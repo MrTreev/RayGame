@@ -1,0 +1,3 @@
+[submodule "raylib"]
+	path = ext/raylib
+	url = https://github.com/MrTreev/raylib.git
