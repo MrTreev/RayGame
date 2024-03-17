@@ -1,5 +1,4 @@
 #pragma once
-#include "utils/patterns.h"
 #include <cassert>
 #include <sstream>
 #include <string>
@@ -50,12 +49,3 @@ class Logger {
         void log(const Level level, const char *text);
 };
 } // namespace utils
-
-#define LOGTRACE    utils::Logger::TRACE
-#define LOGDEBUG    utils::Logger::DEBUG
-#define LOGINFO     utils::Logger::INFO
-#define LOGNOTE     utils::Logger::NOTE
-#define LOGPROGRESS utils::Logger::PROGRESS
-#define LOGWARNING  utils::Logger::WARNING
-#define LOGERROR    utils::Logger::ERROR
-#define LOGFATAL    utils::Logger::FATAL
