@@ -26,7 +26,7 @@ ifeq (${BUILD_TYPE}, DEBUG)
 	CXXFLAGS		+=	-ggdb -Og
 endif
 
-CPPFLAGS	+=	-std=${CPPSTD}
+CXXFLAGS	+=	-std=${CPPSTD}
 CXXFLAGS	+=	-march=${ARCH}
 CXXFLAGS	+=	-mtune=${ARCH}
 CXXFLAGS	+=	${INCLUDES}
