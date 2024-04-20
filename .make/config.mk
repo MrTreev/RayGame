@@ -1,6 +1,6 @@
 .EXPORT_ALL_VARIABLES:
 
-EXE_NAME	=	cpp-ml
+EXE_NAME	=	raygame
 CXX			=	clang++
 CC			=	clang
 CPPSTD		=	c++2b
@@ -20,7 +20,7 @@ INCLUDES	+=	-I${INC_PATH} -I${SRC_PATH}
 CXXWARN		+=	-Werror -Wall -Wextra -Wpedantic -Wabi -Wdeprecated
 
 ifeq (${BUILD_TYPE}, RELEASE)
-	CXXFLAGS		+=	-O2
+	CXXFLAGS		+=	-O3
 endif
 ifeq (${BUILD_TYPE}, DEBUG)
 	CXXFLAGS		+=	-ggdb -Og
@@ -30,6 +30,7 @@ CXXFLAGS	+=	-std=${CPPSTD}
 CXXFLAGS	+=	-march=${ARCH}
 CXXFLAGS	+=	-mtune=${ARCH}
 CXXFLAGS	+=	${INCLUDES}
+CXXFLAGS	+=	-D__STDC_VERSION__=0
 
 ifeq (${CXX}, clang++)
 	include .make/clang.mk

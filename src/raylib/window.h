@@ -1,5 +1,6 @@
 #include <raylib.h>
 #include <string>
+
 namespace raylib {
 
 class Window {

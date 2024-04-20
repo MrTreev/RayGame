@@ -25,6 +25,10 @@ ${LIB_PATH}/libraylib.so:
 	cd ${RAY_PATH} && ${MAKE} && ${MAKE} install
 	cd ${RAY_PATH} && git clean -xf # Clean up after build
 
+${BLD_PATH}/%/%/%.o: ${SRC_PATH}/%/%/%.cpp
+	mkdir -p $(dir $@)
+	${CXX} -c ${CPPFLAGS} -fPIC ${CXXFLAGS} $< -o $@
+
 ${BLD_PATH}/%/%.o: ${SRC_PATH}/%/%.cpp
 	mkdir -p $(dir $@)
 	${CXX} -c ${CPPFLAGS} -fPIC ${CXXFLAGS} $< -o $@
