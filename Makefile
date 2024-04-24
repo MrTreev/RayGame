@@ -11,6 +11,8 @@ LINK_ARGS		=	-L${LIB_PATH} -lm -lraylib
 
 .PHONY: clean
 clean:
+	cd ${RAY_PATH} && ${MAKE} clean && cd -
+	rm -f compile_commands.json
 	rm -rf ${OUT_PATH}
 
 .PHONY: docs
@@ -22,8 +24,8 @@ raylib: ${LIB_PATH}/libraylib.so
 
 ${LIB_PATH}/libraylib.so:
 	mkdir -p $(dir $@)
-	cd ${RAY_PATH} && ${MAKE} && ${MAKE} install
-	cd ${RAY_PATH} && git clean -xf # Clean up after build
+	cd ${RAY_PATH} && ${MAKE} && ${MAKE} install && cd -
+	cd ${RAY_PATH} && git clean -xf && cd - # Clean up after build
 
 ${BLD_PATH}/%/%/%.o: ${SRC_PATH}/%/%/%.cpp
 	mkdir -p $(dir $@)
@@ -43,4 +45,7 @@ ${EXE}: raylib ${OBJ_FILES}
 
 .PHONY: run
 run:
-	LD_LIBRARY_PATH=$$LD_LIBRARY_PATH:${BLD_PATH} ${EXE}
+	LD_LIBRARY_PATH=${LIB_PATH}:$$LD_LIBRARY_PATH ${EXE}
+
+compile_commands.json: ${SRC_FILES}
+	$(shell .make/make-compile-json.sh USE_WAYLAND_DISPLAY=${USE_WAYLAND_DISPLAY})
