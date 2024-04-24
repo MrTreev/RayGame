@@ -52,16 +52,54 @@ inline const std::string ToString(Level v) {
     }
 }
 
-constexpr void log(const Level level, const std::string &text) {
+template <typename T>
+void logger(const Level level, const T &text) {
     if (logging_level >= level) {
         std::cerr << ToString(level) << text << "\n";
     }
 };
 
-constexpr void log(const Level level, const char *text) {
-    if (logging_level >= level) {
-        std::cerr << ToString(level) << text << "\n";
-    }
+namespace log {
+
+template <typename T>
+inline void trace(const T &text) {
+    logger(Level::TRACE, text);
 };
 
+template <typename T>
+inline void debug(const T &text) {
+    logger(Level::DEBUG, text);
+};
+
+template <typename T>
+inline void info(const T &text) {
+    logger(Level::INFO, text);
+};
+
+template <typename T>
+inline void note(const T &text) {
+    logger(Level::NOTE, text);
+};
+
+template <typename T>
+inline void progress(const T &text) {
+    logger(Level::PROGRESS, text);
+};
+
+template <typename T>
+inline void warning(const T &text) {
+    logger(Level::WARNING, text);
+};
+
+template <typename T>
+inline void error(const T &text) {
+    logger(Level::ERROR, text);
+};
+
+template <typename T>
+inline void fatal(const T &text) {
+    logger(Level::FATAL, text);
+};
+
+} // namespace log
 } // namespace utils

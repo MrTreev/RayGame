@@ -6,17 +6,17 @@ namespace raylib {
 
 Window::Window(int width, int height, const std::string title) {
     InitWindow(width, height, title.c_str());
-    utils::log(utils::Level::TRACE, "Initialised Window");
+    utils::log::trace("Initialised Window");
 }
 
 Window::~Window() {
     CloseWindow();
-    utils::log(utils::Level::TRACE, "Destroyed Window");
+    utils::log::trace("Destroyed Window");
 }
 
 bool Window::should_close() {
     const bool win_should_close = WindowShouldClose();
-    utils::log(utils::Level::TRACE, "Window should close: ");
+    utils::log::trace("Window should close: ");
     return win_should_close;
 }
 
