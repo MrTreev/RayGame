@@ -1,9 +1,10 @@
 #pragma once
 #include <string>
+extern char game_name[];
 
 namespace utils {
 
-enum class Level {
+using Level = enum : char {
     TRACE    = 0,
     DEBUG    = 10,
     INFO     = 20,
@@ -15,73 +16,74 @@ enum class Level {
     FATAL    = 100,
 };
 
-#if !defined(RAYGAME_LOGGING_LEVEL)
-constexpr Level logging_level = Level::NOTE;
-#elif (RAYGAME_LOGGING_LEVEL == TRACE)
+#if defined(RAYGAME_LOG_TRACE)
 constexpr Level logging_level = Level::TRACE;
-#elif (RAYGAME_LOGGING_LEVEL == DEBUG)
+#elif defined(RAYGAME_LOG_DEBUG)
 constexpr Level logging_level = Level::DEBUG;
-#elif (RAYGAME_LOGGING_LEVEL == INFO)
+#elif defined(RAYGAME_LOG_INFO)
 constexpr Level logging_level = Level::INFO;
-#elif (RAYGAME_LOGGING_LEVEL == NOTE)
+#elif defined(RAYGAME_LOG_NOTE)
 constexpr Level logging_level = Level::NOTE;
-#elif (RAYGAME_LOGGING_LEVEL == PROGRESS)
+#elif defined(RAYGAME_LOG_PROGRESS)
 constexpr Level logging_level = Level::PROGRESS;
-#elif (RAYGAME_LOGGING_LEVEL == WARNING)
+#elif defined(RAYGAME_LOG_WARNING)
 constexpr Level logging_level = Level::WARNING;
-#elif (RAYGAME_LOGGING_LEVEL == ERROR)
+#elif defined(RAYGAME_LOG_ERROR)
 constexpr Level logging_level = Level::ERROR;
-#elif (RAYGAME_LOGGING_LEVEL == FATAL)
+#elif defined(RAYGAME_LOG_FATAL)
 constexpr Level logging_level = Level::FATAL;
 #else
 #error "Bad value for RAYGAME_LOGGING_LEVEL"
 #endif
 
-std::string ToString(Level v);
+inline std::string ToString(Level v) {
+    switch (v) {
+        case Level::TRACE:    return "TRACE   ";
+        case Level::DEBUG:    return "DEBUG   ";
+        case Level::INFO:     return "INFO    ";
+        case Level::NOTE:     return "NOTE    ";
+        case Level::PROGRESS: return "PROGRESS";
+        case Level::WARNING:  return "WARNING ";
+        case Level::ERROR:    return "ERROR   ";
+        case Level::FATAL:    return "FATAL   ";
+        default:              static_cast<void>(v);
+    }
+}
 
-template <typename T>
-void logger(const Level level, const T &text);
+void logger(const utils::Level level, std::string text);
 
 namespace log {
 
-template <typename T>
-inline void trace(const T &text) {
-    logger(Level::TRACE, text);
+inline void trace(std::string text) {
+    utils::logger(Level::TRACE, text);
 };
 
-template <typename T>
-inline void debug(const T &text) {
-    logger(Level::DEBUG, text);
+inline void debug(std::string text) {
+    utils::logger(Level::DEBUG, text);
 };
 
-template <typename T>
-inline void info(const T &text) {
-    logger(Level::INFO, text);
+inline void info(std::string text) {
+    utils::logger(Level::INFO, text);
 };
 
-template <typename T>
-inline void note(const T &text) {
-    logger(Level::NOTE, text);
+inline void note(std::string text) {
+    utils::logger(Level::NOTE, text);
 };
 
-template <typename T>
-inline void progress(const T &text) {
-    logger(Level::PROGRESS, text);
+inline void progress(std::string text) {
+    utils::logger(Level::PROGRESS, text);
 };
 
-template <typename T>
-inline void warning(const T &text) {
-    logger(Level::WARNING, text);
+inline void warning(std::string text) {
+    utils::logger(Level::WARNING, text);
 };
 
-template <typename T>
-inline void error(const T &text) {
-    logger(Level::ERROR, text);
+inline void error(std::string text) {
+    utils::logger(Level::ERROR, text);
 };
 
-template <typename T>
-inline void fatal(const T &text) {
-    logger(Level::FATAL, text);
+inline void fatal(std::string text) {
+    utils::logger(Level::FATAL, text);
 };
 
 } // namespace log

@@ -3,9 +3,10 @@
 EXE_NAME	=	raygame
 CXX			=	clang++
 CC			=	clang
-CPPSTD		=	c++2b
+CPPSTD		=	c++23
 ARCH		=	native
 BUILD_TYPE	=	DEBUG
+LOG_LEVEL	=	DEBUG
 
 SRC_PATH	=	${PWD}/src
 OUT_PATH	=	${PWD}/out
@@ -21,9 +22,11 @@ CXXWARN		+=	-Werror -Wall -Wextra -Wpedantic -Wabi -Wdeprecated
 
 ifeq (${BUILD_TYPE}, RELEASE)
 	CXXFLAGS		+=	-O3
+	LOG_LEVEL		=	INFO
 endif
 ifeq (${BUILD_TYPE}, DEBUG)
 	CXXFLAGS		+=	-ggdb -Og
+	LOG_LEVEL		=	DEBUG
 endif
 
 CXXFLAGS	+=	-std=${CPPSTD}
@@ -31,6 +34,7 @@ CXXFLAGS	+=	-march=${ARCH}
 CXXFLAGS	+=	-mtune=${ARCH}
 CXXFLAGS	+=	${INCLUDES}
 CXXFLAGS	+=	-D__STDC_VERSION__=0
+CXXFLAGS	+=	-DRAYGAME_LOG_${LOG_LEVEL}
 
 ifeq (${CXX}, clang++)
 	include .make/clang.mk

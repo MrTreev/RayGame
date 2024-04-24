@@ -1,12 +1,11 @@
 #include "raylib/types.h"
-#include <string>
 
 namespace raylib {
 using flag_t = unsigned int;
 
 class Window {
     public:
-        Window(int width, int height, const std::string title);
+        Window(int width, int height, const char *title);
         ~Window();
         Window(const Window &)            = delete;
         Window &operator=(const Window &) = delete;
@@ -23,7 +22,7 @@ class Window {
         bool is_resized();
 
         void set_state(flag_t flags);
-        void check_state(flag_t flag);
+        bool check_state(flag_t flag);
         void clear_state(flag_t flags);
 
         void toggle_fullscreen();
@@ -34,8 +33,11 @@ class Window {
         void restore();
 
         void set_icon(raylib::Image image);
+        void start_frame();
+        void end_frame();
 
-    private:
+        int height();
+        int width();
 };
 
 } // namespace raylib
