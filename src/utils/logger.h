@@ -1,6 +1,5 @@
 #pragma once
-#include <cassert>
-#include <iostream>
+#include <string>
 
 namespace utils {
 
@@ -38,26 +37,10 @@ constexpr Level logging_level = Level::FATAL;
 #error "Bad value for RAYGAME_LOGGING_LEVEL"
 #endif
 
-inline const std::string ToString(Level v) {
-    switch (v) {
-        case Level::TRACE:    return "TRACE   ";
-        case Level::DEBUG:    return "DEBUG   ";
-        case Level::INFO:     return "INFO    ";
-        case Level::NOTE:     return "NOTE    ";
-        case Level::PROGRESS: return "PROGRESS";
-        case Level::WARNING:  return "WARNING ";
-        case Level::ERROR:    return "ERROR   ";
-        case Level::FATAL:    return "FATAL   ";
-        default:              assert(false);
-    }
-}
+std::string ToString(Level v);
 
 template <typename T>
-void logger(const Level level, const T &text) {
-    if (logging_level >= level) {
-        std::cerr << ToString(level) << text << "\n";
-    }
-};
+void logger(const Level level, const T &text);
 
 namespace log {
 
