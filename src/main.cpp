@@ -5,6 +5,34 @@
 #include <raycpp/Texture.hpp>
 #include <raycpp/Window.hpp>
 
+class AnimatedSprite
+{
+public:
+    AnimatedSprite(
+        std::string sheetfile, const int framecount, const int framerate
+    )
+        : _texture(sheetfile), _framecount(framecount), _framerate(framerate),
+          _delta(_texture.width / _framecount){};
+
+    void
+    Draw(raylib::Vector2 position, const double time)
+    {
+        const int               frame_calc = int((time) / float(_framerate));
+        const int               frameno    = frame_calc % _framecount;
+        const float             xcord = static_cast<float>(frameno * _delta);
+        const raylib::Rectangle _draw_rect(
+            xcord, 0.0f, float(_delta), float(_texture.height)
+        );
+        _texture.Draw(_draw_rect, position);
+    };
+
+private:
+    const raylib::Texture _texture;
+    const int             _framecount;
+    const int             _framerate;
+    const int             _delta;
+};
+
 int
 main()
 {
@@ -12,50 +40,30 @@ main()
     window.Maximize();
     window.SetTargetFPS(config::frame_rate);
 
-    constexpr int   medussy_frames    = 60;
-    constexpr float medussy_framerate = 30;
-    raylib::Texture medussy_spritesheet("resources/medussy-spritesheet.png");
-    const int       medussy_delta = medussy_spritesheet.width / medussy_frames;
+    constexpr int oneussy_frames    = 34;
+    constexpr int medussy_frames    = 60;
+    constexpr int medussy_framerate = 30;
+
+    AnimatedSprite medussy(
+        "resources/medussy-spritesheet.png", medussy_frames, medussy_framerate
+    );
+    AnimatedSprite oneussy(
+        "resources/oneussy-spritesheet.png", oneussy_frames, medussy_framerate
+    );
 
     while (!window.ShouldClose())
     {
-        const int frameno = static_cast<int>(
-                                (window.GetTime() * config::frame_rate) /
-                                (config::frame_rate / medussy_framerate)
-                            ) %
-                            medussy_frames;
-        const float xcord = static_cast<float>(frameno * medussy_delta);
-
-        utils::log::trace("medussy_delta: " + std::to_string(medussy_delta));
-        utils::log::trace("frameno: " + std::to_string(frameno));
-        utils::log::trace("xcord: " + std::to_string(xcord));
-
-        const raylib::Rectangle medussy_rect(
-            xcord, 0.0f, float(medussy_delta), float(medussy_spritesheet.height)
-        );
-
         window.BeginDrawing();
         window.ClearBackground();
+        const double time = window.GetTime();
 
-        medussy_spritesheet.Draw(medussy_rect, raylib::Vector2{0, 0});
+        raylib::Vector2 position{0, 0};
+        raylib::Vector2 posone{0, 240};
+        medussy.Draw(position, time);
+        oneussy.Draw(posone, time);
 
         window.DrawFPS(0, 0);
         window.EndDrawing();
     }
     return 0;
 }
-
-class AnimatedSprite
-{
-public:
-    AnimatedSprite(
-        std::string sheetfile, const int framecount, const int framerate
-    )
-        : _texture(sheetfile), _framecount(framecount), _framerate(framerate){};
-    void Draw();
-
-private:
-    const raylib::Texture _texture;
-    const int             _framecount;
-    const int             _framerate;
-};
