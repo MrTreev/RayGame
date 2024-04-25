@@ -2,12 +2,18 @@
 BasedOnStyle: LLVM
 ColumnLimit: 80
 IndentWidth: 4
+InsertNewlineAtEOF: true
+LineEnding: LF
 TabWidth: 4
+UseCRLF: false
 UseTab: Never
 ---
 Language: Cpp
 Standard: Latest
 
+AccessModifierOffset: -4
+AlignAfterOpenBracket: BlockIndent
+AlignArrayOfStructures: Right
 AlignConsecutiveAssignments:
   Enabled: true
   AcrossComments: true
@@ -32,16 +38,18 @@ AlignConsecutiveShortCaseStatements:
   AcrossComments: true
 AllowShortBlocksOnASingleLine: Always
 AllowShortCaseLabelsOnASingleLine: true
+AllowShortEnumsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: Inline
-AllowShortIfStatementsOnASingleLine: WithoutElse
+AlwaysBreakAfterDefinitionReturnType: All
+AlwaysBreakAfterReturnType: AllDefinitions
+AlwaysBreakBeforeMultilineStrings: true
 AlwaysBreakTemplateDeclarations: Yes
+BinPackArguments: false
 BinPackParameters: false
-IndentAccessModifiers: true
+BreakBeforeBraces: Allman
 IndentCaseBlocks: true
 IndentCaseLabels: true
 InsertBraces: true
-InsertNewlineAtEOF: true
-LineEnding: LF
 QualifierAlignment: Left
 SortUsingDeclarations: Lexicographic
 SpaceInEmptyParentheses: false

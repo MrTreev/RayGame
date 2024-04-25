@@ -1,10 +1,11 @@
 #pragma once
 #include <string>
-extern char game_name[];
 
-namespace utils {
+namespace utils
+{
 
-using Level = enum : char {
+using Level = enum : char
+{
     TRACE    = 0,
     DEBUG    = 10,
     INFO     = 20,
@@ -33,11 +34,15 @@ constexpr Level logging_level = Level::ERROR;
 #elif defined(RAYGAME_LOG_FATAL)
 constexpr Level logging_level = Level::FATAL;
 #else
-#error "Bad value for RAYGAME_LOGGING_LEVEL"
+#warning "No logging level set for RAYGAME, using NOTE"
+constexpr Level logging_level = Level::NOTE;
 #endif
 
-inline std::string ToString(Level v) {
-    switch (v) {
+inline std::string
+ToString(Level v)
+{
+    switch (v)
+    {
         case Level::TRACE:    return "TRACE   ";
         case Level::DEBUG:    return "DEBUG   ";
         case Level::INFO:     return "INFO    ";
@@ -52,37 +57,54 @@ inline std::string ToString(Level v) {
 
 void logger(const utils::Level level, std::string text);
 
-namespace log {
+namespace log
+{
 
-inline void trace(std::string text) {
+inline void
+trace(std::string text)
+{
     utils::logger(Level::TRACE, text);
 };
 
-inline void debug(std::string text) {
+inline void
+debug(std::string text)
+{
     utils::logger(Level::DEBUG, text);
 };
 
-inline void info(std::string text) {
+inline void
+info(std::string text)
+{
     utils::logger(Level::INFO, text);
 };
 
-inline void note(std::string text) {
+inline void
+note(std::string text)
+{
     utils::logger(Level::NOTE, text);
 };
 
-inline void progress(std::string text) {
+inline void
+progress(std::string text)
+{
     utils::logger(Level::PROGRESS, text);
 };
 
-inline void warning(std::string text) {
+inline void
+warning(std::string text)
+{
     utils::logger(Level::WARNING, text);
 };
 
-inline void error(std::string text) {
+inline void
+error(std::string text)
+{
     utils::logger(Level::ERROR, text);
 };
 
-inline void fatal(std::string text) {
+inline void
+fatal(std::string text)
+{
     utils::logger(Level::FATAL, text);
 };
 

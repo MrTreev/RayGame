@@ -20,12 +20,16 @@ docs:
 	doxygen ${PWD}/Doxyfile
 
 .PHONY: raylib
-raylib: ${LIB_PATH}/libraylib.so
+raylib: ${LIB_PATH}/libraylib.so ${RAYLIBCPP_H_INSTALL_PATH}/raylib-cpp.hpp
 
 ${LIB_PATH}/libraylib.so:
 	mkdir -p $(dir $@)
 	cd ${RAY_PATH} && ${MAKE} && ${MAKE} install && cd -
 	cd ${RAY_PATH} && git clean -xf && cd - # Clean up after build
+
+${RAYLIBCPP_H_INSTALL_PATH}/raylib-cpp.hpp: $(wildcard ${RAYLIBCPP_PATH}/*.hpp)
+	mkdir -p $(dir $@)
+	$(shell find ${RAYLIBCPP_PATH} -type f -name '*.hpp' -exec cp -f {} ${RAYLIBCPP_H_INSTALL_PATH} \;)
 
 ${BLD_PATH}/%/%/%.o: ${SRC_PATH}/%/%/%.cpp
 	mkdir -p $(dir $@)
