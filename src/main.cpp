@@ -17,12 +17,13 @@ public:
     void
     Draw(raylib::Vector2 position, const double time)
     {
-        const int               frame_calc = int((time) / float(_framerate));
-        const int               frameno    = frame_calc % _framecount;
-        const float             xcord = static_cast<float>(frameno * _delta);
+        const float xcord = static_cast<float>(
+            static_cast<int>(_framerate * time) % _framecount * _delta
+        );
         const raylib::Rectangle _draw_rect(
             xcord, 0.0f, float(_delta), float(_texture.height)
         );
+
         _texture.Draw(_draw_rect, position);
     };
 
@@ -50,6 +51,7 @@ main()
     AnimatedSprite oneussy(
         "resources/oneussy-spritesheet.png", oneussy_frames, medussy_framerate
     );
+    raylib::Texture medtest("resources/medussy-spritesheet.png");
 
     while (!window.ShouldClose())
     {
@@ -57,10 +59,12 @@ main()
         window.ClearBackground();
         const double time = window.GetTime();
 
+        utils::log::debug("time: " + std::to_string(time));
         raylib::Vector2 position{0, 0};
         raylib::Vector2 posone{0, 240};
         medussy.Draw(position, time);
-        oneussy.Draw(posone, time);
+        medtest.Draw();
+        // oneussy.Draw(posone, time);
 
         window.DrawFPS(0, 0);
         window.EndDrawing();
