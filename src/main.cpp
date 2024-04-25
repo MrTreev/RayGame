@@ -21,7 +21,10 @@ public:
             static_cast<int>(_framerate * time) % _framecount * _delta
         );
         const raylib::Rectangle _draw_rect(
-            xcord, 0.0f, float(_delta), float(_texture.height)
+            xcord,
+            0.0f,
+            static_cast<float>(_delta),
+            static_cast<float>(_texture.height)
         );
 
         _texture.Draw(_draw_rect, position);
@@ -29,9 +32,10 @@ public:
 
 private:
     const raylib::Texture _texture;
-    const int             _framecount;
-    const int             _framerate;
-    const int             _delta;
+
+    const int _framecount;
+    const int _framerate;
+    const int _delta;
 };
 
 int
@@ -60,11 +64,9 @@ main()
         const double time = window.GetTime();
 
         utils::log::debug("time: " + std::to_string(time));
-        raylib::Vector2 position{0, 0};
-        raylib::Vector2 posone{0, 240};
-        medussy.Draw(position, time);
         medtest.Draw();
-        // oneussy.Draw(posone, time);
+        // medussy.Draw({0, 0}, time);
+        oneussy.Draw({0, 0}, time);
 
         window.DrawFPS(0, 0);
         window.EndDrawing();
