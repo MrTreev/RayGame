@@ -5,3 +5,7 @@
 [submodule "entt"]
 	path = ext/entt
 	url = https://github.com/skypjack/entt.git
+
+[submodule "raylib"]
+    path = ext/raylib-cpp
+	url = https://github.com/MrTreev/raylib-cpp.git
