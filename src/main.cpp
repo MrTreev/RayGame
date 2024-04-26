@@ -41,7 +41,11 @@ private:
 int
 main()
 {
-    raylib::Window window(640, 360, "RayGame");
+    raylib::Window window(
+        config::start_window_width,
+        config::start_window_height,
+        config::game_name
+    );
     window.Maximize();
     window.SetTargetFPS(config::frame_rate);
 
