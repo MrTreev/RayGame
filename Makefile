@@ -6,6 +6,7 @@ include .make/raylib.mk
 all: ${EXE}
 
 SRC_FILES		=	$(shell find ${SRC_PATH} -name "*.cpp")
+HED_FILES		=	$(shell find ${SRC_PATH} -name "*.h")
 OBJ_FILES		=	$(patsubst ${SRC_PATH}/%.cpp,${BLD_PATH}/%.o,${SRC_FILES})
 LINK_ARGS		=	-L${LIB_PATH} -lm -lraylib
 
@@ -16,36 +17,31 @@ clean:
 	rm -rf ${OUT_PATH}
 
 .PHONY: docs
-docs:
+docs: ${SRC_FILES} ${HED_FILES}
 	doxygen ${PWD}/Doxyfile
 
-.PHONY: raylib
-raylib: ${LIB_PATH}/libraylib.so ${RAYLIBCPP_H_INSTALL_PATH}/raylib-cpp.hpp
-
-${LIB_PATH}/libraylib.so:
-	mkdir -p $(dir $@)
+${LIB_PATH}/libraylib.so: $(patsubst ${RAYLIBCPP_PATH}/%.hpp,${RAYLIBCPP_H_INSTALL_PATH}/%.hpp,$(wildcard ${RAYLIBCPP_PATH}/*.hpp))
+	@mkdir -p $(dir $@)
 	cd ${RAY_PATH} && ${MAKE} && ${MAKE} install && cd -
-	cd ${RAY_PATH} && git clean -xf && cd - # Clean up after build
-	$(shell find ${RAY_PATH} -type f -name '*.h' -exec cp -f {} ${RAYLIB_H_INSTALL_PATH} \;)
+	cd ${RAY_PATH} && git clean -xf && cd -
 
-${RAYLIBCPP_H_INSTALL_PATH}/raylib-cpp.hpp: $(wildcard ${RAYLIBCPP_PATH}/*.hpp) ${LIB_PATH}/libraylib.so
-	mkdir -p ${RAYLIBCPP_H_INSTALL_PATH}
-	$(shell find ${RAYLIBCPP_PATH} -type f -name '*.hpp' -exec cp -f --target-directory=${RAYLIBCPP_H_INSTALL_PATH} {} \;)
+${RAYLIBCPP_H_INSTALL_PATH}/%.hpp: ${RAYLIBCPP_PATH}/%.hpp
+	@mkdir -p $(dir $@) && cp $< $@
 
 ${BLD_PATH}/%/%/%.o: ${SRC_PATH}/%/%/%.cpp
-	mkdir -p $(dir $@)
+	@mkdir -p $(dir $@)
 	${CXX} -c ${CPPFLAGS} -fPIC ${CXXFLAGS} $< -o $@
 
 ${BLD_PATH}/%/%.o: ${SRC_PATH}/%/%.cpp
-	mkdir -p $(dir $@)
+	@mkdir -p $(dir $@)
 	${CXX} -c ${CPPFLAGS} -fPIC ${CXXFLAGS} $< -o $@
 
 ${BLD_PATH}/%.o: ${SRC_PATH}/%.cpp
-	mkdir -p $(dir $@)
+	@mkdir -p $(dir $@)
 	${CXX} -c ${CPPFLAGS} -fPIC ${CXXFLAGS} $< -o $@
 
-${EXE}: raylib ${OBJ_FILES}
-	mkdir -p $(dir $@)
+${EXE}: ${LIB_PATH}/libraylib.so ${OBJ_FILES}
+	@mkdir -p $(dir $@)
 	${CXX} ${CPPFLAGS} ${CXXFLAGS} ${LINK_ARGS} ${OBJ_FILES} -o $@
 
 .PHONY: run

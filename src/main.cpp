@@ -1,9 +1,9 @@
 #include "config.h"
-#include "utils/colours.h"
+#include "objects/shroom.h"
+#include "utils/input.h"
 #include "utils/logger.h"
-#include "objects/evilwizard.h"
+#include <raycpp/Keyboard.hpp>
 #include <raycpp/Window.hpp>
-
 
 int
 main()
@@ -15,7 +15,7 @@ main()
     );
     window.Maximize();
     window.SetTargetFPS(config::frame_rate);
-    EvilWizard wizard;
+    Shroom player;
 
     while (!window.ShouldClose())
     {
@@ -23,9 +23,32 @@ main()
         window.ClearBackground();
         const double time = window.GetTime();
         utils::log::debug("time: " + std::to_string(time));
+        using input::keyboard::Key;
+        while (raylib::Keyboard::GetCharPressed())
+        {
+            if (raylib::Keyboard::IsKeyDown(Key::SPACE))
+            {
+                player.action(ShroomActs::hide);
+            };
+            if (raylib::Keyboard::IsKeyDown(Key::W))
+            {
+                player.move({0, -10});
+            }
+            if (raylib::Keyboard::IsKeyDown(Key::A))
+            {
+                player.move({-10, 0});
+            }
+            if (raylib::Keyboard::IsKeyDown(Key::S))
+            {
+                player.move({0, 10});
+            }
+            if (raylib::Keyboard::IsKeyDown(Key::D))
+            {
+                player.move({10, 0});
+            }
+        }
 
-        wizard.draw_idle(time);
-
+        player.draw();
         window.DrawFPS(0, 0);
         window.EndDrawing();
     }

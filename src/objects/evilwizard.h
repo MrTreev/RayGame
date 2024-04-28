@@ -1,48 +1,76 @@
 #pragma once
 #include "lib/animatedsprite.h"
 
+enum class EvilWizardSprite
+{
+    attack,
+    death,
+    fall,
+    hit,
+    idle,
+    jump,
+    run,
+};
+
 class EvilWizard
 {
 public:
     EvilWizard() = default;
     EvilWizard(raylib::Vector2 position) : _position(position){};
 
-    void draw_attack_down(const double time);
-    void draw_attack_up(const double time);
-    void draw_death(const double time);
-    void draw_fall(const double time);
-    void draw_hit(const double time);
-    void draw_idle(const double time);
-    void draw_jump(const double time);
-    void draw_run(const double time);
+    void draw();
+    void action(EvilWizardSprite action);
+    void draw_attack_down();
+    void draw_attack_up();
+    void draw_death();
+    void draw_fall();
+    void draw_hit();
+    void draw_idle();
+    void draw_jump();
+    void draw_run();
+    void move(raylib::Vector2 position);
+    void set_position(raylib::Vector2 position);
 
-    void
-    set_position(raylib::Vector2 position)
-    {
-        _position = position;
-    };
-
-    void
-    move(raylib::Vector2 position)
-    {
-        _position += position;
-    };
-
-    raylib::Vector2
-    get_position()
-    {
-        return _position;
-    };
+    raylib::Vector2 get_position();
 
 private:
-    raylib::Vector2 _position{0, 0};
+    raylib::Vector2  _position{0, 0};
+    EvilWizardSprite _sprite{EvilWizardSprite::idle};
+    int              _frameno{0};
+    bool             _swing_up{false};
 
-    lib::AnimatedSprite _idle{"resources/evilwizard2/idle.png", 8, 10};
-    lib::AnimatedSprite _hit{"resources/evilwizard2/take-hit.png", 3, 10};
-    lib::AnimatedSprite _attack1{"resources/evilwizard2/attack1.png", 8, 10};
-    lib::AnimatedSprite _attack2{"resources/evilwizard2/attack2.png", 8, 10};
-    lib::AnimatedSprite _death{"resources/evilwizard2/death.png", 7, 10};
-    lib::AnimatedSprite _fall{"resources/evilwizard2/fall.png", 2, 10};
-    lib::AnimatedSprite _jump{"resources/evilwizard2/jump.png", 2, 10};
-    lib::AnimatedSprite _run{"resources/evilwizard2/run.png", 8, 10};
+    static constexpr int _fps                = 10;
+    static constexpr int _attack_down_frames = 8;
+    static constexpr int _attack_up_frames   = 8;
+    static constexpr int _death_frames       = 7;
+    static constexpr int _fall_frames        = 2;
+    static constexpr int _hit_frames         = 3;
+    static constexpr int _idle_frames        = 8;
+    static constexpr int _jump_frames        = 2;
+    static constexpr int _run_frames         = 8;
+
+    lib::AnimatedSprite _attack_down{
+        "resources/evilwizard2/attack2.png", _attack_down_frames, _fps
+    };
+    lib::AnimatedSprite _attack_up{
+        "resources/evilwizard2/attack1.png", _attack_up_frames, _fps
+    };
+    lib::AnimatedSprite _death{
+        "resources/evilwizard2/death.png", _death_frames, _fps
+    };
+    lib::AnimatedSprite _fall{
+        "resources/evilwizard2/fall.png", _fall_frames, _fps
+    };
+    lib::AnimatedSprite _hit{
+        "resources/evilwizard2/take-hit.png", _hit_frames, _fps
+    };
+    lib::AnimatedSprite _idle{
+        "resources/evilwizard2/idle.png", _idle_frames, _fps
+    };
+    lib::AnimatedSprite _jump{
+        "resources/evilwizard2/jump.png", _jump_frames, _fps
+    };
+    lib::AnimatedSprite _run{
+        "resources/evilwizard2/run.png", _run_frames, _fps
+    };
 };
