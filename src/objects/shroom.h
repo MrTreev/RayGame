@@ -14,7 +14,7 @@ enum class ShroomActs
 class Shroom : public Actor<ShroomActs>
 {
 private:
-    static const int _fps         = 10;
+    static const int _fps         = 8;
     static const int _idle_frames = 6;
     static const int _hide_frames = 8;
     static const int _peek_frames = 4;
