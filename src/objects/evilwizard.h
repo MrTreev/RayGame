@@ -1,8 +1,7 @@
 #pragma once
 #include "lib/animatedsprite.h"
 
-enum class EvilWizardSprite
-{
+enum class EvilWizardSprite {
     attack,
     death,
     fall,
@@ -12,11 +11,11 @@ enum class EvilWizardSprite
     run,
 };
 
-class EvilWizard
-{
+class EvilWizard {
 public:
     EvilWizard() = default;
-    EvilWizard(raylib::Vector2 position) : _position(position){};
+    EvilWizard(raylib::Vector2 position)
+        : _position(position){};
 
     void draw();
     void action(EvilWizardSprite action);
@@ -50,27 +49,43 @@ private:
     static constexpr int _run_frames         = 8;
 
     lib::AnimatedSprite _attack_down{
-        "resources/evilwizard2/attack2.png", _attack_down_frames, _fps
+        "resources/evilwizard2/attack2.png",
+        _attack_down_frames,
+        _fps
     };
     lib::AnimatedSprite _attack_up{
-        "resources/evilwizard2/attack1.png", _attack_up_frames, _fps
+        "resources/evilwizard2/attack1.png",
+        _attack_up_frames,
+        _fps
     };
     lib::AnimatedSprite _death{
-        "resources/evilwizard2/death.png", _death_frames, _fps
+        "resources/evilwizard2/death.png",
+        _death_frames,
+        _fps
     };
     lib::AnimatedSprite _fall{
-        "resources/evilwizard2/fall.png", _fall_frames, _fps
+        "resources/evilwizard2/fall.png",
+        _fall_frames,
+        _fps
     };
     lib::AnimatedSprite _hit{
-        "resources/evilwizard2/take-hit.png", _hit_frames, _fps
+        "resources/evilwizard2/take-hit.png",
+        _hit_frames,
+        _fps
     };
     lib::AnimatedSprite _idle{
-        "resources/evilwizard2/idle.png", _idle_frames, _fps
+        "resources/evilwizard2/idle.png",
+        _idle_frames,
+        _fps
     };
     lib::AnimatedSprite _jump{
-        "resources/evilwizard2/jump.png", _jump_frames, _fps
+        "resources/evilwizard2/jump.png",
+        _jump_frames,
+        _fps
     };
     lib::AnimatedSprite _run{
-        "resources/evilwizard2/run.png", _run_frames, _fps
+        "resources/evilwizard2/run.png",
+        _run_frames,
+        _fps
     };
 };

@@ -20,9 +20,9 @@ clean:
 docs: ${SRC_FILES} ${HED_FILES}
 	doxygen ${PWD}/Doxyfile
 
-${LIB_PATH}/libraylib.so: $(patsubst ${RAYLIBCPP_PATH}/%.hpp,${RAYLIBCPP_H_INSTALL_PATH}/%.hpp,$(wildcard ${RAYLIBCPP_PATH}/*.hpp))
+${LIB_PATH}/libraylib.so: ${RAYLIB_HPP_FILES}
 	@mkdir -p $(dir $@)
-	cd ${RAY_PATH} && ${MAKE} && ${MAKE} install && cd -
+	cd ${RAY_PATH} && ${MAKE} CUSTOM_CFLAGS='${RAYLIB_CFLAGS} ${CXXFLAGS}' CUSTOM_LDFLAGS='${RAYLIB_LDFLAGS}' && ${MAKE} install && cd -
 	cd ${RAY_PATH} && git clean -xf && cd -
 
 ${RAYLIBCPP_H_INSTALL_PATH}/%.hpp: ${RAYLIBCPP_PATH}/%.hpp
@@ -30,23 +30,23 @@ ${RAYLIBCPP_H_INSTALL_PATH}/%.hpp: ${RAYLIBCPP_PATH}/%.hpp
 
 ${BLD_PATH}/%/%/%.o: ${SRC_PATH}/%/%/%.cpp
 	@mkdir -p $(dir $@)
-	${CXX} -c ${CPPFLAGS} -fPIC ${CXXFLAGS} $< -o $@
+	${CXX} -c ${CXXFLAGS} ${CPPFLAGS} -fPIC $< -o $@
 
 ${BLD_PATH}/%/%.o: ${SRC_PATH}/%/%.cpp
 	@mkdir -p $(dir $@)
-	${CXX} -c ${CPPFLAGS} -fPIC ${CXXFLAGS} $< -o $@
+	${CXX} -c ${CXXFLAGS} ${CPPFLAGS} -fPIC $< -o $@
 
 ${BLD_PATH}/%.o: ${SRC_PATH}/%.cpp
 	@mkdir -p $(dir $@)
-	${CXX} -c ${CPPFLAGS} -fPIC ${CXXFLAGS} $< -o $@
+	${CXX} -c ${CXXFLAGS} ${CPPFLAGS} -fPIC $< -o $@
 
 ${EXE}: ${LIB_PATH}/libraylib.so ${OBJ_FILES}
 	@mkdir -p $(dir $@)
-	${CXX} ${CPPFLAGS} ${CXXFLAGS} ${LINK_ARGS} ${OBJ_FILES} -o $@
+	${CXX} ${CXXFLAGS} ${CPPFLAGS} ${LINK_ARGS} ${OBJ_FILES} -o $@
 
 .PHONY: run
 run:
 	LD_LIBRARY_PATH=${LIB_PATH}:$$LD_LIBRARY_PATH ${EXE}
 
-compile_commands.json: ${SRC_FILES}
+compile_commands.json: ${HED_FILES} $(patsubst ${RAYLIBCPP_PATH}/%.hpp,${RAYLIBCPP_H_INSTALL_PATH}/%.hpp,$(wildcard ${RAYLIBCPP_PATH}/*.hpp))
 	$(shell .make/make-compile-json.sh USE_WAYLAND_DISPLAY=${USE_WAYLAND_DISPLAY})

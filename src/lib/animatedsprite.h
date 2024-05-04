@@ -2,18 +2,22 @@
 #include <raycpp/Rectangle.hpp>
 #include <raycpp/Texture.hpp>
 
-namespace lib
-{
+namespace lib {
 
-class AnimatedSprite
-{
+class AnimatedSprite {
 public:
     AnimatedSprite(
-        std::string sheetfile, const int framecount, const int framerate
+        std::string sheetfile,
+        const int   framecount,
+        const int   framerate
     );
-    void Draw(raylib::Vector2 position);
-    void Draw(raylib::Vector2 position, int frameno);
-    void Draw(raylib::Vector2 position, const double time);
+    void draw(raylib::Vector2 position);
+    void draw(raylib::Vector2 position, int frameno);
+    void draw(raylib::Vector2 position, const double time);
+
+    inline int fps() {
+        return _framerate;
+    };
 
 private:
     const raylib::Texture _texture;

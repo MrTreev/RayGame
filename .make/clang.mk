@@ -1,9 +1,14 @@
 .EXPORT_ALL_VARIABLES:
 
-CPPFLAGS	+=	-fdelete-null-pointer-checks
-CPPFLAGS	+=	-fsized-deallocation
-CPPFLAGS	+=	-fstack-protector
-CPPFLAGS	+=	-fstrict-enums
+CXXFLAGS	+=	-fdelete-null-pointer-checks
+CXXFLAGS	+=	-fsanitize=undefined
+CXXFLAGS	+=	-fsized-deallocation
+CXXFLAGS	+=	-fstack-protector
+CXXFLAGS	+=	-fstrict-enums
+
+CXXFLAGS	+=	-Wthread-safety
+
+OPTFLAGS	+=	-flto=full
 
 CPPFLAGS	+=	-Wdirect-ivar-access
 CPPFLAGS	+=	-Weffc++
@@ -43,7 +48,7 @@ CPPFLAGS	+=	-Wpointer-arith
 CPPFLAGS	+=	-Wrange-loop-construct
 CPPFLAGS	+=	-Wredundant-move
 CPPFLAGS	+=	-Wreserved-macro-identifier
-#CPPFLAGS	+=	-Wshadow-all
+CPPFLAGS	+=	-Wshadow-all
 CPPFLAGS	+=	-Wsign-compare
 CPPFLAGS	+=	-Wsign-conversion
 CPPFLAGS	+=	-Wtautological-compare

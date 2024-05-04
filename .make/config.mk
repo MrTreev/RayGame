@@ -18,16 +18,7 @@ LIB_PATH	=	${PWD}/out/lib
 EXE			=	${BIN_PATH}/${EXE_NAME}
 
 INCLUDES	+=	-I${INC_PATH} -I${SRC_PATH}
-CXXWARN		+=	-Werror -Wall -Wextra -Wpedantic -Wabi -Wdeprecated
-
-ifeq (${BUILD_TYPE}, RELEASE)
-	CXXFLAGS		+=	-O3
-	LOG_LEVEL		=	INFO
-endif
-ifeq (${BUILD_TYPE}, DEBUG)
-	CXXFLAGS		+=	-ggdb -Og
-	LOG_LEVEL		=	DEBUG
-endif
+CXXFLAGS	+=	-Werror -Wall -Wextra -Wpedantic -Wabi -Wdeprecated
 
 CXXFLAGS	+=	-std=${CPPSTD}
 CXXFLAGS	+=	-march=${ARCH}
@@ -38,4 +29,13 @@ CXXFLAGS	+=	-DRAYGAME_LOG_${LOG_LEVEL}
 
 ifeq (${CXX}, clang++)
 	include .make/clang.mk
+endif
+
+ifeq (${BUILD_TYPE}, RELEASE)
+	CXXFLAGS		+=	-Ofast ${OPTFLAGS}
+	LOG_LEVEL		=	INFO
+endif
+ifeq (${BUILD_TYPE}, DEBUG)
+	CXXFLAGS		+=	-ggdb -Og
+	LOG_LEVEL		=	DEBUG
 endif

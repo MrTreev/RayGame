@@ -1,13 +1,10 @@
 #pragma once
 
-namespace input
-{
+namespace input {
 
-namespace keyboard
-{
+namespace keyboard {
 
-using Key = enum : int
-{
+using Key = enum: int {
     // Alphanumeric keys
     APOSTROPHE    = 39, // Key: '
     COMMA         = 44, // Key: ,
@@ -125,11 +122,9 @@ using Key = enum : int
 
 } // namespace keyboard
 
-namespace mouse
-{
+namespace mouse {
 
-using Button = enum
-{
+using Button = enum {
     LEFT    = 0, // left
     RIGHT   = 1, // right
     MIDDLE  = 2, // middle (pressed wheel)
@@ -139,8 +134,7 @@ using Button = enum
     BACK    = 6, // back (advanced mouse device)
 };
 
-using Cursor = enum
-{
+using Cursor = enum {
     MOUSE_CURSOR_DEFAULT       = 0,  // Default pointer shape
     MOUSE_CURSOR_ARROW         = 1,  // Arrow shape
     MOUSE_CURSOR_IBEAM         = 2,  // Text writing cursor shape
@@ -156,32 +150,41 @@ using Cursor = enum
 
 } // namespace mouse
 
-namespace gamepad
-{
+namespace gamepad {
 
-using Button = enum
-{
-    GAMEPAD_BUTTON_UNKNOWN = 0,         // Unknown button
-    GAMEPAD_BUTTON_LEFT_FACE_UP,        // left DPAD up button
-    GAMEPAD_BUTTON_LEFT_FACE_RIGHT,     // left DPAD right button
-    GAMEPAD_BUTTON_LEFT_FACE_DOWN,      // left DPAD down button
-    GAMEPAD_BUTTON_LEFT_FACE_LEFT,      // left DPAD left button
-    GAMEPAD_BUTTON_RIGHT_FACE_UP,       // right button up (i.e. PS3: Triangle, Xbox: Y)
-    GAMEPAD_BUTTON_RIGHT_FACE_RIGHT,    // right button right (i.e. PS3: Square, Xbox: X)
-    GAMEPAD_BUTTON_RIGHT_FACE_DOWN,     // right button down (i.e. PS3: Cross, Xbox: A)
-    GAMEPAD_BUTTON_RIGHT_FACE_LEFT,     // right button left (i.e. PS3: Circle, Xbox: B)
-    GAMEPAD_BUTTON_LEFT_TRIGGER_1,      // top/back trigger left (first), it could be a trailing button
-    GAMEPAD_BUTTON_LEFT_TRIGGER_2,      // top/back trigger left (second), it could be a trailing button
-    GAMEPAD_BUTTON_RIGHT_TRIGGER_1,     // top/back trigger right (one), it could be a trailing button
-    GAMEPAD_BUTTON_RIGHT_TRIGGER_2,     // top/back trigger right (second), it could be a trailing button
-    GAMEPAD_BUTTON_MIDDLE_LEFT,         // center buttons, left one (i.e. PS3: Select)
-    GAMEPAD_BUTTON_MIDDLE,              // center buttons, middle one (i.e. PS3: PS, Xbox: XBOX)
-    GAMEPAD_BUTTON_MIDDLE_RIGHT,        // center buttons, right one (i.e. PS3: Start)
-    GAMEPAD_BUTTON_LEFT_THUMB,          // joystick pressed button left
-    GAMEPAD_BUTTON_RIGHT_THUMB          // joystick pressed button right
+using Button = enum {
+    GAMEPAD_BUTTON_UNKNOWN = 0,      // Unknown button
+    GAMEPAD_BUTTON_LEFT_FACE_UP,     // left DPAD up button
+    GAMEPAD_BUTTON_LEFT_FACE_RIGHT,  // left DPAD right button
+    GAMEPAD_BUTTON_LEFT_FACE_DOWN,   // left DPAD down button
+    GAMEPAD_BUTTON_LEFT_FACE_LEFT,   // left DPAD left button
+    GAMEPAD_BUTTON_RIGHT_FACE_UP,    // right button up
+                                     // (i.e. PS3: Triangle, Xbox: Y)
+    GAMEPAD_BUTTON_RIGHT_FACE_RIGHT, // right button right
+                                     // (i.e. PS3: Square, Xbox: X)
+    GAMEPAD_BUTTON_RIGHT_FACE_DOWN,  // right button down
+                                     // (i.e. PS3: Cross, Xbox: A)
+    GAMEPAD_BUTTON_RIGHT_FACE_LEFT,  // right button left
+                                     // (i.e. PS3: Circle, Xbox: B)
+    GAMEPAD_BUTTON_LEFT_TRIGGER_1,   // top/back trigger left (first),
+                                     // it could be a trailing button
+    GAMEPAD_BUTTON_LEFT_TRIGGER_2,   // top/back trigger left (second),
+                                     // it could be a trailing button
+    GAMEPAD_BUTTON_RIGHT_TRIGGER_1,  // top/back trigger right (one),
+                                     // it could be a trailing button
+    GAMEPAD_BUTTON_RIGHT_TRIGGER_2,  // top/back trigger right (second),
+                                     // it could be a trailing button
+    GAMEPAD_BUTTON_MIDDLE_LEFT,      // center buttons, left one
+                                     // (i.e. PS3: Select)
+    GAMEPAD_BUTTON_MIDDLE,           // center buttons, middle one
+                                     // (i.e. PS3: PS, Xbox: XBOX)
+    GAMEPAD_BUTTON_MIDDLE_RIGHT,     // center buttons, right one
+                                     // (i.e. PS3: Start)
+    GAMEPAD_BUTTON_LEFT_THUMB,       // joystick pressed button left
+    GAMEPAD_BUTTON_RIGHT_THUMB       // joystick pressed button right
 };
-using Axis = enum
-{
+
+using Axis = enum {
     GAMEPAD_AXIS_LEFT_X        = 0, // left stick X axis
     GAMEPAD_AXIS_LEFT_Y        = 1, // left stick Y axis
     GAMEPAD_AXIS_RIGHT_X       = 2, // right stick X axis

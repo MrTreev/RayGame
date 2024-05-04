@@ -1,10 +1,9 @@
+#pragma once
 #include <raycpp/Color.hpp>
 
-namespace colours
-{
+namespace colours {
 
-namespace raylib
-{
+namespace raylib {
 constexpr ::Color beige       = BEIGE;
 constexpr ::Color black       = BLACK;
 constexpr ::Color blank       = BLANK;
@@ -33,8 +32,7 @@ constexpr ::Color white       = WHITE;
 constexpr ::Color yellow      = YELLOW;
 } // namespace raylib
 
-namespace catpuccin
-{
+namespace catpuccin {
 constexpr ::Color blue      = {137, 180, 250, 255};
 constexpr ::Color flamingo  = {242, 205, 205, 255};
 constexpr ::Color green     = {166, 227, 161, 255};
