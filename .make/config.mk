@@ -2,7 +2,7 @@
 
 EXE_NAME	=	raygame
 CXX			=	clang++
-#CC			=	clang
+CC			=	clang
 CXXSTD		=	c++23
 ARCH		=	native
 BUILD_TYPE	=	DEBUG
