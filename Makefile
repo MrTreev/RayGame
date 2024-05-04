@@ -20,9 +20,9 @@ clean:
 docs: ${SRC_FILES} ${HED_FILES}
 	doxygen ${PWD}/Doxyfile
 
-${LIB_PATH}/libraylib.so: ${RAYLIB_HPP_FILES}
+${LIB_PATH}/libraylib.so: # ${RAYLIB_HPP_FILES}
 	@mkdir -p $(dir $@)
-	cd ${RAY_PATH} && ${MAKE} CUSTOM_CFLAGS='${RAYLIB_CFLAGS} ${CXXFLAGS}' CUSTOM_LDFLAGS='${RAYLIB_LDFLAGS}' && ${MAKE} install && cd -
+	cd ${RAY_PATH} && ${MAKE} CUSTOM_CFLAGS='${RAYLIB_CFLAGS}' CUSTOM_LDFLAGS='${RAYLIB_LDFLAGS}' && ${MAKE} install && cd -
 	cd ${RAY_PATH} && git clean -xf && cd -
 
 ${RAYLIBCPP_H_INSTALL_PATH}/%.hpp: ${RAYLIBCPP_PATH}/%.hpp
@@ -30,19 +30,19 @@ ${RAYLIBCPP_H_INSTALL_PATH}/%.hpp: ${RAYLIBCPP_PATH}/%.hpp
 
 ${BLD_PATH}/%/%/%.o: ${SRC_PATH}/%/%/%.cpp
 	@mkdir -p $(dir $@)
-	${CXX} -c ${CXXFLAGS} ${CPPFLAGS} -fPIC $< -o $@
+	${CXX} -c ${CXXFLAGS} -fPIC $< -o $@
 
 ${BLD_PATH}/%/%.o: ${SRC_PATH}/%/%.cpp
 	@mkdir -p $(dir $@)
-	${CXX} -c ${CXXFLAGS} ${CPPFLAGS} -fPIC $< -o $@
+	${CXX} -c ${CXXFLAGS} -fPIC $< -o $@
 
 ${BLD_PATH}/%.o: ${SRC_PATH}/%.cpp
 	@mkdir -p $(dir $@)
-	${CXX} -c ${CXXFLAGS} ${CPPFLAGS} -fPIC $< -o $@
+	${CXX} -c ${CXXFLAGS} -fPIC $< -o $@
 
 ${EXE}: ${LIB_PATH}/libraylib.so ${OBJ_FILES}
 	@mkdir -p $(dir $@)
-	${CXX} ${CXXFLAGS} ${CPPFLAGS} ${LINK_ARGS} ${OBJ_FILES} -o $@
+	${CXX} ${CXXFLAGS} ${LINK_ARGS} ${OBJ_FILES} -o $@
 
 .PHONY: run
 run:

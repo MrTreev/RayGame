@@ -46,8 +46,8 @@ constexpr Level logging_level = Level::FATAL;
 constexpr Level logging_level = Level::NOTE;
 #endif
 
-inline std::string to_string(Level v) {
-    switch (v) {
+inline std::string to_string(Level level) {
+    switch (level) {
     case Level::TRACE:    return "TRACE";
     case Level::DEBUG:    return "DEBUG";
     case Level::INFO:     return "INFO ";
@@ -56,14 +56,14 @@ inline std::string to_string(Level v) {
     case Level::WARNING:  return "WARN ";
     case Level::ERROR:    return "ERROR";
     case Level::FATAL:    return "FATAL";
-    default:              static_cast<void>(v);
+    default:              std::ignore = level;
     }
 }
 
 namespace {
 void logger(
     const utils::Level level,
-    const std::string  text
+    const std::string& text
 #if defined(RAYGAME_LOG_LOCATION)
     ,
     const source_location loc = source_location::current()
@@ -83,49 +83,49 @@ void logger(
 
 namespace log {
 
-inline void trace(std::string text) {
+inline void trace(const std::string& text) {
     if constexpr (logging_level >= Level::TRACE) {
         utils::logger(Level::TRACE, text);
     }
 };
 
-inline void debug(std::string text) {
+inline void debug(const std::string& text) {
     if constexpr (logging_level >= Level::DEBUG) {
         utils::logger(Level::DEBUG, text);
     }
 };
 
-inline void info(std::string text) {
+inline void info(const std::string& text) {
     if constexpr (logging_level >= Level::INFO) {
         utils::logger(Level::INFO, text);
     }
 };
 
-inline void note(std::string text) {
+inline void note(const std::string& text) {
     if constexpr (logging_level >= Level::NOTE) {
         utils::logger(Level::NOTE, text);
     }
 };
 
-inline void progress(std::string text) {
+inline void progress(const std::string& text) {
     if constexpr (logging_level >= Level::PROGRESS) {
         utils::logger(Level::PROGRESS, text);
     }
 };
 
-inline void warning(std::string text) {
+inline void warning(const std::string& text) {
     if constexpr (logging_level >= Level::WARNING) {
         utils::logger(Level::WARNING, text);
     }
 };
 
-inline void error(std::string text) {
+inline void error(const std::string& text) {
     if constexpr (logging_level >= Level::ERROR) {
         utils::logger(Level::ERROR, text);
     }
 };
 
-inline void fatal(std::string text) {
+inline void fatal(const std::string& text) {
     if constexpr (logging_level >= Level::FATAL) {
         utils::logger(Level::FATAL, text);
     }

@@ -11,8 +11,8 @@ enum class ShroomActs {
     walk,
 };
 
-inline std::string to_string(ShroomActs sa) {
-    switch (sa) {
+inline std::string to_string(ShroomActs sact) {
+    switch (sact) {
     case ShroomActs::hide: return "Hide";
     case ShroomActs::idle: return "Idle";
     case ShroomActs::peek: return "Peek";
@@ -23,6 +23,7 @@ inline std::string to_string(ShroomActs sa) {
 
 class Shroom: public Actor<ShroomActs> {
 private:
+    int              _tick{0};
     static const int _fps         = 15;
     static const int _idle_frames = 6;
     static const int _hide_frames = 8;

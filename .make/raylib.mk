@@ -17,6 +17,4 @@ RAYLIBCPP_H_INSTALL_PATH	?=	${INC_PATH}/raycpp
 
 RAYLIB_HPP_FILES 			:=	$(patsubst ${RAYLIBCPP_PATH}/%.hpp,${RAYLIBCPP_H_INSTALL_PATH}/%.hpp,$(wildcard ${RAYLIBCPP_PATH}/*.hpp))
 
-RAYLIB_CFLAGS				+= -fstack-protector
-
-RAYLIB_LDFLAGS				+= -flto=full
+RAYLIB_CFLAGS				+= -Wno-old-style-cast

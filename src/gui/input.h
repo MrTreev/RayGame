@@ -1,6 +1,6 @@
 #pragma once
 
-namespace input {
+namespace gui::input {
 
 namespace keyboard {
 
@@ -195,4 +195,4 @@ using Axis = enum {
 
 } // namespace gamepad
 
-} // namespace input
+} // namespace gui::input

@@ -1,10 +1,9 @@
 #pragma once
+#include <string>
 
 namespace config {
 
-extern const char game_name[];
-extern const int  frame_rate;
-extern const int  window_height;
-extern const int  window_width;
+extern const std::string game_name;
+extern const int         frame_rate;
 
 } // namespace config

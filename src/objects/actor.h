@@ -3,14 +3,16 @@
 
 template<typename Action_e>
 class Actor {
-protected:
+private:
     raylib::Vector2 _position{0, 0};
     Action_e        _action{Action_e::idle};
-    int             _ticks{0};
 
 public:
-    Actor(raylib::Vector2 position)
+    explicit Actor(raylib::Vector2 position)
         : _position(position){};
+    explicit Actor(raylib::Vector2 position, Action_e action)
+        : _position(position)
+        , _action(action){};
 
     Actor()                        = default;
     ~Actor()                       = default;
@@ -19,12 +21,7 @@ public:
     Actor operator=(const Actor&)  = delete;
     Actor operator=(const Actor&&) = delete;
 
-    void draw();
-
     void action(Action_e action) {
-        if (_action != action) {
-            _ticks = 0;
-        }
         _action = action;
     };
 
@@ -34,6 +31,10 @@ public:
 
     void move(raylib::Vector2 delta) {
         _position += delta;
+    };
+
+    void move(float delta_x, float delta_y) {
+        _position += {delta_x, delta_y};
     };
 
     void position(raylib::Vector2 position) {
