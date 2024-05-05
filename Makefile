@@ -1,6 +1,7 @@
 .DELETE_ON_ERROR:
 include .make/config.mk
 include .make/raylib.mk
+include .make/llvm.mk
 
 .PHONY: all
 all: ${EXE}

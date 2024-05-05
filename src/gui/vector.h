@@ -1,54 +1,27 @@
 #pragma once
 #include "gui/raylib_include.h"
 #include <cmath>
+#include <concepts>
 #include <string>
 
 namespace gui {
 
-class Vec2d {
+namespace {
+
+template<typename Vec>
+concept bool Dim3 = requires (Vec vec) { {vec._z} -> float };
+
+template<typename vector_t>
+class BaseVector {
 private:
-    ::Vector2 _vector;
+    vector_t _vector;
 
 public:
-    Vec2d()
-        : _vector({0, 0}){};
+    template<class... Args>
+    BaseVector(Args... args){};
 
-    Vec2d(float x_val, float y_val)
-        : _vector({x_val, y_val}){};
-
-    ~Vec2d()                  = default;
-    Vec2d& operator=(Vec2d&&) = default;
-    Vec2d(Vec2d&&)            = default;
-    Vec2d(const Vec2d& other)
+    explicit BaseVector(const vector_t& other)
         : _vector(other.vec()){};
-
-    Vec2d& operator=(const Vec2d& other) {
-        set(other.vec());
-        return *this;
-    }
-
-    ::Vector2 Vector2() {
-        return _vector;
-    }
-
-    void x(float x_val) {
-        _vector.x = x_val;
-    };
-
-    void y(float y_val) {
-        _vector.y = y_val;
-    };
-
-    [[nodiscard]]
-    ::Vector2 vec() const {
-        return _vector;
-    };
-
-    [[nodiscard]]
-    std::string ToString() const {
-        using std::to_string;
-        return "Vector2(" + to_string(x()) + ", " + to_string(y()) + ")";
-    }
 
     [[nodiscard]]
     float x() const {
@@ -59,6 +32,41 @@ public:
     float y() const {
         return _vector.y;
     };
+
+    [[nodiscard]]
+    vector_t vec() const {
+        return _vector;
+    };
+
+    void x(const float& x_val) {
+        _vector.x = x_val;
+    };
+
+    void y(const float& y_val) {
+        _vector.y = y_val;
+    };
+};
+} // namespace
+
+class Vec2d: public BaseVector<::Vector2> {
+public:
+    Vec2d(float x_val, float y_val)
+        : _vector({x_val, y_val}){};
+
+    Vec2d& operator=(const Vec2d& other) {
+        set(other.vec());
+        return *this;
+    }
+
+    ::Vector2 Vector2() {
+        return _vector;
+    }
+
+    [[nodiscard]]
+    std::string ToString() const {
+        using std::to_string;
+        return "Vector2(" + to_string(x()) + ", " + to_string(y()) + ")";
+    }
 
     [[nodiscard]]
     float length() const {
@@ -170,4 +178,7 @@ private:
         _vector.y = vec.y;
     }
 };
+
+class Vec4d {};
+
 } // namespace gui

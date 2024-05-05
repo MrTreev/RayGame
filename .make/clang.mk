@@ -4,6 +4,7 @@ CXXFLAGS	+=	-fdelete-null-pointer-checks
 CXXFLAGS	+=	-fsized-deallocation
 CXXFLAGS	+=	-fstrict-enums
 CXXFLAGS	+=	-Wthread-safety
+CXXFLAGS	+=	--stdlib=libc++
 
 CXXFLAGS	+=	-fsanitize=undefined
 CXXFLAGS	+=	-fstack-protector
