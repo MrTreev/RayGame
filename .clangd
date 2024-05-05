@@ -1,2 +1,4 @@
 Style:
   FullyQualifiedNamespaces: Yes
+CompileFlags:
+  Add: [-Isrc]

@@ -3,12 +3,8 @@
 #include <iostream>
 #include <string>
 
-#if defined(__cpp_lib_source_location)
+#if defined(RAYGAME_LOG_LOCATION)
 #    include <source_location>
-using std::source_location;
-#else
-#    include <experimental/source_location>
-using std::experimental::source_location;
 #endif
 
 namespace utils {
@@ -78,7 +74,7 @@ void logger(
               << "-" << loc.file_name() << ":" << loc.line()
 #endif
               << "-" << text << "\n";
-};
+}
 } // namespace
 
 namespace log {
@@ -87,49 +83,49 @@ inline void trace(const std::string& text) {
     if constexpr (logging_level >= Level::TRACE) {
         utils::logger(Level::TRACE, text);
     }
-};
+}
 
 inline void debug(const std::string& text) {
     if constexpr (logging_level >= Level::DEBUG) {
         utils::logger(Level::DEBUG, text);
     }
-};
+}
 
 inline void info(const std::string& text) {
     if constexpr (logging_level >= Level::INFO) {
         utils::logger(Level::INFO, text);
     }
-};
+}
 
 inline void note(const std::string& text) {
     if constexpr (logging_level >= Level::NOTE) {
         utils::logger(Level::NOTE, text);
     }
-};
+}
 
 inline void progress(const std::string& text) {
     if constexpr (logging_level >= Level::PROGRESS) {
         utils::logger(Level::PROGRESS, text);
     }
-};
+}
 
 inline void warning(const std::string& text) {
     if constexpr (logging_level >= Level::WARNING) {
         utils::logger(Level::WARNING, text);
     }
-};
+}
 
 inline void error(const std::string& text) {
     if constexpr (logging_level >= Level::ERROR) {
         utils::logger(Level::ERROR, text);
     }
-};
+}
 
 inline void fatal(const std::string& text) {
     if constexpr (logging_level >= Level::FATAL) {
         utils::logger(Level::FATAL, text);
     }
-};
+}
 
 } // namespace log
 } // namespace utils

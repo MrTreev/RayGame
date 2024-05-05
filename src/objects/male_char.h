@@ -23,7 +23,7 @@ inline std::string to_string(MalePCActs act) {
     case MalePCActs::attack: return "Attack";
     case MalePCActs::death:  return "Death ";
     }
-};
+}
 
 class MalePC: public Actor<MalePCActs> {
 private:

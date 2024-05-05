@@ -1,7 +1,6 @@
 .EXPORT_ALL_VARIABLES:
 
-RAY_PATH		?=	ext/raylib/src
-RAYLIBCPP_PATH	?=	ext/raylib-cpp/include
+RAY_PATH		?=	${EXT_PATH}/raylib/src
 PLATFORM		?=	PLATFORM_DESKTOP
 
 RAYLIB_LIBTYPE 				?=	SHARED
@@ -12,9 +11,3 @@ RAYLIB_CONFIG_FLAGS  		?=	NONE
 RAYLIB_MODULE_AUDIO  		?=	TRUE
 RAYLIB_MODULE_MODELS 		?=	TRUE
 USE_WAYLAND_DISPLAY   		?=	FALSE
-
-RAYLIBCPP_H_INSTALL_PATH	?=	${INC_PATH}/raycpp
-
-RAYLIB_HPP_FILES 			:=	$(patsubst ${RAYLIBCPP_PATH}/%.hpp,${RAYLIBCPP_H_INSTALL_PATH}/%.hpp,$(wildcard ${RAYLIBCPP_PATH}/*.hpp))
-
-RAYLIB_CFLAGS				+= -Wno-old-style-cast

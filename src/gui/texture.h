@@ -1,46 +1,40 @@
 #pragma once
 #include "gui/colour.h"
+#include "gui/rectangle.h"
 #include "gui/vector.h"
-#include "utils/logger.h"
-#include <stdexcept>
 
 namespace gui {
 
-class Texture {
+class Tex2d {
 private:
     const ::Texture _texture;
 
-    void Draw(int posX = 0, int posY = 0, Colour tint = colour::black) const {
-        ::DrawTexture(_texture, posX, posY, tint);
+public:
+    explicit Tex2d(const std::string& fileName);
+    ~Tex2d();
+    Tex2d(const Tex2d&&)            = delete;
+    Tex2d& operator=(const Tex2d&)  = delete;
+    Tex2d(const Tex2d&)             = delete;
+    Tex2d& operator=(const Tex2d&&) = delete;
+
+    [[nodiscard]]
+    int width() const {
+        return _texture.width;
     }
+
+    [[nodiscard]]
+    int height() const {
+        return _texture.height;
+    }
+
+    void Draw(int posX = 0, int posY = 0, gui::Colour tint = gui::colour::black)
+        const;
 
     void Draw(
-        Rect         sourceRec,
+        gui::Rect    sourceRec,
         const Vec2d& position = {0, 0},
-        Colour       tint     = colour::black
-    ) const {
-        ::DrawTextureRec(_texture, sourceRec, position, tint);
-    }
-
-public:
-    explicit Texture(const std::string& fileName)
-        : _texture(::LoadTexture(fileName.c_str())) {
-        if (_texture.id == 0) {
-            utils::log::fatal("Failed to create texture" + fileName);
-            throw std::runtime_error("Failed to create texture");
-        }
-    };
-
-    ~Texture() {
-        if (_texture.id != 0) {
-            ::UnloadTexture(_texture);
-        }
-    };
-
-    Texture(const Texture&&)            = delete;
-    Texture& operator=(const Texture&)  = delete;
-    Texture(const Texture&)             = delete;
-    Texture& operator=(const Texture&&) = delete;
+        gui::Colour  tint     = colour::black
+    ) const;
 };
 
 } // namespace gui

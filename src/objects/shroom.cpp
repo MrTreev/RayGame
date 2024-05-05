@@ -41,7 +41,7 @@ void Shroom::draw() {
     case ShroomActs::pop:  _pop.draw(position(), frameno); break;
     case ShroomActs::walk: _walk.draw(position(), frameno); break;
     }
-};
+}
 
 void Shroom::toggle_state() {
     if (action() == ShroomActs::idle) {
@@ -54,4 +54,4 @@ void Shroom::toggle_state() {
         action(ShroomActs::pop);
         return;
     }
-};
+}

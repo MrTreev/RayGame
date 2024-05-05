@@ -1,10 +1,6 @@
-.EXPORT_ALL_VARIABLES:
-
 CXXFLAGS	+=	-fdelete-null-pointer-checks
 CXXFLAGS	+=	-fsized-deallocation
 CXXFLAGS	+=	-fstrict-enums
-CXXFLAGS	+=	-Wthread-safety
-CXXFLAGS	+=	--stdlib=libc++
 
 CXXFLAGS	+=	-fsanitize=undefined
 CXXFLAGS	+=	-fstack-protector
@@ -51,6 +47,7 @@ CXXFLAGS	+=	-Wshadow-all
 CXXFLAGS	+=	-Wsign-compare
 CXXFLAGS	+=	-Wsign-conversion
 CXXFLAGS	+=	-Wtautological-compare
+CXXFLAGS	+=	-Wthread-safety
 CXXFLAGS	+=	-Wundef
 CXXFLAGS	+=	-Wundef-prefix
 CXXFLAGS	+=	-Wunused

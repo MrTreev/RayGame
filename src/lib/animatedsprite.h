@@ -1,10 +1,18 @@
 #pragma once
-#include <raycpp/Rectangle.hpp>
-#include <raycpp/Texture.hpp>
+#include "gui/rectangle.h"
+#include "gui/texture.h"
+#include "gui/vector.h"
 
 namespace lib {
 
 class AnimatedSprite {
+private:
+    const gui::Tex2d _texture;
+    const int        _framecount;
+    const int        _framerate;
+    const int        _delta;
+    int              _ticks{0};
+
 public:
     AnimatedSprite(
         const std::string& sheetfile,
@@ -14,7 +22,7 @@ public:
         : _texture(sheetfile)
         , _framecount(framecount)
         , _framerate(framerate)
-        , _delta(_texture.width / _framecount){};
+        , _delta(_texture.width() / _framecount){};
 
     AnimatedSprite()                                 = delete;
     ~AnimatedSprite()                                = default;
@@ -23,22 +31,13 @@ public:
     AnimatedSprite operator=(const AnimatedSprite&)  = delete;
     AnimatedSprite operator=(const AnimatedSprite&&) = delete;
 
-    void draw(raylib::Vector2 position);
-    void draw(raylib::Vector2 position, int frameno);
+    void draw(gui::Vec2d position);
+    void draw(gui::Vec2d position, int frameno);
 
     [[nodiscard]]
     inline int fps() const {
         return _framerate;
     };
-
-private:
-    using Texture = raylib::Texture;
-
-    const Texture _texture;
-    const int     _framecount;
-    const int     _framerate;
-    const int     _delta;
-    int           _ticks{0};
 };
 
 } // namespace lib

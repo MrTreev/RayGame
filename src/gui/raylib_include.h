@@ -1,5 +1,4 @@
 #pragma once
-#include "config.h"
 
 extern "C" {
 #if defined(__clang__)

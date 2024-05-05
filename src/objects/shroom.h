@@ -1,7 +1,6 @@
 #pragma once
 #include "lib/animatedsprite.h"
 #include "objects/actor.h"
-#include <string>
 
 enum class ShroomActs {
     hide,
