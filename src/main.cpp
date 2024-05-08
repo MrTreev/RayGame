@@ -1,12 +1,13 @@
 #include "config.h"
-#include "raylib/window.h"
 #include "objects/shroom.h"
+#include "raylib/window.h"
 
 int main() {
-    gui::Window window(config::game_name);
-    Shroom      player;
-    while (gui::Window::next()) {
-        gui::Window::start_frame();
+    raylib::Window window(config::game_name);
+    Shroom         player;
+    while (!raylib::Window::ShouldClose()) {
+        raylib::Window::BeginDrawing();
+        raylib::Window::ClearBackground();
         // while (gui::Keyboard::GetCharPressed()) {
         //     utils::log::debug("test");
         //     if (gui::Keyboard::IsKeyDown(Key::SPACE)) {
@@ -26,7 +27,7 @@ int main() {
         //     }
         // }
         player.draw();
-        gui::Window::end_frame();
+        raylib::Window::EndDrawing();
     }
     return 0;
 }
