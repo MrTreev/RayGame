@@ -1,5 +1,5 @@
 #include "config.h"
-#include "gui/window.h"
+#include "raylib/window.h"
 #include "objects/shroom.h"
 
 int main() {

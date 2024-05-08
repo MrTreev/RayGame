@@ -1,13 +1,11 @@
 #pragma once
-#include "gui/rectangle.h"
-#include "gui/texture.h"
-#include "gui/vector.h"
+#include <raylib>
 
 namespace lib {
 
 class AnimatedSprite {
 private:
-    const gui::Tex2d _texture;
+    const raylib::Texture _texture;
     const int        _framecount;
     const int        _framerate;
     const int        _delta;
@@ -31,8 +29,8 @@ public:
     AnimatedSprite operator=(const AnimatedSprite&)  = delete;
     AnimatedSprite operator=(const AnimatedSprite&&) = delete;
 
-    void draw(gui::Vec2d position);
-    void draw(gui::Vec2d position, int frameno);
+    void draw(raylib::Texture position);
+    void draw(raylib::Texture position, int frameno);
 
     [[nodiscard]]
     inline int fps() const {

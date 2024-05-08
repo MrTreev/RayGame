@@ -22,10 +22,14 @@ ${LIB_PATH}/libraylib.so:
 	make -C ${RAY_PATH} install
 	cd ${RAY_PATH} && git clean -xf && cd -
 
+.PHONY: libcpp-prebuild
+libcpp-prebuild: ${LLVM_BUILD_PATH}/Makefile
+${LLVM_BUILD_PATH}/Makefile:
+	${RAYGAME_PREFIX}/.make/llvm-cmake.sh
+
 .PHONY: libcpp
 libcpp: ${LIB_PATH}/libc++.so
-${LIB_PATH}/libc++.so:
-	${RAYGAME_PREFIX}/.make/llvm-cmake.sh
+${LIB_PATH}/libc++.so: libcpp-prebuild
 	make -C ${LLVM_BUILD_PATH} cxx cxxabi unwind
 ifeq (${LLVM_DO_TESTS}, TRUE)
 	make -C ${LLVM_BUILD_PATH} test-cxx test-cxxabi test-unwind
