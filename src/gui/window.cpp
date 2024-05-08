@@ -1,4 +1,6 @@
 #include "gui/window.h"
+#include "gui/colour.h"
+#include "utils/logger.h"
 
 namespace gui {
 

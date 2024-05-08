@@ -41,7 +41,7 @@ CXXFLAGS	+=	-DRAYGAME_LOG_${LOG_LEVEL}
 CXXFLAGS	+=	-Werror -Wall -Wextra -Wpedantic -Wabi -Wdeprecated
 
 LDFLAGS		=	-L${LIB_PATH} -nostdlib++
-LDFLAGS		+=	-lc++ -lm -lc++abi -lunwind -lraylib
+LINKFLAGS	+=	-lc++ -lm -lc++abi -lunwind -lraylib
 CXXFLAGS	+=	-march=${ARCH}
 CXXFLAGS	+=	-mtune=${ARCH}
 

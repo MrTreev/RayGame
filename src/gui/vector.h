@@ -12,10 +12,6 @@ public:
     Vec2d(float x_val, float y_val)
         : _vector({x_val, y_val}) {}
 
-    ::Vector2 Vector2() {
-        return _vector;
-    }
-
     void x(const float& x_val) {
         _vector.x = x_val;
     }

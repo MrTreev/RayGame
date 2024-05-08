@@ -2,3 +2,4 @@ Style:
   FullyQualifiedNamespaces: Yes
 CompileFlags:
   Add: [-Isrc]
+  Add: [-Iout/include]
