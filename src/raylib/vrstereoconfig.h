@@ -1,51 +1,33 @@
 #pragma once
 
-#include "./raylib-cpp-utils.hpp"
-#include "./raylib.hpp"
+#include "raylib/raylib-cpp-utils.h"
+#include "raylib/raylib.h"
 
 namespace raylib {
-/**
- * VR stereo config functions for VR simulator
- */
 class VrStereoConfig: public ::VrStereoConfig {
 public:
     VrStereoConfig(const ::VrDeviceInfo& info) {
         Load(info);
     }
 
-    /**
-     * Load VR stereo config for VR simulator device parameters
-     */
     void Load(const ::VrDeviceInfo& info) {
         set(LoadVrStereoConfig(info));
     }
 
-    /**
-     * Unload VR stereo config
-     */
     ~VrStereoConfig() {
         Unload();
     }
 
-    /**
-     * Begin stereo rendering
-     */
     VrStereoConfig& BeginMode() {
         ::BeginVrStereoMode(*this);
         return *this;
     }
 
-    /**
-     * End stereo rendering
-     */
     VrStereoConfig& EndMode() {
         ::EndVrStereoMode();
         return *this;
     }
 
-    /**
-     * Unload VR stereo config
-     */
     void Unload() {
         ::UnloadVrStereoConfig(*this);
     }
@@ -71,7 +53,3 @@ protected:
     }
 };
 } // namespace raylib
-
-using RVrStereoConfig = raylib::VrStereoConfig;
-
-#endif // RAYLIB_CPP_INCLUDE_VRSTEREOCONFIG_HPP_

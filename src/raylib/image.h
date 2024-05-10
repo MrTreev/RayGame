@@ -1,112 +1,49 @@
 #pragma once
 
 #include "raylib/color.h"
-#include "raylib/raylib-cpp-utils.h"
 #include "raylib/raylib.h"
-#include "raylib/raylibexception.h"
 #include <string>
 
 namespace raylib {
-/**
- * Image type, bpp always RGBA (32bit)
- *
- * Data stored in CPU memory (RAM)
- */
 class Image: public ::Image {
 public:
-    Image(
+    explicit Image(
         void* _data    = nullptr,
         int   _width   = 0,
         int   _height  = 0,
         int   _mipmaps = 1,
         int   _format  = PIXELFORMAT_UNCOMPRESSED_R8G8B8A8
-    )
-        : ::Image{_data, _width, _height, _mipmaps, _format} {
-        // Nothing.
-    }
+    );
 
-    Image(const ::Image& image) {
-        set(image);
-    }
+    Image(const ::Image& image);
 
-    /**
-     * Load an image from the given file.
-     *
-     * @throws raylib::RaylibException Thrown if the image failed to load
-     * from the file.
-     *
-     * @see Load()
-     */
-    Image(const std::string& fileName) {
-        Load(fileName);
-    }
+    explicit Image(const std::string& fileName);
 
-    /**
-     * Load a raw image from the given file, with the provided width,
-     * height, and formats.
-     *
-     * @throws raylib::RaylibException Thrown if the image failed to load
-     * from the file.
-     *
-     * @see LoadRaw()
-     */
     Image(
         const std::string& fileName,
         int                _width,
         int                _height,
         int                _format,
         int                _headerSize = 0
-    ) {
-        Load(fileName, _width, _height, _format, _headerSize);
-    }
+    );
 
-    /**
-     * Load an animation image from the given file.
-     *
-     * @throws raylib::RaylibException Thrown if the image failed to load
-     * from the file.
-     *
-     * @see LoadAnim()
-     */
-    Image(const std::string& fileName, int* frames) {
-        Load(fileName, frames);
-    }
+    Image(const std::string& fileName, int* frames);
 
-    /**
-     * Load an image from the given file.
-     *
-     * @throws raylib::RaylibException Thrown if the image failed to load
-     * from the file.
-     */
     Image(
         const std::string&   fileType,
         const unsigned char* fileData,
         int                  dataSize
-    ) {
-        Load(fileType, fileData, dataSize);
-    }
+    );
 
-    /**
-     * Load an image from the given file.
-     *
-     * @throws raylib::RaylibException Thrown if the image failed to load
-     * from the file.
-     */
-    Image(const ::Texture2D& texture) {
-        Load(texture);
-    }
+    explicit Image(const ::Texture2D& texture);
 
-    Image(int _width, int _height, ::Color color = {255, 255, 255, 255}) {
-        set(::GenImageColor(_width, _height, color));
-    }
+    Image(int _width, int _height, ::Color color = {255, 255, 255, 255});
 
     Image(
         const std::string& text,
         int                fontSize,
         ::Color            color = {255, 255, 255, 255}
-    ) {
-        set(::ImageText(text.c_str(), fontSize, color));
-    }
+    );
 
     Image(
         const ::Font&      font,
@@ -114,31 +51,17 @@ public:
         float              fontSize,
         float              spacing,
         ::Color            tint = {255, 255, 255, 255}
-    ) {
-        set(::ImageTextEx(font, text.c_str(), fontSize, spacing, tint));
-    }
+    );
 
-    Image(const Image& other) {
-        set(other.Copy());
-    }
+    Image(const Image& other);
 
-    Image(Image&& other) {
-        set(other);
-
-        other.data    = nullptr;
-        other.width   = 0;
-        other.height  = 0;
-        other.mipmaps = 0;
-        other.format  = 0;
-    }
+    Image(Image&& other) noexcept;
 
     static ::Image Text(
         const std::string& text,
         int                fontSize,
         ::Color            color = {255, 255, 255, 255}
-    ) {
-        return ::ImageText(text.c_str(), fontSize, color);
-    }
+    );
 
     static ::Image Text(
         const ::Font&      font,
@@ -146,60 +69,29 @@ public:
         float              fontSize,
         float              spacing,
         ::Color            tint = {255, 255, 255, 255}
-    ) {
-        return ::ImageTextEx(font, text.c_str(), fontSize, spacing, tint);
-    }
+    );
 
-    /**
-     * Get pixel data from screen buffer and return an Image (screenshot)
-     */
-    static ::Image LoadFromScreen() {
-        return ::LoadImageFromScreen();
-    }
+    static ::Image LoadFromScreen();
 
-    /**
-     * Generate image: plain color
-     */
     static ::Image
-    Color(int _width, int _height, ::Color color = {255, 255, 255, 255}) {
-        return ::GenImageColor(_width, _height, color);
-    }
+    Color(int _width, int _height, ::Color color = {255, 255, 255, 255});
 
-    /**
-     * Generate image: linear gradient
-     */
     static ::Image GradientLinear(
         int     _width,
         int     _height,
         int     _direction,
         ::Color start,
         ::Color end
-    ) {
-        return ::GenImageGradientLinear(
-            _width,
-            _height,
-            _direction,
-            start,
-            end
-        );
-    }
+    );
 
-    /**
-     * Generate image: radial gradient
-     */
     static ::Image GradientRadial(
         int     _width,
         int     _height,
         float   density,
         ::Color inner,
         ::Color outer
-    ) {
-        return ::GenImageGradientRadial(_width, _height, density, inner, outer);
-    }
+    );
 
-    /**
-     * Generate image: checked
-     */
     static ::Image Checked(
         int     _width,
         int     _height,
@@ -207,532 +99,137 @@ public:
         int     checksY,
         ::Color col1 = {255, 255, 255, 255},
         ::Color col2 = {0, 0, 0, 255}
-    ) {
-        return ::GenImageChecked(_width, _height, checksX, checksY, col1, col2);
-    }
+    );
 
-    /**
-     * Generate image: white noise
-     */
-    static ::Image WhiteNoise(int _width, int _height, float factor) {
-        return ::GenImageWhiteNoise(_width, _height, factor);
-    }
+    static ::Image WhiteNoise(int _width, int _height, float factor);
 
-    /**
-     * Generate image: cellular algorithm. Bigger tileSize means bigger
-     * cells
-     */
-    static ::Image Cellular(int _width, int _height, int tileSize) {
-        return ::GenImageCellular(_width, _height, tileSize);
-    }
+    static ::Image Cellular(int _width, int _height, int tileSize);
 
-    ~Image() {
-        Unload();
-    }
+    ~Image();
 
-    Image& operator=(const ::Image& image) {
-        set(image);
-        return *this;
-    }
+    Image& operator=(const ::Image& image);
 
-    Image& operator=(const Image& other) {
-        if (this == &other) {
-            return *this;
-        }
+    Image& operator=(const Image& other);
 
-        Unload();
-        set(other.Copy());
+    Image& operator=(Image&& other) noexcept;
 
-        return *this;
-    }
+    void Load(const std::string& fileName);
 
-    Image& operator=(Image&& other) noexcept {
-        if (this == &other) {
-            return *this;
-        }
-
-        Unload();
-        set(other);
-
-        other.data    = nullptr;
-        other.width   = 0;
-        other.height  = 0;
-        other.mipmaps = 0;
-        other.format  = 0;
-
-        return *this;
-    }
-
-    /**
-     * Load image from file into CPU memory (RAM)
-     *
-     * @throws raylib::RaylibException Thrown if the image failed to load
-     * from the file.
-     *
-     * @see ::LoadImage()
-     */
-    void Load(const std::string& fileName) {
-        set(::LoadImage(fileName.c_str()));
-        if (!IsReady()) {
-            throw RaylibException(
-                "Failed to load Image from file: " + fileName
-            );
-        }
-    }
-
-    /**
-     * Load image from RAW file data.
-     *
-     * @throws raylib::RaylibException Thrown if the image failed to load
-     * from the file.
-     *
-     * @see ::LoadImageRaw()
-     */
     void Load(
         const std::string& fileName,
         int                _width,
         int                _height,
         int                _format,
         int                headerSize
-    ) {
-        set(::LoadImageRaw(
-            fileName.c_str(),
-            _width,
-            _height,
-            _format,
-            headerSize
-        ));
-        if (!IsReady()) {
-            throw RaylibException(
-                "Failed to load Image from file: " + fileName
-            );
-        }
-    }
+    );
 
-    /**
-     * Load image sequence from file (frames appended to image.data).
-     *
-     * @throws raylib::RaylibException Thrown if the image animation to load
-     * from the file.
-     *
-     * @see ::LoadImageAnim()
-     */
-    void Load(const std::string& fileName, int* frames) {
-        set(::LoadImageAnim(fileName.c_str(), frames));
-        if (!IsReady()) {
-            throw RaylibException(
-                "Failed to load Image from file: " + fileName
-            );
-        }
-    }
+    void Load(const std::string& fileName, int* frames);
 
-    /**
-     * Load image from memory buffer, fileType refers to extension: i.e.
-     * "png".
-     *
-     * @throws raylib::RaylibException Thrown if the image animation to load
-     * from the file.
-     *
-     * @see ::LoadImageFromMemory()
-     */
     void Load(
         const std::string&   fileType,
         const unsigned char* fileData,
         int                  dataSize
-    ) {
-        set(::LoadImageFromMemory(fileType.c_str(), fileData, dataSize));
-        if (!IsReady()) {
-            throw RaylibException(
-                "Failed to load Image data with file type: " + fileType
-            );
-        }
-    }
+    );
 
-    /**
-     * Load an image from the given file.
-     *
-     * @throws raylib::RaylibException Thrown if the image animation to load
-     * from the file.
-     *
-     * @see ::LoadImageFromTexture()
-     */
-    void Load(const ::Texture2D& texture) {
-        set(::LoadImageFromTexture(texture));
-        if (!IsReady()) {
-            throw RaylibException("Failed to load Image from texture.");
-        }
-    }
+    void Load(const ::Texture2D& texture);
 
-    /**
-     * Unload image from CPU memory (RAM)
-     */
-    void Unload() {
-        if (data != nullptr) {
-            ::UnloadImage(*this);
-            data = nullptr;
-        }
-    }
+    void Unload();
 
-    /**
-     * Export image data to file, returns true on success
-     *
-     * @throws raylib::RaylibException Thrown if the image failed to load
-     * from the file.
-     */
-    void Export(const std::string& fileName) const {
-        if (!::ExportImage(*this, fileName.c_str())) {
-            throw RaylibException(TextFormat(
-                "Failed to export Image to file: %s",
-                fileName.c_str()
-            ));
-        }
-    }
+    void Export(const std::string& fileName) const;
 
-    /**
-     * Export image to memory buffer
-     */
-    unsigned char* ExportToMemory(const char* fileType, int* fileSize) {
-        return ::ExportImageToMemory(*this, fileType, fileSize);
-    }
+    unsigned char* ExportToMemory(const char* fileType, int* fileSize);
 
-    /**
-     * Export image as code file defining an array of bytes, returns true on
-     * success
-     *
-     * @throws raylib::RaylibException Thrown if the image failed to load
-     * from the file.
-     */
-    void ExportAsCode(const std::string& fileName) const {
-        if (!::ExportImageAsCode(*this, fileName.c_str())) {
-            throw RaylibException(TextFormat(
-                "Failed to export Image code to file: %s",
-                fileName.c_str()
-            ));
-        }
-    }
+    void ExportAsCode(const std::string& fileName) const;
 
-    GETTER(void*, Data, data)
-    GETTER(int, Width, width)
-    GETTER(int, Height, height)
-    GETTER(int, Mipmaps, mipmaps)
-    GETTER(int, Format, format)
-
-    /**
-     * Set the width of the image canvas.
-     *
-     * @see ResizeCanvas
-     */
     void SetWidth(
         int     _width,
         int     offsetX = 0,
         int     offsetY = 0,
         ::Color fill    = {255, 255, 255, 255}
-    ) {
-        ResizeCanvas(_width, height, offsetX, offsetY, fill);
-    }
+    );
 
-    /**
-     * Set the height of the image canvas.
-     *
-     * @see ResizeCanvas
-     */
     void SetHeight(
         int     _height,
         int     offsetX = 0,
         int     offsetY = 0,
         ::Color fill    = {255, 255, 255, 255}
-    ) {
-        ResizeCanvas(width, _height, offsetX, offsetY, fill);
-    }
+    );
 
-    /**
-     * Retrieve the width and height of the image.
-     */
-    ::Vector2 GetSize() const {
-        return {static_cast<float>(width), static_cast<float>(height)};
-    }
+    ::Vector2 GetSize() const;
 
-    /**
-     * Create an image duplicate (useful for transformations)
-     */
-    ::Image Copy() const {
-        return ::ImageCopy(*this);
-    }
+    ::Image Copy() const;
 
-    /**
-     * Create an image from another image piece
-     */
-    ::Image FromImage(::Rectangle rec) const {
-        return ::ImageFromImage(*this, rec);
-    }
+    ::Image FromImage(::Rectangle rec) const;
 
-    /**
-     * Convert image data to desired format
-     */
-    Image& Format(int newFormat) {
-        ::ImageFormat(this, newFormat);
-        return *this;
-    }
+    Image& Format(int newFormat);
 
-    /**
-     * Convert image to POT (power-of-two)
-     */
-    Image& ToPOT(::Color fillColor) {
-        ::ImageToPOT(this, fillColor);
-        return *this;
-    }
+    Image& ToPOT(::Color fillColor);
 
-    /**
-     * Crop an image to area defined by a rectangle
-     */
-    Image& Crop(::Rectangle crop) {
-        ::ImageCrop(this, crop);
-        return *this;
-    }
+    Image& Crop(::Rectangle crop);
 
-    /**
-     * Crop image depending on alpha value
-     */
-    Image& AlphaCrop(float threshold) {
-        ::ImageAlphaCrop(this, threshold);
-        return *this;
-    }
+    Image& AlphaCrop(float threshold);
 
-    /**
-     * Clear alpha channel to desired color
-     */
-    Image& AlphaClear(::Color color, float threshold) {
-        ::ImageAlphaClear(this, color, threshold);
-        return *this;
-    }
+    Image& AlphaClear(::Color color, float threshold);
 
-    /**
-     * Apply alpha mask to image
-     */
-    Image& AlphaMask(const ::Image& alphaMask) {
-        ::ImageAlphaMask(this, alphaMask);
-        return *this;
-    }
+    Image& AlphaMask(const ::Image& alphaMask);
 
-    /**
-     * Premultiply alpha channel
-     */
-    Image& AlphaPremultiply() {
-        ::ImageAlphaPremultiply(this);
-        return *this;
-    }
+    Image& AlphaPremultiply();
 
-    /**
-     * Crop an image to a new given width and height.
-     */
-    Image& Crop(int newWidth, int newHeight) {
-        return Crop(0, 0, newWidth, newHeight);
-    }
+    Image& Crop(int newWidth, int newHeight);
 
-    /**
-     * Crop an image to a new given width and height based on a vector.
-     */
-    Image& Crop(::Vector2 size) {
-        return Crop(0, 0, static_cast<int>(size.x), static_cast<int>(size.y));
-    }
+    Image& Crop(::Vector2 size);
 
-    /**
-     * Crop an image to area defined by a rectangle
-     */
-    Image& Crop(int offsetX, int offsetY, int newWidth, int newHeight) {
-        ::Rectangle rect{
-            static_cast<float>(offsetX),
-            static_cast<float>(offsetY),
-            static_cast<float>(newWidth),
-            static_cast<float>(newHeight)
-        };
-        ::ImageCrop(this, rect);
-        return *this;
-    }
+    Image& Crop(int offsetX, int offsetY, int newWidth, int newHeight);
 
-    /**
-     * Resize and image to new size
-     */
-    Image& Resize(int newWidth, int newHeight) {
-        ::ImageResize(this, newWidth, newHeight);
-        return *this;
-    }
+    Image& Resize(int newWidth, int newHeight);
 
-    /**
-     * Resize and image to new size using Nearest-Neighbor scaling algorithm
-     */
-    Image& ResizeNN(int newWidth, int newHeight) {
-        ::ImageResizeNN(this, newWidth, newHeight);
-        return *this;
-    }
+    Image& ResizeNN(int newWidth, int newHeight);
 
-    /**
-     * Resize canvas and fill with color
-     */
     Image& ResizeCanvas(
         int     newWidth,
         int     newHeight,
         int     offsetX = 0,
         int     offsetY = 0,
         ::Color color   = {255, 255, 255, 255}
-    ) {
-        ::ImageResizeCanvas(this, newWidth, newHeight, offsetX, offsetY, color);
-        return *this;
-    }
+    );
 
-    /**
-     * Generate all mipmap levels for a provided image
-     */
-    Image& Mipmaps() {
-        ::ImageMipmaps(this);
-        return *this;
-    }
+    Image& Mipmaps();
 
-    /**
-     * Dither image data to 16bpp or lower (Floyd-Steinberg dithering)
-     */
-    Image& Dither(int rBpp, int gBpp, int bBpp, int aBpp) {
-        ::ImageDither(this, rBpp, gBpp, bBpp, aBpp);
-        return *this;
-    }
+    Image& Dither(int rBpp, int gBpp, int bBpp, int aBpp);
 
-    /**
-     * Flip image vertically
-     */
-    Image& FlipVertical() {
-        ::ImageFlipVertical(this);
-        return *this;
-    }
+    Image& FlipVertical();
 
-    /**
-     * Flip image horizontally
-     */
-    Image& FlipHorizontal() {
-        ::ImageFlipHorizontal(this);
-        return *this;
-    }
+    Image& FlipHorizontal();
 
-    /**
-     * Rotate image by input angle in degrees (-359 to 359)
-     */
-    Image& Rotate(int degrees) {
-        ::ImageRotate(this, degrees);
-        return *this;
-    }
+    Image& Rotate(int degrees);
 
-    /**
-     * Rotate image clockwise 90deg
-     */
-    Image& RotateCW() {
-        ::ImageRotateCW(this);
-        return *this;
-    }
+    Image& RotateCW();
 
-    /**
-     * Rotate image counter-clockwise 90deg
-     */
-    Image& RotateCCW() {
-        ::ImageRotateCCW(this);
-        return *this;
-    }
+    Image& RotateCCW();
 
-    /**
-     * Modify image color: tint
-     */
-    Image& ColorTint(::Color color = {255, 255, 255, 255}) {
-        ::ImageColorTint(this, color);
-        return *this;
-    }
+    Image& ColorTint(::Color color = {255, 255, 255, 255});
 
-    /**
-     * Modify image color: invert
-     */
-    Image& ColorInvert() {
-        ::ImageColorInvert(this);
-        return *this;
-    }
+    Image& ColorInvert();
 
-    /**
-     * Modify image color: grayscale
-     */
-    Image& ColorGrayscale() {
-        ::ImageColorGrayscale(this);
-        return *this;
-    }
+    Image& ColorGrayscale();
 
-    /**
-     * Modify image color: contrast
-     *
-     * @param contrast Contrast values between -100 and 100
-     */
-    Image& ColorContrast(float contrast) {
-        ::ImageColorContrast(this, contrast);
-        return *this;
-    }
+    Image& ColorContrast(float contrast);
 
-    /**
-     * Modify image color: brightness
-     *
-     * @param brightness Brightness values between -255 and 255
-     */
-    Image& ColorBrightness(int brightness) {
-        ::ImageColorBrightness(this, brightness);
-        return *this;
-    }
+    Image& ColorBrightness(int brightness);
 
-    /**
-     * Modify image color: replace color
-     */
-    Image& ColorReplace(::Color color, ::Color replace) {
-        ::ImageColorReplace(this, color, replace);
-        return *this;
-    }
+    Image& ColorReplace(::Color color, ::Color replace);
 
-    /**
-     * Get image alpha border rectangle
-     *
-     * @param threshold Threshold is defined as a percentatge: 0.0f -> 1.0f
-     */
-    Rectangle GetAlphaBorder(float threshold) const {
-        return ::GetImageAlphaBorder(*this, threshold);
-    }
+    Rectangle GetAlphaBorder(float threshold) const;
 
-    /**
-     * Get image pixel color at (x, y) position
-     */
-    raylib::Color GetColor(int x = 0, int y = 0) const {
-        return ::GetImageColor(*this, x, y);
-    }
+    raylib::Color GetColor(int xpos = 0, int ypos = 0) const;
 
-    /**
-     * Get image pixel color at vector position
-     */
-    raylib::Color GetColor(::Vector2 position) const {
-        return ::GetImageColor(
-            *this,
-            static_cast<int>(position.x),
-            static_cast<int>(position.y)
-        );
-    }
+    raylib::Color GetColor(::Vector2 position) const;
 
-    /**
-     * Clear image background with given color
-     */
-    Image& ClearBackground(::Color color = {0, 0, 0, 255}) {
-        ::ImageClearBackground(this, color);
-        return *this;
-    }
+    Image& ClearBackground(::Color color = {0, 0, 0, 255});
 
-    /**
-     * Draw pixel within an image
-     */
-    void DrawPixel(int posX, int posY, ::Color color = {255, 255, 255, 255}) {
-        ::ImageDrawPixel(this, posX, posY, color);
-    }
+    void DrawPixel(int posX, int posY, ::Color color = {255, 255, 255, 255});
 
-    void DrawPixel(::Vector2 position, ::Color color = {255, 255, 255, 255}) {
-        ::ImageDrawPixelV(this, position, color);
-    }
+    void DrawPixel(::Vector2 position, ::Color color = {255, 255, 255, 255});
 
     void DrawLine(
         int     startPosX,
@@ -740,34 +237,26 @@ public:
         int     endPosX,
         int     endPosY,
         ::Color color = {255, 255, 255, 255}
-    ) {
-        ::ImageDrawLine(this, startPosX, startPosY, endPosX, endPosY, color);
-    }
+    );
 
     void DrawLine(
         ::Vector2 start,
         ::Vector2 end,
         ::Color   color = {255, 255, 255, 255}
-    ) {
-        ::ImageDrawLineV(this, start, end, color);
-    }
+    );
 
     void DrawCircle(
         int     centerX,
         int     centerY,
         int     radius,
         ::Color color = {255, 255, 255, 255}
-    ) {
-        ::ImageDrawCircle(this, centerX, centerY, radius, color);
-    }
+    );
 
     void DrawCircle(
         ::Vector2 center,
         int       radius,
         ::Color   color = {255, 255, 255, 255}
-    ) {
-        ::ImageDrawCircleV(this, center, radius, color);
-    }
+    );
 
     void DrawRectangle(
         int     posX,
@@ -775,90 +264,58 @@ public:
         int     _width,
         int     _height,
         ::Color color = {255, 255, 255, 255}
-    ) {
-        ::ImageDrawRectangle(this, posX, posY, _width, _height, color);
-    }
+    );
 
     void DrawRectangle(
         Vector2 position,
         Vector2 size,
         ::Color color = {255, 255, 255, 255}
-    ) {
-        ::ImageDrawRectangleV(this, position, size, color);
-    }
+    );
 
-    void DrawRectangle(::Rectangle rec, ::Color color = {255, 255, 255, 255}) {
-        ::ImageDrawRectangleRec(this, rec, color);
-    }
+    void DrawRectangle(::Rectangle rec, ::Color color = {255, 255, 255, 255});
 
     void DrawRectangleLines(
         ::Rectangle rec,
         int         thick = 1,
         ::Color     color = {255, 255, 255, 255}
-    ) {
-        ::ImageDrawRectangleLines(this, rec, thick, color);
-    }
+    );
 
     void Draw(
         const ::Image& src,
         ::Rectangle    srcRec,
         ::Rectangle    dstRec,
         ::Color        tint = {255, 255, 255, 255}
-    ) {
-        ::ImageDraw(this, src, srcRec, dstRec, tint);
-    }
+    );
 
     void DrawText(
         const char* text,
         ::Vector2   position,
         int         fontSize,
         ::Color     color = {255, 255, 255, 255}
-    ) {
-        ::ImageDrawText(
-            this,
-            text,
-            static_cast<int>(position.x),
-            static_cast<int>(position.y),
-            fontSize,
-            color
-        );
-    }
+    );
 
     void DrawText(
         const std::string& text,
         ::Vector2          position,
         int                fontSize,
         ::Color            color = {255, 255, 255, 255}
-    ) {
-        ::ImageDrawText(
-            this,
-            text.c_str(),
-            static_cast<int>(position.x),
-            static_cast<int>(position.y),
-            fontSize,
-            color
-        );
-    }
+    );
 
     void DrawText(
         const std::string& text,
-        int                x,
-        int                y,
+        int                xpos,
+        int                ypos,
         int                fontSize,
         ::Color            color = {255, 255, 255, 255}
-    ) {
-        ::ImageDrawText(this, text.c_str(), x, y, fontSize, color);
-    }
+    );
 
     void DrawText(
         const char* text,
-        int         x,
-        int         y,
+        int         xpos,
+        int         ypos,
         int         fontSize,
         ::Color     color = {255, 255, 255, 255}
-    ) {
-        ::ImageDrawText(this, text, x, y, fontSize, color);
-    }
+    );
 
     void DrawText(
         const ::Font&      font,
@@ -867,17 +324,7 @@ public:
         float              fontSize,
         float              spacing,
         ::Color            tint = {255, 255, 255, 255}
-    ) {
-        ::ImageDrawTextEx(
-            this,
-            font,
-            text.c_str(),
-            position,
-            fontSize,
-            spacing,
-            tint
-        );
-    }
+    );
 
     void DrawText(
         const ::Font& font,
@@ -886,90 +333,41 @@ public:
         float         fontSize,
         float         spacing,
         ::Color       tint = {255, 255, 255, 255}
-    ) {
-        ::ImageDrawTextEx(this, font, text, position, fontSize, spacing, tint);
-    }
+    );
 
-    /**
-     * Load color data from image as a Color array (RGBA - 32bit)
-     */
-    ::Color* LoadColors() const {
-        return ::LoadImageColors(*this);
-    }
+    ::Color* LoadColors() const;
 
-    /**
-     * Load colors palette from image as a Color array (RGBA - 32bit)
-     */
-    ::Color* LoadPalette(int maxPaletteSize, int* colorsCount) const {
-        return ::LoadImagePalette(*this, maxPaletteSize, colorsCount);
-    }
+    ::Color* LoadPalette(int maxPaletteSize, int* colorsCount) const;
 
-    /**
-     * Unload color data loaded with LoadImageColors()
-     */
-    void UnloadColors(::Color* colors) const {
-        ::UnloadImageColors(colors);
-    }
+    static void UnloadColors(::Color* colors);
 
-    /**
-     * Unload colors palette loaded with LoadImagePalette()
-     */
-    void UnloadPalette(::Color* colors) const {
-        ::UnloadImagePalette(colors);
-    }
+    static void UnloadPalette(::Color* colors);
 
-    /**
-     * Load texture from image data.
-     */
-    ::Texture2D LoadTexture() const {
-        return ::LoadTextureFromImage(*this);
-    }
+    ::Texture2D LoadTexture() const;
 
-    /**
-     * Loads a texture from the image data.
-     *
-     * @see LoadTexture()
-     */
-    operator ::Texture2D() {
-        return LoadTexture();
-    }
+    explicit operator ::Texture2D() const;
 
-    /**
-     * Get pixel data size in bytes for certain format
-     */
     static int GetPixelDataSize(
         int _width,
         int _height,
         int _format = PIXELFORMAT_UNCOMPRESSED_R32G32B32A32
-    ) {
-        return ::GetPixelDataSize(_width, _height, _format);
-    }
+    );
 
-    /**
-     * Returns the pixel data size based on the current image.
-     *
-     * @return The pixel data size of the image.
-     */
-    int GetPixelDataSize() const {
-        return ::GetPixelDataSize(width, height, format);
-    }
+    int GetPixelDataSize() const;
 
-    /**
-     * Retrieve whether or not the Image has been loaded.
-     *
-     * @return True or false depending on whether the Image has been loaded.
-     */
-    bool IsReady() const {
-        return ::IsImageReady(*this);
-    }
+    bool IsReady() const;
+
+    void* GetData() const;
+
+    int GetWidth() const;
+
+    int GetHeight() const;
+
+    int GetMipmaps() const;
+
+    int GetFormat() const;
 
 protected:
-    void set(const ::Image& image) {
-        data    = image.data;
-        width   = image.width;
-        height  = image.height;
-        mipmaps = image.mipmaps;
-        format  = image.format;
-    }
+    void set(const ::Image& image);
 };
 } // namespace raylib

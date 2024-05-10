@@ -1,4 +1,5 @@
 #include "objects/shroom.h"
+#include "utils/logger.h"
 #include "config.h"
 
 void Shroom::draw() {
@@ -34,6 +35,7 @@ void Shroom::draw() {
         break;
     }
     ++_tick;
+	utils::log::debug(std::to_string(frameno) + " - " + to_string(action()));
     switch (action()) {
     case ShroomActs::hide: _hide.draw(position(), frameno); break;
     case ShroomActs::idle: _idle.draw(position(), frameno); break;

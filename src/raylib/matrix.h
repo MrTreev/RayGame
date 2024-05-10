@@ -1,40 +1,13 @@
 #pragma once
 
-#include "raylib/raylib-cpp-utils.h"
 #include "raylib/raylib.h"
 #include "raylib/raymath.h"
 
-#ifndef RAYLIB_CPP_NO_MATH
-#    include <cmath>
-#endif
-
 namespace raylib {
-/**
- * Matrix type (OpenGL style 4x4 - right handed, column major)
- */
+/* (OpenGL style 4x4 - right handed, column major) */
 class Matrix: public ::Matrix {
 public:
-    Matrix(const ::Matrix& mat)
-        : ::Matrix{
-            mat.m0,
-            mat.m4,
-            mat.m8,
-            mat.m12,
-            mat.m1,
-            mat.m5,
-            mat.m9,
-            mat.m13,
-            mat.m2,
-            mat.m6,
-            mat.m10,
-            mat.m14,
-            mat.m3,
-            mat.m7,
-            mat.m11,
-            mat.m15
-        } {
-        // Nothing.
-    }
+    Matrix(const ::Matrix& mat);
 
     Matrix(
         float _m0  = 0,
@@ -53,143 +26,7 @@ public:
         float _m7  = 0,
         float _m11 = 0,
         float _m15 = 0
-    )
-        : ::Matrix{
-            _m0,
-            _m4,
-            _m8,
-            _m12,
-            _m1,
-            _m5,
-            _m9,
-            _m13,
-            _m2,
-            _m6,
-            _m10,
-            _m14,
-            _m3,
-            _m7,
-            _m11,
-            _m15
-        } {
-        // Nothing.
-    }
-
-    GETTERSETTER(float, M0, m0)
-    GETTERSETTER(float, M1, m1)
-    GETTERSETTER(float, M2, m2)
-    GETTERSETTER(float, M3, m3)
-    GETTERSETTER(float, M4, m4)
-    GETTERSETTER(float, M5, m5)
-    GETTERSETTER(float, M6, m6)
-    GETTERSETTER(float, M7, m7)
-    GETTERSETTER(float, M8, m8)
-    GETTERSETTER(float, M9, m9)
-    GETTERSETTER(float, M10, m10)
-    GETTERSETTER(float, M11, m11)
-    GETTERSETTER(float, M12, m12)
-    GETTERSETTER(float, M13, m13)
-    GETTERSETTER(float, M14, m14)
-    GETTERSETTER(float, M15, m15)
-
-    Matrix& operator=(const ::Matrix& matrix) {
-        set(matrix);
-        return *this;
-    }
-
-    Matrix& operator=(const Matrix& matrix) {
-        set(matrix);
-        return *this;
-    }
-
-    bool operator==(const ::Matrix& other) {
-        return m0 == other.m0 && m1 == other.m1 && m2 == other.m2
-               && m3 == other.m3 && m4 == other.m4 && m5 == other.m5
-               && m6 == other.m6 && m7 == other.m7 && m8 == other.m8
-               && m9 == other.m9 && m10 == other.m10 && m11 == other.m11
-               && m12 == other.m12 && m13 == other.m13 && m14 == other.m14
-               && m15 == other.m15;
-    }
-
-    bool operator!=(const ::Matrix& other) {
-        return !(*this == other);
-    }
-
-#ifndef RAYLIB_CPP_NO_MATH
-    /**
-     * Returns the trace of the matrix (sum of the values along the
-     * diagonal)
-     */
-    float Trace() const {
-        return ::MatrixTrace(*this);
-    }
-
-    /**
-     * Transposes provided matrix
-     */
-    Matrix Transpose() const {
-        return ::MatrixTranspose(*this);
-    }
-
-    Matrix Invert() const {
-        return ::MatrixInvert(*this);
-    }
-
-    static Matrix Identity() {
-        return ::MatrixIdentity();
-    }
-
-    Matrix Add(const ::Matrix& right) {
-        return ::MatrixAdd(*this, right);
-    }
-
-    Matrix operator+(const ::Matrix& matrix) {
-        return ::MatrixAdd(*this, matrix);
-    }
-
-    Matrix Subtract(const ::Matrix& right) {
-        return ::MatrixSubtract(*this, right);
-    }
-
-    Matrix operator-(const ::Matrix& matrix) {
-        return ::MatrixSubtract(*this, matrix);
-    }
-
-    static Matrix Translate(float x, float y, float z) {
-        return ::MatrixTranslate(x, y, z);
-    }
-
-    static Matrix Rotate(Vector3 axis, float angle) {
-        return ::MatrixRotate(axis, angle);
-    }
-
-    static Matrix RotateXYZ(Vector3 angle) {
-        return ::MatrixRotateXYZ(angle);
-    }
-
-    static Matrix RotateX(float angle) {
-        return ::MatrixRotateX(angle);
-    }
-
-    static Matrix RotateY(float angle) {
-        return ::MatrixRotateY(angle);
-    }
-
-    static Matrix RotateZ(float angle) {
-        return ::MatrixRotateZ(angle);
-    }
-
-    static Matrix Scale(float x, float y, float z) {
-        return ::MatrixScale(x, y, z);
-    }
-
-    Matrix Multiply(const ::Matrix& right) const {
-        return ::MatrixMultiply(*this, right);
-    }
-
-    Matrix operator*(const ::Matrix& matrix) {
-        return ::MatrixMultiply(*this, matrix);
-    }
+    );
 
     static Matrix Frustum(
         double left,
@@ -198,15 +35,7 @@ public:
         double top,
         double near,
         double far
-    ) {
-        return ::MatrixFrustum(left, right, bottom, top, near, far);
-    }
-
-    static Matrix
-    Perspective(double fovy, double aspect, double near, double far) {
-        return ::MatrixPerspective(fovy, aspect, near, far);
-    }
-
+    );
     static Matrix Ortho(
         double left,
         double right,
@@ -214,58 +43,69 @@ public:
         double top,
         double near,
         double far
-    ) {
-        return ::MatrixOrtho(left, right, bottom, top, near, far);
-    }
-
-    static Matrix LookAt(Vector3 eye, Vector3 target, Vector3 up) {
-        return ::MatrixLookAt(eye, target, up);
-    }
-
-    float16 ToFloatV() const {
-        return ::MatrixToFloatV(*this);
-    }
-
-    operator float16() {
-        return ToFloatV();
-    }
-
-    /**
-     * Set shader uniform value (matrix 4x4)
-     */
-    Matrix& SetShaderValue(const ::Shader& shader, int uniformLoc) {
-        ::SetShaderValueMatrix(shader, uniformLoc, *this);
-        return *this;
-    }
-
-    static Matrix GetCamera(const ::Camera& camera) {
-        return ::GetCameraMatrix(camera);
-    }
-
-    static Matrix GetCamera(const ::Camera2D& camera) {
-        return ::GetCameraMatrix2D(camera);
-    }
-
-#endif
+    );
+    Matrix&       SetShaderValue(const ::Shader& shader, int uniformLoc);
+    float16       ToFloatV() const;
+    Matrix&       operator=(const ::Matrix& matrix);
+    bool          operator==(const ::Matrix& other);
+    bool          operator!=(const ::Matrix& other);
+    float         Trace() const;
+    Matrix        Transpose() const;
+    Matrix        Invert() const;
+    Matrix        Add(const ::Matrix& right);
+    Matrix        operator+(const ::Matrix& matrix);
+    Matrix        Subtract(const ::Matrix& right);
+    Matrix        operator-(const ::Matrix& matrix);
+    Matrix        Multiply(const ::Matrix& right) const;
+    Matrix        operator*(const ::Matrix& matrix);
+    explicit      operator float16() const;
+    static Matrix Translate(float xshift, float yshift, float zshift);
+    static Matrix Rotate(Vector3 axis, float angle);
+    static Matrix RotateXYZ(Vector3 angle);
+    static Matrix RotateX(float angle);
+    static Matrix RotateY(float angle);
+    static Matrix RotateZ(float angle);
+    static Matrix Scale(float xscale, float yscale, float zscale);
+    static Matrix LookAt(Vector3 eye, Vector3 target, Vector3 vup);
+    static Matrix GetCamera(const ::Camera& camera);
+    static Matrix GetCamera(const ::Camera2D& camera);
+    static Matrix Identity();
+    static Matrix
+          Perspective(double fovy, double aspect, double near, double far);
+    float GetM0() const;
+    float GetM1() const;
+    float GetM2() const;
+    float GetM3() const;
+    float GetM4() const;
+    float GetM5() const;
+    float GetM6() const;
+    float GetM7() const;
+    float GetM8() const;
+    float GetM9() const;
+    float GetM10() const;
+    float GetM11() const;
+    float GetM12() const;
+    float GetM13() const;
+    float GetM14() const;
+    float GetM15() const;
+    void  SetM0(float value);
+    void  SetM1(float value);
+    void  SetM2(float value);
+    void  SetM3(float value);
+    void  SetM4(float value);
+    void  SetM5(float value);
+    void  SetM6(float value);
+    void  SetM7(float value);
+    void  SetM8(float value);
+    void  SetM9(float value);
+    void  SetM10(float value);
+    void  SetM11(float value);
+    void  SetM12(float value);
+    void  SetM13(float value);
+    void  SetM14(float value);
+    void  SetM15(float value);
 
 protected:
-    void set(const ::Matrix& mat) {
-        m0  = mat.m0;
-        m1  = mat.m1;
-        m2  = mat.m2;
-        m3  = mat.m3;
-        m4  = mat.m4;
-        m5  = mat.m5;
-        m6  = mat.m6;
-        m7  = mat.m7;
-        m8  = mat.m8;
-        m9  = mat.m9;
-        m10 = mat.m10;
-        m11 = mat.m11;
-        m12 = mat.m12;
-        m13 = mat.m13;
-        m14 = mat.m14;
-        m15 = mat.m15;
-    }
+    void set(const ::Matrix& mat);
 };
 } // namespace raylib

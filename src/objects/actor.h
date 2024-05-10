@@ -1,17 +1,17 @@
 #pragma once
-#include "gui/vector.h"
+#include "raylib/vector2.h"
 
 template<typename Action_e>
 class Actor {
 private:
-    gui::Vec2d _position{0, 0};
-    Action_e   _action{Action_e::idle};
+    raylib::Vector2 _position{0, 0};
+    Action_e        _action{Action_e::idle};
 
 public:
-    explicit Actor(gui::Vec2d position)
+    explicit Actor(raylib::Vector2 position)
         : _position(position) {}
 
-    explicit Actor(gui::Vec2d position, Action_e action)
+    explicit Actor(raylib::Vector2 position, Action_e action)
         : _position(position)
         , _action(action) {}
 
@@ -30,7 +30,7 @@ public:
         return _action;
     }
 
-    void move(gui::Vec2d delta) {
+    void move(raylib::Vector2 delta) {
         _position += delta;
     }
 
@@ -38,11 +38,11 @@ public:
         _position += {delta_x, delta_y};
     }
 
-    void position(gui::Vec2d position) {
+    void position(raylib::Vector2 position) {
         _position = position;
     }
 
-    gui::Vec2d position() {
+    raylib::Vector2 position() {
         return _position;
     }
 };

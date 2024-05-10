@@ -1,15 +1,15 @@
 #pragma once
-#include <raylib>
+#include "raylib/texture.h"
 
 namespace lib {
 
 class AnimatedSprite {
 private:
     const raylib::Texture _texture;
-    const int        _framecount;
-    const int        _framerate;
-    const int        _delta;
-    int              _ticks{0};
+    const int             _framecount;
+    const int             _framerate;
+    const int             _delta;
+    int                   _ticks{0};
 
 public:
     AnimatedSprite(
@@ -20,7 +20,7 @@ public:
         : _texture(sheetfile)
         , _framecount(framecount)
         , _framerate(framerate)
-        , _delta(_texture.width() / _framecount){};
+        , _delta(_texture.width / _framecount){};
 
     AnimatedSprite()                                 = delete;
     ~AnimatedSprite()                                = default;
@@ -29,8 +29,8 @@ public:
     AnimatedSprite operator=(const AnimatedSprite&)  = delete;
     AnimatedSprite operator=(const AnimatedSprite&&) = delete;
 
-    void draw(raylib::Texture position);
-    void draw(raylib::Texture position, int frameno);
+    void draw(raylib::Vector2 position);
+    void draw(raylib::Vector2 position, int frameno);
 
     [[nodiscard]]
     inline int fps() const {

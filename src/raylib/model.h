@@ -1,6 +1,6 @@
 #pragma once
 
-#include "raylib/RaylibException.h"
+#include "raylib/raylibexception.h"
 #include "raylib/raylib-cpp-utils.h"
 #include "raylib/raylib.h"
 #include <string>

@@ -1,21 +1,16 @@
 #pragma once
 
+// IWYU pragma: always_keep
+
 #if defined(__clang__)
 #    pragma clang system_header
 #endif
 
 extern "C" {
 #if !defined(RAYLIB_CPP_NO_MATH)
-#    if !defined(RAYMATH_STATIC_INLINE)
+#    if !defined(RAYMATH_STATIC_INLINE) && !defined(RAYMATH_IMPLEMENTATION)
 #        define RAYMATH_STATIC_INLINE
 #    endif
-#    if defined(__GNUC__)
-#        pragma GCC diagnostic push
-#        pragma GCC diagnostic ignored "-Wmissing-field-initializers"
-#    endif
-#    include "raymath.h" // NOLINT
-#    if defined(__GNUC__)
-#        pragma GCC diagnostic pop
-#    endif
+#    include <raymath.h>
 #endif
 }

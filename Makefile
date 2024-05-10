@@ -29,12 +29,16 @@ ${LLVM_BUILD_PATH}/Makefile:
 
 .PHONY: libcpp
 libcpp: ${LIB_PATH}/libc++.so
-${LIB_PATH}/libc++.so: libcpp-prebuild
+${LIB_PATH}/libc++.so: ${LLVM_BUILD_PATH}/Makefile
 	make -C ${LLVM_BUILD_PATH} cxx cxxabi unwind
 ifeq (${LLVM_DO_TESTS}, TRUE)
 	make -C ${LLVM_BUILD_PATH} test-cxx test-cxxabi test-unwind
 endif
 	make -C ${LLVM_BUILD_PATH} install-cxx install-cxxabi install-unwind
+
+${BLD_PATH}/%/%/%.o: ${SRC_PATH}/%/%/%.h
+${BLD_PATH}/%/%.o: ${SRC_PATH}/%/%.h
+${BLD_PATH}/%.o: ${SRC_PATH}/%.h
 
 ${BLD_PATH}/%/%/%.o: ${SRC_PATH}/%/%/%.cpp
 	@mkdir -p $(dir $@)

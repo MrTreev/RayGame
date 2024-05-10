@@ -9,30 +9,16 @@
 #include <vector>
 
 namespace raylib {
-/**
- * Vertex data defining a mesh
- *
- * The Mesh will be unloaded on object destruction.
- *
- * @see raylib::MeshUnmanaged
- */
 class Mesh: public MeshUnmanaged {
 public:
     using MeshUnmanaged::MeshUnmanaged;
-
-    /**
-     * Explicitly forbid the copy constructor.
-     */
     Mesh(const Mesh&) = delete;
-
-    /**
-     * Explicitly forbid copy assignment.
-     */
     Mesh& operator=(const Mesh&) = delete;
 
-    /**
-     * Move constructor.
-     */
+    ~Mesh() {
+        Unload();
+    }
+
     Mesh(Mesh&& other) {
         set(other);
 
@@ -78,10 +64,6 @@ public:
         other.vboId         = nullptr;
 
         return *this;
-    }
-
-    ~Mesh() {
-        Unload();
     }
 };
 } // namespace raylib

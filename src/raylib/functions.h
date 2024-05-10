@@ -13,7 +13,7 @@ namespace raylib {
  * Initialize window and OpenGL context
  */
 [[maybe_unused]]
-RLCPPAPI inline void
+static inline void
 InitWindow(int width, int height, const std::string& title = "raylib") {
     ::InitWindow(width, height, title.c_str());
 }
@@ -22,7 +22,7 @@ InitWindow(int width, int height, const std::string& title = "raylib") {
  * Set title for window
  */
 [[maybe_unused]]
-RLCPPAPI inline void SetWindowTitle(const std::string& title) {
+static inline void SetWindowTitle(const std::string& title) {
     ::SetWindowTitle(title.c_str());
 }
 
@@ -30,7 +30,7 @@ RLCPPAPI inline void SetWindowTitle(const std::string& title) {
  * Get the human-readable, UTF-8 encoded name of the primary monitor
  */
 [[maybe_unused]]
-RLCPPAPI inline std::string GetMonitorName(int monitor = 0) {
+static inline std::string GetMonitorName(int monitor = 0) {
     return ::GetMonitorName(monitor);
 }
 
@@ -38,7 +38,7 @@ RLCPPAPI inline std::string GetMonitorName(int monitor = 0) {
  * Set clipboard text content
  */
 [[maybe_unused]]
-RLCPPAPI inline void SetClipboardText(const std::string& text) {
+static inline void SetClipboardText(const std::string& text) {
     ::SetClipboardText(text.c_str());
 }
 
@@ -46,7 +46,7 @@ RLCPPAPI inline void SetClipboardText(const std::string& text) {
  * Get clipboard text content
  */
 [[maybe_unused]]
-RLCPPAPI inline std::string GetClipboardText() {
+static inline std::string GetClipboardText() {
     return ::GetClipboardText();
 }
 
@@ -54,7 +54,7 @@ RLCPPAPI inline std::string GetClipboardText() {
  * Takes a screenshot of current screen (saved a .png)
  */
 [[maybe_unused]]
-RLCPPAPI inline void TakeScreenshot(const std::string& fileName) {
+static inline void TakeScreenshot(const std::string& fileName) {
     ::TakeScreenshot(fileName.c_str());
 }
 
@@ -62,7 +62,7 @@ RLCPPAPI inline void TakeScreenshot(const std::string& fileName) {
  * Get gamepad internal name id
  */
 [[maybe_unused]]
-RLCPPAPI inline std::string GetGamepadName(int gamepad) {
+static inline std::string GetGamepadName(int gamepad) {
     return ::GetGamepadName(gamepad);
 }
 
@@ -70,7 +70,7 @@ RLCPPAPI inline std::string GetGamepadName(int gamepad) {
  * Load text data from file (read)
  */
 [[maybe_unused]]
-RLCPPAPI std::string LoadFileText(const std::string& fileName) {
+static std::string LoadFileText(const std::string& fileName) {
     char*       text = ::LoadFileText(fileName.c_str());
     std::string output(text);
     ::UnloadFileText(text);
@@ -81,7 +81,7 @@ RLCPPAPI std::string LoadFileText(const std::string& fileName) {
  * Save text data to file (write)
  */
 [[maybe_unused]]
-RLCPPAPI inline bool
+static inline bool
 SaveFileText(const std::string& fileName, const std::string& text) {
     return ::SaveFileText(fileName.c_str(), const_cast<char*>(text.c_str()));
 }
@@ -90,7 +90,7 @@ SaveFileText(const std::string& fileName, const std::string& text) {
  * Check if file exists
  */
 [[maybe_unused]]
-RLCPPAPI inline bool FileExists(const std::string& fileName) {
+static inline bool FileExists(const std::string& fileName) {
     return ::FileExists(fileName.c_str());
 }
 
@@ -98,7 +98,7 @@ RLCPPAPI inline bool FileExists(const std::string& fileName) {
  * Check if directory path exists
  */
 [[maybe_unused]]
-RLCPPAPI inline bool DirectoryExists(const std::string& dirPath) {
+static inline bool DirectoryExists(const std::string& dirPath) {
     return ::DirectoryExists(dirPath.c_str());
 }
 
@@ -106,7 +106,7 @@ RLCPPAPI inline bool DirectoryExists(const std::string& dirPath) {
  * Check file extension (including point: .png, .wav)
  */
 [[maybe_unused]]
-RLCPPAPI inline bool
+static inline bool
 IsFileExtension(const std::string& fileName, const std::string& ext) {
     return ::IsFileExtension(fileName.c_str(), ext.c_str());
 }
@@ -115,7 +115,7 @@ IsFileExtension(const std::string& fileName, const std::string& ext) {
  * Get pointer to extension for a filename string (including point: ".png")
  */
 [[maybe_unused]]
-RLCPPAPI inline std::string GetFileExtension(const std::string& fileName) {
+static inline std::string GetFileExtension(const std::string& fileName) {
     return ::GetFileExtension(fileName.c_str());
 }
 
@@ -123,7 +123,7 @@ RLCPPAPI inline std::string GetFileExtension(const std::string& fileName) {
  * Get pointer to filename for a path string
  */
 [[maybe_unused]]
-RLCPPAPI inline std::string GetFileName(const std::string& filePath) {
+static inline std::string GetFileName(const std::string& filePath) {
     return ::GetFileName(filePath.c_str());
 }
 
@@ -131,7 +131,7 @@ RLCPPAPI inline std::string GetFileName(const std::string& filePath) {
  * Get filename string without extension
  */
 [[maybe_unused]]
-RLCPPAPI inline std::string GetFileNameWithoutExt(const std::string& filePath) {
+static inline std::string GetFileNameWithoutExt(const std::string& filePath) {
     return ::GetFileNameWithoutExt(filePath.c_str());
 }
 
@@ -139,7 +139,7 @@ RLCPPAPI inline std::string GetFileNameWithoutExt(const std::string& filePath) {
  * Get full path for a given fileName with path
  */
 [[maybe_unused]]
-RLCPPAPI inline std::string GetDirectoryPath(const std::string& filePath) {
+static inline std::string GetDirectoryPath(const std::string& filePath) {
     return ::GetDirectoryPath(filePath.c_str());
 }
 
@@ -147,7 +147,7 @@ RLCPPAPI inline std::string GetDirectoryPath(const std::string& filePath) {
  * Get previous directory path for a given path
  */
 [[maybe_unused]]
-RLCPPAPI inline std::string GetPrevDirectoryPath(const std::string& dirPath) {
+static inline std::string GetPrevDirectoryPath(const std::string& dirPath) {
     return ::GetPrevDirectoryPath(dirPath.c_str());
 }
 
@@ -155,7 +155,7 @@ RLCPPAPI inline std::string GetPrevDirectoryPath(const std::string& dirPath) {
  * Get current working directory
  */
 [[maybe_unused]]
-RLCPPAPI inline std::string GetWorkingDirectory() {
+static inline std::string GetWorkingDirectory() {
     return ::GetWorkingDirectory();
 }
 
@@ -163,8 +163,7 @@ RLCPPAPI inline std::string GetWorkingDirectory() {
  * Get filenames in a directory path
  */
 [[maybe_unused]]
-RLCPPAPI std::vector<std::string> LoadDirectoryFiles(const std::string& dirPath
-) {
+static std::vector<std::string> LoadDirectoryFiles(const std::string& dirPath) {
     FilePathList             files = ::LoadDirectoryFiles(dirPath.c_str());
     std::vector<std::string> output(files.paths, files.paths + files.count);
     ::UnloadDirectoryFiles(files);
@@ -175,7 +174,7 @@ RLCPPAPI std::vector<std::string> LoadDirectoryFiles(const std::string& dirPath
  * Change working directory, return true on success
  */
 [[maybe_unused]]
-RLCPPAPI inline bool ChangeDirectory(const std::string& dir) {
+static inline bool ChangeDirectory(const std::string& dir) {
     return ::ChangeDirectory(dir.c_str());
 }
 
@@ -183,7 +182,7 @@ RLCPPAPI inline bool ChangeDirectory(const std::string& dir) {
  * Get dropped files names
  */
 [[maybe_unused]]
-RLCPPAPI std::vector<std::string> LoadDroppedFiles() {
+static std::vector<std::string> LoadDroppedFiles() {
     if (!::IsFileDropped()) {
         return std::vector<std::string>();
     }
@@ -197,7 +196,7 @@ RLCPPAPI std::vector<std::string> LoadDroppedFiles() {
  * Get file modification time (last write time)
  */
 [[maybe_unused]]
-RLCPPAPI inline long GetFileModTime(const std::string& fileName) { // NOLINT
+static inline long GetFileModTime(const std::string& fileName) { // NOLINT
     return ::GetFileModTime(fileName.c_str());
 }
 
@@ -205,7 +204,7 @@ RLCPPAPI inline long GetFileModTime(const std::string& fileName) { // NOLINT
  * Open URL with default system browser (if available)
  */
 [[maybe_unused]]
-RLCPPAPI inline void OpenURL(const std::string& url) {
+static inline void OpenURL(const std::string& url) {
     return ::OpenURL(url.c_str());
 }
 
@@ -213,7 +212,7 @@ RLCPPAPI inline void OpenURL(const std::string& url) {
  * Load an image.
  */
 [[maybe_unused]]
-RLCPPAPI inline ::Image LoadImage(const std::string& fileName) {
+static inline ::Image LoadImage(const std::string& fileName) {
     return ::LoadImage(fileName.c_str());
 }
 
@@ -221,7 +220,7 @@ RLCPPAPI inline ::Image LoadImage(const std::string& fileName) {
  * Load an image from RAW file data
  */
 [[maybe_unused]]
-RLCPPAPI inline ::Image LoadImageRaw(
+static inline ::Image LoadImageRaw(
     const std::string& fileName,
     int                width,
     int                height,
@@ -235,8 +234,7 @@ RLCPPAPI inline ::Image LoadImageRaw(
  * Load animated image data
  */
 [[maybe_unused]]
-RLCPPAPI inline ::Image
-LoadImageAnim(const std::string& fileName, int* frames) {
+static inline ::Image LoadImageAnim(const std::string& fileName, int* frames) {
     return ::LoadImageAnim(fileName.c_str(), frames);
 }
 
@@ -244,7 +242,7 @@ LoadImageAnim(const std::string& fileName, int* frames) {
  * Load image from memory buffer, fileType refers to extension like "png"
  */
 [[maybe_unused]]
-RLCPPAPI inline ::Image LoadImageFromMemory(
+static inline ::Image LoadImageFromMemory(
     const std::string&   fileType,
     const unsigned char* fileData,
     int                  dataSize
@@ -256,7 +254,7 @@ RLCPPAPI inline ::Image LoadImageFromMemory(
  * Export image data to file
  */
 [[maybe_unused]]
-RLCPPAPI inline bool
+static inline bool
 ExportImage(const Image& image, const std::string& fileName) {
     return ::ExportImage(image, fileName.c_str());
 }
@@ -265,7 +263,7 @@ ExportImage(const Image& image, const std::string& fileName) {
  * Export image as code file (.h) defining an array of bytes
  */
 [[maybe_unused]]
-RLCPPAPI inline bool
+static inline bool
 ExportImageAsCode(const Image& image, const std::string& fileName) {
     return ::ExportImageAsCode(image, fileName.c_str());
 }
@@ -274,7 +272,7 @@ ExportImageAsCode(const Image& image, const std::string& fileName) {
  * Draw text (using default font)
  */
 [[maybe_unused]]
-RLCPPAPI inline void
+static inline void
 DrawText(const char* text, int posX, int posY, int fontSize, ::Color color) {
     ::DrawText(text, posX, posY, fontSize, color);
 }
@@ -283,7 +281,7 @@ DrawText(const char* text, int posX, int posY, int fontSize, ::Color color) {
  * Draw text (using default font)
  */
 [[maybe_unused]]
-RLCPPAPI inline void DrawText(
+static inline void DrawText(
     const std::string& text,
     int                posX,
     int                posY,
@@ -297,7 +295,7 @@ RLCPPAPI inline void DrawText(
  * Draw text using font and additional parameters
  */
 [[maybe_unused]]
-RLCPPAPI inline void DrawTextEx(
+static inline void DrawTextEx(
     const Font& font,
     char*       text,
     Vector2     position,
@@ -312,7 +310,7 @@ RLCPPAPI inline void DrawTextEx(
  * Draw text using font and additional parameters
  */
 [[maybe_unused]]
-RLCPPAPI inline void DrawTextEx(
+static inline void DrawTextEx(
     const Font&        font,
     const std::string& text,
     Vector2            position,
@@ -327,7 +325,7 @@ RLCPPAPI inline void DrawTextEx(
  * Draw text using Font and pro parameters (rotation)
  */
 [[maybe_unused]]
-RLCPPAPI inline void DrawTextPro(
+static inline void DrawTextPro(
     const Font& font,
     const char* text,
     Vector2     position,
@@ -353,7 +351,7 @@ RLCPPAPI inline void DrawTextPro(
  * Draw text using Font and pro parameters (rotation)
  */
 [[maybe_unused]]
-RLCPPAPI inline void DrawTextPro(
+static inline void DrawTextPro(
     const Font&        font,
     const std::string& text,
     Vector2            position,
@@ -379,7 +377,7 @@ RLCPPAPI inline void DrawTextPro(
  * Load font from file (filename must include file extension)
  */
 [[maybe_unused]]
-RLCPPAPI inline ::Font LoadFont(const std::string& fileName) {
+static inline ::Font LoadFont(const std::string& fileName) {
     return ::LoadFont(fileName.c_str());
 }
 
@@ -387,7 +385,7 @@ RLCPPAPI inline ::Font LoadFont(const std::string& fileName) {
  * Load font from file (filename must include file extension)
  */
 [[maybe_unused]]
-RLCPPAPI inline ::Font LoadFontEx(
+static inline ::Font LoadFontEx(
     const std::string& fileName,
     int                fontSize,
     int*               fontChars,
@@ -400,7 +398,7 @@ RLCPPAPI inline ::Font LoadFontEx(
  * Measure string width for default font
  */
 [[maybe_unused]]
-RLCPPAPI inline int MeasureText(const char* text, int fontSize) {
+static inline int MeasureText(const char* text, int fontSize) {
     return ::MeasureText(text, fontSize);
 }
 
@@ -408,7 +406,7 @@ RLCPPAPI inline int MeasureText(const char* text, int fontSize) {
  * Measure string width for default font
  */
 [[maybe_unused]]
-RLCPPAPI inline int MeasureText(const std::string& text, int fontSize) {
+static inline int MeasureText(const std::string& text, int fontSize) {
     return ::MeasureText(text.c_str(), fontSize);
 }
 
@@ -416,7 +414,7 @@ RLCPPAPI inline int MeasureText(const std::string& text, int fontSize) {
  * Check if two text string are equal
  */
 [[maybe_unused]]
-RLCPPAPI inline bool TextIsEqual(const char* text1, const char* text2) {
+static inline bool TextIsEqual(const char* text1, const char* text2) {
     return ::TextIsEqual(text1, text2);
 }
 
@@ -424,7 +422,7 @@ RLCPPAPI inline bool TextIsEqual(const char* text1, const char* text2) {
  * Check if two text string are equal
  */
 [[maybe_unused]]
-RLCPPAPI inline bool
+static inline bool
 TextIsEqual(const std::string& text1, const std::string& text2) {
     return ::TextIsEqual(text1.c_str(), text2.c_str());
 }
@@ -433,7 +431,7 @@ TextIsEqual(const std::string& text1, const std::string& text2) {
  * Check if two text string are equal
  */
 [[maybe_unused]]
-RLCPPAPI inline unsigned int TextLength(const char* text) {
+static inline unsigned int TextLength(const char* text) {
     return ::TextLength(text);
 }
 
@@ -441,7 +439,7 @@ RLCPPAPI inline unsigned int TextLength(const char* text) {
  * Check if two text string are equal
  */
 [[maybe_unused]]
-RLCPPAPI inline unsigned int TextLength(const std::string& text) {
+static inline unsigned int TextLength(const std::string& text) {
     return ::TextLength(text.c_str());
 }
 
@@ -449,7 +447,7 @@ RLCPPAPI inline unsigned int TextLength(const std::string& text) {
  * Get text length, checks for '\0' ending
  */
 [[maybe_unused]]
-RLCPPAPI inline std::string
+static inline std::string
 TextSubtext(const std::string& text, int position, int length) {
     return ::TextSubtext(text.c_str(), position, length);
 }
@@ -458,7 +456,7 @@ TextSubtext(const std::string& text, int position, int length) {
  * Replace text string
  */
 [[maybe_unused]]
-RLCPPAPI std::string TextReplace(
+static std::string TextReplace(
     const std::string& text,
     const std::string& replace,
     const std::string& by
@@ -478,7 +476,7 @@ RLCPPAPI std::string TextReplace(
  * Insert text in a position
  */
 [[maybe_unused]]
-RLCPPAPI std::string
+static std::string
 TextInsert(const std::string& text, const std::string& insert, int position) {
     char* output = ::TextInsert(text.c_str(), insert.c_str(), position);
     if (output != nullptr) {
@@ -493,8 +491,8 @@ TextInsert(const std::string& text, const std::string& insert, int position) {
  * Split text into multiple strings
  */
 [[maybe_unused]]
-RLCPPAPI std::vector<std::string>
-         TextSplit(const std::string& text, char delimiter) {
+static std::vector<std::string>
+TextSplit(const std::string& text, char delimiter) {
     int          count;
     const char** split = ::TextSplit(text.c_str(), delimiter, &count);
     return std::vector<std::string>(split, split + count);
@@ -504,7 +502,7 @@ RLCPPAPI std::vector<std::string>
  * Find first text occurrence within a string
  */
 [[maybe_unused]]
-RLCPPAPI inline int
+static inline int
 TextFindIndex(const std::string& text, const std::string& find) {
     return ::TextFindIndex(text.c_str(), find.c_str());
 }
@@ -513,7 +511,7 @@ TextFindIndex(const std::string& text, const std::string& find) {
  * Get upper case version of provided string
  */
 [[maybe_unused]]
-RLCPPAPI inline std::string TextToUpper(const std::string& text) {
+static inline std::string TextToUpper(const std::string& text) {
     return ::TextToUpper(text.c_str());
 }
 
@@ -521,7 +519,7 @@ RLCPPAPI inline std::string TextToUpper(const std::string& text) {
  * Get lower case version of provided string
  */
 [[maybe_unused]]
-RLCPPAPI inline std::string TextToLower(const std::string& text) {
+static inline std::string TextToLower(const std::string& text) {
     return ::TextToLower(text.c_str());
 }
 
@@ -529,7 +527,7 @@ RLCPPAPI inline std::string TextToLower(const std::string& text) {
  * Get Pascal case notation version of provided string
  */
 [[maybe_unused]]
-RLCPPAPI inline std::string TextToPascal(const std::string& text) {
+static inline std::string TextToPascal(const std::string& text) {
     return ::TextToPascal(text.c_str());
 }
 
@@ -537,7 +535,7 @@ RLCPPAPI inline std::string TextToPascal(const std::string& text) {
  * Get integer value from text (negative values not supported)
  */
 [[maybe_unused]]
-RLCPPAPI inline int TextToInteger(const std::string& text) {
+static inline int TextToInteger(const std::string& text) {
     return ::TextToInteger(text.c_str());
 }
 

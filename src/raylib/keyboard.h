@@ -3,66 +3,40 @@
 #include "raylib/raylib.h"
 
 namespace raylib {
-/**
- * Input-related functions: keyboard
- */
 namespace Keyboard {
-/**
- * Detect if a key has been pressed once
- */
 [[maybe_unused]]
-RLCPPAPI inline bool IsKeyPressed(int key) {
+static inline bool IsKeyPressed(int key) {
     return ::IsKeyPressed(key);
 }
 
-/**
- * Detect if a key has been pressed again (Only PLATFORM_DESKTOP)
- */
 [[maybe_unused]]
-RLCPPAPI inline bool IsKeyPressedRepeat(int key) {
+static inline bool IsKeyPressedRepeat(int key) {
     return ::IsKeyPressedRepeat(key);
 }
 
-/**
- * Detect if a key is being pressed
- */
 [[maybe_unused]]
-RLCPPAPI inline bool IsKeyDown(int key) {
+static inline bool IsKeyDown(int key) {
     return ::IsKeyDown(key);
 }
 
-/**
- * Detect if a key has been released once
- */
 [[maybe_unused]]
-RLCPPAPI inline bool IsKeyReleased(int key) {
+static inline bool IsKeyReleased(int key) {
     return ::IsKeyReleased(key);
 }
 
-/**
- * Detect if a key is NOT being pressed
- */
 [[maybe_unused]]
-RLCPPAPI inline bool IsKeyUp(int key) {
+static inline bool IsKeyUp(int key) {
     return ::IsKeyUp(key);
 }
 
-/**
- * Get key pressed (keycode), call it multiple times for keys queued, returns 0
- * when the queue is empty
- */
 [[maybe_unused]]
-RLCPPAPI inline bool GetKeyPressed() {
-    return ::GetKeyPressed();
+static inline bool GetKeyPressed() {
+    return ::GetKeyPressed() != 0;
 }
 
-/**
- * Get char pressed (unicode), call it multiple times for chars queued, returns
- * 0 when the queue is empty
- */
 [[maybe_unused]]
-RLCPPAPI inline bool GetCharPressed() {
-    return ::GetCharPressed();
+static inline bool GetCharPressed() {
+    return ::GetCharPressed() != 0;
 }
 }; // namespace Keyboard
 } // namespace raylib

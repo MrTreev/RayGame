@@ -23,7 +23,7 @@ raylib::Window::~Window() {
 }
 
 void raylib::Window::Init(const std::string& title) {
-    ::InitWindow(default_window_height, default_window_width, title.c_str());
+    ::InitWindow(config::default_window_height, config::default_window_width, title.c_str());
     if (!::IsWindowReady()) {
         throw RaylibException("Failed to create Window");
     }
