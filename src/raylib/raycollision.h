@@ -1,90 +1,50 @@
 #pragma once
 
-#include "raylib/raylib-cpp-utils.h"
 #include "raylib/raylib.h"
 
 namespace raylib {
-/**
- * Raycast hit information
- */
 class RayCollision: public ::RayCollision {
 public:
-    RayCollision(const ::RayCollision& ray) {
-        set(ray);
-    }
-
+    explicit RayCollision(const ::RayCollision& ray);
     RayCollision(
         bool      _hit,
         float     _distance,
         ::Vector3 _point,
         ::Vector3 _normal
-    )
-        : ::RayCollision{_hit, _distance, _point, _normal} {
-        // Nothing.
-    }
-
-    /**
-     * Get collision info between ray and bounding box
-     */
-    RayCollision(const ::Ray& ray, const ::BoundingBox& box) {
-        set(::GetRayCollisionBox(ray, box));
-    }
-
-    /**
-     * Get collision info between ray and mesh
-     */
+    );
+    RayCollision(const ::Ray& ray, const ::BoundingBox& box);
     RayCollision(
         const ::Ray&    ray,
         const ::Mesh&   mesh,
         const ::Matrix& transform
-    ) {
-        set(::GetRayCollisionMesh(ray, mesh, transform));
-    }
-
-    /**
-     * Get collision info between ray and quad
-     */
+    );
     RayCollision(
         const ::Ray& ray,
-        ::Vector3    p1,
-        ::Vector3    p2,
-        ::Vector3    p3,
-        ::Vector3    p4
-    ) {
-        set(::GetRayCollisionQuad(ray, p1, p2, p3, p4));
-    }
+        ::Vector3    vec1,
+        ::Vector3    vec2,
+        ::Vector3    vec3,
+        ::Vector3    vec4
+    );
+    RayCollision(const ::Ray& ray, ::Vector3 center, float radius);
+    RayCollision(
+        const ::Ray& ray,
+        ::Vector3    vec1,
+        ::Vector3    vec2,
+        ::Vector3    vec3
+    );
+    RayCollision& operator=(const ::RayCollision& ray);
 
-    /**
-     * Get collision info between ray and sphere
-     */
-    RayCollision(const ::Ray& ray, ::Vector3 center, float radius) {
-        set(::GetRayCollisionSphere(ray, center, radius));
-    }
+    void SetHit(bool value);
+    void SetDistance(float value);
+    void SetPosition(::Vector3 value);
+    void SetNormal(::Vector3 value);
 
-    /**
-     * Get collision info between ray and triangle
-     */
-    RayCollision(const ::Ray& ray, ::Vector3 p1, ::Vector3 p2, ::Vector3 p3) {
-        set(::GetRayCollisionTriangle(ray, p1, p2, p3));
-    }
-
-    RayCollision& operator=(const ::RayCollision& ray) {
-        set(ray);
-        return *this;
-    }
-
-    GETTERSETTER(bool, Hit, hit)
-    GETTERSETTER(float, Distance, distance)
-    GETTERSETTER(::Vector3, Position, point)
-    GETTERSETTER(::Vector3, Normal, normal)
+    bool      GetHit() const;
+    float     GetDistance() const;
+    ::Vector3 GetPosition() const;
+    ::Vector3 GetNormal() const;
 
 protected:
-    void set(const ::RayCollision& ray) {
-        hit      = ray.hit;
-        distance = ray.distance;
-        point    = ray.point;
-        normal   = ray.normal;
-    }
+    void set(const ::RayCollision& ray);
 };
 } // namespace raylib
-

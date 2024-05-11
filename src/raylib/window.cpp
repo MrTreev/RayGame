@@ -218,11 +218,11 @@ int raylib::Window::GetRenderHeight() {
 }
 
 raylib::Vector2 raylib::Window::GetPosition() {
-    return ::GetWindowPosition();
+    return Vector2(::GetWindowPosition());
 }
 
 raylib::Vector2 raylib::Window::GetScaleDPI() {
-    return ::GetWindowScaleDPI();
+    return Vector2(::GetWindowScaleDPI());
 }
 
 void raylib::Window::SetClipboardText(const std::string& text) {

@@ -16,8 +16,8 @@ public:
         float     _zoom     = 1.0F
     );
 
-    void BeginMode();
-    void EndMode();
+    void        BeginMode();
+    static void EndMode();
 
     Camera2D& operator=(const ::Camera2D& camera);
     void      SetOffset(::Vector2 value);

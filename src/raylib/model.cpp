@@ -1,4 +1,5 @@
-#include "model.h"
+#include "raylib/model.h"
+#include "raylib/raylibexception.h"
 
 raylib::Model::Model(const ::Model& model) {
     set(model);
@@ -189,7 +190,7 @@ BoundingBox raylib::Model::GetBoundingBox() const {
     return ::GetModelBoundingBox(*this);
 }
 
-explicit raylib::Model::operator BoundingBox() const {
+raylib::Model::operator BoundingBox() const {
     return ::GetModelBoundingBox(*this);
 }
 
@@ -224,3 +225,5 @@ void raylib::Model::set(const ::Model& model) {
     bones     = model.bones;
     bindPose  = model.bindPose;
 }
+
+raylib::Model::Model() {}

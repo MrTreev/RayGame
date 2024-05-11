@@ -99,7 +99,7 @@ int raylib::Font::GetGlyphPadding() const {
 }
 
 raylib::TextureUnmanaged raylib::Font::GetTexture() {
-    return texture;
+    return raylib::TextureUnmanaged(texture);
 }
 
 void raylib::Font::SetTexture(const ::Texture& newTexture) {
@@ -318,7 +318,7 @@ raylib::Vector2 raylib::Font::MeasureText(
     float       fontSize,
     float       spacing
 ) const {
-    return ::MeasureTextEx(*this, text, fontSize, spacing);
+    return raylib::Vector2(::MeasureTextEx(*this, text, fontSize, spacing));
 }
 
 raylib::Vector2 raylib::Font::MeasureText(
@@ -326,7 +326,9 @@ raylib::Vector2 raylib::Font::MeasureText(
     float              fontSize,
     float              spacing
 ) const {
-    return ::MeasureTextEx(*this, text.c_str(), fontSize, spacing);
+    return raylib::Vector2(
+        ::MeasureTextEx(*this, text.c_str(), fontSize, spacing)
+    );
 }
 
 int raylib::Font::GetGlyphIndex(int character) const {

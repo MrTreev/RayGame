@@ -1,7 +1,6 @@
 #pragma once
 
 #include "raylib/raylib.h"
-#include "raylib/vector3.h"
 
 namespace raylib {
 class Camera3D: public ::Camera3D {

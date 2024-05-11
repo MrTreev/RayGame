@@ -7,7 +7,7 @@
 namespace raylib {
 class Color: public ::Color {
 public:
-    Color(const ::Color& color); //NOLINT hicpp-explicit-conversions
+    explicit Color(const ::Color& color);
 
     Color(
         unsigned char red,

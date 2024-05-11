@@ -7,7 +7,6 @@ all: ${EXE}
 .PHONY: clean
 clean:
 	cd ${RAY_PATH} && ${MAKE} clean && cd -
-	rm -rf ${LLVM_BUILD_PATH}
 	rm -rf ${OUT_PATH}
 
 .PHONY: docs

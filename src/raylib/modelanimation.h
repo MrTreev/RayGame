@@ -10,9 +10,9 @@ namespace raylib {
  */
 class ModelAnimation: public ::ModelAnimation {
 public:
-    ModelAnimation(const ::ModelAnimation& model);
+    explicit ModelAnimation(const ::ModelAnimation& model);
     ModelAnimation(const ModelAnimation&) = delete;
-    ModelAnimation(ModelAnimation&& other);
+    ModelAnimation(ModelAnimation&& other) noexcept;
     ~ModelAnimation();
     static std::vector<ModelAnimation> Load(const std::string& fileName);
 

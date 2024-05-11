@@ -1,5 +1,6 @@
 #include "raylib/image.h"
 #include "raylib/raylibexception.h"
+#include <format>
 
 void raylib::Image::set(const ::Image& image) {
     data    = image.data;
@@ -240,7 +241,7 @@ void raylib::Image::Unload() {
 void raylib::Image::Export(const std::string& fileName) const {
     if (!::ExportImage(*this, fileName.c_str())) {
         throw RaylibException(
-            TextFormat("Failed to export Image to file: %s", fileName.c_str())
+            std::format("Failed to export Image to file: {}", fileName)
         );
     }
 }
@@ -252,9 +253,9 @@ raylib::Image::ExportToMemory(const char* fileType, int* fileSize) {
 
 void raylib::Image::ExportAsCode(const std::string& fileName) const {
     if (!::ExportImageAsCode(*this, fileName.c_str())) {
-        throw RaylibException(TextFormat(
-            "Failed to export Image code to file: %s",
-            fileName.c_str()
+        throw RaylibException(std::format(
+            "Failed to export Image code to file: {}",
+            fileName
         ));
     }
 }
@@ -455,15 +456,15 @@ Rectangle raylib::Image::GetAlphaBorder(float threshold) const {
 }
 
 raylib::Color raylib::Image::GetColor(int xpos, int ypos) const {
-    return ::GetImageColor(*this, xpos, ypos);
+    return raylib::Color(::GetImageColor(*this, xpos, ypos));
 }
 
 raylib::Color raylib::Image::GetColor(::Vector2 position) const {
-    return ::GetImageColor(
+    return raylib::Color(::GetImageColor(
         *this,
         static_cast<int>(position.x),
         static_cast<int>(position.y)
-    );
+    ));
 }
 
 raylib::Image& raylib::Image::ClearBackground(::Color color) {

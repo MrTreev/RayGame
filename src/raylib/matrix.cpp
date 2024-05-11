@@ -227,68 +227,68 @@ float raylib::Matrix::Trace() const {
 }
 
 raylib::Matrix raylib::Matrix::Transpose() const {
-    return ::MatrixTranspose(*this);
+    return raylib::Matrix(::MatrixTranspose(*this));
 }
 
 raylib::Matrix raylib::Matrix::Invert() const {
-    return ::MatrixInvert(*this);
+    return raylib::Matrix(::MatrixInvert(*this));
 }
 
 raylib::Matrix raylib::Matrix::Identity() {
-    return ::MatrixIdentity();
+    return raylib::Matrix(::MatrixIdentity());
 }
 
 raylib::Matrix raylib::Matrix::Add(const ::Matrix& right) {
-    return ::MatrixAdd(*this, right);
+    return raylib::Matrix(::MatrixAdd(*this, right));
 }
 
 raylib::Matrix raylib::Matrix::operator+(const ::Matrix& matrix) {
-    return ::MatrixAdd(*this, matrix);
+    return raylib::Matrix(::MatrixAdd(*this, matrix));
 }
 
 raylib::Matrix raylib::Matrix::Subtract(const ::Matrix& right) {
-    return ::MatrixSubtract(*this, right);
+    return raylib::Matrix(::MatrixSubtract(*this, right));
 }
 
 raylib::Matrix raylib::Matrix::operator-(const ::Matrix& matrix) {
-    return ::MatrixSubtract(*this, matrix);
+    return raylib::Matrix(::MatrixSubtract(*this, matrix));
 }
 
 raylib::Matrix
 raylib::Matrix::Translate(float xshift, float yshift, float zshift) {
-    return ::MatrixTranslate(xshift, yshift, zshift);
+    return raylib::Matrix(::MatrixTranslate(xshift, yshift, zshift));
 }
 
 raylib::Matrix raylib::Matrix::Rotate(Vector3 axis, float angle) {
-    return ::MatrixRotate(axis, angle);
+    return raylib::Matrix(::MatrixRotate(axis, angle));
 }
 
 raylib::Matrix raylib::Matrix::RotateXYZ(Vector3 angle) {
-    return ::MatrixRotateXYZ(angle);
+    return raylib::Matrix(::MatrixRotateXYZ(angle));
 }
 
 raylib::Matrix raylib::Matrix::RotateX(float angle) {
-    return ::MatrixRotateX(angle);
+    return raylib::Matrix(::MatrixRotateX(angle));
 }
 
 raylib::Matrix raylib::Matrix::RotateY(float angle) {
-    return ::MatrixRotateY(angle);
+    return raylib::Matrix(::MatrixRotateY(angle));
 }
 
 raylib::Matrix raylib::Matrix::RotateZ(float angle) {
-    return ::MatrixRotateZ(angle);
+    return raylib::Matrix(::MatrixRotateZ(angle));
 }
 
 raylib::Matrix raylib::Matrix::Scale(float xscale, float yscale, float zscale) {
-    return ::MatrixScale(xscale, yscale, zscale);
+    return raylib::Matrix(::MatrixScale(xscale, yscale, zscale));
 }
 
 raylib::Matrix raylib::Matrix::Multiply(const ::Matrix& right) const {
-    return ::MatrixMultiply(*this, right);
+    return raylib::Matrix(::MatrixMultiply(*this, right));
 }
 
 raylib::Matrix raylib::Matrix::operator*(const ::Matrix& matrix) {
-    return ::MatrixMultiply(*this, matrix);
+    return raylib::Matrix(::MatrixMultiply(*this, matrix));
 }
 
 raylib::Matrix raylib::Matrix::Frustum(
@@ -299,7 +299,7 @@ raylib::Matrix raylib::Matrix::Frustum(
     double near,
     double far
 ) {
-    return ::MatrixFrustum(left, right, bottom, top, near, far);
+    return raylib::Matrix(::MatrixFrustum(left, right, bottom, top, near, far));
 }
 
 raylib::Matrix raylib::Matrix::Perspective(
@@ -308,7 +308,7 @@ raylib::Matrix raylib::Matrix::Perspective(
     double near,
     double far
 ) {
-    return ::MatrixPerspective(fovy, aspect, near, far);
+    return raylib::Matrix(::MatrixPerspective(fovy, aspect, near, far));
 }
 
 raylib::Matrix raylib::Matrix::Ortho(
@@ -319,12 +319,12 @@ raylib::Matrix raylib::Matrix::Ortho(
     double near,
     double far
 ) {
-    return ::MatrixOrtho(left, right, bottom, top, near, far);
+    return raylib::Matrix(::MatrixOrtho(left, right, bottom, top, near, far));
 }
 
 raylib::Matrix
 raylib::Matrix::LookAt(Vector3 eye, Vector3 target, Vector3 vup) {
-    return ::MatrixLookAt(eye, target, vup);
+    return raylib::Matrix(::MatrixLookAt(eye, target, vup));
 }
 
 float16 raylib::Matrix::ToFloatV() const {
@@ -342,9 +342,9 @@ raylib::Matrix::SetShaderValue(const ::Shader& shader, int uniformLoc) {
 }
 
 raylib::Matrix raylib::Matrix::GetCamera(const ::Camera& camera) {
-    return ::GetCameraMatrix(camera);
+    return raylib::Matrix(::GetCameraMatrix(camera));
 }
 
 raylib::Matrix raylib::Matrix::GetCamera(const ::Camera2D& camera) {
-    return ::GetCameraMatrix2D(camera);
+    return raylib::Matrix(::GetCameraMatrix2D(camera));
 }

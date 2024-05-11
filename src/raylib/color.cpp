@@ -51,11 +51,11 @@ std::string raylib::Color::ToString() const {
 }
 
 raylib::Color raylib::Color::Fade(float alpha) const {
-    return ::Fade(*this, alpha);
+    return Color(::Fade(*this, alpha));
 }
 
 raylib::Vector4 raylib::Color::Normalize() const {
-    return ::ColorNormalize(*this);
+    return raylib::Vector4(::ColorNormalize(*this));
 }
 
 Vector3 raylib::Color::ToHSV() const {
@@ -63,23 +63,23 @@ Vector3 raylib::Color::ToHSV() const {
 }
 
 raylib::Color raylib::Color::Tint(::Color tint) {
-    return ::ColorTint(*this, tint);
+    return Color(::ColorTint(*this, tint));
 }
 
 raylib::Color raylib::Color::Brightness(float factor) {
-    return ::ColorBrightness(*this, factor);
+    return Color(::ColorBrightness(*this, factor));
 }
 
 raylib::Color raylib::Color::Contrast(float contrast) {
-    return ::ColorContrast(*this, contrast);
+    return Color(::ColorContrast(*this, contrast));
 }
 
 raylib::Color raylib::Color::Alpha(float alpha) const {
-    return ::ColorAlpha(*this, alpha);
+    return Color(::ColorAlpha(*this, alpha));
 }
 
 raylib::Color raylib::Color::AlphaBlend(::Color dst, ::Color tint) const {
-    return ::ColorAlphaBlend(dst, *this, tint);
+    return Color(::ColorAlphaBlend(dst, *this, tint));
 }
 
 unsigned char raylib::Color::GetR() const {

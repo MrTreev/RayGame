@@ -71,9 +71,9 @@ Matrix raylib::Camera2D::GetMatrix() const {
 }
 
 raylib::Vector2 raylib::Camera2D::GetScreenToWorld(::Vector2 position) const {
-    return ::GetScreenToWorld2D(position, *this);
+    return raylib::Vector2(::GetScreenToWorld2D(position, *this));
 }
 
 raylib::Vector2 raylib::Camera2D::GetWorldToScreen(::Vector2 position) const {
-    return ::GetWorldToScreen2D(position, *this);
+    return raylib::Vector2(::GetWorldToScreen2D(position, *this));
 }

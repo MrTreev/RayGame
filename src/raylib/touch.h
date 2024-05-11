@@ -3,48 +3,21 @@
 #include "raylib/raylib.h"
 
 namespace raylib {
-/**
- * Input-related functions: touch
- */
 namespace Touch {
-/**
- * Get touch position X for touch point 0 (relative to screen size)
- */
 [[maybe_unused]]
-static inline int GetX() {
-    return ::GetTouchX();
-}
+static int GetX();
 
-/**
- * Get touch position Y for touch point 0 (relative to screen size)
- */
 [[maybe_unused]]
-static inline int GetY() {
-    return ::GetTouchY();
-}
+static int GetY();
 
-/**
- * Get touch position XY for a touch point index (relative to screen size)
- */
 [[maybe_unused]]
-static inline Vector2 GetPosition(int index) {
-    return ::GetTouchPosition(index);
-}
+static Vector2 GetPosition(int index);
 
-/**
- * Get touch point identifier for given index
- */
 [[maybe_unused]]
-static inline int GetPointId(int index) {
-    return ::GetTouchPointId(index);
-}
+static int GetPointId(int index);
 
-/**
- * Get number of touch points
- */
 [[maybe_unused]]
-static inline int GetPointCount() {
-    return ::GetTouchPointCount();
-}
+static int GetPointCount();
+
 }; // namespace Touch
 } // namespace raylib

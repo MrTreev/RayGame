@@ -1,242 +1,82 @@
 #pragma once
 
-#include "raylib/raylib-cpp-utils.h"
 #include "raylib/raylib.h"
-#include "raylib/raylibexception.h"
 #include <string>
 
 namespace raylib {
-/**
- * Text Functions.
- */
 class Text {
 public:
-    /**
-     * The internal text.
-     */
     std::string text;
+    float       fontSize;
+    ::Color     color;
+    ::Font      font;
+    float       spacing;
 
-    /**
-     * The size of the text.
-     */
-    float fontSize;
+    explicit Text(
+        std::string    _text     = "",
+        float          _fontSize = 10,
+        const ::Color& _color    = WHITE,
+        const ::Font&  _font     = ::GetFontDefault(),
+        float          _spacing  = 0
+    );
+    explicit Text(
+        const ::Font&  _font,
+        std::string    _text     = "",
+        float          _fontSize = 10,
+        float          _spacing  = 0,
+        const ::Color& _color    = WHITE
+    );
+    std ::string GetText() const;
+    void         SetText(std ::string value);
+    float        GetFontSize() const;
+    void         SetFontSize(float value);
+    ::Font       GetFont() const;
+    void         SetFont(::Font value);
+    ::Color      GetColor() const;
+    void         SetColor(::Color value);
+    float        GetSpacing() const;
+    void         SetSpacing(float value);
+    void         Draw(const ::Vector2& position) const;
+    void         Draw(int posX, int posY) const;
 
-    /**
-     * The color of the text.
-     */
-    ::Color color;
-
-    /**
-     * The internal raylib font to use for the text.
-     */
-    ::Font font;
-
-    /**
-     * The character spacing for the text.
-     */
-    float spacing;
-
-    /**
-     * Initializes a new Text object.
-     *
-     * @param text Text to initialize.
-     * @param fontSize The size of the text.
-     * @param color The color of the font.
-     * @param font Font to initialize.
-     * @param spacing The spacing of the text.
-     */
-    Text(
-        const std::string& _text     = "",
-        float              _fontSize = 10,
-        const ::Color&     _color    = WHITE,
-        const ::Font&      _font     = ::GetFontDefault(),
-        float              _spacing  = 0
-    )
-        : text(_text)
-        , fontSize(_fontSize)
-        , color(_color)
-        , font(_font)
-        , spacing(_spacing) {
-        // Nothing.
-    }
-
-    /**
-     * Initializes a new Text object with a custom font.
-     *
-     * @param font Font to initialize.
-     * @param text Text to initialize.
-     * @param fontSize The size of the text.
-     * @param spacing The spacing of the text.
-     * @param color The color of the font.
-     */
-    Text(
-        const ::Font&      _font,
-        const std::string& _text     = "",
-        float              _fontSize = 10,
-        float              _spacing  = 0,
-        const ::Color&     _color    = WHITE
-    )
-        : text(_text)
-        , fontSize(_fontSize)
-        , color(_color)
-        , font(_font)
-        , spacing(_spacing) {
-        // Nothing.
-    }
-
-    GETTERSETTER(std::string, Text, text)
-    GETTERSETTER(float, FontSize, fontSize)
-    GETTERSETTER(::Font, Font, font)
-    GETTERSETTER(::Color, Color, color)
-    GETTERSETTER(float, Spacing, spacing)
-
-    /**
-     * Draw text with values in class.
-     */
-    void Draw(const ::Vector2& position) const {
-        ::DrawTextEx(font, text.c_str(), position, fontSize, spacing, color);
-    }
-
-    /**
-     * Draw text with values in class.
-     */
-    void Draw(int posX, int posY) const {
-        ::DrawTextEx(
-            font,
-            text.c_str(),
-            {static_cast<float>(posX), static_cast<float>(posY)},
-            fontSize,
-            spacing,
-            color
-        );
-    }
-
-    /**
-     * Draw text using Font and pro parameters (rotation).
-     *
-     * @see DrawTextPro()
-     */
     void Draw(
         const ::Vector2& position,
         float            rotation,
         const ::Vector2& origin = {0, 0}
-    ) const {
-        ::DrawTextPro(
-            font,
-            text.c_str(),
-            position,
-            origin,
-            rotation,
-            fontSize,
-            spacing,
-            color
-        );
-    }
+    ) const;
 
-    /**
-     * Measure string width for default font
-     */
-    int Measure() const {
-        return ::MeasureText(text.c_str(), static_cast<int>(fontSize));
-    }
-
-    /**
-     * Measure string size for Font
-     */
-    Vector2 MeasureEx() const {
-        return ::MeasureTextEx(font, text.c_str(), fontSize, spacing);
-    }
-
-    Text& operator=(const Text& other) {
-        if (this == &other) {
-            return *this;
-        }
-
-        text     = other.text;
-        fontSize = other.fontSize;
-        color    = other.color;
-        font     = other.font;
-        spacing  = other.spacing;
-
-        return *this;
-    }
-
-    /**
-     * Draw text using font and color
-     *
-     * @see ::DrawText
-     */
+    int         Measure() const;
+    Vector2     MeasureEx() const;
     static void Draw(
         const std::string& text,
-        const int          posX,
-        const int          posY,
-        const int          fontSize,
+        int                posX,
+        int                posY,
+        int                fontSize,
         const ::Color&     color
-    ) {
-        ::DrawText(text.c_str(), posX, posY, fontSize, color);
-    }
-
-    /**
-     * Draw text using font and color, with position defined as Vector2
-     *
-     * @see ::DrawText
-     */
+    );
     static void Draw(
         const std::string& text,
         const ::Vector2&   pos,
-        const int          fontSize,
+        int                fontSize,
         const ::Color&     color
-    ) {
-        ::DrawText(
-            text.c_str(),
-            static_cast<int>(pos.x),
-            static_cast<int>(pos.y),
-            fontSize,
-            color
-        );
-    }
-
-    /**
-     * Draw text using font, color, position, font size and spacing
-     *
-     * @see ::DrawTextEx
-     */
+    );
     static void Draw(
         const ::Font&      font,
         const std::string& text,
         const ::Vector2&   position,
-        const float        fontSize,
-        const float        spacing,
+        float              fontSize,
+        float              spacing,
         const ::Color&     color
-    ) {
-        ::DrawTextEx(font, text.c_str(), position, fontSize, spacing, color);
-    }
-
-    /**
-     * Draw text using font, color, position, origin, font size and spacing
-     *
-     * @see ::DrawTextPro
-     */
+    );
     static void Draw(
         const ::Font&      font,
         const std::string& text,
         const ::Vector2&   position,
         const ::Vector2&   origin,
-        const float        rotation,
-        const float        fontSize,
-        const float        spacing,
+        float              rotation,
+        float              fontSize,
+        float              spacing,
         const ::Color&     color
-    ) {
-        ::DrawTextPro(
-            font,
-            text.c_str(),
-            position,
-            origin,
-            rotation,
-            fontSize,
-            spacing,
-            color
-        );
-    }
+    );
 };
 } // namespace raylib

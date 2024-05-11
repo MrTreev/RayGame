@@ -1,8 +1,6 @@
 #pragma once
 
-#include "raylib/raylib-cpp-utils.h"
 #include "raylib/raylib.h"
-#include "raylib/raylibexception.h"
 #include <string>
 
 namespace raylib {
@@ -13,11 +11,11 @@ class Mesh;
  */
 class Model: public ::Model {
 public:
-    Model() {}
+    Model();
 
-    Model(const ::Model& model);
-    Model(const std::string& fileName);
-    Model(const ::Mesh& mesh);
+    explicit Model(const ::Model& model);
+    explicit Model(const std::string& fileName);
+    explicit Model(const ::Mesh& mesh);
     Model(const raylib::Mesh& mesh) = delete;
     ~Model();
     Model(const Model&) = delete;

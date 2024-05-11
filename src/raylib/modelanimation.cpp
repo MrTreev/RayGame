@@ -4,7 +4,7 @@ raylib::ModelAnimation::ModelAnimation(const ::ModelAnimation& model) {
     set(model);
 }
 
-raylib::ModelAnimation::ModelAnimation(ModelAnimation&& other) {
+raylib::ModelAnimation::ModelAnimation(ModelAnimation&& other) noexcept {
     set(other);
 
     other.boneCount  = 0;
@@ -17,12 +17,15 @@ raylib::ModelAnimation::~ModelAnimation() {
     Unload();
 }
 
-std::vector<ModelAnimation>
+std::vector<raylib::ModelAnimation>
 raylib::ModelAnimation::Load(const std::string& fileName) {
     int               count = 0;
     ::ModelAnimation* modelAnimations =
         ::LoadModelAnimations(fileName.c_str(), &count);
-    std::vector<ModelAnimation> mats(modelAnimations, modelAnimations + count);
+    std::vector<raylib::ModelAnimation> mats(
+        modelAnimations,
+        modelAnimations + count
+    );
 
     RL_FREE(modelAnimations);
 
