@@ -5,22 +5,11 @@
 #include "raylib/raylib-cpp-utils.h"
 #include "raylib/raylib.h"
 #include <string>
-#include <vector>
 
 namespace raylib {
 
-/**
- * Vertex data defining a mesh, not managed by C++ RAII.
- *
- * Make sure to Unload() this if needed, otherwise use raylib::Mesh.
- *
- * @see raylib::Mesh
- */
 class MeshUnmanaged: public ::Mesh {
 public:
-    /**
-     * Default texture constructor.
-     */
     MeshUnmanaged() {
         vertexCount   = 0;
         triangleCount = 0;

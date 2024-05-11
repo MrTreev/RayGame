@@ -7,9 +7,9 @@ namespace raylib {
 /* (OpenGL style 4x4 - right handed, column major) */
 class Matrix: public ::Matrix {
 public:
-    Matrix(const ::Matrix& mat);
+    explicit Matrix(const ::Matrix& mat);
 
-    Matrix(
+    explicit Matrix(
         float _m0  = 0,
         float _m4  = 0,
         float _m8  = 0,

@@ -1,7 +1,5 @@
 #pragma once
 
-#include "raylib/mesh.h"
-#include "raylib/raylib-cpp-utils.h"
 #include "raylib/raylib.h"
 #include <string>
 #include <vector>
@@ -12,98 +10,29 @@ namespace raylib {
  */
 class ModelAnimation: public ::ModelAnimation {
 public:
-    ModelAnimation(const ::ModelAnimation& model) {
-        set(model);
-    }
-
+    ModelAnimation(const ::ModelAnimation& model);
     ModelAnimation(const ModelAnimation&) = delete;
+    ModelAnimation(ModelAnimation&& other);
+    ~ModelAnimation();
+    static std::vector<ModelAnimation> Load(const std::string& fileName);
 
-    ModelAnimation(ModelAnimation&& other) {
-        set(other);
-
-        other.boneCount  = 0;
-        other.frameCount = 0;
-        other.bones      = nullptr;
-        other.framePoses = nullptr;
-    }
-
-    ~ModelAnimation() {
-        Unload();
-    }
-
-    /**
-     * Load model animations from file
-     */
-    static std::vector<ModelAnimation> Load(const std::string& fileName) {
-        int               count = 0;
-        ::ModelAnimation* modelAnimations =
-            ::LoadModelAnimations(fileName.c_str(), &count);
-        std::vector<ModelAnimation> mats(
-            modelAnimations,
-            modelAnimations + count
-        );
-
-        RL_FREE(modelAnimations);
-
-        return mats;
-    }
-
-    GETTERSETTER(int, BoneCount, boneCount)
-    GETTERSETTER(::BoneInfo*, Bones, bones)
-    GETTERSETTER(int, FrameCount, frameCount)
-    GETTERSETTER(::Transform**, FramePoses, framePoses)
-
-    ModelAnimation& operator=(const ::ModelAnimation& model) {
-        set(model);
-        return *this;
-    }
-
+    ModelAnimation& operator=(const ::ModelAnimation& model);
     ModelAnimation& operator=(const ModelAnimation&) = delete;
+    ModelAnimation& operator=(ModelAnimation&& other) noexcept;
+    ModelAnimation& Update(const ::Model& model, int frame);
+    void            Unload();
+    bool            IsValid(const ::Model& model) const;
 
-    ModelAnimation& operator=(ModelAnimation&& other) noexcept {
-        if (this == &other) {
-            return *this;
-        }
-
-        Unload();
-        set(other);
-
-        other.boneCount  = 0;
-        other.frameCount = 0;
-        other.bones      = nullptr;
-        other.framePoses = nullptr;
-
-        return *this;
-    }
-
-    /**
-     * Unload animation data
-     */
-    void Unload() {
-        ::UnloadModelAnimation(*this);
-    }
-
-    /**
-     * Update model animation pose
-     */
-    ModelAnimation& Update(const ::Model& model, int frame) {
-        ::UpdateModelAnimation(model, *this, frame);
-        return *this;
-    }
-
-    /**
-     * Check model animation skeleton match
-     */
-    bool IsValid(const ::Model& model) const {
-        return ::IsModelAnimationValid(model, *this);
-    }
+    int           GetBoneCount() const;
+    void          SetBoneCount(int value);
+    ::BoneInfo*   GetBones() const;
+    void          SetBones(::BoneInfo* value);
+    int           GetFrameCount() const;
+    void          SetFrameCount(int value);
+    ::Transform** GetFramePoses() const;
+    void          SetFramePoses(::Transform** value);
 
 protected:
-    void set(const ::ModelAnimation& model) {
-        boneCount  = model.boneCount;
-        frameCount = model.frameCount;
-        bones      = model.bones;
-        framePoses = model.framePoses;
-    }
+    void set(const ::ModelAnimation& model);
 };
 } // namespace raylib

@@ -15,7 +15,7 @@ public:
         int   _format  = PIXELFORMAT_UNCOMPRESSED_R8G8B8A8
     );
 
-    Image(const ::Image& image);
+    explicit Image(const ::Image& image);
 
     explicit Image(const std::string& fileName);
 

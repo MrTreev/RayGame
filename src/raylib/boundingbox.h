@@ -5,7 +5,7 @@
 namespace raylib {
 class BoundingBox: public ::BoundingBox {
 public:
-    BoundingBox(const ::BoundingBox& box);
+    explicit BoundingBox(const ::BoundingBox& box);
     explicit BoundingBox(const ::Mesh& mesh);
     explicit BoundingBox(::Vector3 minMax = ::Vector3{0.0F, 0.0F, 0.0F});
     BoundingBox(::Vector3 _min, ::Vector3 _max);

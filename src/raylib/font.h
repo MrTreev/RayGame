@@ -19,7 +19,7 @@ public:
 
     Font();
 
-    Font(const ::Font& font);
+    explicit Font(const ::Font& font);
 
     explicit Font(const std::string& fileName);
 

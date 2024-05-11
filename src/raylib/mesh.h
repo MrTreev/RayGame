@@ -1,25 +1,22 @@
 #pragma once
 
-#include "raylib/boundingbox.h"
 #include "raylib/meshunmanaged.h"
 #include "raylib/model.h"
 #include "raylib/raylib-cpp-utils.h"
 #include "raylib/raylib.h"
-#include <string>
-#include <vector>
 
 namespace raylib {
 class Mesh: public MeshUnmanaged {
 public:
     using MeshUnmanaged::MeshUnmanaged;
-    Mesh(const Mesh&) = delete;
+    Mesh(const Mesh&)            = delete;
     Mesh& operator=(const Mesh&) = delete;
 
     ~Mesh() {
         Unload();
     }
 
-    Mesh(Mesh&& other) {
+    Mesh(Mesh&& other)  noexcept {
         set(other);
 
         other.vertexCount   = 0;

@@ -6,8 +6,8 @@
 namespace raylib {
 class Camera3D: public ::Camera3D {
 public:
-    Camera3D(const ::Camera3D& camera);
-    Camera3D(
+    explicit Camera3D(const ::Camera3D& camera);
+    explicit Camera3D(
         ::Vector3 _position,
         ::Vector3 _target     = ::Vector3{0.0F, 0.0F, 0.0F},
         ::Vector3 _up         = ::Vector3{0.0F, 1.0F, 0.0F},

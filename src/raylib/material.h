@@ -7,7 +7,7 @@
 namespace raylib {
 class Material: public ::Material {
 public:
-    Material(const ::Material& material);
+    explicit Material(const ::Material& material);
     Material();
     Material(const Material&) = delete;
     Material(Material&& other) noexcept;
