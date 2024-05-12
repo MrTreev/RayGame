@@ -1,5 +1,5 @@
 #include "config.h"
-#include "objects/shroom.h"
+#include "objects/topdown_char.h"
 #include "raylib/input.h"
 #include "raylib/keyboard.h"
 #include "raylib/window.h"
@@ -8,16 +8,18 @@
 int main() {
     raylib::Window window(config::game_name);
     raylib::Window::SetTargetFPS(config::frame_rate);
-    Shroom         player;
+
+    TopdownChar player;
+
     while (!raylib::Window::ShouldClose()) {
         raylib::Window::BeginDrawing();
         raylib::Window::ClearBackground();
         while (raylib::Keyboard::GetCharPressed()) {
             using raylib::Key;
             utils::log::debug("test");
-            if (raylib::Keyboard::IsKeyDown(Key::SPACE)) {
-                player.toggle_state();
-            };
+            // if (raylib::Keyboard::IsKeyDown(Key::SPACE)) {
+            //     player.toggle_state();
+            // };
             if (raylib::Keyboard::IsKeyDown(Key::W)) {
                 player.move({0, -10});
             }

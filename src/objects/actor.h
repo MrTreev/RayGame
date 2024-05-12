@@ -5,7 +5,7 @@ template<typename Action_e>
 class Actor {
 private:
     raylib::Vector2 _position{0, 0};
-    Action_e        _action{Action_e::idle};
+    Action_e        _action{};
 
 public:
     explicit Actor(raylib::Vector2 position)

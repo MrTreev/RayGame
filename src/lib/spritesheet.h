@@ -6,25 +6,20 @@ namespace lib {
 template<std::size_t height>
 class SpriteSheet {
 private:
-    const raylib::Texture             _texture;
-    const std::array<int, height - 1> _framecount;
-    const std::array<int, height - 1> _framerate;
-    const int                         _delta_width;
-    const int                         _delta_height;
-    int                               _ticks{0};
+    const raylib::Texture         _texture;
+    const std::array<int, height> _framecount;
+    const std::array<int, height> _framerate;
+    const int                     _delta_width;
+    const int                     _delta_height;
+    int                           _ticks{0};
 
 public:
     SpriteSheet(
-        const std::string&                 sheetfile,
-        const std::array<int, height - 1>& framecount,
-        const std::array<int, height - 1>& framerate,
-        const int&                         frameswide
-    )
-        : _texture(sheetfile)
-        , _framecount(framecount)
-        , _framerate(framerate)
-        , _delta_height(_texture.height / height)
-        , _delta_width(_texture.width / frameswide){};
+        const std::string&             sheetfile,
+        const std::array<int, height>& framecount,
+        const std::array<int, height>& framerate,
+        const int&                     frameswide
+    );
 
     SpriteSheet()                              = delete;
     ~SpriteSheet()                             = default;
