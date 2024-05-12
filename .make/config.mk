@@ -32,16 +32,16 @@ SRC_FILES	=	$(shell find ${SRC_PATH} -name "*.cpp")
 HED_FILES	=	$(shell find ${SRC_PATH} -name "*.h")
 OBJ_FILES	=	$(patsubst ${SRC_PATH}/%.cpp,${BLD_PATH}/%.o,${SRC_FILES})
 
-CPPFLAGS	+=	-nostdinc++
+CPPFLAGS	+=	-nostdinc++ -nodefaultincs
 CPPFLAGS	+=	-isystem${INC_PATH}
-CPPFLAGS	+=	-isystem${INC_PATH}/c++/v1
+CPPFLAGS	+=	-cxx-isystem${INC_PATH}/c++/v1
 CPPFLAGS	+=	-iquote${SRC_PATH}
 CPPFLAGS	+=	-std=${CXXSTD}
 CXXFLAGS	+=	-DRAYGAME_LOG_${LOG_LEVEL}
 CXXFLAGS	+=	-Werror -Wall -Wextra -Wpedantic -Wabi -Wdeprecated
 
-LDFLAGS		=	-L${LIB_PATH} -nostdlib++
-LINKFLAGS	+=	-lc++ -lm -lc++abi -lunwind -lraylib
+LDFLAGS		=	-L${LIB_PATH} -nostdlib++ -nodefaultlibs
+LINKFLAGS	+=	-lc++ -lc++abi -lunwind -lraylib
 CXXFLAGS	+=	-march=${ARCH}
 CXXFLAGS	+=	-mtune=${ARCH}
 

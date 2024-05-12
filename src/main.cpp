@@ -1,5 +1,5 @@
 #include "config.h"
-#include "objects/topdown_char.h"
+#include "objects/shroom.h"
 #include "raylib/input.h"
 #include "raylib/keyboard.h"
 #include "raylib/window.h"
@@ -8,9 +8,7 @@
 int main() {
     raylib::Window window(config::game_name);
     raylib::Window::SetTargetFPS(config::frame_rate);
-
-    TopdownChar player;
-
+    Shroom player;
     while (!raylib::Window::ShouldClose()) {
         raylib::Window::BeginDrawing();
         raylib::Window::ClearBackground();
