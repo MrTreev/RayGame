@@ -3,7 +3,6 @@
 #include "raylib/input.h"
 #include "raylib/keyboard.h"
 #include "raylib/window.h"
-#include "utils/logger.h"
 
 int main() {
     raylib::Window window(config::game_name.data());

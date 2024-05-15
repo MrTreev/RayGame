@@ -1,16 +1,16 @@
 #pragma once
-#include "lib/animatedsprite.h"
+#include "lib/spritesheet.h"
 #include "objects/actor.h"
 #include <string>
 
 enum class MalePCActs {
-    idle,
-    walk,
-    run,
-    jump,
-    fall,
-    attack,
-    death,
+    idle   = 0,
+    walk   = 1,
+    run    = 2,
+    jump   = 3,
+    fall   = 4,
+    attack = 5,
+    death  = 6,
 };
 
 inline std::string to_string(MalePCActs act) {
@@ -27,50 +27,13 @@ inline std::string to_string(MalePCActs act) {
 
 class MalePC: public Actor<MalePCActs> {
 private:
-    static const int _fps           = 15;
-    static const int _idle_frames   = 00;
-    static const int _walk_frames   = 00;
-    static const int _run_frames    = 00;
-    static const int _jump_frames   = 00;
-    static const int _fall_frames   = 00;
-    static const int _attack_frames = 00;
-    static const int _death_frames  = 00;
-
-    lib::AnimatedSprite _idle{
-        "resources/GandalfHardcore/PC/idle.png",
-        _idle_frames,
-        _fps
+    lib::SpriteSheet<7> _spritesheet{
+        "",
+        {{5, 8, 8, 3, 3, 6, 10}},
+        {{15, 15, 15, 15, 15, 15, 15}},
+        10
     };
-    lib::AnimatedSprite _walk{
-        "resources/GandalfHardcore/PC/walk.png",
-        _walk_frames,
-        _fps
-    };
-    lib::AnimatedSprite _run{
-        "resources/GandalfHardcore/PC/run.png",
-        _run_frames,
-        _fps
-    };
-    lib::AnimatedSprite _jump{
-        "resources/GandalfHardcore/PC/jump.png",
-        _jump_frames,
-        _fps
-    };
-    lib::AnimatedSprite _fall{
-        "resources/GandalfHardcore/PC/fall.png",
-        _fall_frames,
-        _fps
-    };
-    lib::AnimatedSprite _attack{
-        "resources/GandalfHardcore/PC/attack.png",
-        _attack_frames,
-        _fps
-    };
-    lib::AnimatedSprite _death{
-        "resources/GandalfHardcore/PC/death.png",
-        _death_frames,
-        _fps
-    };
+    static const int _fps = 15;
 
 public:
     void draw();
