@@ -21,39 +21,25 @@ ${LIB_PATH}/libraylib.so:
 	make -C ${RAY_PATH} install
 	cd ${RAY_PATH} && git clean -xf && cd -
 
-.PHONY: libcpp-prebuild
-libcpp-prebuild: ${LLVM_BUILD_PATH}/Makefile
-${LLVM_BUILD_PATH}/Makefile:
-	${RAYGAME_PREFIX}/.make/llvm-cmake.sh
-
-.PHONY: libcpp
-libcpp: ${LIB_PATH}/libc++.so
-${LIB_PATH}/libc++.so: ${LLVM_BUILD_PATH}/Makefile
-	make -C ${LLVM_BUILD_PATH} cxx cxxabi unwind
-ifeq (${LLVM_DO_TESTS}, TRUE)
-	make -C ${LLVM_BUILD_PATH} test-cxx test-cxxabi test-unwind
-endif
-	make -C ${LLVM_BUILD_PATH} install-cxx install-cxxabi install-unwind
-
 ${BLD_PATH}/%/%/%.o: ${SRC_PATH}/%/%/%.h
 ${BLD_PATH}/%/%.o: ${SRC_PATH}/%/%.h
 ${BLD_PATH}/%.o: ${SRC_PATH}/%.h
 
 ${BLD_PATH}/%/%/%.o: ${SRC_PATH}/%/%/%.cpp
 	@mkdir -p $(dir $@)
-	${CXX} -c ${CPPFLAGS} ${CXXFLAGS} -fPIC $< -o $@
+	${CXX} -c ${CXXFLAGS} -fPIC $< -o $@
 
 ${BLD_PATH}/%/%.o: ${SRC_PATH}/%/%.cpp
 	@mkdir -p $(dir $@)
-	${CXX} -c ${CPPFLAGS} ${CXXFLAGS} -fPIC $< -o $@
+	${CXX} -c ${CXXFLAGS} -fPIC $< -o $@
 
 ${BLD_PATH}/%.o: ${SRC_PATH}/%.cpp
 	@mkdir -p $(dir $@)
-	${CXX} -c ${CPPFLAGS} ${CXXFLAGS} -fPIC $< -o $@
+	${CXX} -c ${CXXFLAGS} -fPIC $< -o $@
 
-${EXE}: libcpp raylib ${OBJ_FILES}
+${EXE}: raylib ${OBJ_FILES}
 	@mkdir -p $(dir $@)
-	${CXX} ${CXXFLAGS} ${LDFLAGS} ${LINKFLAGS} ${OBJ_FILES} -o $@
+	${CXX} ${CXXFLAGS} ${LDFLAGS} ${SRC_FILES} -o $@
 
 .PHONY: run
 run:

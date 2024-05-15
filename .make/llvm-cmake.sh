@@ -1,56 +1,33 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 set -e
 
-LLVM_BUILD_PATH="/home/opatterson/Repos/MrTreev/RayGame/build"
-OUT_PATH="/home/opatterson/Repos/MrTreev/RayGame/out/sysroot"
+LLVM_OUT_PATH="/home/opatterson/Repos/MrTreev/RayGame/out/sysroot"
 LLVM_PATH="/home/opatterson/Repos/MrTreev/RayGame/ext/llvm-project"
+LLVM_BUILD_PATH="${LLVM_PATH}/build"
+LLVM_BUILD_TYPE="RelWithDebInfo"
+rm -r "${LLVM_BUILD_PATH}"
 
-build_llvm="${LLVM_BUILD_PATH}/llvm"
-build_libc="${LLVM_BUILD_PATH}/libc"
-build_libcxx="${LLVM_BUILD_PATH}/libcxx"
-mkdir -p "${build_llvm}" "${build_libc}" "${build_libcxx}"
+cmake \
+    -G Ninja \
+    -S "${LLVM_PATH}/llvm" \
+    -B "${LLVM_BUILD_PATH}" \
+    -DCLANG_DEFAULT_RTLIB=compiler-rt \
+    -DCMAKE_BUILD_TYPE="${LLVM_BUILD_TYPE}" \
+    -DCMAKE_CXX_COMPILER="${LLVM_OUT_PATH}/bin/clang++" \
+    -DCMAKE_CXX_STANDARD=20 \
+    -DCMAKE_C_COMPILER="${LLVM_OUT_PATH}/bin/clang" \
+    -DCMAKE_INSTALL_PREFIX="${LLVM_OUT_PATH}" \
+    -DDEFAULT_SYSROOT="${LLVM_OUT_PATH}" \
+    -DLLVM_ENABLE_LLVM_LIBC=ON \
+    -DLLVM_ENABLE_PROJECTS="compiler-rt;cross-project-tests;clang;clang-tools-extra;libc;libclc;lld;lldb" \
+    -DLLVM_ENABLE_RTTI=ON \
+    -DLLVM_ENABLE_RUNTIMES="all" \
+    -DLLVM_INSTALL_BINUTILS_SYMLINKS=ON \
+    -DLLVM_INSTALL_UTILS=ON \
+    -DLLVM_LIBC_FULL_BUILD=ON \
+    -DLLVM_TARGETS_TO_BUILD=X86 \
+    -Wno-deprecated \
+    -Wno-dev
 
-llvm="${LLVM_PATH}"
-install_prefix="${OUT_PATH}"
-build_type="Debug"
-
-cmake                                                                           \
-    -G Ninja                                                                    \
-    -S ${llvm}/llvm                                                             \
-    -B ${build_llvm}                                                            \
-    -DLLVM_INSTALL_UTILS=ON                                                     \
-    -DCMAKE_INSTALL_PREFIX="${install_prefix}"                                  \
-    -DCMAKE_BUILD_TYPE="${build_type}"
-ninja -C "${build_llvm}" install
-
-cmake                                                                           \
-    -S ${llvm}/llvm                                                             \
-    -B "${build_libc}"                                                          \
-    -G Ninja                                                                    \
-    -DCLANG_DEFAULT_LINKER=lld                                                  \
-    -DCLANG_DEFAULT_RTLIB=compiler-rt                                           \
-    -DCMAKE_BUILD_TYPE="${build_type}"                                          \
-    -DCMAKE_CXX_COMPILER="${install_prefix}/bin/clang++"                        \
-    -DCMAKE_C_COMPILER="${install_prefix}/bin/clang"                            \
-    -DCMAKE_INSTALL_PREFIX="${install_prefix}"                                  \
-    -DCOMPILER_RT_BUILD_GWP_ASAN=OFF                                            \
-    -DCOMPILER_RT_BUILD_SCUDO_STANDALONE_WITH_LLVM_LIBC=ON                      \
-    -DCOMPILER_RT_SCUDO_STANDALONE_BUILD_SHARED=OFF                             \
-    -DDEFAULT_SYSROOT="${install_prefix}"                                       \
-    -DLLVM_ENABLE_PROJECTS="clang;libc;lld;compiler-rt"                         \
-    -DLLVM_EXTERNAL_LIT=${build_llvm}/utils/lit                                 \
-    -DLLVM_LIBC_FULL_BUILD=ON                                                   \
-    -DLLVM_LIBC_INCLUDE_SCUDO=ON                                                \
-    -DLLVM_ROOT="${install_prefix}"                                             \
-    -DLLVM_RUNTIME_TARGETS="x86_64-pc-linux-gnu"
-ninja -C "${build_libc}" install
-
-cmake                                                                           \
-    -S "${llvm}/runtimes"                                                       \
-    -G Ninja                                                                    \
-    -B "${build_libcxx}"                                                        \
-    -DCMAKE_BUILD_TYPE="${build_type}"                                          \
-    -DCMAKE_INSTALL_PREFIX="${install_prefix}"                                  \
-    -DLLVM_ENABLE_RUNTIMES="libcxx;libcxxabi;libunwind"                         \
-    -DLLVM_RUNTIME_TARGETS="x86_64-pc-linux-gnu"
-ninja -C "${build_libcxx}" install-runtimes
+ninja -C "${LLVM_BUILD_PATH}"
+# ninja -C "${LLVM_BUILD_PATH}" install

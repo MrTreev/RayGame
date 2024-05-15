@@ -1,12 +1,9 @@
 EXE_NAME		=	raygame
 CXXSTD			=	c++23
-CXX				=	clang++
-CC				=	clang
 ARCH			?=	native
 BUILD_TYPE		?=	DEBUG
 
-export CC
-export CXX
+CXXFLAGS	=
 
 RAYGAME_PREFIX	?=	${PWD}
 SRC_PATH		=	${RAYGAME_PREFIX}/src
@@ -17,7 +14,11 @@ BLD_PATH		=	${RAYGAME_PREFIX}/out/build
 DOC_PATH		=	${RAYGAME_PREFIX}/out/doc
 INC_PATH		=	${RAYGAME_PREFIX}/out/include
 LIB_PATH		=	${RAYGAME_PREFIX}/out/lib
+SYSROOT			=	${OUT_PATH}/sysroot
 EXE				=	${BIN_PATH}/${EXE_NAME}
+
+CXX				=	${SYSROOT}/bin/clang++
+CC				=	${SYSROOT}/bin/clang
 
 ifeq (${BUILD_TYPE}, RELEASE)
 	CXXFLAGS		+=	-Ofast ${OPTFLAGS}
@@ -32,16 +33,20 @@ SRC_FILES	=	$(shell find ${SRC_PATH} -name "*.cpp")
 HED_FILES	=	$(shell find ${SRC_PATH} -name "*.h")
 OBJ_FILES	=	$(patsubst ${SRC_PATH}/%.cpp,${BLD_PATH}/%.o,${SRC_FILES})
 
-CPPFLAGS	+=	-nostdinc++ -nodefaultincs
-CPPFLAGS	+=	-isystem${INC_PATH}
-CPPFLAGS	+=	-cxx-isystem${INC_PATH}/c++/v1
-CPPFLAGS	+=	-iquote${SRC_PATH}
-CPPFLAGS	+=	-std=${CXXSTD}
+LDFLAGS		=	-L${LIB_PATH}
+LDFLAGS		+=	-L${SYSROOT}/lib
+LDFLAGS		+=	-lc++ -lc++abi -lunwind -lraylib
+
+CXXFLAGS	+=	--sysroot ${SYSROOT}
+CXXFLAGS	+=	-isystem${INC_PATH}
+CXXFLAGS	+=	-isystem${SYSROOT}/include
+CXXFLAGS	+=	-isystem${SYSROOT}/include/x86_64-unknown-linux-gnu/c++/v1
+CXXFLAGS	+=	-cxx-isystem${SYSROOT}/include/c++/v1
+CXXFLAGS	+=	-iquote${SRC_PATH}
+CXXFLAGS	+=	-std=${CXXSTD} -stdlib=libc++
 CXXFLAGS	+=	-DRAYGAME_LOG_${LOG_LEVEL}
 CXXFLAGS	+=	-Werror -Wall -Wextra -Wpedantic -Wabi -Wdeprecated
 
-LDFLAGS		=	-L${LIB_PATH} -nostdlib++ -nodefaultlibs
-LINKFLAGS	+=	-lc++ -lc++abi -lunwind -lraylib
 CXXFLAGS	+=	-march=${ARCH}
 CXXFLAGS	+=	-mtune=${ARCH}
 
