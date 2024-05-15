@@ -7,7 +7,8 @@ namespace raylib {
 
 class RaylibException: public std::runtime_error {
 public:
-    explicit RaylibException(const std::string& message);
+    explicit RaylibException(const std::string& message)
+        : std::runtime_error(message) {}
 };
 
 } // namespace raylib

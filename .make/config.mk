@@ -3,7 +3,10 @@ CXXSTD			=	c++23
 ARCH			?=	native
 BUILD_TYPE		?=	DEBUG
 
-CXXFLAGS	=
+CXX				=	clang++
+CC				=	clang
+
+CXXFLAGS		=
 
 RAYGAME_PREFIX	?=	${PWD}
 SRC_PATH		=	${RAYGAME_PREFIX}/src
@@ -16,9 +19,6 @@ INC_PATH		=	${RAYGAME_PREFIX}/out/include
 LIB_PATH		=	${RAYGAME_PREFIX}/out/lib
 SYSROOT			=	${OUT_PATH}/sysroot
 EXE				=	${BIN_PATH}/${EXE_NAME}
-
-CXX				=	${SYSROOT}/bin/clang++
-CC				=	${SYSROOT}/bin/clang
 
 ifeq (${BUILD_TYPE}, RELEASE)
 	CXXFLAGS		+=	-Ofast ${OPTFLAGS}
@@ -37,19 +37,22 @@ LDFLAGS		=	-L${LIB_PATH}
 LDFLAGS		+=	-L${SYSROOT}/lib
 LDFLAGS		+=	-lc++ -lc++abi -lunwind -lraylib
 
-CXXFLAGS	+=	--sysroot ${SYSROOT}
 CXXFLAGS	+=	-isystem${INC_PATH}
-CXXFLAGS	+=	-isystem${SYSROOT}/include
-CXXFLAGS	+=	-isystem${SYSROOT}/include/x86_64-unknown-linux-gnu/c++/v1
-CXXFLAGS	+=	-cxx-isystem${SYSROOT}/include/c++/v1
 CXXFLAGS	+=	-iquote${SRC_PATH}
-CXXFLAGS	+=	-std=${CXXSTD} -stdlib=libc++
+CXXFLAGS	+=	-std=${CXXSTD}
 CXXFLAGS	+=	-DRAYGAME_LOG_${LOG_LEVEL}
-CXXFLAGS	+=	-Werror -Wall -Wextra -Wpedantic -Wabi -Wdeprecated
+CXXFLAGS	+=	-Werror
+CXXFLAGS	+=	-Wall -Wextra -Wpedantic -Wdeprecated
 
 CXXFLAGS	+=	-march=${ARCH}
 CXXFLAGS	+=	-mtune=${ARCH}
 
-include .make/clang.mk
+ifeq (${CXX}, clang++)
+	include .make/clang.mk
+endif
+ifeq (${CXX}, g++)
+	include .make/gcc.mk
+endif
+
 include .make/raylib.mk
 include .make/llvm.mk

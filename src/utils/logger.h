@@ -52,7 +52,7 @@ inline std::string to_string(Level level) {
     case Level::WARNING:  return "WARN ";
     case Level::ERROR:    return "ERROR";
     case Level::FATAL:    return "FATAL";
-    default:              std::ignore = level;
+	default:              return "     "; // std::unreachable(); in c++23
     }
 }
 

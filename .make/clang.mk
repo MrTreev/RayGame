@@ -1,10 +1,12 @@
+CXXFLAGS	+=	-stdlib=libc++
+
 CXXFLAGS	+=	-fdelete-null-pointer-checks
+CXXFLAGS	+=	-fsanitize=undefined
 CXXFLAGS	+=	-fsized-deallocation
+CXXFLAGS	+=	-fstack-protector
 CXXFLAGS	+=	-fstrict-enums
 
-CXXFLAGS	+=	-fsanitize=undefined
-CXXFLAGS	+=	-fstack-protector
-
+CXXFLAGS	+=	-Wabi
 CXXFLAGS	+=	-Wdirect-ivar-access
 CXXFLAGS	+=	-Weffc++
 CXXFLAGS	+=	-Wempty-init-stmt

@@ -18,6 +18,7 @@ inline std::string to_string(ShroomActs sact) {
     case ShroomActs::peek: return "Peek";
     case ShroomActs::pop:  return "Pop ";
     case ShroomActs::walk: return "Walk";
+	default:               return "    ";
     }
 };
 

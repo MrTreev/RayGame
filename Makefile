@@ -39,7 +39,7 @@ ${BLD_PATH}/%.o: ${SRC_PATH}/%.cpp
 
 ${EXE}: raylib ${OBJ_FILES}
 	@mkdir -p $(dir $@)
-	${CXX} ${CXXFLAGS} ${LDFLAGS} ${SRC_FILES} -o $@
+	${CXX} ${CXXFLAGS} ${LDFLAGS} ${OBJ_FILES} -o $@
 
 .PHONY: run
 run:

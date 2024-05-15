@@ -1,0 +1,27 @@
+CXXFLAGS	+=	-fdelete-null-pointer-checks
+CXXFLAGS	+=	-fsanitize=undefined
+CXXFLAGS	+=	-fsized-deallocation
+CXXFLAGS	+=	-fstack-protector
+CXXFLAGS	+=	-fstrict-enums
+
+CXXFLAGS	+=	-Weffc++
+CXXFLAGS	+=	-Wformat
+CXXFLAGS	+=	-Wformat-zero-length
+CXXFLAGS	+=	-Wframe-address
+CXXFLAGS	+=	-Winfinite-recursion
+CXXFLAGS	+=	-Wint-in-bool-context
+CXXFLAGS	+=	-Wmisleading-indentation
+CXXFLAGS	+=	-Wmissing-braces
+CXXFLAGS	+=	-Wold-style-cast
+CXXFLAGS	+=	-Wpointer-arith
+CXXFLAGS	+=	-Wrange-loop-construct
+CXXFLAGS	+=	-Wredundant-move
+CXXFLAGS	+=	-Wshadow
+CXXFLAGS	+=	-Wsign-compare
+CXXFLAGS	+=	-Wsign-conversion
+CXXFLAGS	+=	-Wtautological-compare
+CXXFLAGS	+=	-Wundef
+CXXFLAGS	+=	-Wunused
+CXXFLAGS	+=	-Wvariadic-macros
+CXXFLAGS	+=	-Wvla
+CXXFLAGS	+=	-Wzero-as-null-pointer-constant

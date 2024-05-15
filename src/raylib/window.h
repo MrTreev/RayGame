@@ -8,11 +8,11 @@
 namespace raylib {
 class Window {
 public:
-    explicit Window(const std::string& title = config::game_name);
+    explicit Window(const std::string& title = config::game_name.data());
     explicit Window(
         int                width  = config::default_window_width,
         int                height = config::default_window_height,
-        const std::string& title  = config::game_name,
+        const std::string& title  = config::game_name.data(),
         unsigned int       flags  = 0
     );
 

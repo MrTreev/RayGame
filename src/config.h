@@ -1,12 +1,12 @@
 #pragma once
-#include <string>
+#include <string_view>
 
 namespace config {
 
 constexpr int default_window_height = 800;
 constexpr int default_window_width  = 450;
 
-extern const std::string game_name;
-extern const int         frame_rate;
+constexpr int              frame_rate = 60;
+constexpr std::string_view game_name  = "RayGame";
 
 } // namespace config
