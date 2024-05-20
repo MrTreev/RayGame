@@ -1,37 +1,31 @@
 #include "config.h"
-#include "objects/topdown_char.h"
-#include "raylib/input.h"
-#include "raylib/keyboard.h"
-#include "raylib/window.h"
+#include "world/topdown_char.h"
+#include "core/raycpp/input.h"
+#include "core/raycpp/keyboard.h"
+#include "core/raycpp/window.h"
 
 int main() {
-    raylib::Window window(config::game_name.data());
-    raylib::Window::SetTargetFPS(config::frame_rate);
-    TopdownChar player;
-    while (!raylib::Window::ShouldClose()) {
-        raylib::Window::BeginDrawing();
-        raylib::Window::ClearBackground();
-        while (raylib::Keyboard::GetCharPressed()) {
-            using raylib::Key;
-            // if (raylib::Keyboard::IsKeyDown(Key::SPACE)) {
-            //     player.toggle_state();
-            // };
-            if (raylib::Keyboard::IsKeyDown(Key::W)) {
-                player.move({0, -10});
-            }
-            if (raylib::Keyboard::IsKeyDown(Key::A)) {
-                player.move({-10, 0});
-            }
-            if (raylib::Keyboard::IsKeyDown(Key::S)) {
-                player.move({0, 10});
-            }
-            if (raylib::Keyboard::IsKeyDown(Key::D)) {
-                player.move({10, 0});
+	core::raycpp::Window window(config::game_name.data());
+    core::raycpp::Window::SetTargetFPS(config::frame_rate);
+    constexpr int tile_size = 48;
+	world::TopdownChar   player;
+    while (!core::raycpp::Window::ShouldClose()) {
+		core::raycpp::Window::BeginDrawing();
+        core::raycpp::Window::ClearBackground();
+        while (const auto key = core::raycpp::Keyboard::GetKeyPressed()) {
+            using core::raycpp::Key;
+            switch (key) {
+            // case Key::SPACE: player.toggle_state();
+            case Key::W: player.move({0, -tile_size}); break;
+            case Key::A: player.move({-tile_size, 0}); break;
+            case Key::S: player.move({0, tile_size}); break;
+            case Key::D: player.move({tile_size, 0}); break;
+            default:     break;
             }
         }
         player.draw();
-        raylib::Window::DrawFPS();
-        raylib::Window::EndDrawing();
+		core::raycpp::Window::DrawFPS();
+		core::raycpp::Window::EndDrawing();
     }
     return 0;
 }
