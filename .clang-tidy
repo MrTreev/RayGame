@@ -16,17 +16,6 @@ Checks:
   - '-*-use-nodiscard'
   - '-*-use-trailing-return-type'
 WarningsAsErrors: ''
-HeaderFileExtensions:
-  - ''
-  - h
-  - hh
-  - hpp
-  - hxx
-ImplementationFileExtensions:
-  - c
-  - cc
-  - cpp
-  - cxx
 AnalyzeTemporaryDtors: false
 SystemHeaders:   false
 ...
