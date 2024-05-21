@@ -1,6 +1,5 @@
 .cache
-/out/
-compile_commands.json
+/build/
 
 # Prerequisites
 *.d

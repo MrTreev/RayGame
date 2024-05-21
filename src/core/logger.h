@@ -2,11 +2,18 @@
 #include <string>
 
 #if defined(RAYGAME_LOG_LOCATION)
-#    include <source_location>
+#    if __has_include(<experimental/source_location>)
+#        include <experimental/source_location>
+#    elif __has_include(<source_location>)
+#        include <source_location>
+#    else
+#        undef RAYGAME_LOG_LOCATION
+#    endif
 #endif
 
-namespace core::utils {
+namespace core::log {
 
+//! Logging level
 using Level = enum: unsigned char {
     TRACE    = 0,
     DEBUG    = 10,
@@ -40,6 +47,7 @@ constexpr Level logging_level = Level::FATAL;
 constexpr Level logging_level = Level::NOTE;
 #endif
 
+//! Logging level to string converter
 inline std::string to_string(Level level) {
     switch (level) {
     case Level::TRACE:    return "TRACE";
@@ -55,65 +63,78 @@ inline std::string to_string(Level level) {
 }
 
 namespace detail {
+
+#if __has_include(<experimental/source_location>)
+using std::experimental::source_location;
+#elif __has_include(<source_location>)
+using std::source_location;
+#endif
+
+//! Logger implementation
 void logger(
-    const core::utils::Level& level,
-    const std::string&        text
+    const core::log::Level& level,
+    const std::string&      text
 #if defined(RAYGAME_LOG_LOCATION)
     ,
-    const source_location loc = source_location::current()
+    const source_location& loc = source_location::current()
 #endif
 );
 } // namespace detail
 
-namespace log {
-
+//! Log at an trace level
 inline void trace(const std::string& text) {
     if constexpr (logging_level >= Level::TRACE) {
-        core::utils::detail::logger(Level::TRACE, text);
+        core::log::detail::logger(Level::TRACE, text);
     }
 }
 
+//! Log at an debug level
 inline void debug(const std::string& text) {
     if constexpr (logging_level >= Level::DEBUG) {
-        core::utils::detail::logger(Level::DEBUG, text);
+        core::log::detail::logger(Level::DEBUG, text);
     }
 }
 
+//! Log at an info level
 inline void info(const std::string& text) {
     if constexpr (logging_level >= Level::INFO) {
-        core::utils::detail::logger(Level::INFO, text);
+        core::log::detail::logger(Level::INFO, text);
     }
 }
 
+//! Log at an note level
 inline void note(const std::string& text) {
     if constexpr (logging_level >= Level::NOTE) {
-        core::utils::detail::logger(Level::NOTE, text);
+        core::log::detail::logger(Level::NOTE, text);
     }
 }
 
+//! Log at an progress level
 inline void progress(const std::string& text) {
     if constexpr (logging_level >= Level::PROGRESS) {
-        core::utils::detail::logger(Level::PROGRESS, text);
+        core::log::detail::logger(Level::PROGRESS, text);
     }
 }
 
+//! Log at an warning level
 inline void warning(const std::string& text) {
     if constexpr (logging_level >= Level::WARNING) {
-        core::utils::detail::logger(Level::WARNING, text);
+        core::log::detail::logger(Level::WARNING, text);
     }
 }
 
+//! Log at an error level
 inline void error(const std::string& text) {
     if constexpr (logging_level >= Level::ERROR) {
-        core::utils::detail::logger(Level::ERROR, text);
+        core::log::detail::logger(Level::ERROR, text);
     }
 }
 
+//! Log at a fatal level
 inline void fatal(const std::string& text) {
     if constexpr (logging_level >= Level::FATAL) {
-        core::utils::detail::logger(Level::FATAL, text);
+        core::log::detail::logger(Level::FATAL, text);
     }
 }
 
-} // namespace log
-} // namespace core::utils
+} // namespace core::log
