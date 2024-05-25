@@ -21,6 +21,7 @@ int main() {
         core::log::trace("Frame");
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
+                core::log::note(std::string("Closing ", config::game_name.data()));
                 window.close();
             }
         }

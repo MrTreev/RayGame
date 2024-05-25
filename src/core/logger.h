@@ -14,7 +14,7 @@
 namespace core::log {
 
 //! Logging level
-using Level = enum: unsigned char {
+enum class Level : uint8_t {
     TRACE    = 0,
     DEBUG    = 10,
     INFO     = 20,
@@ -58,7 +58,6 @@ inline std::string to_string(Level level) {
     case Level::WARNING:  return "WARN ";
     case Level::ERROR:    return "ERROR";
     case Level::FATAL:    return "FATAL";
-    default:              return "     "; // std::unreachable(); in c++23
     }
 }
 
@@ -76,64 +75,167 @@ void logger(
     const std::string&      text
 #if defined(RAYGAME_LOG_LOCATION)
     ,
-    const source_location& loc = source_location::current()
+    const source_location& loc
 #endif
 );
 } // namespace detail
 
 //! Log at an trace level
-inline void trace(const std::string& text) {
-    if constexpr (logging_level >= Level::TRACE) {
-        core::log::detail::logger(Level::TRACE, text);
+inline void trace(
+    const std::string& text
+#if defined(RAYGAME_LOG_LOCATION)
+    ,
+    const detail::source_location& loc = detail::source_location::current()
+#endif
+) {
+    if constexpr (logging_level <= Level::TRACE) {
+        core::log::detail::logger(
+            Level::TRACE,
+            text
+#if defined(RAYGAME_LOG_LOCATION)
+            ,
+            loc
+#endif
+        );
     }
 }
 
 //! Log at an debug level
-inline void debug(const std::string& text) {
-    if constexpr (logging_level >= Level::DEBUG) {
-        core::log::detail::logger(Level::DEBUG, text);
+inline void debug(
+    const std::string& text
+#if defined(RAYGAME_LOG_LOCATION)
+    ,
+    const detail::source_location& loc = detail::source_location::current()
+#endif
+) {
+    if constexpr (logging_level <= Level::DEBUG) {
+        core::log::detail::logger(
+            Level::DEBUG,
+            text
+#if defined(RAYGAME_LOG_LOCATION)
+            ,
+            loc
+#endif
+        );
     }
 }
 
 //! Log at an info level
-inline void info(const std::string& text) {
-    if constexpr (logging_level >= Level::INFO) {
-        core::log::detail::logger(Level::INFO, text);
+inline void info(
+    const std::string& text
+#if defined(RAYGAME_LOG_LOCATION)
+    ,
+    const detail::source_location& loc = detail::source_location::current()
+#endif
+) {
+    if constexpr (logging_level <= Level::INFO) {
+        core::log::detail::logger(
+            Level::INFO,
+            text
+#if defined(RAYGAME_LOG_LOCATION)
+            ,
+            loc
+#endif
+        );
     }
 }
 
 //! Log at an note level
-inline void note(const std::string& text) {
-    if constexpr (logging_level >= Level::NOTE) {
-        core::log::detail::logger(Level::NOTE, text);
+inline void note(
+    const std::string& text
+#if defined(RAYGAME_LOG_LOCATION)
+    ,
+    const detail::source_location& loc = detail::source_location::current()
+#endif
+) {
+    if constexpr (logging_level <= Level::NOTE) {
+        core::log::detail::logger(
+            Level::NOTE,
+            text
+#if defined(RAYGAME_LOG_LOCATION)
+            ,
+            loc
+#endif
+        );
     }
-}
+} //! Log at an progress level
 
-//! Log at an progress level
-inline void progress(const std::string& text) {
-    if constexpr (logging_level >= Level::PROGRESS) {
-        core::log::detail::logger(Level::PROGRESS, text);
+inline void progress(
+    const std::string& text
+#if defined(RAYGAME_LOG_LOCATION)
+    ,
+    const detail::source_location& loc = detail::source_location::current()
+#endif
+) {
+    if constexpr (logging_level <= Level::PROGRESS) {
+        core::log::detail::logger(
+            Level::PROGRESS,
+            text
+#if defined(RAYGAME_LOG_LOCATION)
+            ,
+            loc
+#endif
+        );
     }
 }
 
 //! Log at an warning level
-inline void warning(const std::string& text) {
-    if constexpr (logging_level >= Level::WARNING) {
-        core::log::detail::logger(Level::WARNING, text);
+inline void warning(
+    const std::string& text
+#if defined(RAYGAME_LOG_LOCATION)
+    ,
+    const detail::source_location& loc = detail::source_location::current()
+#endif
+) {
+    if constexpr (logging_level <= Level::WARNING) {
+        core::log::detail::logger(
+            Level::WARNING,
+            text
+#if defined(RAYGAME_LOG_LOCATION)
+            ,
+            loc
+#endif
+        );
     }
 }
 
 //! Log at an error level
-inline void error(const std::string& text) {
-    if constexpr (logging_level >= Level::ERROR) {
-        core::log::detail::logger(Level::ERROR, text);
+inline void error(
+    const std::string& text
+#if defined(RAYGAME_LOG_LOCATION)
+    ,
+    const detail::source_location& loc = detail::source_location::current()
+#endif
+) {
+    if constexpr (logging_level <= Level::ERROR) {
+        core::log::detail::logger(
+            Level::ERROR,
+            text
+#if defined(RAYGAME_LOG_LOCATION)
+            ,
+            loc
+#endif
+        );
     }
 }
 
 //! Log at a fatal level
-inline void fatal(const std::string& text) {
-    if constexpr (logging_level >= Level::FATAL) {
-        core::log::detail::logger(Level::FATAL, text);
+inline void fatal(
+    const std::string& text
+#if defined(RAYGAME_LOG_LOCATION)
+    ,
+    const detail::source_location& loc = detail::source_location::current()
+#endif
+) {
+    if constexpr (logging_level <= Level::FATAL) {
+        core::log::detail::logger(
+            Level::FATAL,
+            text
+#if defined(RAYGAME_LOG_LOCATION)
+            ,
+            loc
+#endif
+        );
     }
 }
 
