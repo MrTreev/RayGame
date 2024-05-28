@@ -1,15 +1,7 @@
 #pragma once
+#include "core/config.h"
+#include "core/types.h"
 #include <string>
-
-#if defined(RAYGAME_LOG_LOCATION)
-#    if __has_include(<experimental/source_location>)
-#        include <experimental/source_location>
-#    elif __has_include(<source_location>)
-#        include <source_location>
-#    else
-#        undef RAYGAME_LOG_LOCATION
-#    endif
-#endif
 
 namespace core::log {
 
@@ -63,19 +55,13 @@ inline std::string to_string(Level level) {
 
 namespace detail {
 
-#if __has_include(<experimental/source_location>)
-using std::experimental::source_location;
-#elif __has_include(<source_location>)
-using std::source_location;
-#endif
-
 //! Logger implementation
 void logger(
     const core::log::Level& level,
     const std::string&      text
 #if defined(RAYGAME_LOG_LOCATION)
     ,
-    const source_location& loc
+    const core::detail::source_location& loc
 #endif
 );
 } // namespace detail
@@ -85,7 +71,8 @@ inline void trace(
     const std::string& text
 #if defined(RAYGAME_LOG_LOCATION)
     ,
-    const detail::source_location& loc = detail::source_location::current()
+    const core::detail::source_location& loc =
+        core::detail::source_location::current()
 #endif
 ) {
     if constexpr (logging_level <= Level::TRACE) {
@@ -105,7 +92,8 @@ inline void debug(
     const std::string& text
 #if defined(RAYGAME_LOG_LOCATION)
     ,
-    const detail::source_location& loc = detail::source_location::current()
+    const core::detail::source_location& loc =
+        core::detail::source_location::current()
 #endif
 ) {
     if constexpr (logging_level <= Level::DEBUG) {
@@ -125,7 +113,8 @@ inline void info(
     const std::string& text
 #if defined(RAYGAME_LOG_LOCATION)
     ,
-    const detail::source_location& loc = detail::source_location::current()
+    const core::detail::source_location& loc =
+        core::detail::source_location::current()
 #endif
 ) {
     if constexpr (logging_level <= Level::INFO) {
@@ -145,7 +134,8 @@ inline void note(
     const std::string& text
 #if defined(RAYGAME_LOG_LOCATION)
     ,
-    const detail::source_location& loc = detail::source_location::current()
+    const core::detail::source_location& loc =
+        core::detail::source_location::current()
 #endif
 ) {
     if constexpr (logging_level <= Level::NOTE) {
@@ -164,7 +154,8 @@ inline void progress(
     const std::string& text
 #if defined(RAYGAME_LOG_LOCATION)
     ,
-    const detail::source_location& loc = detail::source_location::current()
+    const core::detail::source_location& loc =
+        core::detail::source_location::current()
 #endif
 ) {
     if constexpr (logging_level <= Level::PROGRESS) {
@@ -184,7 +175,8 @@ inline void warning(
     const std::string& text
 #if defined(RAYGAME_LOG_LOCATION)
     ,
-    const detail::source_location& loc = detail::source_location::current()
+    const core::detail::source_location& loc =
+        core::detail::source_location::current()
 #endif
 ) {
     if constexpr (logging_level <= Level::WARNING) {
@@ -204,7 +196,8 @@ inline void error(
     const std::string& text
 #if defined(RAYGAME_LOG_LOCATION)
     ,
-    const detail::source_location& loc = detail::source_location::current()
+    const core::detail::source_location& loc =
+        core::detail::source_location::current()
 #endif
 ) {
     if constexpr (logging_level <= Level::ERROR) {
@@ -224,7 +217,8 @@ inline void fatal(
     const std::string& text
 #if defined(RAYGAME_LOG_LOCATION)
     ,
-    const detail::source_location& loc = detail::source_location::current()
+    const core::detail::source_location& loc =
+        core::detail::source_location::current()
 #endif
 ) {
     if constexpr (logging_level <= Level::FATAL) {
