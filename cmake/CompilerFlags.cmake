@@ -15,22 +15,15 @@ else()
 endif()
 
 if(RAYGAME_IGNORE_CONDITIONS)
-    target_compile_definitions(
-        ${PROJECT_NAME} PUBLIC "RAYGAME_IGNORE_CONDITIONS"
-    )
+    target_compile_definitions(${PROJECT_NAME} PUBLIC "RAYGAME_IGNORE_CONDITIONS")
 endif()
 
 if(ENABLE_LTO)
-    set_target_properties(
-        ${PROJECT_NAME} PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE
-    )
+    set_target_properties(${PROJECT_NAME} PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
 endif()
 
 if(ENABLE_MSAN AND ENABLE_ASAN)
-    message(
-        WARNING
-            "Compiling with both AddressSanitizer and MemorySanitizer is not recommended"
-    )
+    message(WARNING "Compiling with both AddressSanitizer and MemorySanitizer is not recommended")
 endif()
 
 if(ENABLE_ASAN)
@@ -73,17 +66,11 @@ target_compile_options(${PROJECT_NAME} PUBLIC -Wframe-address)
 target_compile_options(${PROJECT_NAME} PUBLIC -Wgcc-compat)
 target_compile_options(${PROJECT_NAME} PUBLIC -Wgnu)
 target_compile_options(${PROJECT_NAME} PUBLIC -Wheader-hygiene)
-target_compile_options(
-    ${PROJECT_NAME} PUBLIC -Wimport-preprocessor-directive-pedantic
-)
+target_compile_options(${PROJECT_NAME} PUBLIC -Wimport-preprocessor-directive-pedantic)
 target_compile_options(${PROJECT_NAME} PUBLIC -Wimplicit-function-declaration)
-target_compile_options(
-    ${PROJECT_NAME} PUBLIC -Wincompatible-function-pointer-types-strict
-)
+target_compile_options(${PROJECT_NAME} PUBLIC -Wincompatible-function-pointer-types-strict)
 target_compile_options(${PROJECT_NAME} PUBLIC -Wincomplete-module)
-target_compile_options(
-    ${PROJECT_NAME} PUBLIC -Winconsistent-missing-destructor-override
-)
+target_compile_options(${PROJECT_NAME} PUBLIC -Winconsistent-missing-destructor-override)
 target_compile_options(${PROJECT_NAME} PUBLIC -Winfinite-recursion)
 target_compile_options(${PROJECT_NAME} PUBLIC -Wint-in-bool-context)
 target_compile_options(${PROJECT_NAME} PUBLIC -Wmicrosoft)
@@ -95,9 +82,7 @@ target_compile_options(${PROJECT_NAME} PUBLIC -Wnon-gcc)
 target_compile_options(${PROJECT_NAME} PUBLIC -Wnonportable-cfstrings)
 target_compile_options(${PROJECT_NAME} PUBLIC -Wnonportable-include-path)
 target_compile_options(${PROJECT_NAME} PUBLIC -Wnonportable-system-include-path)
-target_compile_options(
-    ${PROJECT_NAME} PUBLIC -Wnonportable-vector-initialization
-)
+target_compile_options(${PROJECT_NAME} PUBLIC -Wnonportable-vector-initialization)
 target_compile_options(${PROJECT_NAME} PUBLIC -Wnull-pointer-arithmetic)
 target_compile_options(${PROJECT_NAME} PUBLIC -Wnull-pointer-subtraction)
 target_compile_options(${PROJECT_NAME} PUBLIC -Wold-style-cast)

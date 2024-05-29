@@ -1,5 +1,4 @@
 #pragma once
-#include "core/config.h"
 #include "core/types.h"
 #include <chrono>
 #include <string_view>
@@ -7,10 +6,10 @@
 namespace config {
 
 //! Default window width
-constexpr std::size_t window_width  = 480;
+constexpr std::size_t window_width  = 640;
 //
 //! Default window height
-constexpr std::size_t window_height = 640;
+constexpr std::size_t window_height = 480;
 
 //! Default frame rate
 constexpr std::size_t frame_rate = 60;

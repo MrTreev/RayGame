@@ -32,25 +32,24 @@ public:
 
     void clear();
     void display();
+    void draw_fps(bool enable);
+
+    bool is_windowed();
+    bool is_windowed_fullscreen();
+    bool is_fullscreen();
 
     void set_style(WindowStyle style);
     void set_framerate(const size_t& framerate);
-    void set_size(const size_t& framerate);
+    void set_size(const size_t& width, const size_t& height);
+    void set_fullscreen(const bool& enable);
+
+    void toggle_fullscreen();
 
     WindowStyle get_style();
     size_t      get_framerate();
 
-    inline bool is_windowed() {
-        return (get_style() == WindowStyle::Windowed);
-    };
-
-    inline bool is_windowed_fullscreen() {
-        return (get_style() == WindowStyle::WindowedFullscreen);
-    };
-
-    inline bool is_fullscreen() {
-        return (get_style() == WindowStyle::Fullscreen);
-    };
+private:
+    bool _draw_fps{false};
 };
 
 } // namespace core::gui
