@@ -9,6 +9,8 @@ target_sources(
            exception.h
            logger.cpp
            logger.h
+		   spritesheet.cpp
+		   spritesheet.h
            types.cpp
            types.h
 )

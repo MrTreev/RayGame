@@ -1,6 +1,6 @@
 #pragma once
 #include "core/types.h"
-#include <string_view>
+#include <string>
 
 namespace core::gui {
 

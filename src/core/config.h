@@ -150,17 +150,36 @@ static_assert(false, "Unknown Architecture");
 static_assert(false, "Cannot run without an OS");
 #endif
 
+#if defined(__SSE2__)
+#    define RAYGAME_HAS_SSE2
+#    ifdef RAYGAME_HAS_SSE2
+#        ifdef __SSSE3__
+#            define RAYGAME_HAS_SSE3
+#        endif
+#        ifdef __AVX__
+#            define RAYGAME_HAS_AVX
+#            ifdef RAYGAME_HAS_AVX
+#                ifdef __AVX2__
+#                    define RAYGAME_HAS_AVX2
+#                endif
+#            endif
+#        endif
+#    endif
+#elif defined(__ARM_NEON)
+#    define RAYGAME_HAS_NEON
+#endif
+
 enum class Backend {
-    SFML,
-    DFPSR,
     RAYLIB,
+    DFPSR,
+    SFML,
 };
-#if defined(RAYGAME_BACKEND_SFML)
-constexpr Backend backend = Backend::SFML;
+#if defined(RAYGAME_BACKEND_RAYLIB)
+static constexpr Backend backend = Backend::RAYLIB;
 #elif defined(RAYGAME_BACKEND_DFPSR)
-constexpr Backend backend = Backend::DFPSR;
-#elif defined(RAYGAME_BACKEND_RAYLIB)
-constexpr Backend backend = Backend::RAYLIB;
+static constexpr Backend backend = Backend::DFPSR;
+#elif defined(RAYGAME_BACKEND_SFML)
+static constexpr Backend backend = Backend::SFML;
 #endif
 
 } // namespace core
@@ -203,3 +222,11 @@ constexpr size_t path_count = core::detail::get_prefix_len();
 } // namespace core::detail
 
 #endif
+
+#if defined(RAYGAME_CC_CLANG)
+#    define RAYGAME_SYSTEM_HEADER _Pragma("clang system_header")
+#elif defined(RAYGAME_CC_GCC)
+#    define RAYGAME_SYSTEM_HEADER _Pragma("GCC system_header")
+#else
+#    define RAYGAME_SYSTEM_HEADER
+#endif // defined (RAYGAME_CC_CLANG)

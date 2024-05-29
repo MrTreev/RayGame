@@ -1,11 +1,9 @@
 #include "core/gui/window.h" // IWYU pragma: keep
 #include "core/condition.h"
+#include "core/gui/backend.h"
 #include "main.h"
 #include <limits>
 #include <string_view>
-
-// Raylib
-#include <raylib.h>
 
 constexpr int rl_win_flags = static_cast<int>(
     static_cast<unsigned int>(FLAG_WINDOW_RESIZABLE)
@@ -92,8 +90,6 @@ void core::gui::Window::display() {
         ::DrawFPS(10, 10);
     }
     ::EndDrawing();
-    ::ClearBackground(BLACK);
-    ::BeginDrawing();
 }
 
 void core::gui::Window::draw_fps(bool enable) {

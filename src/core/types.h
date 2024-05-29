@@ -1,11 +1,4 @@
 #pragma once
-#include "core/config.h"
-
-#if defined(RAYGAME_CC_CLANG)
-#    pragma clang system_header
-#elif defined(RAYGAME_CC_GCC)
-#    pragma GCC system_header
-#endif
 
 #include <cstddef> // IWYU pragma: export
 #include <cstdint> // IWYU pragma: export
