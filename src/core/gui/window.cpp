@@ -29,38 +29,38 @@ core::gui::Window::Window()
     : core::gui::Window(config::window_width, config::window_height) {}
 
 core::gui::Window::Window(const size_t& width, const size_t& height)
-    : core::gui::Window(width, height, config::game_name) {}
+    : core::gui::Window(width, height, config::game_name.data()) {}
 
 core::gui::Window::Window(
-    const size_t&    width,
-    const size_t&    height,
-    std::string_view name
+    const size_t&      width,
+    const size_t&      height,
+    const std::string& name
 )
     : core::gui::Window(width, height, name, WindowStyle::Windowed) {}
 
 core::gui::Window::Window(
     const size_t&      width,
     const size_t&      height,
-    std::string_view   name,
+    const std::string& name,
     const WindowStyle& style
 ) {
     core::condition::pre_condition(
         ((width > 0) && (height > 0)),
-        "Cannot have a width or height of 0"
+        "Width and height must be greater than zero"
     );
     core::condition::pre_condition(
         (width <= std::numeric_limits<int>::max()),
-        "width is too large for Raylib int type"
+        "Width is too large for Raylib int type"
     );
     core::condition::pre_condition(
         (height <= std::numeric_limits<int>::max()),
-        "height is too large for Raylib int type"
+        "Height is too large for Raylib int type"
     );
 
     ::InitWindow(
         static_cast<int>(width),
         static_cast<int>(height),
-        name.data()
+        name.c_str()
     );
     core::condition::post_condition(
         ::IsWindowReady(),
@@ -68,7 +68,6 @@ core::gui::Window::Window(
     );
     set_style(style);
     set_framerate(60);
-    ::BeginDrawing();
 }
 
 core::gui::Window::~Window() {
@@ -92,8 +91,8 @@ void core::gui::Window::display() {
     if (_draw_fps) {
         ::DrawFPS(10, 10);
     }
-    ::ClearBackground(BLACK);
     ::EndDrawing();
+    ::ClearBackground(BLACK);
     ::BeginDrawing();
 }
 

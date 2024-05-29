@@ -12,13 +12,26 @@ enum class WindowStyle {
 
 class Window {
 public:
+    //! Window initialiser
+    /*!
+	 * @param	width	Width of the window
+	 * @param	height	Height of the window
+	 * @param	name	Name of the window
+	 * @param	style	Style of the window
+	 *
+	 * @pre		The width is greater than zero and smaller than the maximum
+	 * 			value supported by the implementation @see RAYGAME_BACKEND
+	 * @pre		The height is greater than zero and smaller than the maximum
+	 * 			value supported by the implementation @see RAYGAME_BACKEND
+	 * @post 	The Window is created correctly
+	 */
     Window();
     Window(const size_t& width, const size_t& height);
-    Window(const size_t& width, const size_t& height, std::string_view name);
+    Window(const size_t& width, const size_t& height, const std::string& name);
     Window(
         const size_t&      width,
         const size_t&      height,
-        std::string_view   name,
+        const std::string& name,
         const WindowStyle& style
     );
     ~Window();

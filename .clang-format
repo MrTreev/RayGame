@@ -1,11 +1,13 @@
 ---
-ColumnLimit: 80
-IndentWidth: 4
-InsertNewlineAtEOF: true
-KeepEmptyLinesAtEOF: false
 Language: Cpp
 LineEnding: LF
 Standard: Latest
+
+InsertNewlineAtEOF: true
+KeepEmptyLinesAtEOF: false
+
+ColumnLimit: 80
+IndentWidth: 4
 TabWidth: 4
 UseTab: Never
 
