@@ -69,7 +69,6 @@ core::gui::Window::Window(
 }
 
 core::gui::Window::~Window() {
-    ::EndDrawing();
     if (::IsWindowReady()) {
         ::CloseWindow();
     }

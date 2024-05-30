@@ -1,4 +1,7 @@
 cmake_minimum_required(VERSION 3.25...3.29)
+include(FetchContent)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(
     RayGame
@@ -6,13 +9,16 @@ project(
     DESCRIPTION "A top-down sprite-based game in C++"
     LANGUAGES CXX
 )
-
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
 add_executable(${PROJECT_NAME})
+
+option(BUILD_DOC "Build documentation" OFF)
+option(ENABLE_ASAN "Enable the Address Sanitiser" OFF)
+option(ENABLE_MSAN "Enable the Memory Sanitiser" OFF)
+option(ENABLE_UBSAN "Enable the Undefined Behaviour Sanitiser" OFF)
+option(ENABLE_LTO "Enable Link-Time Optimisation" OFF)
+option(RAYGAME_IGNORE_CONDITIONS "Ignore all runtime condition checks" OFF)
+
 include(CompilerFlags)
-include(Doxygen)
 
 add_subdirectory(src)
 
@@ -35,37 +41,39 @@ if(NOT CMAKE_BUILD_TYPE)
     )
 endif()
 
-# SFML Library
-if(NOT RAYGAME_BACKEND)
-    set(default_raygame_backend RAYLIB)
-    message(
-        STATUS
-            "Setting build type to '${default_raygame_backend}' as none was specified."
-    )
-    set(RAYGAME_BACKEND "${default_raygame_backend}"
-        CACHE STRING "Choose the graphics backend." FORCE
-    )
-    set_property(
-        CACHE RAYGAME_BACKEND
-        PROPERTY STRINGS
-                 "RAYLIB"
-                 "SFML"
-                 "DFPSR"
-    )
-endif()
+if (BUILD_DOC)
+	find_package(Doxygen)
+	if (DOXYGEN_FOUND)
+	    # set input and output files
+	    set(DOXYFILE ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile)
+	    message("Doxygen build started")
+	    add_custom_target( doc_doxygen ALL
+	        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE}
+	        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+	        COMMENT "Generating API documentation with Doxygen"
+	        VERBATIM )
+	else (DOXYGEN_FOUND)
+	  message("Doxygen need to be installed to generate the doxygen documentation")
+	endif (DOXYGEN_FOUND)
+endif (BUILD_DOC)
 
-if(RAYGAME_BACKEND STREQUAL SFML)
-    target_compile_definitions(${PROJECT_NAME} PRIVATE "RAYGAME_BACKEND_SFML")
-    include(BuildSfml)
-    target_link_libraries(${PROJECT_NAME} PRIVATE sfml-audio)
-    target_link_libraries(${PROJECT_NAME} PRIVATE sfml-graphics)
-    target_link_libraries(${PROJECT_NAME} PRIVATE sfml-system)
-    target_link_libraries(${PROJECT_NAME} PRIVATE sfml-window)
-elseif(RAYGAME_BACKEND STREQUAL DFPSR)
-    target_compile_definitions(${PROJECT_NAME} PRIVATE "RAYGAME_BACKEND_DFPSR")
-    include(BuildDfpsr)
-elseif(RAYGAME_BACKEND STREQUAL RAYLIB)
-	target_compile_definitions(${PROJECT_NAME} PRIVATE "RAYGAME_BACKEND_RAYLIB")
-	include(BuildRaylib)
-    target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
-endif()
+FetchContent_Declare(
+  battery-embed
+  GIT_REPOSITORY https://github.com/batterycenter/embed.git
+  GIT_TAG        v1.2.15
+)
+FetchContent_Declare(
+    RAYLIB GIT_REPOSITORY https://github.com/MrTreev/raylib.git GIT_TAG 5.0
+    SYSTEM
+)
+
+FetchContent_MakeAvailable(RAYLIB)
+FetchContent_MakeAvailable(battery-embed)
+
+set_property(
+    DIRECTORY ${raylib_SOURCE_DIR}
+    APPEND
+    PROPERTY COMPILE_OPTIONS -Wno-error -Wno-zero-as-null-pointer-constant -Wno-implicit-const-int-float-conversion
+)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE raylib)

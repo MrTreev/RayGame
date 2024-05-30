@@ -169,19 +169,6 @@ static_assert(false, "Cannot run without an OS");
 #    define RAYGAME_HAS_NEON
 #endif
 
-enum class Backend {
-    RAYLIB,
-    DFPSR,
-    SFML,
-};
-#if defined(RAYGAME_BACKEND_RAYLIB)
-static constexpr Backend backend = Backend::RAYLIB;
-#elif defined(RAYGAME_BACKEND_DFPSR)
-static constexpr Backend backend = Backend::DFPSR;
-#elif defined(RAYGAME_BACKEND_SFML)
-static constexpr Backend backend = Backend::SFML;
-#endif
-
 } // namespace core
 
 #if defined(RAYGAME_LOG_LOCATION)
