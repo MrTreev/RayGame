@@ -18,10 +18,6 @@ option(ENABLE_UBSAN "Enable the Undefined Behaviour Sanitiser" OFF)
 option(ENABLE_LTO "Enable Link-Time Optimisation" OFF)
 option(RAYGAME_IGNORE_CONDITIONS "Ignore all runtime condition checks" OFF)
 
-include(CompilerFlags)
-
-add_subdirectory(src)
-
 if(NOT CMAKE_BUILD_TYPE)
     set(default_build_type Debug)
     message(
@@ -63,17 +59,13 @@ FetchContent_Declare(
   GIT_TAG        v1.2.15
 )
 FetchContent_Declare(
-    RAYLIB GIT_REPOSITORY https://github.com/MrTreev/raylib.git GIT_TAG 5.0
+    RAYLIB GIT_REPOSITORY https://github.com/raysan5/raylib.git GIT_TAG 5.0
     SYSTEM
 )
 
 FetchContent_MakeAvailable(RAYLIB)
 FetchContent_MakeAvailable(battery-embed)
 
-set_property(
-    DIRECTORY ${raylib_SOURCE_DIR}
-    APPEND
-    PROPERTY COMPILE_OPTIONS -Wno-error -Wno-zero-as-null-pointer-constant -Wno-implicit-const-int-float-conversion
-)
-
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
+
+add_subdirectory(src)

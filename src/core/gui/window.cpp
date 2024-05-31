@@ -81,7 +81,6 @@ bool core::gui::Window::should_close() {
 void core::gui::Window::clear() {
     ::BeginDrawing();
     ::ClearBackground(BLACK);
-    ::EndDrawing();
 }
 
 void core::gui::Window::display() {

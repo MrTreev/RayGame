@@ -1,14 +1,20 @@
 #pragma once
+#include "core/texture.h"
 #include "core/types.h"
 #include <string>
 
+namespace core {
+
 class SpriteSheet {
 private:
+    core::Texture _texture;
 
 public:
     SpriteSheet(
         const std::string& filename,
-        const uint32_t&    width,
-        const uint32_t&    height
+        const size_t&      width,
+        const size_t&      height
     );
 };
+
+} // namespace core
