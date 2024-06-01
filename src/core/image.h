@@ -16,7 +16,6 @@ private:
     std::vector<Pixel> _image_data;
     size_t             _width;
     size_t             _height;
-    static std::vector<Pixel> load(void* data, const size_t& length);
 
 public:
     explicit Image(const std::string& filepath);
