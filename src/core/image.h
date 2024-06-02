@@ -4,6 +4,7 @@
 #include <vector>
 
 namespace core {
+
 struct Pixel {
     uint8_t red;
     uint8_t green;

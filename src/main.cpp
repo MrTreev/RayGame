@@ -13,5 +13,4 @@ int main() {
     while (!game_window.should_close()) {
         game_window.display();
     }
-    return 0;
 }
