@@ -1,7 +1,8 @@
 target_compile_definitions(${PROJECT_NAME} PUBLIC "RAYGAME_LOG_DEBUG")
 target_sources(
     ${PROJECT_NAME}
-    PUBLIC condition.cpp
+    PUBLIC
+           condition.cpp
            condition.h
            config.cpp
            config.h
@@ -11,6 +12,8 @@ target_sources(
            image.h
            logger.cpp
            logger.h
+           math.cpp
+           math.h
            spritesheet.cpp
            spritesheet.h
            texture.cpp

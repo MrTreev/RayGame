@@ -12,11 +12,14 @@ struct Pixel {
     uint8_t alpha;
 };
 
+using Color = Pixel;
+
 class Image {
 private:
     std::vector<Pixel> _image_data;
-    size_t             _width;
-    size_t             _height;
+    int_t              _width;
+    int_t              _height;
+    int_t              _n_mipmaps;
 
 public:
     explicit Image(const std::string& filepath);
@@ -27,6 +30,22 @@ public:
     Image& operator=(const Image&) = default;
     Image& operator=(Image&&)      = default;
     ~Image();
+
+    inline Pixel* data() {
+        return _image_data.data();
+    }
+
+    inline int_t width() {
+        return _width;
+    }
+
+    inline int_t height() {
+        return _height;
+    }
+
+    inline int_t n_mipmaps() {
+        return _n_mipmaps;
+    }
 };
 
 } // namespace core

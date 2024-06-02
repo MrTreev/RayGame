@@ -6,16 +6,15 @@ namespace core {
 
 class Texture {
 private:
-    uint64_t id;
-    int64_t  width;
-    int64_t  height;
-    int64_t  mipmaps;
-    int64_t  format;
+    uint_t _id;
+    int_t  _width;
+    int_t  _height;
+    int_t  _n_mipmaps;
 
 public:
-    explicit Texture(core::Image);
+    explicit Texture(core::Image image);
 
-    Texture();
+    Texture()                           = delete;
     Texture(const Texture&)             = delete;
     Texture(Texture&& other)            = default;
     Texture& operator=(const Texture&)  = delete;
@@ -24,8 +23,15 @@ public:
 
     void load();
     void unload();
-    void draw(size_t posX, size_t posY);
-    void draw(size_t posX, size_t posY, rot_deg rotation);
+    void draw(Vec2<int_t> pos);
+    void draw(Vec2<int_t> pos, deg_t rot_d);
+    void draw(Vec2<int_t> pos, deg_t rot_d, float32 scale);
+    void draw(int_t pos_x, int_t pos_y);
+    void draw(int_t pos_x, int_t pos_y, deg_t rot_d);
+    void draw(int_t pos_x, int_t pos_y, deg_t rot_d, float32 scale);
+
+private:
+    void draw(Quad<Vec2<float32>> vert, Quad<Vec2<float32>> tex);
 };
 
 } // namespace core
