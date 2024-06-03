@@ -21,15 +21,17 @@ core::Texture::Texture(core::Image image)
 void core::Texture::draw(int_t pos_x, int_t pos_y) {
     condition::pre_condition((_width != 0), "Texture._width != 0");
     condition::pre_condition((_height != 0), "Texture._height != 0");
+    const auto posxf = static_cast<float32>(pos_x);
+    const auto posyf = static_cast<float32>(pos_y);
+    const auto poswf = static_cast<float32>(pos_x + _width);
+    const auto poshf = static_cast<float32>(pos_y + _height);
 
-    // clang-format off
     const Quad<Vec2<float32>> vert{
-        {static_cast<float32>(pos_x),          static_cast<float32>(pos_y)},
-        {static_cast<float32>(pos_x + _width), static_cast<float32>(pos_y)},
-        {static_cast<float32>(pos_x),          static_cast<float32>(pos_y + _height)},
-        {static_cast<float32>(pos_x + _width), static_cast<float32>(pos_y + _height)},
+        {posxf, posyf},
+        {posxf, poshf},
+        {posxf, poshf},
+        {poswf, posyf},
     };
-    // clang-format on
     const Quad<Vec2<float32>> tex = vert;
 
     draw(vert, tex);
@@ -39,30 +41,51 @@ void core::Texture::draw(int_t pos_x, int_t pos_y, deg_t rot_d) {
     const float32 rot_rad = math::deg2rad(rot_d);
     const float32 sin_rot = sinf(rot_rad);
     const float32 cos_rot = cosf(rot_rad);
-    const auto posxf = static_cast<float32>(pos_x);
-    const auto posyf = static_cast<float32>(pos_y);
-    const auto fwidth = static_cast<float32>(_width);
-    const auto fheight = static_cast<float32>(_height);
+    const auto    posxf   = static_cast<float32>(pos_x);
+    const auto    posyf   = static_cast<float32>(pos_y);
+    const auto    fwidth  = static_cast<float32>(_width);
+    const auto    fheight = static_cast<float32>(_height);
 
-    Quad<Vec2<float32>> vert{};
-
-    vert.tl.x = posxf + -posxf * cos_rot - -posyf * sin_rot;
-    vert.tl.y = posyf + -posxf * sin_rot + -posyf * cos_rot;
-
-    vert.tr.x = posxf + (-posxf + fwidth) * cos_rot - -posyf * sin_rot;
-    vert.tr.y = posyf + (-posxf + fwidth) * sin_rot + -posyf * cos_rot;
-
-    vert.bl.x = posxf + -posxf * cos_rot - (-posyf + fheight) * sin_rot;
-    vert.bl.y = posyf + -posxf * sin_rot + (-posyf + fheight) * cos_rot;
-
-    vert.br.x = posxf + (-posxf + fwidth) * cos_rot - (-posyf + fheight) * sin_rot;
-    vert.br.y = posyf + (-posxf + fwidth) * sin_rot + (-posyf + fheight) * cos_rot;
+    Quad<Vec2<float32>> vert{
+  // Top Left
+        {posxf - posxf * cos_rot + posyf * sin_rot,
+         posyf - posxf * sin_rot - posyf * cos_rot                            },
+ // Bottom Left
+        {posxf - (posxf * cos_rot) - ((fheight - posyf) * sin_rot),
+         posyf - (posxf * sin_rot) + ((fheight - posyf) * cos_rot)            },
+ // Bottom Right
+        {posxf + ((fwidth - posxf) * cos_rot) - ((fheight + -posyf) * sin_rot),
+         posyf + ((fwidth - posxf) * sin_rot) + ((fheight + -posyf) * cos_rot)},
+ // Top Right
+        {posxf + ((fwidth - posxf) * cos_rot) + (posyf * sin_rot),
+         posyf + ((fwidth - posxf) * sin_rot) - (posyf * cos_rot)             },
+    };
 
     const Quad<Vec2<float32>> tex = vert;
     draw(vert, tex);
 }
 
 void core::Texture::draw(int_t pos_x, int_t pos_y, deg_t rot_d, float32 scale) {
+    const auto posxf   = static_cast<float32>(pos_x);
+    const auto posyf   = static_cast<float32>(pos_y);
+    const auto fwidth  = static_cast<float32>(_width);
+    const auto fheight = static_cast<float32>(_height);
+
+    float32       sin_rot = sinf(math::deg2rad(rot_d));
+    float32       cos_rot = cosf(math::deg2rad(rot_d));
+    Rect<float32> dest    = {posxf, posyf, fwidth * scale, fwidth * scale};
+
+    tl.x = x + dx * cos_rot - dy * sin_rot;
+    tl.y = y + dx * sin_rot + dy * cos_rot;
+
+    tr.x = x + (dx + dest.width) * cos_rot - dy * sin_rot;
+    tr.y = y + (dx + dest.width) * sin_rot + dy * cos_rot;
+
+    bl.x = x + dx * cos_rot - (dy + dest.height) * sin_rot;
+    bl.y = y + dx * sin_rot + (dy + dest.height) * cos_rot;
+
+    br.x = x + (dx + dest.width) * cos_rot - (dy + dest.height) * sin_rot;
+    br.y = y + (dx + dest.width) * sin_rot + (dy + dest.height) * cos_rot;
 }
 
 void core::Texture::draw(Quad<Vec2<float32>> vert, Quad<Vec2<float32>> tex) {

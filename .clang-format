@@ -13,7 +13,7 @@ UseTab: Never
 
 AccessModifierOffset: -4
 AlignAfterOpenBracket: BlockIndent
-AlignArrayOfStructures: Right
+AlignArrayOfStructures: Left
 AlignEscapedNewlines: Right
 AlignOperands: Align
 AllowAllArgumentsOnNextLine: false

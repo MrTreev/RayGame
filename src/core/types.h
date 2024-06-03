@@ -26,6 +26,8 @@ using std::size_t;
 using float32 = float;
 using float64 = double;
 
+namespace core {
+
 using rad_t  = float32;
 using deg_t  = float32;
 
@@ -53,7 +55,7 @@ struct Vec4 {
     T w;
 };
 
-template<typename Pos_t, typename Dis_t>
+template<typename Pos_t, typename Dis_t = Pos_t>
 struct Rect {
     Pos_t x;
     Pos_t y;
@@ -68,3 +70,5 @@ struct Quad {
     T br;
     T tr;
 };
+
+}
