@@ -11,6 +11,7 @@ RAYGAME_SYSTEM_HEADER
 extern "C" {
 #include <raylib.h>  // IWYU pragma: export
 #include <raymath.h> // IWYU pragma: export
+#include <rlgl.h> // IWYU pragma: export
 }
 #if defined(RAYLIB_VERSION_MAJOR)
 #    if RAYLIB_VERSION_MAJOR < 5

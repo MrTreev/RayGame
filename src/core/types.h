@@ -25,12 +25,10 @@ using std::size_t;
 
 using float32 = float;
 using float64 = double;
-#if defined(RAYGAME_CC_CLANG) || defined(RAYGAME_CC_GCC)
-using float128 = __float128;
-#endif
 
 using rad_t  = float32;
 using deg_t  = float32;
+
 using int_t  = int;
 using uint_t = unsigned int;
 
