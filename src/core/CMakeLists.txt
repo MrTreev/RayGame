@@ -1,7 +1,8 @@
 target_compile_definitions(${PROJECT_NAME} PUBLIC "RAYGAME_LOG_DEBUG")
 target_sources(
     ${PROJECT_NAME}
-    PUBLIC
+    PUBLIC backend.cpp
+           backend.h
            condition.cpp
            condition.h
            config.cpp

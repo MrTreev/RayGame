@@ -19,19 +19,20 @@ public:
     Texture(Texture&& other)            = default;
     Texture& operator=(const Texture&)  = delete;
     Texture& operator=(Texture&& other) = default;
-    ~Texture()                          = default;
+    ~Texture();
 
     void load();
     void unload();
+
     void draw(Vec2<int_t> pos);
-    void draw(Vec2<int_t> pos, deg_t rot_d);
-    void draw(Vec2<int_t> pos, deg_t rot_d, float32 scale);
-    void draw(int_t pos_x, int_t pos_y);
-    void draw(int_t pos_x, int_t pos_y, deg_t rot_d);
-    void draw(int_t pos_x, int_t pos_y, deg_t rot_d, float32 scale);
+    void draw(Vec2<int_t> pos, int_t scale);
+    void draw(Vec2<int_t> pos, float_t scale);
+    void draw(Vec2<int_t> pos, deg_t rot_d, float_t scale);
+    void draw(Vec2<int_t> pos, Rect<int_t> rect);
 
 private:
-    void draw(Quad<Vec2<float32>> vert, Quad<Vec2<float32>> tex);
+    void draw(const Quad<Vec2<float_t>>& vert, const Quad<Vec2<float_t>>& tex);
+    void print_info();
 };
 
 } // namespace core

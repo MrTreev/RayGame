@@ -1,5 +1,9 @@
 #pragma once
+#include "core/condition.h"
 #include "core/types.h"
+#include <format>
+#include <limits>
+#include <typeinfo>
 
 namespace core::math {
 
@@ -17,5 +21,28 @@ inline rad_t deg2rad(deg_t deg) {
 inline deg_t rad2deg(rad_t rad) {
     return rad * constants::rad2deg;
 };
+
+template<typename Out_T, typename In_T>
+constexpr Out_T numeric_cast(const In_T& input) {
+    const auto max_val = static_cast<In_T>(std::numeric_limits<Out_T>::max());
+    const auto min_val = static_cast<In_T>(std::numeric_limits<Out_T>::min());
+    condition::pre_condition(
+        input <= max_val,
+        std::format(
+            "Input of type {} is above the max for output type {}",
+            typeid(In_T).name(),
+            typeid(Out_T).name()
+        )
+    );
+    condition::pre_condition(
+        input >= min_val,
+        std::format(
+            "Input of type {} is below the min for output type {}",
+            typeid(In_T).name(),
+            typeid(Out_T).name()
+        )
+    );
+    return static_cast<Out_T>(input);
+}
 
 } // namespace core::math

@@ -1,17 +1,34 @@
 #include "core/logger.h" // IWYU pragma: keep
-#include "core/config.h"
-#include "main.h"
 #include <chrono>
 #include <iostream>
 #include <string_view>
 
+#if defined(RAYGAME_LOG_LOCATION)
 namespace {
+consteval std::size_t get_prefix_len(
+    const core::detail::source_location loc =
+        core::detail::source_location::current()
+) {
+    const std::string_view search_str = "/src/";
+    const std::string_view locname    = loc.file_name();
+    const std::size_t      nopref_len = locname.rfind(search_str);
+    return nopref_len + search_str.length();
+}
+
 constexpr std::string_view shorten_name(std::string_view full_loc) {
     std::string_view shortloc(full_loc);
-    shortloc.remove_prefix(core::detail::path_count);
+    shortloc.remove_prefix(get_prefix_len());
     return shortloc;
 }
+
+const size_t start_time =
+    static_cast<size_t>(std::chrono::duration_cast<std::chrono::milliseconds>(
+                            std::chrono::system_clock::now().time_since_epoch()
+    )
+                            .count());
+
 } // namespace
+#endif
 
 void core::log::detail::logger(
     const core::log::Level& level,
@@ -25,8 +42,8 @@ void core::log::detail::logger(
     using std::chrono::duration_cast;
     using ms = std::chrono::milliseconds;
 
-    const size_t time_ms = static_cast<size_t>(duration_cast<ms>(now).count())
-                           - config::start_time;
+    const size_t time_ms =
+        static_cast<size_t>(duration_cast<ms>(now).count()) - start_time;
 
     std::cout << time_ms << " - " << to_string(level)
 #if defined(RAYGAME_LOG_LOCATION)

@@ -13,9 +13,10 @@ add_executable(${PROJECT_NAME})
 
 option(BUILD_DOC "Build documentation" OFF)
 option(ENABLE_ASAN "Enable the Address Sanitiser" OFF)
+option(ENABLE_AVX "Enable AVX instructions" ON)
+option(ENABLE_LTO "Enable Link-Time Optimisation" OFF)
 option(ENABLE_MSAN "Enable the Memory Sanitiser" OFF)
 option(ENABLE_UBSAN "Enable the Undefined Behaviour Sanitiser" OFF)
-option(ENABLE_LTO "Enable Link-Time Optimisation" OFF)
 option(RAYGAME_IGNORE_CONDITIONS "Ignore all runtime condition checks" OFF)
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -37,35 +38,16 @@ if(NOT CMAKE_BUILD_TYPE)
     )
 endif()
 
-if (BUILD_DOC)
-	find_package(Doxygen)
-	if (DOXYGEN_FOUND)
-	    # set input and output files
-	    set(DOXYFILE ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile)
-	    message("Doxygen build started")
-	    add_custom_target( doc_doxygen ALL
-	        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE}
-	        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-	        COMMENT "Generating API documentation with Doxygen"
-	        VERBATIM )
-	else (DOXYGEN_FOUND)
-	  message("Doxygen need to be installed to generate the doxygen documentation")
-	endif (DOXYGEN_FOUND)
-endif (BUILD_DOC)
-
-FetchContent_Declare(
-  battery-embed
-  GIT_REPOSITORY https://github.com/batterycenter/embed.git
-  GIT_TAG        v1.2.15
-)
-FetchContent_Declare(
-    RAYLIB GIT_REPOSITORY https://github.com/raysan5/raylib.git GIT_TAG 5.0
-    SYSTEM
-)
-
-FetchContent_MakeAvailable(RAYLIB)
-FetchContent_MakeAvailable(battery-embed)
-
-target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
+if(NOT RAYGAME_BACKEND)
+    set(default_raygame_backend RAYLIB)
+    message(
+        STATUS
+            "Setting build type to '${default_raygame_backend}' as none was specified."
+    )
+    set(RAYGAME_BACKEND "${default_raygame_backend}"
+        CACHE STRING "Choose the graphics backend." FORCE
+    )
+    set_property(CACHE RAYGAME_BACKEND PROPERTY STRINGS "RAYLIB" "VULKAN" "SDL")
+endif()
 
 add_subdirectory(src)

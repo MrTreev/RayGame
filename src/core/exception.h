@@ -6,8 +6,10 @@ namespace core::exception {
 namespace detail {
 class Condition: public std::logic_error {
 public:
-    explicit Condition(const std::string& message);
-    explicit Condition(const std::logic_error&& error);
+    explicit Condition(const std::string& message)
+        : ::std::logic_error(message){};
+    explicit Condition(const std::logic_error&& error)
+        : ::std::logic_error(error){};
 };
 } // namespace detail
 
@@ -19,7 +21,8 @@ public:
  */
 class PreCondition: public detail::Condition {
 public:
-    explicit PreCondition(const std::string& message);
+    explicit PreCondition(const std::string& message)
+        : detail::Condition(message){};
 };
 
 //! Check-Condition exception
@@ -29,7 +32,8 @@ public:
  */
 class CheckCondition: public detail::Condition {
 public:
-    explicit CheckCondition(const std::string& message);
+    explicit CheckCondition(const std::string& message)
+        : detail::Condition(message){};
 };
 
 //! Post-Check-Condition exception
@@ -39,6 +43,7 @@ public:
  */
 class PostCondition: public detail::Condition {
 public:
-    explicit PostCondition(const std::string& message);
+    explicit PostCondition(const std::string& message)
+        : detail::Condition(message){};
 };
 } // namespace core::exception

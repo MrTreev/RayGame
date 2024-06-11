@@ -9,40 +9,9 @@ static_assert(
     "attempt to compile without support for C++23 features"
 );
 #    error "This game's code uses features from the C++23 standard"
-#    include <THIS_HEADER_SHOULD_NEVER_EXIT> // cause compiler error if prior two attempts don't work
 #endif
 
-namespace core {
-
-//! Compiler Definitions
-enum class Compiler {
-    CLANG,
-    GCC,
-    MSC,
-    MINGW,
-};
-
-#if defined(__clang__)
-#    define RAYGAME_CC_CLANG
-static constexpr Compiler compiler = Compiler::CLANG;
-static_assert(__clang_major__ >= 17, "Only tested on clang 17 and higher");
-#elif defined(__GNUC__)
-#    define RAYGAME_CC_GCC
-static constexpr Compiler compiler = Compiler::GCC;
-static_assert(__GNUC__ >= 14, "Only tested on GCC 14 and higher");
-#elif defined(__MINGW32__)
-#    define RAYGAME_CC_MINGW
-static constexpr Compiler compiler = Compiler::MINGW;
-static_assert(false, "Not tested on MinGW yet");
-#elif defined(_MSC_VER)
-#    define RAYGAME_CC_MSC
-static constexpr Compiler compiler = Compiler::MSC;
-static_assert(false, "Not tested on MSC yet");
-#else
-static_assert(false, "Unknown Compiler");
-#endif
-
-// Architecture Definitions
+//! Architecture Definitions
 enum class Architecture {
     AMD64,
     X86_64,
@@ -77,7 +46,74 @@ static_assert(false, "Not tested on ARM yet");
 static_assert(false, "Unknown Architecture");
 #endif
 
-// Operating System Definitions
+//! Compiler Definitions
+enum class Compiler {
+    CLANG,
+    GCC,
+    MSC,
+    MINGW,
+};
+
+#if defined(__clang__)
+#    define RAYGAME_CC_CLANG
+static constexpr Compiler compiler = Compiler::CLANG;
+static_assert(__clang_major__ >= 17, "Only tested on clang 17 and higher");
+#elif defined(__GNUC__)
+#    define RAYGAME_CC_GCC
+static constexpr Compiler compiler = Compiler::GCC;
+static_assert(false, "Not tested on GCC yet");
+#elif defined(__MINGW32__)
+#    define RAYGAME_CC_MINGW
+static constexpr Compiler compiler = Compiler::MINGW;
+static_assert(false, "Not tested on MinGW yet");
+#elif defined(_MSC_VER)
+#    define RAYGAME_CC_MSC
+static constexpr Compiler compiler = Compiler::MSC;
+static_assert(false, "Not tested on MSC yet");
+#else
+static_assert(false, "Unknown Compiler");
+#endif
+
+#if defined(RAYGAME_CC_CLANG)
+#    define RAYGAME_SYSTEM_HEADER _Pragma("clang system_header")
+#elif defined(RAYGAME_CC_GCC)
+#    define RAYGAME_SYSTEM_HEADER _Pragma("GCC system_header")
+#else
+#    define RAYGAME_SYSTEM_HEADER
+#endif // defined (RAYGAME_CC_CLANG)
+
+#if defined(__SSE2__)
+#    define RAYGAME_HAS_SSE2
+#    ifdef RAYGAME_HAS_SSE2
+#        ifdef __SSSE3__
+#            define RAYGAME_HAS_SSSE3
+#        endif
+#        ifdef __AVX__
+#            define RAYGAME_HAS_AVX
+#            ifdef RAYGAME_HAS_AVX
+#                ifdef __AVX2__
+#                    define RAYGAME_HAS_AVX2
+#                endif
+#            endif
+#        endif
+#    endif
+#elif defined(__ARM_NEON)
+#    define RAYGAME_HAS_NEON
+#endif
+
+#if defined(RAYGAME_HAS_SSE2) || defined(RAYGAME_HAS_NEON)
+#    define RAYGAME_SIMD_128BIT
+#    if defined(RAYGAME_HAS_SSSE2)
+#    endif
+#    if defined(RAYGAME_HAS_AVX)
+#        define RAYGAME_SIMD_256BIT_F
+#        if defined(RAYGAME_HAS_AVX2)
+#            define RAYGAME_SIMD_256BIT_X
+#        endif
+#    endif
+#endif
+
+//! Operating System Definitions
 #if (__STDC_HOSTED__ == 1)
 enum class OperatingSystem {
     ANDROID,
@@ -91,6 +127,7 @@ enum class OperatingSystem {
     WIN64,
     WIN32,
 };
+
 #    if defined(__ANDROID__)
 #        define RAYGAME_OS_ANDROID
 static constexpr OperatingSystem operatingsystem = OperatingSystem::ANDROID;
@@ -150,70 +187,3 @@ static_assert(false, "Unknown Architecture");
 static_assert(false, "Cannot run without an OS");
 #endif
 
-#if defined(__SSE2__)
-#    define RAYGAME_HAS_SSE2
-#    ifdef RAYGAME_HAS_SSE2
-#        ifdef __SSSE3__
-#            define RAYGAME_HAS_SSE3
-#        endif
-#        ifdef __AVX__
-#            define RAYGAME_HAS_AVX
-#            ifdef RAYGAME_HAS_AVX
-#                ifdef __AVX2__
-#                    define RAYGAME_HAS_AVX2
-#                endif
-#            endif
-#        endif
-#    endif
-#elif defined(__ARM_NEON)
-#    define RAYGAME_HAS_NEON
-#endif
-
-} // namespace core
-
-#if defined(RAYGAME_LOG_LOCATION)
-#    if __has_include(<experimental/source_location>)
-#        include <experimental/source_location>
-
-namespace core::detail {
-using std::experimental::source_location;
-}
-#    elif __has_include(<source_location>)
-#        include <source_location>
-
-namespace core::detail {
-using std::source_location;
-}
-#    else
-#        warn "source_location unsupported, disabling RAYGAME_LOG_LOCATION"
-#        undef RAYGAME_LOG_LOCATION
-#    endif
-#endif
-
-#if defined(RAYGAME_LOG_LOCATION)
-#    include <string_view>
-
-namespace core::detail {
-constexpr std::size_t get_prefix_len(
-    const core::detail::source_location loc =
-        core::detail::source_location::current()
-) {
-    const std::string_view search_str = "/src/";
-    const std::string_view locname    = loc.file_name();
-    const std::size_t      nopref_len = locname.rfind(search_str);
-    return nopref_len + search_str.length();
-}
-
-constexpr size_t path_count = core::detail::get_prefix_len();
-
-} // namespace core::detail
-
-#endif
-
-#if defined(RAYGAME_CC_CLANG)
-#    define RAYGAME_SYSTEM_HEADER _Pragma("clang system_header")
-#elif defined(RAYGAME_CC_GCC)
-#    define RAYGAME_SYSTEM_HEADER _Pragma("GCC system_header")
-#else
-#    define RAYGAME_SYSTEM_HEADER
-#endif // defined (RAYGAME_CC_CLANG)

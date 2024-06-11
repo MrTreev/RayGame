@@ -12,8 +12,6 @@ struct Pixel {
     uint8_t alpha;
 };
 
-using Color = Pixel;
-
 class Image {
 private:
     std::vector<Pixel> _image_data;

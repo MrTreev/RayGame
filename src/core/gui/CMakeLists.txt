@@ -1,7 +1,6 @@
 target_sources(
     ${PROJECT_NAME}
-    PUBLIC window.h
+    PUBLIC
            window.cpp
-           backend.h
-           backend.cpp
+           window.h
 )

@@ -1,7 +1,25 @@
 #pragma once
-#include "core/config.h"
 #include "core/types.h"
 #include <string>
+
+#if defined(RAYGAME_LOG_LOCATION)
+#    if __has_include(<experimental/source_location>)
+#        include <experimental/source_location>
+
+namespace core::detail {
+using std::experimental::source_location;
+}
+#    elif __has_include(<source_location>)
+#        include <source_location>
+
+namespace core::detail {
+using std::source_location;
+}
+#    else
+#        warn "source_location unsupported, disabling RAYGAME_LOG_LOCATION"
+#        undef RAYGAME_LOG_LOCATION
+#    endif
+#endif
 
 namespace core::log {
 
@@ -42,14 +60,22 @@ constexpr Level logging_level = Level::NOTE;
 //! Logging level to string converter
 inline std::string to_string(Level level) {
     switch (level) {
-    case Level::TRACE:    return "TRACE";
-    case Level::DEBUG:    return "DEBUG";
-    case Level::INFO:     return "INFO ";
-    case Level::NOTE:     return "NOTE ";
-    case Level::PROGRESS: return "PROGR";
-    case Level::WARNING:  return "WARN ";
-    case Level::ERROR:    return "ERROR";
-    case Level::FATAL:    return "FATAL";
+    case Level::TRACE:
+        return "TRACE";
+    case Level::DEBUG:
+        return "DEBUG";
+    case Level::INFO:
+        return "INFO ";
+    case Level::NOTE:
+        return "NOTE ";
+    case Level::PROGRESS:
+        return "PROGR";
+    case Level::WARNING:
+        return "WARN ";
+    case Level::ERROR:
+        return "ERROR";
+    case Level::FATAL:
+        return "FATAL";
     }
 }
 
@@ -67,7 +93,7 @@ void logger(
 } // namespace detail
 
 //! Log at an trace level
-inline void trace(
+constexpr inline void trace(
     const std::string& text
 #if defined(RAYGAME_LOG_LOCATION)
     ,
@@ -88,7 +114,7 @@ inline void trace(
 }
 
 //! Log at an debug level
-inline void debug(
+constexpr inline void debug(
     const std::string& text
 #if defined(RAYGAME_LOG_LOCATION)
     ,
@@ -109,7 +135,7 @@ inline void debug(
 }
 
 //! Log at an info level
-inline void info(
+constexpr inline void info(
     const std::string& text
 #if defined(RAYGAME_LOG_LOCATION)
     ,
@@ -130,7 +156,7 @@ inline void info(
 }
 
 //! Log at an note level
-inline void note(
+constexpr inline void note(
     const std::string& text
 #if defined(RAYGAME_LOG_LOCATION)
     ,
@@ -150,7 +176,7 @@ inline void note(
     }
 } //! Log at an progress level
 
-inline void progress(
+constexpr inline void progress(
     const std::string& text
 #if defined(RAYGAME_LOG_LOCATION)
     ,
@@ -171,7 +197,7 @@ inline void progress(
 }
 
 //! Log at an warning level
-inline void warning(
+constexpr inline void warning(
     const std::string& text
 #if defined(RAYGAME_LOG_LOCATION)
     ,
@@ -192,7 +218,7 @@ inline void warning(
 }
 
 //! Log at an error level
-inline void error(
+constexpr inline void error(
     const std::string& text
 #if defined(RAYGAME_LOG_LOCATION)
     ,
@@ -213,7 +239,7 @@ inline void error(
 }
 
 //! Log at a fatal level
-inline void fatal(
+constexpr inline void fatal(
     const std::string& text
 #if defined(RAYGAME_LOG_LOCATION)
     ,
