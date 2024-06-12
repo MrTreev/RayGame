@@ -9,7 +9,7 @@
 
 [submodule "raylib"]
 	path = ext/raylib
-	url = https://github.com/MrTreev/raylib.git
+	url = https://github.com/raysan5/raylib.git
 
 [submodule "SDL"]
     path = ext/SDL
