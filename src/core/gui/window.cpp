@@ -1,5 +1,5 @@
 #include "core/gui/window.h" // IWYU pragma: keep
-#include "core/backend.h"
+#include "core/backend.h"    // IWYU pragma: keep
 #include "core/condition.h"
 #include "core/math.h"
 #include <string_view>
@@ -10,21 +10,21 @@ namespace {
 #if defined(RAYGAME_GAME_WIDTH)
 constexpr std::size_t window_width = RAYGAME_GAME_WIDTH;
 #else
-constexpr std::size_t window_width = 640;
+constexpr size_t window_width = 640;
 #endif
 
 //! Default window height
 #if defined(RAYGAME_GAME_HEIGHT)
 constexpr std::size_t window_height = RAYGAME_GAME_HEIGHT;
 #else
-constexpr std::size_t window_height = 480;
+constexpr size_t window_height = 480;
 #endif
 
 //! Default frame rate
 #if defined(RAYGAME_GAME_FPS)
 constexpr std::size_t frame_rate = RAYGAME_GAME_FPS;
 #else
-constexpr std::size_t frame_rate = 60;
+constexpr size_t frame_rate = 60;
 #endif
 
 //! Game name
@@ -275,7 +275,8 @@ core::gui::Window::~Window() {
 static struct window {
     SDL_Window*  window{nullptr};
     SDL_Surface* surface{nullptr};
-} sdl_impl; //NOLINT
+    bool         should_close{false};
+} impl; //NOLINT
 
 core::gui::Window::Window()
     : core::gui::Window(window_width, window_height) {}
@@ -312,22 +313,75 @@ core::gui::Window::Window(
     }
     const int& init_result = SDL_Init(sdl_flags);
     condition::check_condition(init_result == 0, "SDL Initialisation failed");
-    sdl_impl.window = SDL_CreateWindow(
+    impl.window = SDL_CreateWindow(
         name.c_str(),
         core::math::numeric_cast<int>(width),
         core::math::numeric_cast<int>(height),
         window_flags
     );
-    sdl_impl.surface = SDL_GetWindowSurface(sdl_impl.window);
-    size_t fps       = frame_rate;
+    impl.surface = SDL_GetWindowSurface(impl.window);
+    size_t fps   = frame_rate;
     fps++;
     std::ignore = fps;
 }
 
 core::gui::Window::~Window() {
-    SDL_DestroyWindow(sdl_impl.window);
-    sdl_impl.window = nullptr;
+    SDL_DestroyWindow(impl.window);
+    impl.window = nullptr;
     SDL_Quit();
 }
+
+bool core::gui::Window::should_close() {
+    return impl.should_close;
+}
+
+void core::gui::Window::clear() {}
+
+void core::gui::Window::display() {
+    SDL_UpdateWindowSurface(impl.window);
+}
+
+void core::gui::Window::draw_fps(bool enable) {}
+
+bool core::gui::Window::is_windowed() {}
+
+bool core::gui::Window::is_windowed_fullscreen() {}
+
+bool core::gui::Window::is_fullscreen() {}
+
+void core::gui::Window::set_style(WindowStyle style) {
+    switch (style) {
+    case WindowStyle::Windowed:
+        SDL_SetWindowBordered(impl.window, SDL_TRUE);
+        SDL_SetWindowFullscreen(impl.window, SDL_FALSE);
+        break;
+    case WindowStyle::WindowedFullscreen:
+        SDL_SetWindowBordered(impl.window, SDL_FALSE);
+        SDL_SetWindowFullscreen(impl.window, SDL_FALSE);
+        break;
+    case WindowStyle::Fullscreen:
+        SDL_SetWindowFullscreen(impl.window, SDL_TRUE);
+        break;
+    }
+}
+
+void core::gui::Window::set_framerate(const size_t& framerate) {}
+
+void core::gui::Window::set_size(const size_t& width, const size_t& height) {}
+
+void core::gui::Window::set_fullscreen(const bool& enable) {}
+
+void core::gui::Window::toggle_fullscreen() {
+    if ((SDL_GetWindowFlags(impl.window) & SDL_WINDOW_FULLSCREEN)
+        == SDL_WINDOW_FULLSCREEN) {
+        SDL_SetWindowFullscreen(impl.window, SDL_FALSE);
+    } else {
+        SDL_SetWindowFullscreen(impl.window, SDL_TRUE);
+    }
+}
+
+core::gui::WindowStyle core::gui::Window::get_style() {}
+
+size_t core::gui::Window::get_framerate() {}
 
 #endif

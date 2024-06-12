@@ -1,9 +1,9 @@
 #include "core/texture.h" // IWYU pragma: keep
 #include "core/condition.h"
+#include "core/backend.h"
 #include "core/config.h"
 #include "core/logger.h"
 #include "core/math.h"
-#include <raylib.h>
 
 #if defined(RAYGAME_BACKEND_RAYLIB)
 

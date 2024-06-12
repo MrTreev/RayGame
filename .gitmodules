@@ -1,0 +1,20 @@
+[submodule "battery-embed"]
+	path = ext/battery-embed
+	url = https://github.com/batterycenter/embed.git
+
+
+[submodule "DFPSR"]
+	path = ext/DFPSR
+	url = https://github.com/Dawoodoz/DFPSR.git
+
+[submodule "raylib"]
+	path = ext/raylib
+	url = https://github.com/MrTreev/raylib.git
+
+[submodule "SDL"]
+    path = ext/SDL
+	url = https://github.com/libsdl-org/SDL.git
+
+[submodule "SFML"]
+    path = ext/SFML
+	url = https://github.com/SFML/SFML.git
