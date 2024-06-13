@@ -28,8 +28,5 @@ core::Image::Image(const std::string& filepath)
     );
     core::log::debug("vector created");
 }
+#elif defined(RAYGAME_BACKEND_SDL)
 #endif
-
-core::Image::~Image() {
-    core::log::debug("destructor");
-};

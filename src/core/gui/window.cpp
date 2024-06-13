@@ -1,5 +1,5 @@
 #include "core/gui/window.h" // IWYU pragma: keep
-#include "core/backend.h"    // IWYU pragma: keep
+#include "core/backend.h"
 #include "core/condition.h"
 #include "core/math.h"
 #include <string_view>
@@ -260,7 +260,10 @@ core::gui::Window::Window(
         nullptr,
         nullptr
     ));
-    condition::check_condition(window != nullptr, "Window creation failed");
+    core::condition::check_condition(
+        window != nullptr,
+        "Window creation failed"
+    );
 }
 
 core::gui::Window::~Window() {
@@ -272,11 +275,6 @@ core::gui::Window::~Window() {
 #elif defined(RAYGAME_BACKEND_SDL)
 
 // These need to be raw pointers because of incomplete types
-static struct window {
-    SDL_Window*  window{nullptr};
-    SDL_Surface* surface{nullptr};
-    bool         should_close{false};
-} impl; //NOLINT
 
 core::gui::Window::Window()
     : core::gui::Window(window_width, window_height) {}
@@ -312,55 +310,80 @@ core::gui::Window::Window(
         break;
     }
     const int& init_result = SDL_Init(sdl_flags);
-    condition::check_condition(init_result == 0, "SDL Initialisation failed");
-    impl.window = SDL_CreateWindow(
+    core::condition::check_condition(
+        init_result == 0,
+        "SDL initialisation failed"
+    );
+    backend.window = SDL_CreateWindow(
         name.c_str(),
         core::math::numeric_cast<int>(width),
         core::math::numeric_cast<int>(height),
         window_flags
     );
-    impl.surface = SDL_GetWindowSurface(impl.window);
-    size_t fps   = frame_rate;
-    fps++;
+    core::condition::check_condition(
+        backend.window != nullptr,
+        "SDL failed to create window"
+    );
+    backend.renderer = SDL_CreateRenderer(backend.window, nullptr);
+    core::condition::check_condition(
+        backend.renderer != nullptr,
+        "SDL failed to create renderer"
+    );
+    size_t fps  = frame_rate;
     std::ignore = fps;
 }
 
 core::gui::Window::~Window() {
-    SDL_DestroyWindow(impl.window);
-    impl.window = nullptr;
+    SDL_DestroyWindow(backend.window);
+    backend.window = nullptr;
     SDL_Quit();
 }
 
 bool core::gui::Window::should_close() {
-    return impl.should_close;
+    return backend.should_close;
 }
 
-void core::gui::Window::clear() {}
+void core::gui::Window::clear() {
+    SDL_SetRenderDrawColor(backend.renderer, 0x00, 0x00, 0x00, 0xFF);
+    SDL_RenderClear(backend.renderer);
+}
 
 void core::gui::Window::display() {
-    SDL_UpdateWindowSurface(impl.window);
+    SDL_RenderPresent(backend.renderer);
+    SDL_UpdateWindowSurface(backend.window);
 }
 
 void core::gui::Window::draw_fps(bool enable) {}
 
-bool core::gui::Window::is_windowed() {}
+bool core::gui::Window::is_windowed() {
+    return (SDL_GetWindowFlags(backend.window)
+            & (SDL_WINDOW_FULLSCREEN | SDL_WINDOW_BORDERLESS))
+           == (SDL_WINDOW_FULLSCREEN);
+}
 
-bool core::gui::Window::is_windowed_fullscreen() {}
+bool core::gui::Window::is_windowed_fullscreen() {
+    return (SDL_GetWindowFlags(backend.window)
+            & (SDL_WINDOW_FULLSCREEN | SDL_WINDOW_BORDERLESS))
+           == (SDL_WINDOW_FULLSCREEN | SDL_WINDOW_BORDERLESS);
+}
 
-bool core::gui::Window::is_fullscreen() {}
+bool core::gui::Window::is_fullscreen() {
+    return (SDL_GetWindowFlags(backend.window) & SDL_WINDOW_FULLSCREEN)
+           == SDL_WINDOW_FULLSCREEN;
+}
 
 void core::gui::Window::set_style(WindowStyle style) {
     switch (style) {
     case WindowStyle::Windowed:
-        SDL_SetWindowBordered(impl.window, SDL_TRUE);
-        SDL_SetWindowFullscreen(impl.window, SDL_FALSE);
+        SDL_SetWindowBordered(backend.window, SDL_TRUE);
+        SDL_SetWindowFullscreen(backend.window, SDL_FALSE);
         break;
     case WindowStyle::WindowedFullscreen:
-        SDL_SetWindowBordered(impl.window, SDL_FALSE);
-        SDL_SetWindowFullscreen(impl.window, SDL_FALSE);
+        SDL_SetWindowBordered(backend.window, SDL_FALSE);
+        SDL_SetWindowFullscreen(backend.window, SDL_FALSE);
         break;
     case WindowStyle::Fullscreen:
-        SDL_SetWindowFullscreen(impl.window, SDL_TRUE);
+        SDL_SetWindowFullscreen(backend.window, SDL_TRUE);
         break;
     }
 }
@@ -369,19 +392,38 @@ void core::gui::Window::set_framerate(const size_t& framerate) {}
 
 void core::gui::Window::set_size(const size_t& width, const size_t& height) {}
 
-void core::gui::Window::set_fullscreen(const bool& enable) {}
+void core::gui::Window::set_fullscreen(const bool& enable) {
+    SDL_SetWindowFullscreen(backend.window, static_cast<SDL_bool>(enable));
+}
 
 void core::gui::Window::toggle_fullscreen() {
-    if ((SDL_GetWindowFlags(impl.window) & SDL_WINDOW_FULLSCREEN)
-        == SDL_WINDOW_FULLSCREEN) {
-        SDL_SetWindowFullscreen(impl.window, SDL_FALSE);
+    if (core::gui::Window::is_fullscreen()) {
+        SDL_SetWindowFullscreen(backend.window, SDL_FALSE);
     } else {
-        SDL_SetWindowFullscreen(impl.window, SDL_TRUE);
+        SDL_SetWindowFullscreen(backend.window, SDL_TRUE);
     }
 }
 
-core::gui::WindowStyle core::gui::Window::get_style() {}
+core::gui::WindowStyle core::gui::Window::get_style() {
+    const SDL_WindowFlags winflags = SDL_GetWindowFlags(backend.window);
+    if ((winflags & SDL_WINDOW_FULLSCREEN) != 0U) {
+        return WindowStyle::Fullscreen;
+    }
+    if ((winflags & SDL_WINDOW_BORDERLESS) != 0U) {
+        return WindowStyle::WindowedFullscreen;
+    }
+    if ((winflags & SDL_WINDOW_BORDERLESS) == 0U) {
+        return WindowStyle::Windowed;
+    }
+    core::condition::check_condition(
+        false,
+        "Unhandled window style encountered"
+    );
+    return WindowStyle::Windowed;
+}
 
-size_t core::gui::Window::get_framerate() {}
+size_t core::gui::Window::get_framerate() {
+    return 0;
+}
 
 #endif

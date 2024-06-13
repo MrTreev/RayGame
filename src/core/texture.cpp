@@ -1,9 +1,5 @@
 #include "core/texture.h" // IWYU pragma: keep
-#include "core/condition.h"
 #include "core/backend.h"
-#include "core/config.h"
-#include "core/logger.h"
-#include "core/math.h"
 
 #if defined(RAYGAME_BACKEND_RAYLIB)
 
@@ -55,22 +51,22 @@ core::Texture::~Texture() {
     }
 }
 
-void core::Texture::draw(Vec2<int_t> pos) {
+void core::Texture::draw(Vec2<int32_t> pos) {
     condition::pre_condition((_id != 0), "Texture._id != 0");
     condition::pre_condition((_width != 0), "Texture._width != 0");
     condition::pre_condition((_height != 0), "Texture._height != 0");
-    const auto posxf = core::math::numeric_cast<float_t>(pos.x);
-    const auto posyf = core::math::numeric_cast<float_t>(pos.y);
-    const auto poswf = core::math::numeric_cast<float_t>(pos.x + _width);
-    const auto poshf = core::math::numeric_cast<float_t>(pos.y + _height);
-    const Quad<Vec2<float_t>> vert{
+    const auto posxf = core::math::numeric_cast<float>(pos.x);
+    const auto posyf = core::math::numeric_cast<float>(pos.y);
+    const auto poswf = core::math::numeric_cast<float>(pos.x + _width);
+    const auto poshf = core::math::numeric_cast<float>(pos.y + _height);
+    const Quad<Vec2<float>> vert{
         {posxf, posyf},
         {posxf, poshf},
         {poswf, poshf},
         {poswf, posyf},
     };
-    const Quad<Vec2<float_t>> tex = vert;
-    const std::string         msg = std::format(
+    const Quad<Vec2<float>> tex = vert;
+    const std::string       msg = std::format(
         "tex: ({}, {}), ({}, {}), ({}, {}), ({}, {})",
         tex.tl.x,
         tex.tl.y,
@@ -85,22 +81,22 @@ void core::Texture::draw(Vec2<int_t> pos) {
     draw(vert, tex);
 }
 
-void core::Texture::draw(Vec2<int_t> pos, float_t scale) {
+void core::Texture::draw(Vec2<int32_t> pos, float scale) {
     condition::pre_condition((_id != 0), "Texture._id != 0");
     condition::pre_condition((_width != 0), "Texture._width != 0");
     condition::pre_condition((_height != 0), "Texture._height != 0");
-    const auto posxf = core::math::numeric_cast<float_t>(pos.x);
-    const auto posyf = core::math::numeric_cast<float_t>(pos.y);
-    const auto poswf = core::math::numeric_cast<float_t>(pos.x + _width);
-    const auto poshf = core::math::numeric_cast<float_t>(pos.y + _height);
+    const auto posxf = core::math::numeric_cast<float>(pos.x);
+    const auto posyf = core::math::numeric_cast<float>(pos.y);
+    const auto poswf = core::math::numeric_cast<float>(pos.x + _width);
+    const auto poshf = core::math::numeric_cast<float>(pos.y + _height);
 
-    const Quad<Vec2<float_t>> vert{
+    const Quad<Vec2<float>> vert{
         {posxf,         posyf        },
         {posxf,         poshf * scale},
         {poswf * scale, poshf * scale},
         {poswf * scale, posyf        },
     };
-    const Quad<Vec2<float_t>> tex{
+    const Quad<Vec2<float>> tex{
         {posxf, posyf},
         {posxf, poshf},
         {poswf, poshf},
@@ -111,8 +107,8 @@ void core::Texture::draw(Vec2<int_t> pos, float_t scale) {
 }
 
 void core::Texture::draw(
-    const Quad<Vec2<float_t>>& vert,
-    const Quad<Vec2<float_t>>& tex
+    const Quad<Vec2<float>>& vert,
+    const Quad<Vec2<float>>& tex
 ) {
     condition::pre_condition((_id != 0), "Texture._id != 0");
     rlSetTexture(_id);
@@ -138,5 +134,31 @@ void core::Texture::draw(
     rlEnd();
     rlSetTexture(0);
 }
+#elif defined(RAYGAME_BACKEND_SDL)
+
+core::Texture::Texture(core::Image image) {}
+
+core::Texture::~Texture() {}
+
+void core::Texture::load() {}
+
+void core::Texture::unload() {}
+
+void core::Texture::draw(Vec2<int32_t> pos) {}
+
+void core::Texture::draw(Vec2<int32_t> pos, uint8_t scale) {}
+
+void core::Texture::draw(Vec2<int32_t> pos, float scale) {}
+
+void core::Texture::draw(Vec2<int32_t> pos, deg_t rot_d, float scale) {}
+
+void core::Texture::draw(Vec2<int32_t> pos, Rect<int32_t> rect) {}
+
+void core::Texture::draw(
+    const core::Quad<Vec2<float>>& vert,
+    const core::Quad<Vec2<float>>& tex
+) {}
+
+void core::Texture::print_info() {}
 
 #endif

@@ -15,9 +15,9 @@ struct Pixel {
 class Image {
 private:
     std::vector<Pixel> _image_data;
-    int_t              _width;
-    int_t              _height;
-    int_t              _n_mipmaps;
+    int32_t            _width;
+    int32_t            _height;
+    int32_t            _n_mipmaps;
 
 public:
     explicit Image(const std::string& filepath);
@@ -27,21 +27,21 @@ public:
     Image(Image&&)                 = default;
     Image& operator=(const Image&) = default;
     Image& operator=(Image&&)      = default;
-    ~Image();
+    ~Image()                       = default;
 
     inline Pixel* data() {
         return _image_data.data();
     }
 
-    inline int_t width() {
+    inline int32_t width() {
         return _width;
     }
 
-    inline int_t height() {
+    inline int32_t height() {
         return _height;
     }
 
-    inline int_t n_mipmaps() {
+    inline int32_t n_mipmaps() {
         return _n_mipmaps;
     }
 };

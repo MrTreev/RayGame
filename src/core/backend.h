@@ -26,6 +26,12 @@ extern "C" {
 #    include <GLFW/glfw3.h> // IWYU pragma: export
 #elif defined(RAYGAME_BACKEND_SDL)
 #    include <SDL3/SDL.h> // IWYU pragma: export
+
+static struct window {
+    SDL_Window*   window{nullptr};
+    SDL_Renderer* renderer{nullptr};
+    bool          should_close{false};
+} backend; //NOLINT
 #else
 #    error "No backend defined"
 #endif

@@ -27,10 +27,6 @@ namespace core {
 using rad_t = float;
 using deg_t = float;
 
-using float_t = float;
-using int_t   = int;
-using uint_t  = unsigned int;
-
 template<typename T>
 struct Vec2 {
     T x;
