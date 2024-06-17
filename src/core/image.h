@@ -1,6 +1,5 @@
 #pragma once
 #include "core/types.h"
-#include <battery/embed.hpp>
 #include <vector>
 
 namespace core {
@@ -20,7 +19,7 @@ private:
     int32_t            _n_mipmaps;
 
 public:
-    Image(b::embed embed);
+    Image(auto embed);
     ~Image();
     Image(const Image&)            = default;
     Image(Image&&)                 = default;

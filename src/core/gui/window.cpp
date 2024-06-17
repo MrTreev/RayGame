@@ -14,6 +14,46 @@
 #if defined(RAYGAME_GUI_WAYLAND)
 namespace {
 
+const uint32_t wayland_display_object_id                   = 1;
+const uint16_t wayland_wl_registry_event_global            = 0;
+const uint16_t wayland_shm_pool_event_format               = 0;
+const uint16_t wayland_wl_buffer_event_release             = 0;
+const uint16_t wayland_xdg_wm_base_event_ping              = 0;
+const uint16_t wayland_xdg_toplevel_event_configure        = 0;
+const uint16_t wayland_xdg_toplevel_event_close            = 1;
+const uint16_t wayland_xdg_surface_event_configure         = 0;
+const uint16_t wayland_wl_display_get_registry_opcode      = 1;
+const uint16_t wayland_wl_registry_bind_opcode             = 0;
+const uint16_t wayland_wl_compositor_create_surface_opcode = 0;
+const uint16_t wayland_xdg_wm_base_pong_opcode             = 3;
+const uint16_t wayland_xdg_surface_ack_configure_opcode    = 4;
+const uint16_t wayland_wl_shm_create_pool_opcode           = 0;
+const uint16_t wayland_xdg_wm_base_get_xdg_surface_opcode  = 2;
+const uint16_t wayland_wl_shm_pool_create_buffer_opcode    = 0;
+const uint16_t wayland_wl_surface_attach_opcode            = 1;
+const uint16_t wayland_xdg_surface_get_toplevel_opcode     = 1;
+const uint16_t wayland_wl_surface_commit_opcode            = 6;
+const uint16_t wayland_wl_display_error_event              = 0;
+const uint32_t wayland_format_xrgb8888                     = 1;
+const uint32_t wayland_header_size                         = 8;
+const uint32_t color_channels                              = 4;
+
+template<typename T>
+constexpr inline T ceil_4(T num) {
+    return (num + 3) & -4;
+}
+
+template<typename T>
+constexpr inline size_t cstrlen(T string);
+
+constexpr inline size_t cstrlen(const char* string) {
+    return sizeof(string) - 1;
+}
+
+constexpr inline size_t cstrlen(const std::string& string) {
+    return cstrlen(string.c_str());
+}
+
 int wayland_display_connect() {
     const std::string xdg_runtime_dir = std::getenv("XDG_RUNTIME_DIR");
     core::condition::check_condition(
@@ -28,7 +68,7 @@ int wayland_display_connect() {
 
     struct sockaddr_un addr = {.sun_family = AF_UNIX};
     core::condition::check_condition(
-        xdg_runtime_dir.length() <= (sizeof(addr.sun_path) - 1),
+        xdg_runtime_dir.length() <= (cstrlen(addr.sun_path)),
         "Failed to get valid socket"
     );
 
