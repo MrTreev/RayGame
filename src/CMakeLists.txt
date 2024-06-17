@@ -9,21 +9,6 @@ project(
 )
 add_executable(${PROJECT_NAME})
 
-set_target_properties(
-    ${PROJECT_NAME}
-    PROPERTIES CMAKE_CXX_STANDARD 23
-               CMAKE_CXX_STANDARD_REQUIRED True
-               CXX_EXTENSIONS OFF
-               INTERPROCEDURAL_OPTIMIZATION ${ENABLE_LTO}
-)
-
-target_sources(${PROJECT_NAME} PUBLIC main.cpp)
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_23)
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-add_subdirectory(core)
-add_subdirectory(system)
-add_subdirectory(world)
-
 option(BUILD_DOC "Build documentation" OFF)
 option(ENABLE_ASAN "Enable the Address Sanitiser" OFF)
 option(ENABLE_AVX "Enable AVX instructions" ON)
@@ -49,6 +34,13 @@ if(NOT CMAKE_BUILD_TYPE)
                  "RelWithDebInfo"
     )
 endif()
+
+target_sources(${PROJECT_NAME} PUBLIC main.cpp)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_23)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+add_subdirectory(core)
+add_subdirectory(system)
+add_subdirectory(world)
 
 if(NOT RAYGAME_BACKEND)
     set(rg_def_back SDL)

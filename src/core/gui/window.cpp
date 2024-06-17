@@ -1,8 +1,11 @@
 #include "core/gui/window.h" // IWYU pragma: keep
 #include "core/backend.h"
 #include "core/condition.h"
-#include "core/math.h"
 #include <string_view>
+
+#if defined(RAYGAME_BACKEND_RAYLIB)
+#    include <raylib.h>
+#endif
 
 namespace {
 
@@ -211,6 +214,7 @@ core::gui::WindowStyle core::gui::Window::get_style() {
 };
 
 #elif defined(RAYGAME_BACKEND_VULKAN)
+#include "core/math.h"
 
 namespace {
 std::shared_ptr<GLFWwindow> window; // NOLINT

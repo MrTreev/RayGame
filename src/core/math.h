@@ -24,10 +24,10 @@ inline deg_t rad2deg(rad_t rad) {
 
 template<typename Out_T, typename In_T>
 constexpr Out_T numeric_cast(const In_T& input) {
-    const auto max_val = static_cast<In_T>(std::numeric_limits<Out_T>::max());
-    const auto min_val = static_cast<In_T>(std::numeric_limits<Out_T>::min());
+    const auto max_val = std::numeric_limits<Out_T>::max();
+    const auto min_val = std::numeric_limits<Out_T>::min();
     condition::pre_condition(
-        input <= max_val,
+        (input <= max_val),
         std::format(
             "Input of type {} is above the max for output type {}",
             typeid(In_T).name(),
@@ -35,7 +35,7 @@ constexpr Out_T numeric_cast(const In_T& input) {
         )
     );
     condition::pre_condition(
-        input >= min_val,
+        (input >= min_val),
         std::format(
             "Input of type {} is below the min for output type {}",
             typeid(In_T).name(),

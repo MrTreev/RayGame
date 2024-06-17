@@ -1,5 +1,10 @@
 #include "core/texture.h" // IWYU pragma: keep
 #include "core/backend.h"
+#include "core/logger.h"
+#include "core/math.h"
+#if defined(RAYGAME_BACKEND_RAYLIB)
+#    include <raylib.h>
+#endif
 
 #if defined(RAYGAME_BACKEND_RAYLIB)
 
@@ -66,7 +71,7 @@ void core::Texture::draw(Vec2<int32_t> pos) {
         {poswf, posyf},
     };
     const Quad<Vec2<float>> tex = vert;
-    const std::string       msg = std::format(
+    log::debug(std::format(
         "tex: ({}, {}), ({}, {}), ({}, {}), ({}, {})",
         tex.tl.x,
         tex.tl.y,
@@ -76,8 +81,7 @@ void core::Texture::draw(Vec2<int32_t> pos) {
         tex.br.y,
         tex.tr.x,
         tex.tr.y
-    );
-    log::debug(msg);
+    ));
     draw(vert, tex);
 }
 
@@ -134,6 +138,7 @@ void core::Texture::draw(
     rlEnd();
     rlSetTexture(0);
 }
+
 #elif defined(RAYGAME_BACKEND_SDL)
 
 core::Texture::Texture(core::Image image) {}
