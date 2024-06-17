@@ -19,5 +19,6 @@ target_sources(
            texture.h
            types.cpp
            types.h
+           window.cpp
+           window.h
 )
-add_subdirectory(gui)

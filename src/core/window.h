@@ -2,7 +2,7 @@
 #include "core/types.h"
 #include <string>
 
-namespace core::gui {
+namespace core {
 
 //! Window display styles
 enum class WindowStyle {
@@ -20,10 +20,6 @@ public:
      * @param   name    Name of the window
      * @param   style    Style of the window
      *
-     * @pre     The width is greater than zero and smaller than the maximum
-     *          value supported by the implementation
-     * @pre     The height is greater than zero and smaller than the maximum
-     *          value supported by the implementation
      * @post    The Window is created correctly
      */
     explicit Window(
@@ -43,4 +39,4 @@ public:
     bool should_close();
 };
 
-} // namespace core::gui
+} // namespace core

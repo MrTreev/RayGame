@@ -12,7 +12,6 @@ private:
     int32_t  _n_mipmaps;
 
 public:
-    explicit Texture(const std::string& filepath);
     explicit Texture(const core::Image& image);
 
     Texture()                           = delete;

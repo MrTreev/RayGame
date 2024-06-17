@@ -1,4 +1,4 @@
-#include "core/gui/window.h" // IWYU pragma: keep
+#include "core/window.h" // IWYU pragma: keep
 #include "core/condition.h"
 #include "core/config.h"
 #include "core/types.h"
@@ -14,37 +14,34 @@
 #if defined(RAYGAME_GUI_WAYLAND)
 namespace {
 
-const uint32_t wayland_display_object_id                   = 1;
-const uint16_t wayland_wl_registry_event_global            = 0;
-const uint16_t wayland_shm_pool_event_format               = 0;
-const uint16_t wayland_wl_buffer_event_release             = 0;
-const uint16_t wayland_xdg_wm_base_event_ping              = 0;
-const uint16_t wayland_xdg_toplevel_event_configure        = 0;
-const uint16_t wayland_xdg_toplevel_event_close            = 1;
-const uint16_t wayland_xdg_surface_event_configure         = 0;
-const uint16_t wayland_wl_display_get_registry_opcode      = 1;
-const uint16_t wayland_wl_registry_bind_opcode             = 0;
-const uint16_t wayland_wl_compositor_create_surface_opcode = 0;
-const uint16_t wayland_xdg_wm_base_pong_opcode             = 3;
-const uint16_t wayland_xdg_surface_ack_configure_opcode    = 4;
-const uint16_t wayland_wl_shm_create_pool_opcode           = 0;
-const uint16_t wayland_xdg_wm_base_get_xdg_surface_opcode  = 2;
-const uint16_t wayland_wl_shm_pool_create_buffer_opcode    = 0;
-const uint16_t wayland_wl_surface_attach_opcode            = 1;
-const uint16_t wayland_xdg_surface_get_toplevel_opcode     = 1;
-const uint16_t wayland_wl_surface_commit_opcode            = 6;
-const uint16_t wayland_wl_display_error_event              = 0;
-const uint32_t wayland_format_xrgb8888                     = 1;
-const uint32_t wayland_header_size                         = 8;
-const uint32_t color_channels                              = 4;
+constexpr uint32_t wayland_display_object_id                   = 1;
+constexpr uint16_t wayland_wl_registry_event_global            = 0;
+constexpr uint16_t wayland_shm_pool_event_format               = 0;
+constexpr uint16_t wayland_wl_buffer_event_release             = 0;
+constexpr uint16_t wayland_xdg_wm_base_event_ping              = 0;
+constexpr uint16_t wayland_xdg_toplevel_event_configure        = 0;
+constexpr uint16_t wayland_xdg_toplevel_event_close            = 1;
+constexpr uint16_t wayland_xdg_surface_event_configure         = 0;
+constexpr uint16_t wayland_wl_display_get_registry_opcode      = 1;
+constexpr uint16_t wayland_wl_registry_bind_opcode             = 0;
+constexpr uint16_t wayland_wl_compositor_create_surface_opcode = 0;
+constexpr uint16_t wayland_xdg_wm_base_pong_opcode             = 3;
+constexpr uint16_t wayland_xdg_surface_ack_configure_opcode    = 4;
+constexpr uint16_t wayland_wl_shm_create_pool_opcode           = 0;
+constexpr uint16_t wayland_xdg_wm_base_get_xdg_surface_opcode  = 2;
+constexpr uint16_t wayland_wl_shm_pool_create_buffer_opcode    = 0;
+constexpr uint16_t wayland_wl_surface_attach_opcode            = 1;
+constexpr uint16_t wayland_xdg_surface_get_toplevel_opcode     = 1;
+constexpr uint16_t wayland_wl_surface_commit_opcode            = 6;
+constexpr uint16_t wayland_wl_display_error_event              = 0;
+constexpr uint32_t wayland_format_xrgb8888                     = 1;
+constexpr uint32_t wayland_header_size                         = 8;
+constexpr uint32_t color_channels                              = 4;
 
 template<typename T>
 constexpr inline T ceil_4(T num) {
     return (num + 3) & -4;
 }
-
-template<typename T>
-constexpr inline size_t cstrlen(T string);
 
 constexpr inline size_t cstrlen(const char* string) {
     return sizeof(string) - 1;
