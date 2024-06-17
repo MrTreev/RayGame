@@ -1,5 +1,6 @@
 #pragma once
 #include "core/exception.h"
+#include "core/logger.h"
 #include <string>
 
 namespace core::condition {
@@ -8,41 +9,51 @@ namespace core::condition {
 /*!
  *  @see PreCondition
  */
-constexpr void pre_condition(const bool& check, const std::string& message);
+inline constexpr void
+pre_condition(const bool& check, const std::string& message RG_LOC_DEF);
 
 //! Condition Checker
 /*!
  *  @see CheckCondition
  */
-constexpr void check_condition(const bool& check, const std::string& message);
+inline constexpr void
+check_condition(const bool& check, const std::string& message RG_LOC_DEF);
 
 //! Post-Condition Checker
 /*!
  *  @see PostCondition
  */
-constexpr void post_condition(const bool& check, const std::string& message);
+inline constexpr void
+post_condition(const bool& check, const std::string& message RG_LOC_DEF);
 
 } // namespace core::condition
 
-constexpr void
-core::condition::pre_condition(const bool& check, const std::string& message) {
+inline constexpr void core::condition::pre_condition(
+    const bool&                check,
+    const std::string& message RG_LOC_CUR
+) {
     if (!check) {
+        core::log::fatal(message RG_LOC_VAR);
         throw core::exception::PreCondition(message);
     }
 }
 
-constexpr void core::condition::check_condition(
-    const bool&        check,
-    const std::string& message
+inline constexpr void core::condition::check_condition(
+    const bool&                check,
+    const std::string& message RG_LOC_CUR
 ) {
     if (!check) {
+        core::log::fatal(message RG_LOC_VAR);
         throw core::exception::CheckCondition(message);
     }
 }
 
-constexpr void
-core::condition::post_condition(const bool& check, const std::string& message) {
+inline constexpr void core::condition::post_condition(
+    const bool&                check,
+    const std::string& message RG_LOC_CUR
+) {
     if (!check) {
+        core::log::fatal(message RG_LOC_VAR);
         throw core::exception::PostCondition(message);
     }
 }

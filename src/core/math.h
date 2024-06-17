@@ -14,16 +14,16 @@ constexpr float rad2deg = (180.0F / pi);
 constexpr float epsilon = 0.000001F;
 } // namespace constants
 
-inline rad_t deg2rad(deg_t deg) {
+inline constexpr core::rad_t deg2rad(core::deg_t deg) {
     return deg * constants::deg2rad;
 };
 
-inline deg_t rad2deg(rad_t rad) {
+inline constexpr core::deg_t rad2deg(core::rad_t rad) {
     return rad * constants::rad2deg;
 };
 
 template<typename Out_T, typename In_T>
-constexpr Out_T numeric_cast(const In_T& input) {
+inline constexpr Out_T numeric_cast(const In_T& input RG_LOC_DEF) {
     const auto max_val = std::numeric_limits<Out_T>::max();
     const auto min_val = std::numeric_limits<Out_T>::min();
     condition::pre_condition(
@@ -32,7 +32,7 @@ constexpr Out_T numeric_cast(const In_T& input) {
             "Input of type {} is above the max for output type {}",
             typeid(In_T).name(),
             typeid(Out_T).name()
-        )
+        ) RG_LOC_VAR
     );
     condition::pre_condition(
         (input >= min_val),
@@ -40,7 +40,7 @@ constexpr Out_T numeric_cast(const In_T& input) {
             "Input of type {} is below the min for output type {}",
             typeid(In_T).name(),
             typeid(Out_T).name()
-        )
+        ) RG_LOC_VAR
     );
     return static_cast<Out_T>(input);
 }

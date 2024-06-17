@@ -1,25 +1,7 @@
 #pragma once
+#include "core/config.h"
 #include "core/types.h"
 #include <string>
-
-#if defined(RAYGAME_LOG_LOCATION)
-#    if __has_include(<experimental/source_location>)
-#        include <experimental/source_location>
-
-namespace core::detail {
-using std::experimental::source_location;
-}
-#    elif __has_include(<source_location>)
-#        include <source_location>
-
-namespace core::detail {
-using std::source_location;
-}
-#    else
-#        warn "source_location unsupported, disabling RAYGAME_LOG_LOCATION"
-#        undef RAYGAME_LOG_LOCATION
-#    endif
-#endif
 
 namespace core::log {
 
@@ -69,7 +51,7 @@ inline std::string to_string(Level level) {
     case Level::NOTE:
         return "NOTE ";
     case Level::PROGRESS:
-        return "PROGR";
+        return "PROG ";
     case Level::WARNING:
         return "WARN ";
     case Level::ERROR:
@@ -82,180 +64,61 @@ inline std::string to_string(Level level) {
 namespace detail {
 
 //! Logger implementation
-void logger(
-    const core::log::Level& level,
-    const std::string&      text
-#if defined(RAYGAME_LOG_LOCATION)
-    ,
-    const core::detail::source_location& loc
-#endif
-);
+void logger(const core::log::Level& level, const std::string& text RG_LOC_DEF);
 } // namespace detail
 
 //! Log at an trace level
-constexpr inline void trace(
-    const std::string& text
-#if defined(RAYGAME_LOG_LOCATION)
-    ,
-    const core::detail::source_location& loc =
-        core::detail::source_location::current()
-#endif
-) {
+constexpr inline void trace(const std::string& text RG_LOC_CUR) {
     if constexpr (logging_level <= Level::TRACE) {
-        core::log::detail::logger(
-            Level::TRACE,
-            text
-#if defined(RAYGAME_LOG_LOCATION)
-            ,
-            loc
-#endif
-        );
+        core::log::detail::logger(Level::TRACE, text RG_LOC_VAR);
     }
 }
 
 //! Log at an debug level
-constexpr inline void debug(
-    const std::string& text
-#if defined(RAYGAME_LOG_LOCATION)
-    ,
-    const core::detail::source_location& loc =
-        core::detail::source_location::current()
-#endif
-) {
+constexpr inline void debug(const std::string& text RG_LOC_CUR) {
     if constexpr (logging_level <= Level::DEBUG) {
-        core::log::detail::logger(
-            Level::DEBUG,
-            text
-#if defined(RAYGAME_LOG_LOCATION)
-            ,
-            loc
-#endif
-        );
+        core::log::detail::logger(Level::DEBUG, text RG_LOC_VAR);
     }
 }
 
 //! Log at an info level
-constexpr inline void info(
-    const std::string& text
-#if defined(RAYGAME_LOG_LOCATION)
-    ,
-    const core::detail::source_location& loc =
-        core::detail::source_location::current()
-#endif
-) {
+constexpr inline void info(const std::string& text RG_LOC_CUR) {
     if constexpr (logging_level <= Level::INFO) {
-        core::log::detail::logger(
-            Level::INFO,
-            text
-#if defined(RAYGAME_LOG_LOCATION)
-            ,
-            loc
-#endif
-        );
+        core::log::detail::logger(Level::INFO, text RG_LOC_VAR);
     }
 }
 
 //! Log at an note level
-constexpr inline void note(
-    const std::string& text
-#if defined(RAYGAME_LOG_LOCATION)
-    ,
-    const core::detail::source_location& loc =
-        core::detail::source_location::current()
-#endif
-) {
+constexpr inline void note(const std::string& text RG_LOC_CUR) {
     if constexpr (logging_level <= Level::NOTE) {
-        core::log::detail::logger(
-            Level::NOTE,
-            text
-#if defined(RAYGAME_LOG_LOCATION)
-            ,
-            loc
-#endif
-        );
+        core::log::detail::logger(Level::NOTE, text RG_LOC_VAR);
     }
 } //! Log at an progress level
 
-constexpr inline void progress(
-    const std::string& text
-#if defined(RAYGAME_LOG_LOCATION)
-    ,
-    const core::detail::source_location& loc =
-        core::detail::source_location::current()
-#endif
-) {
+constexpr inline void progress(const std::string& text RG_LOC_CUR) {
     if constexpr (logging_level <= Level::PROGRESS) {
-        core::log::detail::logger(
-            Level::PROGRESS,
-            text
-#if defined(RAYGAME_LOG_LOCATION)
-            ,
-            loc
-#endif
-        );
+        core::log::detail::logger(Level::PROGRESS, text RG_LOC_VAR);
     }
 }
 
 //! Log at an warning level
-constexpr inline void warning(
-    const std::string& text
-#if defined(RAYGAME_LOG_LOCATION)
-    ,
-    const core::detail::source_location& loc =
-        core::detail::source_location::current()
-#endif
-) {
+constexpr inline void warning(const std::string& text RG_LOC_CUR) {
     if constexpr (logging_level <= Level::WARNING) {
-        core::log::detail::logger(
-            Level::WARNING,
-            text
-#if defined(RAYGAME_LOG_LOCATION)
-            ,
-            loc
-#endif
-        );
+        core::log::detail::logger(Level::WARNING, text RG_LOC_VAR);
     }
 }
 
 //! Log at an error level
-constexpr inline void error(
-    const std::string& text
-#if defined(RAYGAME_LOG_LOCATION)
-    ,
-    const core::detail::source_location& loc =
-        core::detail::source_location::current()
-#endif
-) {
+constexpr inline void error(const std::string& text RG_LOC_CUR) {
     if constexpr (logging_level <= Level::ERROR) {
-        core::log::detail::logger(
-            Level::ERROR,
-            text
-#if defined(RAYGAME_LOG_LOCATION)
-            ,
-            loc
-#endif
-        );
+        core::log::detail::logger(Level::ERROR, text RG_LOC_VAR);
     }
 }
 
 //! Log at a fatal level
-constexpr inline void fatal(
-    const std::string& text
-#if defined(RAYGAME_LOG_LOCATION)
-    ,
-    const core::detail::source_location& loc =
-        core::detail::source_location::current()
-#endif
-) {
+constexpr inline void fatal(const std::string& text RG_LOC_CUR) {
     if constexpr (logging_level <= Level::FATAL) {
-        core::log::detail::logger(
-            Level::FATAL,
-            text
-#if defined(RAYGAME_LOG_LOCATION)
-            ,
-            loc
-#endif
-        );
+        core::log::detail::logger(Level::FATAL, text RG_LOC_VAR);
     }
 }
 

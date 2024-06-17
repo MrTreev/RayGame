@@ -187,3 +187,37 @@ static_assert(false, "Unknown Architecture");
 static_assert(false, "Cannot run without an OS");
 #endif
 
+#if defined(RAYGAME_OS_LINUX)
+#    define RAYGAME_GUI_WAYLAND
+#endif
+
+#if defined(RAYGAME_LOG_LOCATION)
+#    if __has_include(<experimental/source_location>)
+#        include <experimental/source_location>
+
+namespace core::detail {
+using std::experimental::source_location;
+}
+#    elif __has_include(<source_location>)
+#        include <source_location>
+
+namespace core::detail {
+using std::source_location;
+}
+#    else
+#        warn "source_location unsupported, disabling RAYGAME_LOG_LOCATION"
+#        undef RAYGAME_LOG_LOCATION
+#    endif
+#endif
+
+#if defined(RAYGAME_LOG_LOCATION)
+#    define RG_LOC_DEF , const core::detail::source_location& loc
+#    define RG_LOC_CUR                                                         \
+        , const core::detail::source_location& loc =                           \
+              core::detail::source_location::current()
+#    define RG_LOC_VAR , loc
+#else
+#    define RG_LOC
+#    define RG_LOC_CUR
+#    define RG_LOC_VAR
+#endif

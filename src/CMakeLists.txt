@@ -42,33 +42,13 @@ add_subdirectory(core)
 add_subdirectory(system)
 add_subdirectory(world)
 
-if(NOT RAYGAME_BACKEND)
-    set(rg_def_back SDL)
-    message(
-        STATUS "Setting build type to '${rg_def_back}' as none was specified."
-    )
-    set(RAYGAME_BACKEND "${rg_def_back}"
-        CACHE STRING "Choose the graphics backend." FORCE
-    )
-    set_property(CACHE RAYGAME_BACKEND PROPERTY STRINGS "RAYLIB" "SDL")
-endif()
-
-if(RAYGAME_BACKEND STREQUAL RAYLIB)
-    add_compile_definitions("RAYGAME_BACKEND_RAYLIB")
-    add_subdirectory(../ext/raylib ext/raylib)
-    target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
-elseif(RAYGAME_BACKEND STREQUAL SDL)
-    add_compile_definitions("RAYGAME_BACKEND_SDL")
-    add_subdirectory(../ext/SDL ext/SDL)
-    target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3)
-endif()
-
 # Embedding resources into files
 if(CMAKE_BUILD_TYPE STREQUAL Debug)
     set(B_EMBED_SILENCE_DEVMODE_WARNING ON)
 else()
     set(B_PRODUCTION_MODE ON)
 endif()
+
 add_subdirectory(../ext/battery-embed ext/battery-embed)
 
 if(CMAKE_BUILD_TYPE STREQUAL Debug)

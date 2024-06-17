@@ -1,6 +1,6 @@
 #pragma once
 #include "core/types.h"
-#include <string>
+#include <battery/embed.hpp>
 #include <vector>
 
 namespace core {
@@ -20,14 +20,12 @@ private:
     int32_t            _n_mipmaps;
 
 public:
-    explicit Image(const std::string& filepath);
-    explicit Image(std::string_view filepath);
-
+    Image(b::embed embed);
+    ~Image();
     Image(const Image&)            = default;
     Image(Image&&)                 = default;
     Image& operator=(const Image&) = default;
     Image& operator=(Image&&)      = default;
-    ~Image()                       = default;
 
     inline Pixel* data() {
         return _image_data.data();

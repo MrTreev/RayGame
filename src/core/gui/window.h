@@ -26,14 +26,11 @@ public:
      *          value supported by the implementation
      * @post    The Window is created correctly
      */
-    Window();
-    Window(const size_t& width, const size_t& height);
-    Window(const size_t& width, const size_t& height, const std::string& name);
-    Window(
-        const size_t&      width,
-        const size_t&      height,
-        const std::string& name,
-        const WindowStyle& style
+    explicit Window(
+        const size_t&      width  = 640,
+        const size_t&      height = 480,
+        const std::string& name   = "RayGame",
+        const WindowStyle& style  = WindowStyle::Windowed
     );
     ~Window();
 
@@ -44,53 +41,6 @@ public:
 
     //! Reports if the window has been requested to close
     bool should_close();
-
-    //! Clears the drawing buffer and begins drawing mode
-    void clear();
-
-    //! Swaps the display buffers and ends drawing mode
-    void display();
-
-    //! Sets whether the current FPS should be drawn to the screen
-    void draw_fps(bool enable);
-
-    //! Reports if the window is in windowed mode
-    bool is_windowed();
-
-    //! Reports if the window is in windowed-fullscreen mode
-    bool is_windowed_fullscreen();
-
-    //! Reports if the window is in fullscreen mode
-    bool is_fullscreen();
-
-    //! Sets the window style, @see WindowStyle
-    void set_style(WindowStyle style);
-
-    //! Sets the target framerate
-    /*!
-     * @param   name Target framerate
-     * @pre     The framerate is greater than zero and smaller than the maximum
-     *          value supported by the implementation
-     */
-    void set_framerate(const size_t& framerate);
-
-    //! Sets the window size
-    void set_size(const size_t& width, const size_t& height);
-
-    //! Set fullscreen mode
-    void set_fullscreen(const bool& enable);
-
-    //! Toggle fullscreen mode
-    void toggle_fullscreen();
-
-    //! Reports the current window style, @see WindowStyle
-    WindowStyle get_style();
-
-    //! Reports the current average framerate
-    size_t get_framerate();
-
-private:
-    bool _draw_fps{false};
 };
 
 } // namespace core::gui
