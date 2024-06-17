@@ -93,6 +93,8 @@ int wayland_display_connect() {
     return win_fd;
 }
 
+class Socket {}; //TODO
+
 class Buffer {
 private:
     std::unique_ptr<char> _buffer;
