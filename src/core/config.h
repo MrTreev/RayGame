@@ -187,7 +187,7 @@ static_assert(false, "Unknown Architecture");
 static_assert(false, "Cannot run without an OS");
 #endif
 
-#if defined(RAYGAME_OS_LINUX)
+#if defined(RAYGAME_OS_LINUX) && defined(RAYGAME_GUI_USE_WAYLAND)
 #    define RAYGAME_GUI_WAYLAND
 #endif
 

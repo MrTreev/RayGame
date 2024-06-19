@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.25...3.29)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_MODULE_PATH ../cmake)
 
 project(
     RayGame
@@ -16,6 +17,7 @@ option(ENABLE_LTO "Enable Link-Time Optimisation" OFF)
 option(ENABLE_MSAN "Enable the Memory Sanitiser" OFF)
 option(ENABLE_UBSAN "Enable the Undefined Behaviour Sanitiser" OFF)
 option(RAYGAME_IGNORE_CONDITIONS "Ignore all runtime condition checks" OFF)
+option(RAYGAME_GUI_USE_WAYLAND "Use Wayland for GUI backend" ON)
 
 if(NOT CMAKE_BUILD_TYPE)
     set(rg_def_type Debug)
@@ -47,6 +49,12 @@ if(CMAKE_BUILD_TYPE STREQUAL Debug)
     set(B_EMBED_SILENCE_DEVMODE_WARNING ON)
 else()
     set(B_PRODUCTION_MODE ON)
+endif()
+
+if(RAYGAME_GUI_USE_WAYLAND)
+	target_compile_definitions(${PROJECT_NAME} PRIVATE "RAYGAME_GUI_USE_WAYLAND")
+    include(FindWayland)
+    target_link_libraries(${PROJECT_NAME} PRIVATE wayland::client)
 endif()
 
 add_subdirectory(../ext/battery-embed ext/battery-embed)
