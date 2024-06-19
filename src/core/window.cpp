@@ -1,11 +1,12 @@
 #include "core/window.h" // IWYU pragma: keep
 #include "core/condition.h"
 #include "core/config.h"
+#include "core/image.h"
 #include "core/types.h"
-#include <cstdlib>
-#include <cstring>
-#include <format>
+#include <cstddef>
+#include <fcntl.h>
 #include <memory>
+#include <sys/mman.h>
 #if defined(RAYGAME_OS_LINUX)
 #    include <sys/socket.h>
 #    include <sys/un.h>
@@ -38,101 +39,59 @@ constexpr uint32_t wayland_format_xrgb8888                     = 1;
 constexpr uint32_t wayland_header_size                         = 8;
 constexpr uint32_t color_channels                              = 4;
 
-template<typename T>
-constexpr inline T ceil_4(T num) {
-    return (num + 3) & -4;
-}
-
-constexpr inline size_t cstrlen(const char* string) {
-    return sizeof(string) - 1;
-}
-
-constexpr inline size_t cstrlen(const std::string& string) {
-    return cstrlen(string.c_str());
-}
-
-int wayland_display_connect() {
-    const std::string xdg_runtime_dir = std::getenv("XDG_RUNTIME_DIR");
-    core::condition::check_condition(
-        !xdg_runtime_dir.empty(),
-        "Failed to get XDG_RUNTIME_DIR environment variable"
-    );
-    std::string wayland_display = std::getenv("WAYLAND_DISPLAY");
-    if (wayland_display.empty()) {
-        std::string wayland_display = "wayland-0";
-    }
-    const std::string sock_name = xdg_runtime_dir + "/" + wayland_display;
-
-    struct sockaddr_un addr = {.sun_family = AF_UNIX};
-    core::condition::check_condition(
-        xdg_runtime_dir.length() <= (cstrlen(addr.sun_path)),
-        "Failed to get valid socket"
-    );
-
-    std::memcpy(
-        static_cast<void*>(addr.sun_path),
-        xdg_runtime_dir.c_str(),
-        xdg_runtime_dir.length()
-    );
-
-    size_t socket_path_len           = xdg_runtime_dir.length();
-    addr.sun_path[socket_path_len++] = '/';
-
-    std::memcpy(
-        static_cast<void*>(addr.sun_path),
-        wayland_display.c_str(),
-        wayland_display.length()
-    );
-    int win_fd = socket(AF_UNIX, SOCK_STREAM, 0);
-    core::condition::check_condition(win_fd != -1, "Failed to create socket");
-    core::condition::check_condition(
-        connect(win_fd, reinterpret_cast<struct sockaddr*>(&addr), sizeof(addr))
-            != 0,
-        "Failed to connect to socket"
-    );
-    return win_fd;
-}
-
-class Socket {}; //TODO
-
-class Buffer {
-private:
-    std::unique_ptr<char> _buffer;
-    size_t                _buffer_size;
-    size_t                _buffer_capacity;
-
-public:
-    template<typename T>
-    void write(T msg);
-    void write(std::string msg);
+enum class state_type {
+    STATE_NONE,
+    STATE_SURFACE_ACKED_CONFIGURE,
+    STATE_SURFACE_ATTACHED,
 };
 
-template<typename T>
-void Buffer::write(T msg) {
-    core::condition::pre_condition(
-        _buffer_size + sizeof(T) <= _buffer_capacity,
-        std::format("{} Too big for write", msg)
-    );
-    core::condition::pre_condition(
-        (_buffer.get() + _buffer_size % sizeof(T) == nullptr),
-        "Write not aligned"
-    );
-    static_cast<T*>(_buffer.get() + _buffer_size) = msg;
-};
+using frame_buffer = std::unique_ptr<std::vector<core::Pixel>>;
 
-void Buffer::write(std::string msg) {
-    core::condition::pre_condition(
-        _buffer_size + msg.length() <= _buffer_capacity,
-        std::format("{} Too big for write", msg)
-    );
-    core::condition::pre_condition(
-        (_buffer.get() + _buffer_size % msg.size() == nullptr),
-        "Write not aligned"
-    );
-    std::memcpy(_buffer.get() + _buffer_size, msg.c_str(), msg.length());
-};
-
-uint32_t wayland_get_registry(int win_fd) {}
+struct WindowState {
+    uint32_t     height;
+    uint32_t     width;
+    uint32_t     stride;
+    uint32_t     shm_pool_size;
+    uint32_t     wl_buffer;
+    uint32_t     wl_registry;
+    uint32_t     wl_shm;
+    uint32_t     wl_shm_pool;
+    uint32_t     xdg_surface;
+    uint32_t     xdg_toplevel;
+    uint32_t     xdg_wm_base;
+    int          shm_fd;
+    state_type   state;
+    frame_buffer front_buffer;
+    frame_buffer back_buffer;
+} _state;
 
 } // namespace
+
+core::Window::Window(
+    const size_t&      width,
+    const size_t&      height,
+    const std::string& name,
+    const WindowStyle& style
+) {
+    char shared_buffers[255];
+    _state.width  = width;
+    _state.height = height;
+    _state.stride = width * sizeof(core::Pixel);
+    _state.front_buffer->reserve(
+        static_cast<size_t>(_state.stride) * static_cast<size_t>(_state.height)
+    );
+    _state.back_buffer->reserve(
+        static_cast<size_t>(_state.stride) * static_cast<size_t>(_state.height)
+    );
+    _state.shm_fd = shm_open(shared_buffers, O_RDWR | O_EXCL | O_CREAT, 0600);
+    condition::check_condition(
+        _state.shm_fd != -1,
+        "Shared memory file descriptor could not be opened"
+    );
+}
+
+core::Window::~Window() {}
+
+bool core::Window::should_close() {}
+
 #endif

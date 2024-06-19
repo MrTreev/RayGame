@@ -23,7 +23,7 @@ inline constexpr core::deg_t rad2deg(core::rad_t rad) {
 };
 
 template<typename Out_T, typename In_T>
-inline constexpr Out_T numeric_cast(const In_T& input RG_LOC_DEF) {
+inline constexpr Out_T numeric_cast(const In_T& input RG_LOC_CUR) {
     const auto max_val = std::numeric_limits<Out_T>::max();
     const auto min_val = std::numeric_limits<Out_T>::min();
     condition::pre_condition(
