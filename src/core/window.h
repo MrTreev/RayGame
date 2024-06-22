@@ -1,5 +1,7 @@
 #pragma once
+#include "core/config.h"
 #include "core/types.h"
+#include <memory>
 #include <string>
 
 namespace core {
@@ -37,6 +39,13 @@ public:
 
     //! Reports if the window has been requested to close
     bool should_close();
+
+private:
+#if defined(RAYGAME_GUI_WAYLAND)
+    using WinState = struct WaylandWinState;
+#endif
+
+    std::unique_ptr<WinState> _win_state;
 };
 
 } // namespace core
