@@ -1,9 +1,26 @@
 #pragma once
-#include "core/condition.h"
+#include "core/logger.h"
 #include "core/types.h"
 #include <format>
 #include <limits>
-#include <typeinfo>
+
+#if defined(RAYGAME_CC_GCC) || defined(RAYGAME_CC_CLANG)
+#    include <cxxabi.h>
+#    include <typeinfo>
+
+template<typename T>
+inline constexpr std::string type_name() {
+    int         status = 0;
+    std::string tname  = typeid(T).name();
+    char*       demangled_name =
+        abi::__cxa_demangle(tname.c_str(), nullptr, nullptr, &status);
+    if (status == 0) {
+        tname = demangled_name;
+        std::free(demangled_name); //NOLINT
+    }
+    return tname;
+}
+#endif
 
 namespace core::math {
 
@@ -22,26 +39,26 @@ inline constexpr core::deg_t rad2deg(core::rad_t rad) {
     return rad * constants::rad2deg;
 };
 
+class NumericException: public std::exception {};
+
 template<typename Out_T, typename In_T>
 inline constexpr Out_T numeric_cast(const In_T& input RG_LOC_CUR) {
-    const auto max_val = std::numeric_limits<Out_T>::max();
-    const auto min_val = std::numeric_limits<Out_T>::min();
-    condition::pre_condition(
-        (input <= max_val),
-        std::format(
+    if (input > std::numeric_limits<Out_T>::max()) {
+        core::log::error(std::format(
             "Input of type {} is above the max for output type {}",
-            typeid(In_T).name(),
-            typeid(Out_T).name()
-        ) RG_LOC_VAR
-    );
-    condition::pre_condition(
-        (input >= min_val),
-        std::format(
+            type_name<In_T>(),
+            type_name<Out_T>()
+        ) RG_LOC_VAR);
+        throw NumericException();
+    };
+    if (input < std::numeric_limits<Out_T>::min()) {
+        core::log::error(std::format(
             "Input of type {} is below the min for output type {}",
-            typeid(In_T).name(),
-            typeid(Out_T).name()
-        ) RG_LOC_VAR
-    );
+            type_name<In_T>(),
+            type_name<Out_T>()
+        ) RG_LOC_VAR);
+        throw NumericException();
+    };
     return static_cast<Out_T>(input);
 }
 

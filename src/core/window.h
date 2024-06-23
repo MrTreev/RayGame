@@ -27,7 +27,7 @@ public:
     explicit Window(
         const size_t&      width  = 640,
         const size_t&      height = 480,
-        const std::string& name   = "RayGame",
+        const std::string& title  = "RayGame",
         const WindowStyle& style  = WindowStyle::Windowed
     );
     ~Window();
