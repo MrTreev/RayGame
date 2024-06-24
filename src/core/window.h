@@ -45,7 +45,7 @@ private:
     using WinState = struct WaylandWinState;
 #endif
 
-    std::unique_ptr<WinState> _win_state;
+    std::unique_ptr<WinState> m_win_state;
 };
 
 } // namespace core

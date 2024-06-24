@@ -18,8 +18,8 @@ protected:
     void connect();
 
 private:
-    int             _fd{0};
-    struct sockaddr _sockaddr;
+    int             m_fd{0};
+    struct sockaddr m_sockaddr;
 };
 
 #if defined(RAYGAME_OS_LINUX)
@@ -33,7 +33,7 @@ protected:
 private:
     int _fd{0};
 
-    struct sockaddr_un _sockaddr {
+    struct sockaddr_un m_sockaddr {
         .sun_family = AF_UNIX,
     };
 };

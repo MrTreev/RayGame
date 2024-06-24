@@ -7,7 +7,7 @@ namespace core {
 
 class SpriteSheet {
 private:
-    core::Texture _texture;
+    core::Texture m_texture;
 
 public:
     SpriteSheet(

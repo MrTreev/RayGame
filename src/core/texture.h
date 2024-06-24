@@ -6,10 +6,10 @@ namespace core {
 
 class Texture {
 private:
-    uint32_t _id;
-    int32_t  _width;
-    int32_t  _height;
-    int32_t  _n_mipmaps;
+    uint32_t m_id;
+    int32_t  m_width;
+    int32_t  m_height;
+    int32_t  m_n_mipmaps;
 
 public:
     explicit Texture(const core::Image& image);

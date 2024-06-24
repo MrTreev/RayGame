@@ -2,6 +2,7 @@
 #include "core/condition.h"
 #include "core/config.h"
 #include "core/logger.h"
+#include "core/math.h"
 #include "core/types.h"
 #include <random>
 
@@ -141,7 +142,7 @@ int allocate_shm_file(size_t size) {
         shm_fd >= 0,
         "Failed to create valid SHM File Descriptor"
     );
-    const int ret = ftruncate(shm_fd, size);
+    const int ret = ftruncate(shm_fd, core::math::numeric_cast<__off_t>(size));
     core::condition::post_condition(
         ret >= 0,
         "Could not resize SHM memory-mapped file"
@@ -158,47 +159,47 @@ core::Window::Window(
     const std::string& title,
     const WindowStyle& style
 )
-    : _win_state(std::make_unique<core::WaylandWinState>()) {
+    : m_win_state(std::make_unique<core::WaylandWinState>()) {
     core::log::debug("Window attempt");
-    _win_state->title       = title;
-    _win_state->height      = height;
-    _win_state->width       = width;
-    _win_state->buffer_size = width * height;
+    m_win_state->title       = title;
+    m_win_state->height      = height;
+    m_win_state->width       = width;
+    m_win_state->buffer_size = width * height;
 #if defined(RAYGAME_GUI_WAYLAND)
 
-    _win_state->display = wl_display_connect(nullptr);
+    m_win_state->display = wl_display_connect(nullptr);
     core::condition::check_condition(
-        _win_state->display != nullptr,
+        m_win_state->display != nullptr,
         "Unable to create Wayland display"
     );
 
-    _win_state->registry = wl_display_get_registry(_win_state->display);
+    m_win_state->registry = wl_display_get_registry(m_win_state->display);
     core::condition::check_condition(
-        _win_state->display != nullptr,
+        m_win_state->display != nullptr,
         "Unable to create Wayland registry"
     );
 
     wl_registry_add_listener(
-        _win_state->registry,
-        &_win_state->registry_listener,
-        &_win_state
+        m_win_state->registry,
+        &m_win_state->registry_listener,
+        &m_win_state
     );
 
     const size_t stride     = width * COLOUR_CHANNELS;
-    _win_state->buffer_size = height * stride;
-    const size_t pool_size  = _win_state->buffer_size * N_BUFFERS;
+    m_win_state->buffer_size = height * stride;
+    const size_t pool_size  = m_win_state->buffer_size * N_BUFFERS;
     const int    shm_fd     = allocate_shm_file(pool_size);
 
     auto* pool_data = static_cast<uint8_t*>(
         mmap(nullptr, pool_size, PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0)
     );
     struct wl_shm_pool* pool = wl_shm_create_pool(
-        _win_state->shm,
+        m_win_state->shm,
         shm_fd,
         static_cast<int32_t>(pool_size)
     );
 
-    wl_display_roundtrip(_win_state->display);
+    wl_display_roundtrip(m_win_state->display);
 #endif
     log::debug("Window created");
 }
@@ -206,16 +207,16 @@ core::Window::Window(
 core::Window::~Window() {
     core::log::debug("Window closing");
 #if defined(RAYGAME_GUI_WAYLAND)
-    wl_display_disconnect(_win_state->display);
+    wl_display_disconnect(m_win_state->display);
 #endif
 }
 
 bool core::Window::should_close() {
     core::condition::pre_condition(
-        _win_state->display != nullptr,
+        m_win_state->display != nullptr,
         "Cannot check if null window should close"
     );
-    const bool close_now = (wl_display_dispatch(_win_state->display) != -1);
+    const bool close_now = (wl_display_dispatch(m_win_state->display) != -1);
     core::log::debug(close_now ? "True" : "False");
     return close_now;
 }
