@@ -1,0 +1,263 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Keyboard input - The Wayland Protocol</title>
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="../">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body class="light">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../introduction/high-level-design.html"><strong aria-hidden="true">1.1.</strong> High-level Wayland design</a></li><li class="chapter-item expanded "><a href="../introduction/goals.html"><strong aria-hidden="true">1.2.</strong> Goals & target audience</a></li><li class="chapter-item expanded "><a href="../introduction/package.html"><strong aria-hidden="true">1.3.</strong> What's in the package</a></li></ol></li><li class="chapter-item expanded "><a href="../protocol-design.html"><strong aria-hidden="true">2.</strong> Protocol design</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../protocol-design/wire-protocol.html"><strong aria-hidden="true">2.1.</strong> Wire protocol basics</a></li><li class="chapter-item expanded "><a href="../protocol-design/interfaces-reqs-events.html"><strong aria-hidden="true">2.2.</strong> Interfaces, requests, events</a></li><li class="chapter-item expanded "><a href="../protocol-design/high-level.html"><strong aria-hidden="true">2.3.</strong> The high-level protocol</a></li><li class="chapter-item expanded "><a href="../protocol-design/design-patterns.html"><strong aria-hidden="true">2.4.</strong> Protocol design patterns</a></li></ol></li><li class="chapter-item expanded "><a href="../libwayland.html"><strong aria-hidden="true">3.</strong> libwayland in depth</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../libwayland/util.html"><strong aria-hidden="true">3.1.</strong> wayland-util primitives</a></li><li class="chapter-item expanded "><a href="../libwayland/wayland-scanner.html"><strong aria-hidden="true">3.2.</strong> wayland-scanner</a></li><li class="chapter-item expanded "><a href="../libwayland/proxies.html"><strong aria-hidden="true">3.3.</strong> Proxies & resources</a></li><li class="chapter-item expanded "><a href="../libwayland/interfaces.html"><strong aria-hidden="true">3.4.</strong> Interfaces & listeners</a></li></ol></li><li class="chapter-item expanded "><a href="../wayland-display.html"><strong aria-hidden="true">4.</strong> The Wayland display</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../wayland-display/creation.html"><strong aria-hidden="true">4.1.</strong> Creating a display</a></li><li class="chapter-item expanded "><a href="../wayland-display/event-loop.html"><strong aria-hidden="true">4.2.</strong> Incorporating an event loop</a></li></ol></li><li class="chapter-item expanded "><a href="../registry.html"><strong aria-hidden="true">5.</strong> Globals & the registry</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../registry/binding.html"><strong aria-hidden="true">5.1.</strong> Binding to globals</a></li><li class="chapter-item expanded "><a href="../registry/server-side.html"><strong aria-hidden="true">5.2.</strong> Registering globals</a></li></ol></li><li class="chapter-item expanded "><a href="../surfaces.html"><strong aria-hidden="true">6.</strong> Buffers & surfaces</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../surfaces/compositor.html"><strong aria-hidden="true">6.1.</strong> Using wl_compositor</a></li><li class="chapter-item expanded "><a href="../surfaces/shared-memory.html"><strong aria-hidden="true">6.2.</strong> Shared memory buffers</a></li><li class="chapter-item expanded "><a href="../surfaces/dmabuf.html"><strong aria-hidden="true">6.3.</strong> Linux dmabuf</a></li><li class="chapter-item expanded "><a href="../surfaces/roles.html"><strong aria-hidden="true">6.4.</strong> Surface roles</a></li></ol></li><li class="chapter-item expanded "><a href="../xdg-shell-basics.html"><strong aria-hidden="true">7.</strong> XDG shell basics</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../xdg-shell-basics/xdg-surface.html"><strong aria-hidden="true">7.1.</strong> XDG surfaces</a></li><li class="chapter-item expanded "><a href="../xdg-shell-basics/xdg-toplevel.html"><strong aria-hidden="true">7.2.</strong> Application windows</a></li><li class="chapter-item expanded "><a href="../xdg-shell-basics/example-code.html"><strong aria-hidden="true">7.3.</strong> Extended example code</a></li></ol></li><li class="chapter-item expanded "><a href="../surfaces-in-depth.html"><strong aria-hidden="true">8.</strong> Surfaces in depth</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../surfaces-in-depth/lifecycle.html"><strong aria-hidden="true">8.1.</strong> Surface lifecycle</a></li><li class="chapter-item expanded "><a href="../surfaces-in-depth/frame-callbacks.html"><strong aria-hidden="true">8.2.</strong> Frame callbacks</a></li><li class="chapter-item expanded "><a href="../surfaces-in-depth/damaging-surfaces.html"><strong aria-hidden="true">8.3.</strong> Damaging surfaces</a></li><li class="chapter-item expanded "><a href="../surfaces-in-depth/surface-regions.html"><strong aria-hidden="true">8.4.</strong> Surface regions</a></li><li class="chapter-item expanded "><a href="../surfaces-in-depth/subsurfaces.html"><strong aria-hidden="true">8.5.</strong> Subsurfaces</a></li><li class="chapter-item expanded "><a href="../surfaces-in-depth/hidpi.html"><strong aria-hidden="true">8.6.</strong> High density surfaces (HiDPI)</a></li></ol></li><li class="chapter-item expanded "><a href="../seat.html"><strong aria-hidden="true">9.</strong> Seats: Handling input</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../seat/pointer.html"><strong aria-hidden="true">9.1.</strong> Pointer input</a></li><li class="chapter-item expanded "><a href="../seat/xkb.html"><strong aria-hidden="true">9.2.</strong> XKB, briefly</a></li><li class="chapter-item expanded "><a href="../seat/keyboard.html" class="active"><strong aria-hidden="true">9.3.</strong> Keyboard input</a></li><li class="chapter-item expanded "><a href="../seat/touch.html"><strong aria-hidden="true">9.4.</strong> Touch input</a></li><li class="chapter-item expanded "><a href="../seat/example.html"><strong aria-hidden="true">9.5.</strong> Expanding our example code</a></li></ol></li><li class="chapter-item expanded "><a href="../xdg-shell-in-depth.html"><strong aria-hidden="true">10.</strong> XDG shell in depth</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../xdg-shell-in-depth/configuration.html"><strong aria-hidden="true">10.1.</strong> Configuration & lifecycle</a></li><li class="chapter-item expanded "><a href="../xdg-shell-in-depth/popups.html"><strong aria-hidden="true">10.2.</strong> Popups & parent windows</a></li><li class="chapter-item expanded "><a href="../xdg-shell-in-depth/interactive.html"><strong aria-hidden="true">10.3.</strong> Interactive move and resize</a></li><li class="chapter-item expanded "><a href="../xdg-shell-in-depth/positioners.html"><strong aria-hidden="true">10.4.</strong> Positioners</a></li></ol></li><li class="chapter-item expanded "><a href="../clipboard.html"><strong aria-hidden="true">11.</strong> Clipboard access</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../clipboard/data-offers.html"><strong aria-hidden="true">11.1.</strong> Data offers</a></li><li class="chapter-item expanded "><a href="../clipboard/dnd.html"><strong aria-hidden="true">11.2.</strong> Drag & drop</a></li></ol></li><li class="chapter-item expanded "><a href="../protocol-extensions.html"><strong aria-hidden="true">12.</strong> Protocol extensions</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../protocol-extensions/timing.html"><strong aria-hidden="true">12.1.</strong> Accurate timing</a></li><li class="chapter-item expanded "><a href="../protocol-extensions/pointer-constraints.html"><strong aria-hidden="true">12.2.</strong> Pointer constraints</a></li><li class="chapter-item expanded "><a href="../protocol-extensions/clipboard.html"><strong aria-hidden="true">12.3.</strong> Extended clipboard support</a></li><li class="chapter-item expanded "><a href="../protocol-extensions/desktop-shell.html"><strong aria-hidden="true">12.4.</strong> Desktop shell components</a></li><li class="chapter-item expanded "><a href="../protocol-extensions/misc.html"><strong aria-hidden="true">12.5.</strong> Miscellaneous extensions</a></li><li class="chapter-item expanded "><a href="../protocol-extensions/writing.html"><strong aria-hidden="true">12.6.</strong> Writing new extensions</a></li><li class="spacer"></li></ol></li><li class="chapter-item expanded "><a href="../acknowledgements.html">Acknowledgements</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <h1 class="menu-title">The Wayland Protocol</h1>
+
+                        <div class="right-buttons">
+                            <a href="../print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="keyboard-input"><a class="header" href="#keyboard-input">Keyboard input</a></h1>
+<p>Equipped with an understanding of how to use XKB, let's extend our Wayland code
+to provide us with key events to feed into it. Similarly to how we obtained a
+<code>wl_pointer</code> resource, we can use the <code>wl_seat.get_keyboard</code> request to create a
+<code>wl_keyboard</code> for a seat whose capabilities include
+<code>WL_SEAT_CAPABILITY_KEYBOARD</code>. When you're done with it, you should send the
+&quot;release&quot; request:</p>
+<pre><code>&lt;request name=&quot;release&quot; type=&quot;destructor&quot; since=&quot;3&quot;&gt;
+&lt;/request&gt;
+</code></pre>
+<p>This will allow the server to clean up the resources associated with this
+keyboard.</p>
+<p>But how do you actually use it? Let's start with the basics.</p>
+<h2 id="key-maps"><a class="header" href="#key-maps">Key maps</a></h2>
+<p>When you bind to <code>wl_keyboard</code>, the first event that the server is likely to
+send is <code>keymap</code>.</p>
+<pre><code>&lt;enum name=&quot;keymap_format&quot;&gt;
+  &lt;entry name=&quot;no_keymap&quot; value=&quot;0&quot; /&gt;
+  &lt;entry name=&quot;xkb_v1&quot; value=&quot;1&quot; /&gt;
+&lt;/enum&gt;
+
+&lt;event name=&quot;keymap&quot;&gt;
+  &lt;arg name=&quot;format&quot; type=&quot;uint&quot; enum=&quot;keymap_format&quot; /&gt;
+  &lt;arg name=&quot;fd&quot; type=&quot;fd&quot; /&gt;
+  &lt;arg name=&quot;size&quot; type=&quot;uint&quot; /&gt;
+&lt;/event&gt;
+</code></pre>
+<p>The <code>keymap_format</code> enum is provided in the event that we come
+up with a new format for keymaps, but at the time of writing, XKB keymaps are
+the only format which the server is likely to send.</p>
+<p>Bulk data like this is transferred over file descriptors. We could simply read
+from the file descriptor, but in general it's recommended to mmap it instead.
+In C, this could look similar to the following code:</p>
+<pre><code>#include &lt;sys/mman.h&gt;
+// ...
+
+static void wl_keyboard_keymap(void *data, struct wl_keyboard *wl_keyboard,
+        uint32_t format, int32_t fd, uint32_t size) {
+    assert(format == WL_KEYBOARD_KEYMAP_FORMAT_XKB_V1);
+    struct my_state *state = (struct my_state *)data;
+
+    char *map_shm = mmap(NULL, size, PROT_READ, MAP_PRIVATE, fd, 0);
+    assert(map_shm != MAP_FAILED);
+
+    struct xkb_keymap *keymap = xkb_keymap_new_from_string(
+        state-&gt;xkb_context, map_shm, XKB_KEYMAP_FORMAT_TEXT_V1,
+        XKB_KEYMAP_COMPILE_NO_FLAGS);
+    munmap(map_shm, size);
+    close(fd);
+
+    // ...do something with keymap...
+}
+</code></pre>
+<p>Once we have a keymap, we can interpret future keypress events for this
+<code>wl_keyboard</code>. Note that the server can send a new keymap at any time, and all
+future key events should be interpreted in that light.</p>
+<h2 id="keyboard-focus"><a class="header" href="#keyboard-focus">Keyboard focus</a></h2>
+<pre><code>&lt;event name=&quot;enter&quot;&gt;
+  &lt;arg name=&quot;serial&quot; type=&quot;uint&quot; /&gt;
+  &lt;arg name=&quot;surface&quot; type=&quot;object&quot; interface=&quot;wl_surface&quot; /&gt;
+  &lt;arg name=&quot;keys&quot; type=&quot;array&quot; /&gt;
+&lt;/event&gt;
+
+&lt;event name=&quot;leave&quot;&gt;
+  &lt;arg name=&quot;serial&quot; type=&quot;uint&quot; /&gt;
+  &lt;arg name=&quot;surface&quot; type=&quot;object&quot; interface=&quot;wl_surface&quot; /&gt;
+&lt;/event&gt;
+</code></pre>
+<p>Like <code>wl_pointer</code>'s &quot;enter&quot; and &quot;leave&quot; events are issued when a pointer is
+moved over your surface, the server sends <code>wl_keyboard.enter</code> when a surface
+receives keyboard focus, and <code>wl_keyboard.leave</code> when it's lost. Many
+applications will change their appearance under these conditions — for
+example, to start drawing a blinking caret.</p>
+<p>The &quot;enter&quot; event also includes an array of currently pressed keys. This is an
+array of 32-bit unsigned integers, each representing the scancode of a pressed
+key.</p>
+<h2 id="input-events"><a class="header" href="#input-events">Input events</a></h2>
+<p>Once the keyboard has entered your surface, you can expect to start receiving
+input events.</p>
+<pre><code>&lt;enum name=&quot;key_state&quot;&gt;
+  &lt;entry name=&quot;released&quot; value=&quot;0&quot; /&gt;
+  &lt;entry name=&quot;pressed&quot; value=&quot;1&quot; /&gt;
+&lt;/enum&gt;
+
+&lt;event name=&quot;key&quot;&gt;
+  &lt;arg name=&quot;serial&quot; type=&quot;uint&quot; /&gt;
+  &lt;arg name=&quot;time&quot; type=&quot;uint&quot; /&gt;
+  &lt;arg name=&quot;key&quot; type=&quot;uint&quot; /&gt;
+  &lt;arg name=&quot;state&quot; type=&quot;uint&quot; enum=&quot;key_state&quot; /&gt;
+&lt;/event&gt;
+
+&lt;event name=&quot;modifiers&quot;&gt;
+  &lt;arg name=&quot;serial&quot; type=&quot;uint&quot; /&gt;
+  &lt;arg name=&quot;mods_depressed&quot; type=&quot;uint&quot; /&gt;
+  &lt;arg name=&quot;mods_latched&quot; type=&quot;uint&quot; /&gt;
+  &lt;arg name=&quot;mods_locked&quot; type=&quot;uint&quot; /&gt;
+  &lt;arg name=&quot;group&quot; type=&quot;uint&quot; /&gt;
+&lt;/event&gt;
+</code></pre>
+<p>The &quot;key&quot; event is sent when the user presses or releases a key. Like many input
+events, a serial is included which you can use to associate future requests with
+this input event. The &quot;key&quot; is the scancode of the key which was pressed or
+released, and the &quot;state&quot; is the pressed or released state of that key.</p>
+<p><strong>Important</strong>: the scancode from this event is the Linux evdev scancode. To
+translate this to an XKB scancode, you must add 8 to the evdev scancode.</p>
+<p>The modifiers event includes a similar serial, as well as masks of the
+depressed, latched, and locked modifiers, and the index of the input group
+currently in use. A modifier is depressed, for example, while you hold down
+Shift. A modifier can latch, such as pressing Shift with sticky keys enabled -
+it'll stop taking effect after the next non-modifier key is pressed. And a
+modifier can be locked, such as when caps lock is toggled on or off. Input
+groups are used to switch between various keyboard layouts, such as toggling
+between ISO and ANSI layouts, or for more language-specific features.</p>
+<p>The interpretation of modifiers is keymap-specific. You should forward them both
+to XKB to deal with. Most implementations of the &quot;modifiers&quot; event are
+straightforward:</p>
+<pre><code>static void wl_keyboard_modifiers(void *data, struct wl_keyboard *wl_keyboard,
+        uint32_t serial, uint32_t depressed, uint32_t latched,
+        uint32_t locked, uint32_t group) {
+    struct my_state *state = (struct my_state *)data;
+    xkb_state_update_mask(state-&gt;xkb_state,
+        depressed, latched, locked, 0, 0, group);
+}
+</code></pre>
+<h2 id="key-repeat"><a class="header" href="#key-repeat">Key repeat</a></h2>
+<p>The last event to consider is the &quot;repeat_info&quot; event:</p>
+<pre><code>&lt;event name=&quot;repeat_info&quot; since=&quot;4&quot;&gt;
+  &lt;arg name=&quot;rate&quot; type=&quot;int&quot; /&gt;
+  &lt;arg name=&quot;delay&quot; type=&quot;int&quot; /&gt;
+&lt;/event&gt;
+</code></pre>
+<p>In Wayland, the client is responsible for implementing &quot;key repeat&quot; — the
+feature which continues to type characters as long as you've got the key held
+doooooown. This event is sent to inform the client of the user's preferences
+for key repeat settings. The &quot;delay&quot; is the number of milliseconds a key should
+be held down for before key repeat kicks in, and the &quot;rate&quot; is the number of
+characters per second to repeat until the key is released.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../seat/xkb.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="../seat/touch.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a href="../seat/xkb.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a href="../seat/touch.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+
+    </body>
+</html>
