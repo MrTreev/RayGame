@@ -5,13 +5,13 @@
 
 #if defined(RAYGAME_LOG_LOCATION)
 namespace {
-consteval std::size_t get_prefix_len(
+consteval size_t get_prefix_len(
     const core::detail::source_location loc =
         core::detail::source_location::current()
 ) {
     const std::string_view search_str = "/src/";
     const std::string_view locname    = loc.file_name();
-    const std::size_t      nopref_len = locname.rfind(search_str);
+    const size_t           nopref_len = locname.rfind(search_str);
     return nopref_len + search_str.length();
 }
 

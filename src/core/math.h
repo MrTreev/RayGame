@@ -1,5 +1,4 @@
 #pragma once
-#include "core/exception.h"
 #include "core/logger.h"
 #include "core/types.h"
 #include <format>
@@ -40,12 +39,15 @@ static constexpr core::deg_t rad2deg(core::rad_t rad) {
     return rad * constants::rad2deg;
 };
 
-class NumericCondition: public exception::detail::Condition {};
-
 template<typename Out_T, typename In_T>
 static constexpr Out_T numeric_cast(const In_T& input RG_LOC_CUR) {
-    if constexpr (std::numeric_limits<In_T>::max() < std::numeric_limits<Out_T>::max()) {
-        if (input > std::numeric_limits<Out_T>::max()) {
+    constexpr auto in_max  = std::numeric_limits<In_T>::max();
+    constexpr auto in_min  = std::numeric_limits<In_T>::min();
+    constexpr auto out_max = std::numeric_limits<Out_T>::max();
+    constexpr auto out_min = std::numeric_limits<Out_T>::min();
+
+    if constexpr (in_max < out_max) {
+        if (input > out_max) {
             core::log::error(std::format(
                 "Input of type '{}' is above the max for output type '{}': {}",
                 type_name<In_T>(),
@@ -54,8 +56,8 @@ static constexpr Out_T numeric_cast(const In_T& input RG_LOC_CUR) {
             ) RG_LOC_VAR);
         };
     }
-    if constexpr (std::numeric_limits<In_T>::min() > std::numeric_limits<Out_T>::min()) {
-        if (input < std::numeric_limits<Out_T>::min()) {
+    if constexpr (in_min > out_min) {
+        if (input < out_min) {
             core::log::error(std::format(
                 "Input of type '{}' is below the min for output type '{}': {}",
                 type_name<In_T>(),

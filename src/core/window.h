@@ -13,6 +13,17 @@ enum class WindowStyle {
     Fullscreen,         //< Fullscreen mode
 };
 
+namespace {
+constexpr size_t             DEFAULT_WINDOW_WIDTH  = 640;
+constexpr size_t             DEFAULT_WINDOW_HEIGHT = 480;
+constexpr core::Vec2<size_t> DEFAULT_WINDOW_SIZE   = {
+    DEFAULT_WINDOW_WIDTH,
+    DEFAULT_WINDOW_HEIGHT
+};
+constexpr std::string       DEFAULT_WINDOW_NAME  = "RayGame";
+constexpr core::WindowStyle DEFAULT_WINDOW_STYLE = core::WindowStyle::Windowed;
+} // namespace
+
 class Window {
 public:
     //! Window initialiser
@@ -25,10 +36,15 @@ public:
      * @post    The Window is created correctly
      */
     explicit Window(
-        const size_t&      width  = 640,
-        const size_t&      height = 480,
-        const std::string& title  = "RayGame",
-        const WindowStyle& style  = WindowStyle::Windowed
+        const size_t&      width  = DEFAULT_WINDOW_WIDTH,
+        const size_t&      height = DEFAULT_WINDOW_HEIGHT,
+        const std::string& title  = DEFAULT_WINDOW_NAME,
+        const WindowStyle& style  = DEFAULT_WINDOW_STYLE
+    );
+    explicit Window(
+        const core::Vec2<size_t>& size  = DEFAULT_WINDOW_SIZE,
+        const std::string&        title = DEFAULT_WINDOW_NAME,
+        const WindowStyle&        style = DEFAULT_WINDOW_STYLE
     );
     ~Window();
 

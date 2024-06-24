@@ -1,6 +1,5 @@
 #pragma once
 #include "core/image.h"
-#include "core/types.h"
 
 namespace core {
 

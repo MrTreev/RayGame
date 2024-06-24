@@ -27,6 +27,7 @@ namespace core {
 using rad_t = float;
 using deg_t = float;
 
+// NOLINTBEGIN(readability-identifier-naming)
 template<typename T>
 struct Vec2 {
     T x;
@@ -63,5 +64,6 @@ struct Quad {
     T br;
     T tr;
 };
-
+// NOLINTEND(readability-identifier-naming)
+//
 } // namespace core

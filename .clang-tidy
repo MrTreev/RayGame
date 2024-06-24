@@ -12,13 +12,9 @@ Checks:
   - 'portability-*'
   - 'readability-*'
   - '-bugprone-easily-swappable-parameters'
-  - '-*-magic-numbers'
-  - '-*-use-nodiscard'
   - '-*-use-trailing-return-type'
-  - '-readability-make-member-function-const'
-  - '-readability-convert-member-functions-to-static'
 WarningsAsErrors: ''
 AnalyzeTemporaryDtors: false
 SystemHeaders:   false
-...
-
+CheckOptions:
+    readability-identifier-naming.MemberPrefix: 'm_'

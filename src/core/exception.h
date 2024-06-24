@@ -3,7 +3,6 @@
 
 namespace core::exception {
 
-namespace detail {
 class Condition: public std::logic_error {
 public:
     explicit Condition(const std::string& message)
@@ -11,7 +10,6 @@ public:
     explicit Condition(const std::logic_error&& error)
         : ::std::logic_error(error){};
 };
-} // namespace detail
 
 //! Pre-Check-Condition exception
 /*!
@@ -19,10 +17,10 @@ public:
  * 	thrown.
  * 	The most common use of a PreCondition is to check for valid function arguments.
  */
-class PreCondition: public detail::Condition {
+class PreCondition: public Condition {
 public:
     explicit PreCondition(const std::string& message)
-        : detail::Condition(message){};
+        : Condition(message){};
 };
 
 //! Check-Condition exception
@@ -30,10 +28,10 @@ public:
  * 	A thrown CheckCondition does not have any guarantees, it is used anywhere in
  * 	a function as a runtime assertion.
  */
-class CheckCondition: public detail::Condition {
+class CheckCondition: public Condition {
 public:
     explicit CheckCondition(const std::string& message)
-        : detail::Condition(message){};
+        : Condition(message){};
 };
 
 //! Post-Check-Condition exception
@@ -41,9 +39,9 @@ public:
  * 	A thrown PostCondition is used to show that the operations within the
  * 	function were successful, but the function produced an invalid result.
  */
-class PostCondition: public detail::Condition {
+class PostCondition: public Condition {
 public:
     explicit PostCondition(const std::string& message)
-        : detail::Condition(message){};
+        : Condition(message){};
 };
 } // namespace core::exception

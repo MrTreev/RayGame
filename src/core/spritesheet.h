@@ -1,6 +1,5 @@
 #pragma once
 #include "core/texture.h"
-#include "core/types.h"
 #include <string>
 
 namespace core {
