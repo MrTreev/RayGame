@@ -1,9 +1,5 @@
 cmake_minimum_required(VERSION 3.25...3.29)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_CXX_CLANG_TIDY
-    clang-tidy
-    -checks=bugprone-*,clang-*,concurrency-*,cppcoreguidelines-*,hicpp-*,misc-*,modernize-*,performance-*,portability-*,readability-*,-*-use-trailing-return-type,-misc-include-cleaner
-)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 project(
@@ -20,8 +16,16 @@ option(ENABLE_AVX "Enable AVX instructions" ON)
 option(ENABLE_LTO "Enable Link-Time Optimisation" OFF)
 option(ENABLE_MSAN "Enable the Memory Sanitiser" OFF)
 option(ENABLE_UBSAN "Enable the Undefined Behaviour Sanitiser" OFF)
+option(ENABLE_STATIC_ANALYSIS "Do a bunch of extra checking" OFF)
 option(RAYGAME_IGNORE_CONDITIONS "Ignore all runtime condition checks" OFF)
 option(RAYGAME_GUI_USE_WAYLAND "Use Wayland for GUI backend" ON)
+
+if(ENABLE_STATIC_ANALYSIS)
+    set(CMAKE_CXX_CLANG_TIDY
+        clang-tidy
+        -checks=bugprone-*,clang-*,concurrency-*,cppcoreguidelines-*,hicpp-*,misc-*,modernize-*,performance-*,portability-*,readability-*,-*-use-trailing-return-type,-misc-include-cleaner
+    )
+endif()
 
 if(NOT CMAKE_BUILD_TYPE)
     set(rg_def_type Debug)
@@ -48,13 +52,6 @@ add_subdirectory(core)
 add_subdirectory(system)
 add_subdirectory(world)
 
-# Embedding resources into files
-if(CMAKE_BUILD_TYPE STREQUAL Debug)
-    set(B_EMBED_SILENCE_DEVMODE_WARNING ON)
-else()
-    set(B_PRODUCTION_MODE ON)
-endif()
-
 if(RAYGAME_GUI_USE_WAYLAND)
     target_compile_definitions(
         ${PROJECT_NAME} PRIVATE "RAYGAME_GUI_USE_WAYLAND"
@@ -71,9 +68,11 @@ if(CMAKE_BUILD_TYPE STREQUAL Debug)
     add_compile_options(-Og)
     add_compile_options(-ggdb)
     add_compile_options(-fno-omit-frame-pointer)
+    set(B_EMBED_SILENCE_DEVMODE_WARNING ON)
 else()
     add_compile_definitions("RAYGAME_LOG_INFO")
     target_compile_options(${PROJECT_NAME} PUBLIC -Ofast)
+    set(B_PRODUCTION_MODE ON)
 endif()
 
 if(RAYGAME_IGNORE_CONDITIONS)

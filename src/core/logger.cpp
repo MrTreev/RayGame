@@ -32,11 +32,7 @@ const size_t start_time =
 
 void core::log::detail::logger(
     const core::log::Level& level,
-    const std::string&      text
-#if defined(RAYGAME_LOG_LOCATION)
-    ,
-    const core::detail::source_location& loc
-#endif
+    const std::string& text RG_LOC_DEF
 ) {
     const auto now = std::chrono::system_clock::now().time_since_epoch();
     using std::chrono::duration_cast;
@@ -51,4 +47,26 @@ void core::log::detail::logger(
               << ":" << loc.function_name()
 #endif
               << " - " << text << "\n";
+}
+
+template<class... Args>
+void core::log::detail::logger(
+    const core::log::Level&     level,
+    std::format_string<Args...> fmt,
+    Args&&... args              RG_LOC_DEF
+) {
+    const auto now = std::chrono::system_clock::now().time_since_epoch();
+    using std::chrono::duration_cast;
+    using ms = std::chrono::milliseconds;
+
+    const size_t time_ms =
+        static_cast<size_t>(duration_cast<ms>(now).count()) - start_time;
+
+    const auto message = std::format(fmt, std::forward<Args...>(args)...);
+    std::cout << time_ms << " - " << to_string(level)
+#if defined(RAYGAME_LOG_LOCATION)
+              << " - " << shorten_name(loc.file_name()) << ":" << loc.line()
+              << ":" << loc.function_name()
+#endif
+              << " - " << message << "\n";
 }

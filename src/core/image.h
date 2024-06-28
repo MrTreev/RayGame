@@ -5,10 +5,10 @@
 namespace core {
 
 struct Pixel {
-    uint8_t red;
-    uint8_t green;
-    uint8_t blue;
-    uint8_t alpha;
+    uint8_t m_red;
+    uint8_t m_green;
+    uint8_t m_blue;
+    uint8_t m_alpha;
 };
 
 class Image {
@@ -19,7 +19,7 @@ private:
     int32_t            m_n_mipmaps;
 
 public:
-    Image(auto embed);
+    explicit Image(auto embed);
     ~Image();
     Image(const Image&)            = default;
     Image(Image&&)                 = default;
@@ -30,15 +30,18 @@ public:
         return m_image_data.data();
     }
 
-    inline int32_t width() {
+    [[nodiscard]]
+    inline int32_t width() const {
         return m_width;
     }
 
-    inline int32_t height() {
+    [[nodiscard]]
+    inline int32_t height() const {
         return m_height;
     }
 
-    inline int32_t n_mipmaps() {
+    [[nodiscard]]
+    inline int32_t n_mipmaps() const {
         return m_n_mipmaps;
     }
 };

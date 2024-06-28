@@ -31,7 +31,7 @@ protected:
     void connect();
 
 private:
-    int _fd{0};
+    int m_fd{0};
 
     struct sockaddr_un m_sockaddr {
         .sun_family = AF_UNIX,

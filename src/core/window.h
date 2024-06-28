@@ -42,7 +42,7 @@ public:
         const WindowStyle& style  = DEFAULT_WINDOW_STYLE
     );
     explicit Window(
-        const core::Vec2<size_t>& size  = DEFAULT_WINDOW_SIZE,
+        const core::Vec2<size_t>& size,
         const std::string&        title = DEFAULT_WINDOW_NAME,
         const WindowStyle&        style = DEFAULT_WINDOW_STYLE
     );

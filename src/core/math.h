@@ -1,7 +1,6 @@
 #pragma once
 #include "core/logger.h"
 #include "core/types.h"
-#include <format>
 #include <limits>
 
 #if defined(RAYGAME_CC_GCC) || defined(RAYGAME_CC_CLANG)
@@ -48,22 +47,22 @@ static constexpr Out_T numeric_cast(const In_T& input RG_LOC_CUR) {
 
     if constexpr (in_max < out_max) {
         if (input > out_max) {
-            core::log::error(std::format(
+            core::log::error(
                 "Input of type '{}' is above the max for output type '{}': {}",
                 type_name<In_T>(),
                 type_name<Out_T>(),
-                input
-            ) RG_LOC_VAR);
+                input RG_LOC_VAR
+            );
         };
     }
     if constexpr (in_min > out_min) {
         if (input < out_min) {
-            core::log::error(std::format(
+            core::log::error(
                 "Input of type '{}' is below the min for output type '{}': {}",
                 type_name<In_T>(),
                 type_name<Out_T>(),
-                input
-            ) RG_LOC_VAR);
+                input RG_LOC_VAR
+            );
         };
     }
     return static_cast<Out_T>(input);
