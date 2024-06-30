@@ -1,10 +1,11 @@
 #include "core/logger.h" // IWYU pragma: keep
 #include <chrono>
 #include <iostream>
+#include <ostream>
 #include <string_view>
 
-#if defined(RAYGAME_LOG_LOCATION)
 namespace {
+
 consteval size_t get_prefix_len(
     const core::detail::source_location loc =
         core::detail::source_location::current()
@@ -21,52 +22,37 @@ constexpr std::string_view shorten_name(std::string_view full_loc) {
     return shortloc;
 }
 
-const size_t start_time =
-    static_cast<size_t>(std::chrono::duration_cast<std::chrono::milliseconds>(
-                            std::chrono::system_clock::now().time_since_epoch()
-    )
-                            .count());
-
-} // namespace
-#endif
-
-void core::log::detail::logger(
-    const core::log::Level& level,
-    const std::string& text RG_LOC_DEF
+constexpr std::string location_string(const core::detail::source_location& loc
 ) {
-    const auto now = std::chrono::system_clock::now().time_since_epoch();
-    using std::chrono::duration_cast;
-    using ms = std::chrono::milliseconds;
-
-    const size_t time_ms =
-        static_cast<size_t>(duration_cast<ms>(now).count()) - start_time;
-
-    std::cout << time_ms << " - " << to_string(level)
 #if defined(RAYGAME_LOG_LOCATION)
-              << " - " << shorten_name(loc.file_name()) << ":" << loc.line()
-              << ":" << loc.function_name()
+    return std::format(
+        "{}:{}:{} ",
+        shorten_name(loc.file_name()),
+        loc.line(),
+        loc.function_name()
+    );
 #endif
-              << " - " << text << "\n";
+    return "";
 }
 
-template<class... Args>
+} // namespace
+
 void core::log::detail::logger(
-    const core::log::Level&     level,
-    std::format_string<Args...> fmt,
-    Args&&... args              RG_LOC_DEF
+    const core::log::Level&              level,
+    const std::string&                   text,
+    const core::detail::source_location& loc
 ) {
-    const auto now = std::chrono::system_clock::now().time_since_epoch();
-    using std::chrono::duration_cast;
-    using ms = std::chrono::milliseconds;
-
-    const size_t time_ms =
-        static_cast<size_t>(duration_cast<ms>(now).count()) - start_time;
-
-    const auto message = std::format(fmt, std::forward<Args...>(args)...);
-    std::cout << time_ms << " - " << to_string(level)
-#if defined(RAYGAME_LOG_LOCATION)
-              << " - " << shorten_name(loc.file_name()) << ":" << loc.line()
-              << ":" << loc.function_name()
-#endif
-              << " - " << message << "\n";
+    if (logging_level <= level) {
+        std::println(
+            std::cout,
+            "{:%T} [{}] {}- {}",
+            std::chrono::zoned_time{
+                std::chrono::current_zone(),
+                std::chrono::time_point{std::chrono::system_clock::now()}
+            },
+            to_string(level),
+            location_string(loc),
+            text
+        );
+    }
 }

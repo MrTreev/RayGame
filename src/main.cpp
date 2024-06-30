@@ -7,5 +7,6 @@ int main() {
     core::Window           game_window;
     while (!game_window.should_close()) {
         core::log::debug("Tick");
+        game_window.render();
     }
 }
