@@ -3,6 +3,7 @@
 #include "core/logger.h"
 #include "core/math.h"
 #include "core/types.h"
+#include <wayland-client-protocol.h>
 
 namespace {
 
@@ -51,12 +52,30 @@ struct core::WaylandWinState {
     size_t      m_buffer_size = 0;
     int         m_shm_fd      = 0;
 
-    struct wl_compositor* m_compositor = nullptr;
-    struct wl_display*    m_display    = nullptr;
-    struct wl_registry*   m_registry   = nullptr;
-    struct wl_shm*        m_shm        = nullptr;
-    struct wl_shm_pool*   m_shm_pool   = nullptr;
-    struct wl_surface*    m_surface    = nullptr;
+    std::unique_ptr<struct wl_compositor, decltype(free)*> m_compositor{
+        static_cast<struct wl_compositor*>(malloc(sizeof m_compositor)),
+        free
+    };
+    std::unique_ptr<struct wl_display, decltype(free)*> m_display{
+        static_cast<struct wl_display*>(malloc(sizeof m_compositor)),
+        free
+    };
+    std::unique_ptr<struct wl_registry, decltype(free)*> m_registry{
+        static_cast<struct wl_registry*>(malloc(sizeof m_compositor)),
+        free
+    };
+    std::unique_ptr<struct wl_shm, decltype(free)*> m_shm{
+        static_cast<struct wl_shm*>(malloc(sizeof m_compositor)),
+        free
+    };
+    std::unique_ptr<struct wl_shm_pool, decltype(free)*> m_shm_pool{
+        static_cast<struct wl_shm_pool*>(malloc(sizeof m_compositor)),
+        free
+    };
+    std::unique_ptr<struct wl_surface, decltype(free)*> m_surface{
+        static_cast<struct wl_surface*>(malloc(sizeof m_compositor)),
+        free
+    };
 };
 
 namespace {
@@ -70,14 +89,17 @@ void registry_handle_global(
 ) {
     auto* state = static_cast<core::WaylandWinState*>(data);
     if (strcmp(interface, wl_compositor_interface.name) == 0) {
-        state->m_compositor = static_cast<wl_compositor*>(
+        state->m_compositor.reset(static_cast<wl_compositor*>(
             wl_registry_bind(registry, name, &wl_compositor_interface, 4)
+        ));
+        state->m_surface.reset(
+            wl_compositor_create_surface(state->m_compositor.get())
         );
-        state->m_surface = wl_compositor_create_surface(state->m_compositor);
     } else if (strcmp(interface, wl_shm_interface.name) == 0) {
-        state->m_shm = static_cast<wl_shm*>(
+        debug("shm: {}", interface);
+        state->m_shm.reset(static_cast<wl_shm*>(
             wl_registry_bind(registry, name, &wl_shm_interface, 1)
-        );
+        ));
     }
 }
 
