@@ -1,59 +1,40 @@
-find_path(
-  WAYLAND_CLIENT_INCLUDE_DIR
-  NAMES wayland-client.h
-)
+if(RAYGAME_GUI_USE_WAYLAND)
+    find_package(PkgConfig REQUIRED)
+    target_compile_definitions(
+        ${PROJECT_NAME} PRIVATE "RAYGAME_GUI_USE_WAYLAND"
+    )
+    set(RAYGAME_WL_PROTO_DIR ${CMAKE_BINARY_DIR}/protocol)
+    set(RAYGAME_WL_PROTO_IN ${RAYGAME_ETC}/wayland-protocols)
+    pkg_check_modules(
+        wayland-deps
+        REQUIRED
+        IMPORTED_TARGET
+        wayland-client
+    )
+    pkg_get_variable(WaylandScanner wayland-scanner wayland_scanner)
+    function(protocol protoName)
+        execute_process(COMMAND mkdir -p ${RAYGAME_WL_PROTO_DIR})
+        execute_process(
+            COMMAND
+                ${WaylandScanner} server-header
+                ${RAYGAME_WL_PROTO_IN}/${protoName}.xml
+                ${RAYGAME_WL_PROTO_DIR}/${protoName}.h
+        )
+        execute_process(
+            COMMAND
+                ${WaylandScanner} private-code
+                ${RAYGAME_WL_PROTO_IN}/${protoName}.xml
+                ${RAYGAME_WL_PROTO_DIR}/${protoName}.c
+        )
+        target_sources(
+            ${PROJECT_NAME} PRIVATE ${RAYGAME_WL_PROTO_DIR}/${protoName}.c
+        )
+    endfunction()
 
-find_library(
-  WAYLAND_CLIENT_LIBRARY
-  NAMES wayland-client libwayland-client
-)
+    protocol(xdg-shell)
 
-if(WAYLAND_CLIENT_INCLUDE_DIR AND WAYLAND_CLIENT_LIBRARY)
-  add_library(wayland::client UNKNOWN IMPORTED)
-
-  set_target_properties(
-    wayland::client PROPERTIES
-    INTERFACE_INCLUDE_DIRECTORIES "${WAYLAND_CLIENT_INCLUDE_DIR}"
-    IMPORTED_LINK_INTERFACE_LANGUAGES "C"
-    IMPORTED_LOCATION "${WAYLAND_CLIENT_LIBRARY}"
-  )
+    target_link_libraries(${PROJECT_NAME} wayland-client)
+    target_include_directories(
+        ${PROJECT_NAME} SYSTEM PUBLIC ${RAYGAME_WL_PROTO_DIR}
+    )
 endif()
-
-find_path(
-  WAYLAND_SERVER_INCLUDE_DIR
-  NAMES wayland-server.h
-)
-
-find_library(
-  WAYLAND_SERVER_LIBRARY
-  NAMES wayland-server libwayland-server
-)
-
-if(WAYLAND_SERVER_INCLUDE_DIR AND WAYLAND_SERVER_LIBRARY)
-  add_library(wayland::server UNKNOWN IMPORTED)
-
-  set_target_properties(
-    wayland::server PROPERTIES
-    INTERFACE_INCLUDE_DIRECTORIES "${WAYLAND_SERVER_INCLUDE_DIR}"
-    IMPORTED_LINK_INTERFACE_LANGUAGES "C"
-    IMPORTED_LOCATION "${WAYLAND_SERVER_LIBRARY}"
-  )
-endif()
-
-include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(
-  WAYLAND_CLIENT
-  REQUIRED_VARS WAYLAND_CLIENT_LIBRARY WAYLAND_CLIENT_INCLUDE_DIR
-)
-
-find_package_handle_standard_args(
-  WAYLAND_SERVER
-  REQUIRED_VARS WAYLAND_SERVER_LIBRARY WAYLAND_SERVER_INCLUDE_DIR
-)
-
-mark_as_advanced(
-  WAYLAND_CLIENT_INCLUDE_DIR
-  WAYLAND_CLIENT_LIBRARY
-  WAYLAND_SERVER_INCLUDE_DIR
-  WAYLAND_SERVER_LIBRARY
-)

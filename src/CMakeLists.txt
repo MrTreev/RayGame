@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.25...3.29)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+set(RAYGAME_ETC ${CMAKE_CURRENT_SOURCE_DIR}/../etc)
+set(RAYGAME_EXT ${CMAKE_CURRENT_SOURCE_DIR}/../ext)
 
 project(
     RayGame
@@ -52,16 +54,6 @@ add_subdirectory(core)
 add_subdirectory(system)
 add_subdirectory(world)
 
-if(RAYGAME_GUI_USE_WAYLAND)
-    target_compile_definitions(
-        ${PROJECT_NAME} PRIVATE "RAYGAME_GUI_USE_WAYLAND"
-    )
-    include(FindWayland)
-    target_link_libraries(${PROJECT_NAME} PRIVATE wayland::client)
-endif()
-
-add_subdirectory(../ext/battery-embed ext/battery-embed)
-
 if(CMAKE_BUILD_TYPE STREQUAL Debug)
     add_compile_definitions("RAYGAME_LOG_DEBUG")
     add_compile_definitions("RAYGAME_LOG_LOCATION")
@@ -74,6 +66,9 @@ else()
     target_compile_options(${PROJECT_NAME} PUBLIC -Ofast)
     set(B_PRODUCTION_MODE ON)
 endif()
+
+include(FindWayland)
+include(FindBattery)
 
 if(RAYGAME_IGNORE_CONDITIONS)
     target_compile_definitions(
@@ -93,16 +88,19 @@ endif()
 if(ENABLE_ASAN)
     add_compile_options(-fno-omit-frame-pointer)
     add_compile_options(-fsanitize=address)
+    link_libraries(asan)
 endif()
 
 if(ENABLE_MSAN)
     add_compile_options(-fno-omit-frame-pointer)
     add_compile_options(-fsanitize=memory)
+    link_libraries(msan)
 endif()
 
 if(ENABLE_UBSAN)
     add_compile_options(-fno-omit-frame-pointer)
     add_compile_options(-fsanitize=undefined)
+    link_libraries(ubsan)
 endif()
 
 if(BUILD_DOC)

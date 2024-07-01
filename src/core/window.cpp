@@ -28,14 +28,6 @@ const struct wl_surface_listener surface_listener = {
     .enter = core::window::impl::wayland::surface_enter_handler,
     .leave = core::window::impl::wayland::surface_leave_handler
 };
-const struct zxdg_surface_v6_listener xdg_surface_listener = {
-    .configure = core::window::impl::wayland::xdg_surface_configure,
-};
-
-const struct zxdg_toplevel_v6_listener xdg_toplevel_listener = {
-    .configure = core::window::impl::wayland::xdg_toplevel_configure_handler,
-    .close     = core::window::impl::wayland::xdg_toplevel_close_handler
-};
 
 } // namespace
 
@@ -102,22 +94,6 @@ core::Window::Window(
     ));
 
     log::debug("Truncated");
-    m_win_state->m_xdg_surface = zxdg_shell_v6_get_xdg_surface(
-        m_win_state->m_shell,
-        m_win_state->m_surface
-    );
-    zxdg_surface_v6_add_listener(
-        m_win_state->m_xdg_surface,
-        &xdg_surface_listener,
-        nullptr
-    );
-    m_win_state->m_xdg_toplevel =
-        zxdg_surface_v6_get_toplevel(m_win_state->m_xdg_surface);
-    zxdg_toplevel_v6_add_listener(
-        m_win_state->m_xdg_toplevel,
-        &xdg_toplevel_listener,
-        nullptr
-    );
     m_win_state->m_pool = wl_shm_create_pool(
         m_win_state->m_shm,
         m_win_state->m_shm_fd,
