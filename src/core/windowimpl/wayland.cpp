@@ -1,6 +1,9 @@
 #include "core/windowimpl/wayland.h" // IWYU pragma: keep
 #include "core/logger.h"
 
+// after all else
+#include "core/windowimpl/wayland/xdg-shell.h"
+
 void core::window::impl::wayland::buffer_release(
     void*             data,
     struct wl_buffer* wl_buffer

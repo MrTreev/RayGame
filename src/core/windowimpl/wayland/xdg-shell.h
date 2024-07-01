@@ -3,15 +3,15 @@
 #ifndef XDG_SHELL_UNSTABLE_V6_CLIENT_PROTOCOL_H
 #define XDG_SHELL_UNSTABLE_V6_CLIENT_PROTOCOL_H
 
-#include <stdint.h>
 #include <stddef.h>
-#include "wayland-client.h"
+#include <stdint.h>
+#include <wayland-client.h>
 
-#ifdef  __cplusplus
+#ifdef __cplusplus
 extern "C" {
 #endif
 
-/**
+    /**
  * @page page_xdg_shell_unstable_v6 The xdg_shell_unstable_v6 protocol
  * @section page_ifaces_xdg_shell_unstable_v6 Interfaces
  * - @subpage page_iface_zxdg_shell_v6 - create desktop-style surfaces
@@ -47,18 +47,18 @@ extern "C" {
  * DEALINGS IN THE SOFTWARE.
  * </pre>
  */
-struct wl_output;
-struct wl_seat;
-struct wl_surface;
-struct zxdg_popup_v6;
-struct zxdg_positioner_v6;
-struct zxdg_shell_v6;
-struct zxdg_surface_v6;
-struct zxdg_toplevel_v6;
+    struct wl_output;
+    struct wl_seat;
+    struct wl_surface;
+    struct zxdg_popup_v6;
+    struct zxdg_positioner_v6;
+    struct zxdg_shell_v6;
+    struct zxdg_surface_v6;
+    struct zxdg_toplevel_v6;
 
 #ifndef ZXDG_SHELL_V6_INTERFACE
-#define ZXDG_SHELL_V6_INTERFACE
-/**
+#    define ZXDG_SHELL_V6_INTERFACE
+    /**
  * @page page_iface_zxdg_shell_v6 zxdg_shell_v6
  * @section page_iface_zxdg_shell_v6_desc Description
  *
@@ -69,7 +69,7 @@ struct zxdg_toplevel_v6;
  * @section page_iface_zxdg_shell_v6_api API
  * See @ref iface_zxdg_shell_v6.
  */
-/**
+    /**
  * @defgroup iface_zxdg_shell_v6 The zxdg_shell_v6 interface
  *
  * xdg_shell allows clients to turn a wl_surface into a "real window"
@@ -77,11 +77,11 @@ struct zxdg_toplevel_v6;
  * user. Everything about this interface is suited towards traditional
  * desktop environments.
  */
-extern const struct wl_interface zxdg_shell_v6_interface;
+    extern const struct wl_interface zxdg_shell_v6_interface;
 #endif
 #ifndef ZXDG_POSITIONER_V6_INTERFACE
-#define ZXDG_POSITIONER_V6_INTERFACE
-/**
+#    define ZXDG_POSITIONER_V6_INTERFACE
+    /**
  * @page page_iface_zxdg_positioner_v6 zxdg_positioner_v6
  * @section page_iface_zxdg_positioner_v6_desc Description
  *
@@ -107,7 +107,7 @@ extern const struct wl_interface zxdg_shell_v6_interface;
  * @section page_iface_zxdg_positioner_v6_api API
  * See @ref iface_zxdg_positioner_v6.
  */
-/**
+    /**
  * @defgroup iface_zxdg_positioner_v6 The zxdg_positioner_v6 interface
  *
  * The xdg_positioner provides a collection of rules for the placement of a
@@ -130,11 +130,11 @@ extern const struct wl_interface zxdg_shell_v6_interface;
  * set_anchor_rect. Passing an incomplete xdg_positioner object when
  * positioning a surface raises an error.
  */
-extern const struct wl_interface zxdg_positioner_v6_interface;
+    extern const struct wl_interface zxdg_positioner_v6_interface;
 #endif
 #ifndef ZXDG_SURFACE_V6_INTERFACE
-#define ZXDG_SURFACE_V6_INTERFACE
-/**
+#    define ZXDG_SURFACE_V6_INTERFACE
+    /**
  * @page page_iface_zxdg_surface_v6 zxdg_surface_v6
  * @section page_iface_zxdg_surface_v6_desc Description
  *
@@ -171,7 +171,7 @@ extern const struct wl_interface zxdg_positioner_v6_interface;
  * @section page_iface_zxdg_surface_v6_api API
  * See @ref iface_zxdg_surface_v6.
  */
-/**
+    /**
  * @defgroup iface_zxdg_surface_v6 The zxdg_surface_v6 interface
  *
  * An interface that may be implemented by a wl_surface, for
@@ -205,11 +205,11 @@ extern const struct wl_interface zxdg_positioner_v6_interface;
  * the role dependent state to the surface and (3) the client has committed a
  * buffer to the surface.
  */
-extern const struct wl_interface zxdg_surface_v6_interface;
+    extern const struct wl_interface zxdg_surface_v6_interface;
 #endif
 #ifndef ZXDG_TOPLEVEL_V6_INTERFACE
-#define ZXDG_TOPLEVEL_V6_INTERFACE
-/**
+#    define ZXDG_TOPLEVEL_V6_INTERFACE
+    /**
  * @page page_iface_zxdg_toplevel_v6 zxdg_toplevel_v6
  * @section page_iface_zxdg_toplevel_v6_desc Description
  *
@@ -221,7 +221,7 @@ extern const struct wl_interface zxdg_surface_v6_interface;
  * @section page_iface_zxdg_toplevel_v6_api API
  * See @ref iface_zxdg_toplevel_v6.
  */
-/**
+    /**
  * @defgroup iface_zxdg_toplevel_v6 The zxdg_toplevel_v6 interface
  *
  * This interface defines an xdg_surface role which allows a surface to,
@@ -230,11 +230,11 @@ extern const struct wl_interface zxdg_surface_v6_interface;
  * id, and well as trigger user interactive operations such as interactive
  * resize and move.
  */
-extern const struct wl_interface zxdg_toplevel_v6_interface;
+    extern const struct wl_interface zxdg_toplevel_v6_interface;
 #endif
 #ifndef ZXDG_POPUP_V6_INTERFACE
-#define ZXDG_POPUP_V6_INTERFACE
-/**
+#    define ZXDG_POPUP_V6_INTERFACE
+    /**
  * @page page_iface_zxdg_popup_v6 zxdg_popup_v6
  * @section page_iface_zxdg_popup_v6_desc Description
  *
@@ -274,7 +274,7 @@ extern const struct wl_interface zxdg_toplevel_v6_interface;
  * @section page_iface_zxdg_popup_v6_api API
  * See @ref iface_zxdg_popup_v6.
  */
-/**
+    /**
  * @defgroup iface_zxdg_popup_v6 The zxdg_popup_v6 interface
  *
  * A popup surface is a short-lived, temporary surface. It can be used to
@@ -311,45 +311,46 @@ extern const struct wl_interface zxdg_toplevel_v6_interface;
  * The client must call wl_surface.commit on the corresponding wl_surface
  * for the xdg_popup state to take effect.
  */
-extern const struct wl_interface zxdg_popup_v6_interface;
+    extern const struct wl_interface zxdg_popup_v6_interface;
 #endif
 
 #ifndef ZXDG_SHELL_V6_ERROR_ENUM
-#define ZXDG_SHELL_V6_ERROR_ENUM
-enum zxdg_shell_v6_error {
-	/**
+#    define ZXDG_SHELL_V6_ERROR_ENUM
+
+    enum zxdg_shell_v6_error {
+        /**
 	 * given wl_surface has another role
 	 */
-	ZXDG_SHELL_V6_ERROR_ROLE = 0,
-	/**
+        ZXDG_SHELL_V6_ERROR_ROLE                  = 0,
+        /**
 	 * xdg_shell was destroyed before children
 	 */
-	ZXDG_SHELL_V6_ERROR_DEFUNCT_SURFACES = 1,
-	/**
+        ZXDG_SHELL_V6_ERROR_DEFUNCT_SURFACES      = 1,
+        /**
 	 * the client tried to map or destroy a non-topmost popup
 	 */
-	ZXDG_SHELL_V6_ERROR_NOT_THE_TOPMOST_POPUP = 2,
-	/**
+        ZXDG_SHELL_V6_ERROR_NOT_THE_TOPMOST_POPUP = 2,
+        /**
 	 * the client specified an invalid popup parent surface
 	 */
-	ZXDG_SHELL_V6_ERROR_INVALID_POPUP_PARENT = 3,
-	/**
+        ZXDG_SHELL_V6_ERROR_INVALID_POPUP_PARENT  = 3,
+        /**
 	 * the client provided an invalid surface state
 	 */
-	ZXDG_SHELL_V6_ERROR_INVALID_SURFACE_STATE = 4,
-	/**
+        ZXDG_SHELL_V6_ERROR_INVALID_SURFACE_STATE = 4,
+        /**
 	 * the client provided an invalid positioner
 	 */
-	ZXDG_SHELL_V6_ERROR_INVALID_POSITIONER = 5,
-};
+        ZXDG_SHELL_V6_ERROR_INVALID_POSITIONER    = 5,
+    };
 #endif /* ZXDG_SHELL_V6_ERROR_ENUM */
 
-/**
+    /**
  * @ingroup iface_zxdg_shell_v6
  * @struct zxdg_shell_v6_listener
  */
-struct zxdg_shell_v6_listener {
-	/**
+    struct zxdg_shell_v6_listener {
+        /**
 	 * check if the client is alive
 	 *
 	 * The ping event asks the client if it's still alive. Pass the
@@ -366,26 +367,32 @@ struct zxdg_shell_v6_listener {
 	 * must always respond to any xdg_shell object it created.
 	 * @param serial pass this to the pong request
 	 */
-	void (*ping)(void *data,
-		     struct zxdg_shell_v6 *zxdg_shell_v6,
-		     uint32_t serial);
-};
+        void (*ping)(
+            void*                 data,
+            struct zxdg_shell_v6* zxdg_shell_v6,
+            uint32_t              serial
+        );
+    };
 
-/**
+    /**
  * @ingroup iface_zxdg_shell_v6
  */
-static inline int
-zxdg_shell_v6_add_listener(struct zxdg_shell_v6 *zxdg_shell_v6,
-			   const struct zxdg_shell_v6_listener *listener, void *data)
-{
-	return wl_proxy_add_listener((struct wl_proxy *) zxdg_shell_v6,
-				     (void (**)(void)) listener, data);
-}
+    static inline int zxdg_shell_v6_add_listener(
+        struct zxdg_shell_v6*                zxdg_shell_v6,
+        const struct zxdg_shell_v6_listener* listener,
+        void*                                data
+    ) {
+        return wl_proxy_add_listener(
+            (struct wl_proxy*)zxdg_shell_v6,
+            (void (**)(void))listener,
+            data
+        );
+    }
 
-#define ZXDG_SHELL_V6_DESTROY 0
+#define ZXDG_SHELL_V6_DESTROY           0
 #define ZXDG_SHELL_V6_CREATE_POSITIONER 1
-#define ZXDG_SHELL_V6_GET_XDG_SURFACE 2
-#define ZXDG_SHELL_V6_PONG 3
+#define ZXDG_SHELL_V6_GET_XDG_SURFACE   2
+#define ZXDG_SHELL_V6_PONG              3
 
 /**
  * @ingroup iface_zxdg_shell_v6
@@ -395,7 +402,7 @@ zxdg_shell_v6_add_listener(struct zxdg_shell_v6 *zxdg_shell_v6,
 /**
  * @ingroup iface_zxdg_shell_v6
  */
-#define ZXDG_SHELL_V6_DESTROY_SINCE_VERSION 1
+#define ZXDG_SHELL_V6_DESTROY_SINCE_VERSION           1
 /**
  * @ingroup iface_zxdg_shell_v6
  */
@@ -403,33 +410,32 @@ zxdg_shell_v6_add_listener(struct zxdg_shell_v6 *zxdg_shell_v6,
 /**
  * @ingroup iface_zxdg_shell_v6
  */
-#define ZXDG_SHELL_V6_GET_XDG_SURFACE_SINCE_VERSION 1
+#define ZXDG_SHELL_V6_GET_XDG_SURFACE_SINCE_VERSION   1
 /**
  * @ingroup iface_zxdg_shell_v6
  */
-#define ZXDG_SHELL_V6_PONG_SINCE_VERSION 1
+#define ZXDG_SHELL_V6_PONG_SINCE_VERSION              1
 
-/** @ingroup iface_zxdg_shell_v6 */
-static inline void
-zxdg_shell_v6_set_user_data(struct zxdg_shell_v6 *zxdg_shell_v6, void *user_data)
-{
-	wl_proxy_set_user_data((struct wl_proxy *) zxdg_shell_v6, user_data);
-}
+    /** @ingroup iface_zxdg_shell_v6 */
+    static inline void zxdg_shell_v6_set_user_data(
+        struct zxdg_shell_v6* zxdg_shell_v6,
+        void*                 user_data
+    ) {
+        wl_proxy_set_user_data((struct wl_proxy*)zxdg_shell_v6, user_data);
+    }
 
-/** @ingroup iface_zxdg_shell_v6 */
-static inline void *
-zxdg_shell_v6_get_user_data(struct zxdg_shell_v6 *zxdg_shell_v6)
-{
-	return wl_proxy_get_user_data((struct wl_proxy *) zxdg_shell_v6);
-}
+    /** @ingroup iface_zxdg_shell_v6 */
+    static inline void*
+    zxdg_shell_v6_get_user_data(struct zxdg_shell_v6* zxdg_shell_v6) {
+        return wl_proxy_get_user_data((struct wl_proxy*)zxdg_shell_v6);
+    }
 
-static inline uint32_t
-zxdg_shell_v6_get_version(struct zxdg_shell_v6 *zxdg_shell_v6)
-{
-	return wl_proxy_get_version((struct wl_proxy *) zxdg_shell_v6);
-}
+    static inline uint32_t
+    zxdg_shell_v6_get_version(struct zxdg_shell_v6* zxdg_shell_v6) {
+        return wl_proxy_get_version((struct wl_proxy*)zxdg_shell_v6);
+    }
 
-/**
+    /**
  * @ingroup iface_zxdg_shell_v6
  *
  * Destroy this xdg_shell object.
@@ -438,32 +444,41 @@ zxdg_shell_v6_get_version(struct zxdg_shell_v6 *zxdg_shell_v6)
  * still alive created by this xdg_shell object instance is illegal
  * and will result in a protocol error.
  */
-static inline void
-zxdg_shell_v6_destroy(struct zxdg_shell_v6 *zxdg_shell_v6)
-{
-	wl_proxy_marshal_flags((struct wl_proxy *) zxdg_shell_v6,
-			 ZXDG_SHELL_V6_DESTROY, NULL, wl_proxy_get_version((struct wl_proxy *) zxdg_shell_v6), WL_MARSHAL_FLAG_DESTROY);
-}
+    static inline void zxdg_shell_v6_destroy(struct zxdg_shell_v6* zxdg_shell_v6
+    ) {
+        wl_proxy_marshal_flags(
+            (struct wl_proxy*)zxdg_shell_v6,
+            ZXDG_SHELL_V6_DESTROY,
+            NULL,
+            wl_proxy_get_version((struct wl_proxy*)zxdg_shell_v6),
+            WL_MARSHAL_FLAG_DESTROY
+        );
+    }
 
-/**
+    /**
  * @ingroup iface_zxdg_shell_v6
  *
  * Create a positioner object. A positioner object is used to position
  * surfaces relative to some parent surface. See the interface description
  * and xdg_surface.get_popup for details.
  */
-static inline struct zxdg_positioner_v6 *
-zxdg_shell_v6_create_positioner(struct zxdg_shell_v6 *zxdg_shell_v6)
-{
-	struct wl_proxy *id;
+    static inline struct zxdg_positioner_v6*
+    zxdg_shell_v6_create_positioner(struct zxdg_shell_v6* zxdg_shell_v6) {
+        struct wl_proxy* id;
 
-	id = wl_proxy_marshal_flags((struct wl_proxy *) zxdg_shell_v6,
-			 ZXDG_SHELL_V6_CREATE_POSITIONER, &zxdg_positioner_v6_interface, wl_proxy_get_version((struct wl_proxy *) zxdg_shell_v6), 0, NULL);
+        id = wl_proxy_marshal_flags(
+            (struct wl_proxy*)zxdg_shell_v6,
+            ZXDG_SHELL_V6_CREATE_POSITIONER,
+            &zxdg_positioner_v6_interface,
+            wl_proxy_get_version((struct wl_proxy*)zxdg_shell_v6),
+            0,
+            NULL
+        );
 
-	return (struct zxdg_positioner_v6 *) id;
-}
+        return (struct zxdg_positioner_v6*)id;
+    }
 
-/**
+    /**
  * @ingroup iface_zxdg_shell_v6
  *
  * This creates an xdg_surface for the given surface. While xdg_surface
@@ -478,95 +493,112 @@ zxdg_shell_v6_create_positioner(struct zxdg_shell_v6 *zxdg_shell_v6)
  * See the documentation of xdg_surface for more details about what an
  * xdg_surface is and how it is used.
  */
-static inline struct zxdg_surface_v6 *
-zxdg_shell_v6_get_xdg_surface(struct zxdg_shell_v6 *zxdg_shell_v6, struct wl_surface *surface)
-{
-	struct wl_proxy *id;
+    static inline struct zxdg_surface_v6* zxdg_shell_v6_get_xdg_surface(
+        struct zxdg_shell_v6* zxdg_shell_v6,
+        struct wl_surface*    surface
+    ) {
+        struct wl_proxy* id;
 
-	id = wl_proxy_marshal_flags((struct wl_proxy *) zxdg_shell_v6,
-			 ZXDG_SHELL_V6_GET_XDG_SURFACE, &zxdg_surface_v6_interface, wl_proxy_get_version((struct wl_proxy *) zxdg_shell_v6), 0, NULL, surface);
+        id = wl_proxy_marshal_flags(
+            (struct wl_proxy*)zxdg_shell_v6,
+            ZXDG_SHELL_V6_GET_XDG_SURFACE,
+            &zxdg_surface_v6_interface,
+            wl_proxy_get_version((struct wl_proxy*)zxdg_shell_v6),
+            0,
+            NULL,
+            surface
+        );
 
-	return (struct zxdg_surface_v6 *) id;
-}
+        return (struct zxdg_surface_v6*)id;
+    }
 
-/**
+    /**
  * @ingroup iface_zxdg_shell_v6
  *
  * A client must respond to a ping event with a pong request or
  * the client may be deemed unresponsive. See xdg_shell.ping.
  */
-static inline void
-zxdg_shell_v6_pong(struct zxdg_shell_v6 *zxdg_shell_v6, uint32_t serial)
-{
-	wl_proxy_marshal_flags((struct wl_proxy *) zxdg_shell_v6,
-			 ZXDG_SHELL_V6_PONG, NULL, wl_proxy_get_version((struct wl_proxy *) zxdg_shell_v6), 0, serial);
-}
+    static inline void
+    zxdg_shell_v6_pong(struct zxdg_shell_v6* zxdg_shell_v6, uint32_t serial) {
+        wl_proxy_marshal_flags(
+            (struct wl_proxy*)zxdg_shell_v6,
+            ZXDG_SHELL_V6_PONG,
+            NULL,
+            wl_proxy_get_version((struct wl_proxy*)zxdg_shell_v6),
+            0,
+            serial
+        );
+    }
 
 #ifndef ZXDG_POSITIONER_V6_ERROR_ENUM
-#define ZXDG_POSITIONER_V6_ERROR_ENUM
-enum zxdg_positioner_v6_error {
-	/**
+#    define ZXDG_POSITIONER_V6_ERROR_ENUM
+
+    enum zxdg_positioner_v6_error {
+        /**
 	 * invalid input provided
 	 */
-	ZXDG_POSITIONER_V6_ERROR_INVALID_INPUT = 0,
-};
+        ZXDG_POSITIONER_V6_ERROR_INVALID_INPUT = 0,
+    };
 #endif /* ZXDG_POSITIONER_V6_ERROR_ENUM */
 
 #ifndef ZXDG_POSITIONER_V6_ANCHOR_ENUM
-#define ZXDG_POSITIONER_V6_ANCHOR_ENUM
-enum zxdg_positioner_v6_anchor {
-	/**
+#    define ZXDG_POSITIONER_V6_ANCHOR_ENUM
+
+    enum zxdg_positioner_v6_anchor {
+        /**
 	 * the center of the anchor rectangle
 	 */
-	ZXDG_POSITIONER_V6_ANCHOR_NONE = 0,
-	/**
+        ZXDG_POSITIONER_V6_ANCHOR_NONE   = 0,
+        /**
 	 * the top edge of the anchor rectangle
 	 */
-	ZXDG_POSITIONER_V6_ANCHOR_TOP = 1,
-	/**
+        ZXDG_POSITIONER_V6_ANCHOR_TOP    = 1,
+        /**
 	 * the bottom edge of the anchor rectangle
 	 */
-	ZXDG_POSITIONER_V6_ANCHOR_BOTTOM = 2,
-	/**
+        ZXDG_POSITIONER_V6_ANCHOR_BOTTOM = 2,
+        /**
 	 * the left edge of the anchor rectangle
 	 */
-	ZXDG_POSITIONER_V6_ANCHOR_LEFT = 4,
-	/**
+        ZXDG_POSITIONER_V6_ANCHOR_LEFT   = 4,
+        /**
 	 * the right edge of the anchor rectangle
 	 */
-	ZXDG_POSITIONER_V6_ANCHOR_RIGHT = 8,
-};
+        ZXDG_POSITIONER_V6_ANCHOR_RIGHT  = 8,
+    };
 #endif /* ZXDG_POSITIONER_V6_ANCHOR_ENUM */
 
 #ifndef ZXDG_POSITIONER_V6_GRAVITY_ENUM
-#define ZXDG_POSITIONER_V6_GRAVITY_ENUM
-enum zxdg_positioner_v6_gravity {
-	/**
+#    define ZXDG_POSITIONER_V6_GRAVITY_ENUM
+
+    enum zxdg_positioner_v6_gravity {
+        /**
 	 * center over the anchor edge
 	 */
-	ZXDG_POSITIONER_V6_GRAVITY_NONE = 0,
-	/**
+        ZXDG_POSITIONER_V6_GRAVITY_NONE   = 0,
+        /**
 	 * position above the anchor edge
 	 */
-	ZXDG_POSITIONER_V6_GRAVITY_TOP = 1,
-	/**
+        ZXDG_POSITIONER_V6_GRAVITY_TOP    = 1,
+        /**
 	 * position below the anchor edge
 	 */
-	ZXDG_POSITIONER_V6_GRAVITY_BOTTOM = 2,
-	/**
+        ZXDG_POSITIONER_V6_GRAVITY_BOTTOM = 2,
+        /**
 	 * position to the left of the anchor edge
 	 */
-	ZXDG_POSITIONER_V6_GRAVITY_LEFT = 4,
-	/**
+        ZXDG_POSITIONER_V6_GRAVITY_LEFT   = 4,
+        /**
 	 * position to the right of the anchor edge
 	 */
-	ZXDG_POSITIONER_V6_GRAVITY_RIGHT = 8,
-};
+        ZXDG_POSITIONER_V6_GRAVITY_RIGHT  = 8,
+    };
 #endif /* ZXDG_POSITIONER_V6_GRAVITY_ENUM */
 
 #ifndef ZXDG_POSITIONER_V6_CONSTRAINT_ADJUSTMENT_ENUM
-#define ZXDG_POSITIONER_V6_CONSTRAINT_ADJUSTMENT_ENUM
-/**
+#    define ZXDG_POSITIONER_V6_CONSTRAINT_ADJUSTMENT_ENUM
+
+    /**
  * @ingroup iface_zxdg_positioner_v6
  * constraint adjustments
  *
@@ -582,15 +614,15 @@ enum zxdg_positioner_v6_gravity {
  * The adjustments can be combined, according to a defined precedence: 1)
  * Flip, 2) Slide, 3) Resize.
  */
-enum zxdg_positioner_v6_constraint_adjustment {
-	/**
+    enum zxdg_positioner_v6_constraint_adjustment {
+        /**
 	 * don't move the child surface when constrained
 	 *
 	 * Don't alter the surface position even if it is constrained on
 	 * some axis, for example partially outside the edge of a monitor.
 	 */
-	ZXDG_POSITIONER_V6_CONSTRAINT_ADJUSTMENT_NONE = 0,
-	/**
+        ZXDG_POSITIONER_V6_CONSTRAINT_ADJUSTMENT_NONE     = 0,
+        /**
 	 * move along the x axis until unconstrained
 	 *
 	 * Slide the surface along the x axis until it is no longer
@@ -606,8 +638,8 @@ enum zxdg_positioner_v6_constraint_adjustment {
 	 * gravity is unconstrained or the edge in the opposite direction
 	 * of the gravity is constrained.
 	 */
-	ZXDG_POSITIONER_V6_CONSTRAINT_ADJUSTMENT_SLIDE_X = 1,
-	/**
+        ZXDG_POSITIONER_V6_CONSTRAINT_ADJUSTMENT_SLIDE_X  = 1,
+        /**
 	 * move along the y axis until unconstrained
 	 *
 	 * Slide the surface along the y axis until it is no longer
@@ -623,8 +655,8 @@ enum zxdg_positioner_v6_constraint_adjustment {
 	 * gravity is unconstrained or the edge in the opposite direction
 	 * of the gravity is constrained.
 	 */
-	ZXDG_POSITIONER_V6_CONSTRAINT_ADJUSTMENT_SLIDE_Y = 2,
-	/**
+        ZXDG_POSITIONER_V6_CONSTRAINT_ADJUSTMENT_SLIDE_Y  = 2,
+        /**
 	 * invert the anchor and gravity on the x axis
 	 *
 	 * Invert the anchor and gravity on the x axis if the surface is
@@ -636,8 +668,8 @@ enum zxdg_positioner_v6_constraint_adjustment {
 	 * resulting position of the flip_x adjustment will be the one
 	 * before the adjustment.
 	 */
-	ZXDG_POSITIONER_V6_CONSTRAINT_ADJUSTMENT_FLIP_X = 4,
-	/**
+        ZXDG_POSITIONER_V6_CONSTRAINT_ADJUSTMENT_FLIP_X   = 4,
+        /**
 	 * invert the anchor and gravity on the y axis
 	 *
 	 * Invert the anchor and gravity on the y axis if the surface is
@@ -650,53 +682,52 @@ enum zxdg_positioner_v6_constraint_adjustment {
 	 * resulting position of the flip_y adjustment will be the one
 	 * before the adjustment.
 	 */
-	ZXDG_POSITIONER_V6_CONSTRAINT_ADJUSTMENT_FLIP_Y = 8,
-	/**
+        ZXDG_POSITIONER_V6_CONSTRAINT_ADJUSTMENT_FLIP_Y   = 8,
+        /**
 	 * horizontally resize the surface
 	 *
 	 * Resize the surface horizontally so that it is completely
 	 * unconstrained.
 	 */
-	ZXDG_POSITIONER_V6_CONSTRAINT_ADJUSTMENT_RESIZE_X = 16,
-	/**
+        ZXDG_POSITIONER_V6_CONSTRAINT_ADJUSTMENT_RESIZE_X = 16,
+        /**
 	 * vertically resize the surface
 	 *
 	 * Resize the surface vertically so that it is completely
 	 * unconstrained.
 	 */
-	ZXDG_POSITIONER_V6_CONSTRAINT_ADJUSTMENT_RESIZE_Y = 32,
-};
+        ZXDG_POSITIONER_V6_CONSTRAINT_ADJUSTMENT_RESIZE_Y = 32,
+    };
 #endif /* ZXDG_POSITIONER_V6_CONSTRAINT_ADJUSTMENT_ENUM */
 
-#define ZXDG_POSITIONER_V6_DESTROY 0
-#define ZXDG_POSITIONER_V6_SET_SIZE 1
-#define ZXDG_POSITIONER_V6_SET_ANCHOR_RECT 2
-#define ZXDG_POSITIONER_V6_SET_ANCHOR 3
-#define ZXDG_POSITIONER_V6_SET_GRAVITY 4
+#define ZXDG_POSITIONER_V6_DESTROY                   0
+#define ZXDG_POSITIONER_V6_SET_SIZE                  1
+#define ZXDG_POSITIONER_V6_SET_ANCHOR_RECT           2
+#define ZXDG_POSITIONER_V6_SET_ANCHOR                3
+#define ZXDG_POSITIONER_V6_SET_GRAVITY               4
 #define ZXDG_POSITIONER_V6_SET_CONSTRAINT_ADJUSTMENT 5
-#define ZXDG_POSITIONER_V6_SET_OFFSET 6
+#define ZXDG_POSITIONER_V6_SET_OFFSET                6
 
-
 /**
  * @ingroup iface_zxdg_positioner_v6
  */
-#define ZXDG_POSITIONER_V6_DESTROY_SINCE_VERSION 1
+#define ZXDG_POSITIONER_V6_DESTROY_SINCE_VERSION                   1
 /**
  * @ingroup iface_zxdg_positioner_v6
  */
-#define ZXDG_POSITIONER_V6_SET_SIZE_SINCE_VERSION 1
+#define ZXDG_POSITIONER_V6_SET_SIZE_SINCE_VERSION                  1
 /**
  * @ingroup iface_zxdg_positioner_v6
  */
-#define ZXDG_POSITIONER_V6_SET_ANCHOR_RECT_SINCE_VERSION 1
+#define ZXDG_POSITIONER_V6_SET_ANCHOR_RECT_SINCE_VERSION           1
 /**
  * @ingroup iface_zxdg_positioner_v6
  */
-#define ZXDG_POSITIONER_V6_SET_ANCHOR_SINCE_VERSION 1
+#define ZXDG_POSITIONER_V6_SET_ANCHOR_SINCE_VERSION                1
 /**
  * @ingroup iface_zxdg_positioner_v6
  */
-#define ZXDG_POSITIONER_V6_SET_GRAVITY_SINCE_VERSION 1
+#define ZXDG_POSITIONER_V6_SET_GRAVITY_SINCE_VERSION               1
 /**
  * @ingroup iface_zxdg_positioner_v6
  */
@@ -704,41 +735,46 @@ enum zxdg_positioner_v6_constraint_adjustment {
 /**
  * @ingroup iface_zxdg_positioner_v6
  */
-#define ZXDG_POSITIONER_V6_SET_OFFSET_SINCE_VERSION 1
+#define ZXDG_POSITIONER_V6_SET_OFFSET_SINCE_VERSION                1
 
-/** @ingroup iface_zxdg_positioner_v6 */
-static inline void
-zxdg_positioner_v6_set_user_data(struct zxdg_positioner_v6 *zxdg_positioner_v6, void *user_data)
-{
-	wl_proxy_set_user_data((struct wl_proxy *) zxdg_positioner_v6, user_data);
-}
+    /** @ingroup iface_zxdg_positioner_v6 */
+    static inline void zxdg_positioner_v6_set_user_data(
+        struct zxdg_positioner_v6* zxdg_positioner_v6,
+        void*                      user_data
+    ) {
+        wl_proxy_set_user_data((struct wl_proxy*)zxdg_positioner_v6, user_data);
+    }
 
-/** @ingroup iface_zxdg_positioner_v6 */
-static inline void *
-zxdg_positioner_v6_get_user_data(struct zxdg_positioner_v6 *zxdg_positioner_v6)
-{
-	return wl_proxy_get_user_data((struct wl_proxy *) zxdg_positioner_v6);
-}
+    /** @ingroup iface_zxdg_positioner_v6 */
+    static inline void* zxdg_positioner_v6_get_user_data(
+        struct zxdg_positioner_v6* zxdg_positioner_v6
+    ) {
+        return wl_proxy_get_user_data((struct wl_proxy*)zxdg_positioner_v6);
+    }
 
-static inline uint32_t
-zxdg_positioner_v6_get_version(struct zxdg_positioner_v6 *zxdg_positioner_v6)
-{
-	return wl_proxy_get_version((struct wl_proxy *) zxdg_positioner_v6);
-}
+    static inline uint32_t
+    zxdg_positioner_v6_get_version(struct zxdg_positioner_v6* zxdg_positioner_v6
+    ) {
+        return wl_proxy_get_version((struct wl_proxy*)zxdg_positioner_v6);
+    }
 
-/**
+    /**
  * @ingroup iface_zxdg_positioner_v6
  *
  * Notify the compositor that the xdg_positioner will no longer be used.
  */
-static inline void
-zxdg_positioner_v6_destroy(struct zxdg_positioner_v6 *zxdg_positioner_v6)
-{
-	wl_proxy_marshal_flags((struct wl_proxy *) zxdg_positioner_v6,
-			 ZXDG_POSITIONER_V6_DESTROY, NULL, wl_proxy_get_version((struct wl_proxy *) zxdg_positioner_v6), WL_MARSHAL_FLAG_DESTROY);
-}
+    static inline void
+    zxdg_positioner_v6_destroy(struct zxdg_positioner_v6* zxdg_positioner_v6) {
+        wl_proxy_marshal_flags(
+            (struct wl_proxy*)zxdg_positioner_v6,
+            ZXDG_POSITIONER_V6_DESTROY,
+            NULL,
+            wl_proxy_get_version((struct wl_proxy*)zxdg_positioner_v6),
+            WL_MARSHAL_FLAG_DESTROY
+        );
+    }
 
-/**
+    /**
  * @ingroup iface_zxdg_positioner_v6
  *
  * Set the size of the surface that is to be positioned with the positioner
@@ -747,14 +783,23 @@ zxdg_positioner_v6_destroy(struct zxdg_positioner_v6 *zxdg_positioner_v6)
  *
  * If a zero or negative size is set the invalid_input error is raised.
  */
-static inline void
-zxdg_positioner_v6_set_size(struct zxdg_positioner_v6 *zxdg_positioner_v6, int32_t width, int32_t height)
-{
-	wl_proxy_marshal_flags((struct wl_proxy *) zxdg_positioner_v6,
-			 ZXDG_POSITIONER_V6_SET_SIZE, NULL, wl_proxy_get_version((struct wl_proxy *) zxdg_positioner_v6), 0, width, height);
-}
+    static inline void zxdg_positioner_v6_set_size(
+        struct zxdg_positioner_v6* zxdg_positioner_v6,
+        int32_t                    width,
+        int32_t                    height
+    ) {
+        wl_proxy_marshal_flags(
+            (struct wl_proxy*)zxdg_positioner_v6,
+            ZXDG_POSITIONER_V6_SET_SIZE,
+            NULL,
+            wl_proxy_get_version((struct wl_proxy*)zxdg_positioner_v6),
+            0,
+            width,
+            height
+        );
+    }
 
-/**
+    /**
  * @ingroup iface_zxdg_positioner_v6
  *
  * Specify the anchor rectangle within the parent surface that the child
@@ -768,14 +813,27 @@ zxdg_positioner_v6_set_size(struct zxdg_positioner_v6 *zxdg_positioner_v6, int32
  *
  * If a zero or negative size is set the invalid_input error is raised.
  */
-static inline void
-zxdg_positioner_v6_set_anchor_rect(struct zxdg_positioner_v6 *zxdg_positioner_v6, int32_t x, int32_t y, int32_t width, int32_t height)
-{
-	wl_proxy_marshal_flags((struct wl_proxy *) zxdg_positioner_v6,
-			 ZXDG_POSITIONER_V6_SET_ANCHOR_RECT, NULL, wl_proxy_get_version((struct wl_proxy *) zxdg_positioner_v6), 0, x, y, width, height);
-}
+    static inline void zxdg_positioner_v6_set_anchor_rect(
+        struct zxdg_positioner_v6* zxdg_positioner_v6,
+        int32_t                    x,
+        int32_t                    y,
+        int32_t                    width,
+        int32_t                    height
+    ) {
+        wl_proxy_marshal_flags(
+            (struct wl_proxy*)zxdg_positioner_v6,
+            ZXDG_POSITIONER_V6_SET_ANCHOR_RECT,
+            NULL,
+            wl_proxy_get_version((struct wl_proxy*)zxdg_positioner_v6),
+            0,
+            x,
+            y,
+            width,
+            height
+        );
+    }
 
-/**
+    /**
  * @ingroup iface_zxdg_positioner_v6
  *
  * Defines a set of edges for the anchor rectangle. These are used to
@@ -789,14 +847,21 @@ zxdg_positioner_v6_set_anchor_rect(struct zxdg_positioner_v6 *zxdg_positioner_v6
  * If two parallel anchor edges are specified (e.g. 'left' and 'right'),
  * the invalid_input error is raised.
  */
-static inline void
-zxdg_positioner_v6_set_anchor(struct zxdg_positioner_v6 *zxdg_positioner_v6, uint32_t anchor)
-{
-	wl_proxy_marshal_flags((struct wl_proxy *) zxdg_positioner_v6,
-			 ZXDG_POSITIONER_V6_SET_ANCHOR, NULL, wl_proxy_get_version((struct wl_proxy *) zxdg_positioner_v6), 0, anchor);
-}
+    static inline void zxdg_positioner_v6_set_anchor(
+        struct zxdg_positioner_v6* zxdg_positioner_v6,
+        uint32_t                   anchor
+    ) {
+        wl_proxy_marshal_flags(
+            (struct wl_proxy*)zxdg_positioner_v6,
+            ZXDG_POSITIONER_V6_SET_ANCHOR,
+            NULL,
+            wl_proxy_get_version((struct wl_proxy*)zxdg_positioner_v6),
+            0,
+            anchor
+        );
+    }
 
-/**
+    /**
  * @ingroup iface_zxdg_positioner_v6
  *
  * Defines in what direction a surface should be positioned, relative to
@@ -809,14 +874,21 @@ zxdg_positioner_v6_set_anchor(struct zxdg_positioner_v6 *zxdg_positioner_v6, uin
  * If two parallel gravities are specified (e.g. 'left' and 'right'), the
  * invalid_input error is raised.
  */
-static inline void
-zxdg_positioner_v6_set_gravity(struct zxdg_positioner_v6 *zxdg_positioner_v6, uint32_t gravity)
-{
-	wl_proxy_marshal_flags((struct wl_proxy *) zxdg_positioner_v6,
-			 ZXDG_POSITIONER_V6_SET_GRAVITY, NULL, wl_proxy_get_version((struct wl_proxy *) zxdg_positioner_v6), 0, gravity);
-}
+    static inline void zxdg_positioner_v6_set_gravity(
+        struct zxdg_positioner_v6* zxdg_positioner_v6,
+        uint32_t                   gravity
+    ) {
+        wl_proxy_marshal_flags(
+            (struct wl_proxy*)zxdg_positioner_v6,
+            ZXDG_POSITIONER_V6_SET_GRAVITY,
+            NULL,
+            wl_proxy_get_version((struct wl_proxy*)zxdg_positioner_v6),
+            0,
+            gravity
+        );
+    }
 
-/**
+    /**
  * @ingroup iface_zxdg_positioner_v6
  *
  * Specify how the window should be positioned if the originally intended
@@ -833,14 +905,21 @@ zxdg_positioner_v6_set_gravity(struct zxdg_positioner_v6 *zxdg_positioner_v6, ui
  *
  * The default adjustment is none.
  */
-static inline void
-zxdg_positioner_v6_set_constraint_adjustment(struct zxdg_positioner_v6 *zxdg_positioner_v6, uint32_t constraint_adjustment)
-{
-	wl_proxy_marshal_flags((struct wl_proxy *) zxdg_positioner_v6,
-			 ZXDG_POSITIONER_V6_SET_CONSTRAINT_ADJUSTMENT, NULL, wl_proxy_get_version((struct wl_proxy *) zxdg_positioner_v6), 0, constraint_adjustment);
-}
+    static inline void zxdg_positioner_v6_set_constraint_adjustment(
+        struct zxdg_positioner_v6* zxdg_positioner_v6,
+        uint32_t                   constraint_adjustment
+    ) {
+        wl_proxy_marshal_flags(
+            (struct wl_proxy*)zxdg_positioner_v6,
+            ZXDG_POSITIONER_V6_SET_CONSTRAINT_ADJUSTMENT,
+            NULL,
+            wl_proxy_get_version((struct wl_proxy*)zxdg_positioner_v6),
+            0,
+            constraint_adjustment
+        );
+    }
 
-/**
+    /**
  * @ingroup iface_zxdg_positioner_v6
  *
  * Specify the surface position offset relative to the position of the
@@ -855,28 +934,38 @@ zxdg_positioner_v6_set_constraint_adjustment(struct zxdg_positioner_v6 *zxdg_pos
  * element, while aligning the user interface element of the parent surface
  * with some user interface element placed somewhere in the popup surface.
  */
-static inline void
-zxdg_positioner_v6_set_offset(struct zxdg_positioner_v6 *zxdg_positioner_v6, int32_t x, int32_t y)
-{
-	wl_proxy_marshal_flags((struct wl_proxy *) zxdg_positioner_v6,
-			 ZXDG_POSITIONER_V6_SET_OFFSET, NULL, wl_proxy_get_version((struct wl_proxy *) zxdg_positioner_v6), 0, x, y);
-}
+    static inline void zxdg_positioner_v6_set_offset(
+        struct zxdg_positioner_v6* zxdg_positioner_v6,
+        int32_t                    x,
+        int32_t                    y
+    ) {
+        wl_proxy_marshal_flags(
+            (struct wl_proxy*)zxdg_positioner_v6,
+            ZXDG_POSITIONER_V6_SET_OFFSET,
+            NULL,
+            wl_proxy_get_version((struct wl_proxy*)zxdg_positioner_v6),
+            0,
+            x,
+            y
+        );
+    }
 
 #ifndef ZXDG_SURFACE_V6_ERROR_ENUM
-#define ZXDG_SURFACE_V6_ERROR_ENUM
-enum zxdg_surface_v6_error {
-	ZXDG_SURFACE_V6_ERROR_NOT_CONSTRUCTED = 1,
-	ZXDG_SURFACE_V6_ERROR_ALREADY_CONSTRUCTED = 2,
-	ZXDG_SURFACE_V6_ERROR_UNCONFIGURED_BUFFER = 3,
-};
+#    define ZXDG_SURFACE_V6_ERROR_ENUM
+
+    enum zxdg_surface_v6_error {
+        ZXDG_SURFACE_V6_ERROR_NOT_CONSTRUCTED     = 1,
+        ZXDG_SURFACE_V6_ERROR_ALREADY_CONSTRUCTED = 2,
+        ZXDG_SURFACE_V6_ERROR_UNCONFIGURED_BUFFER = 3,
+    };
 #endif /* ZXDG_SURFACE_V6_ERROR_ENUM */
 
-/**
+    /**
  * @ingroup iface_zxdg_surface_v6
  * @struct zxdg_surface_v6_listener
  */
-struct zxdg_surface_v6_listener {
-	/**
+    struct zxdg_surface_v6_listener {
+        /**
 	 * suggest a surface change
 	 *
 	 * The configure event marks the end of a configure sequence. A
@@ -900,27 +989,33 @@ struct zxdg_surface_v6_listener {
 	 * received.
 	 * @param serial serial of the configure event
 	 */
-	void (*configure)(void *data,
-			  struct zxdg_surface_v6 *zxdg_surface_v6,
-			  uint32_t serial);
-};
+        void (*configure)(
+            void*                   data,
+            struct zxdg_surface_v6* zxdg_surface_v6,
+            uint32_t                serial
+        );
+    };
 
-/**
+    /**
  * @ingroup iface_zxdg_surface_v6
  */
-static inline int
-zxdg_surface_v6_add_listener(struct zxdg_surface_v6 *zxdg_surface_v6,
-			     const struct zxdg_surface_v6_listener *listener, void *data)
-{
-	return wl_proxy_add_listener((struct wl_proxy *) zxdg_surface_v6,
-				     (void (**)(void)) listener, data);
-}
+    static inline int zxdg_surface_v6_add_listener(
+        struct zxdg_surface_v6*                zxdg_surface_v6,
+        const struct zxdg_surface_v6_listener* listener,
+        void*                                  data
+    ) {
+        return wl_proxy_add_listener(
+            (struct wl_proxy*)zxdg_surface_v6,
+            (void (**)(void))listener,
+            data
+        );
+    }
 
-#define ZXDG_SURFACE_V6_DESTROY 0
-#define ZXDG_SURFACE_V6_GET_TOPLEVEL 1
-#define ZXDG_SURFACE_V6_GET_POPUP 2
+#define ZXDG_SURFACE_V6_DESTROY             0
+#define ZXDG_SURFACE_V6_GET_TOPLEVEL        1
+#define ZXDG_SURFACE_V6_GET_POPUP           2
 #define ZXDG_SURFACE_V6_SET_WINDOW_GEOMETRY 3
-#define ZXDG_SURFACE_V6_ACK_CONFIGURE 4
+#define ZXDG_SURFACE_V6_ACK_CONFIGURE       4
 
 /**
  * @ingroup iface_zxdg_surface_v6
@@ -930,15 +1025,15 @@ zxdg_surface_v6_add_listener(struct zxdg_surface_v6 *zxdg_surface_v6,
 /**
  * @ingroup iface_zxdg_surface_v6
  */
-#define ZXDG_SURFACE_V6_DESTROY_SINCE_VERSION 1
+#define ZXDG_SURFACE_V6_DESTROY_SINCE_VERSION             1
 /**
  * @ingroup iface_zxdg_surface_v6
  */
-#define ZXDG_SURFACE_V6_GET_TOPLEVEL_SINCE_VERSION 1
+#define ZXDG_SURFACE_V6_GET_TOPLEVEL_SINCE_VERSION        1
 /**
  * @ingroup iface_zxdg_surface_v6
  */
-#define ZXDG_SURFACE_V6_GET_POPUP_SINCE_VERSION 1
+#define ZXDG_SURFACE_V6_GET_POPUP_SINCE_VERSION           1
 /**
  * @ingroup iface_zxdg_surface_v6
  */
@@ -946,29 +1041,28 @@ zxdg_surface_v6_add_listener(struct zxdg_surface_v6 *zxdg_surface_v6,
 /**
  * @ingroup iface_zxdg_surface_v6
  */
-#define ZXDG_SURFACE_V6_ACK_CONFIGURE_SINCE_VERSION 1
+#define ZXDG_SURFACE_V6_ACK_CONFIGURE_SINCE_VERSION       1
 
-/** @ingroup iface_zxdg_surface_v6 */
-static inline void
-zxdg_surface_v6_set_user_data(struct zxdg_surface_v6 *zxdg_surface_v6, void *user_data)
-{
-	wl_proxy_set_user_data((struct wl_proxy *) zxdg_surface_v6, user_data);
-}
+    /** @ingroup iface_zxdg_surface_v6 */
+    static inline void zxdg_surface_v6_set_user_data(
+        struct zxdg_surface_v6* zxdg_surface_v6,
+        void*                   user_data
+    ) {
+        wl_proxy_set_user_data((struct wl_proxy*)zxdg_surface_v6, user_data);
+    }
 
-/** @ingroup iface_zxdg_surface_v6 */
-static inline void *
-zxdg_surface_v6_get_user_data(struct zxdg_surface_v6 *zxdg_surface_v6)
-{
-	return wl_proxy_get_user_data((struct wl_proxy *) zxdg_surface_v6);
-}
+    /** @ingroup iface_zxdg_surface_v6 */
+    static inline void*
+    zxdg_surface_v6_get_user_data(struct zxdg_surface_v6* zxdg_surface_v6) {
+        return wl_proxy_get_user_data((struct wl_proxy*)zxdg_surface_v6);
+    }
 
-static inline uint32_t
-zxdg_surface_v6_get_version(struct zxdg_surface_v6 *zxdg_surface_v6)
-{
-	return wl_proxy_get_version((struct wl_proxy *) zxdg_surface_v6);
-}
+    static inline uint32_t
+    zxdg_surface_v6_get_version(struct zxdg_surface_v6* zxdg_surface_v6) {
+        return wl_proxy_get_version((struct wl_proxy*)zxdg_surface_v6);
+    }
 
-/**
+    /**
  * @ingroup iface_zxdg_surface_v6
  *
  * Destroy the xdg_surface object. An xdg_surface must only be destroyed
@@ -976,14 +1070,18 @@ zxdg_surface_v6_get_version(struct zxdg_surface_v6 *zxdg_surface_v6)
  * exists when this request is issued, the zxdg_shell_v6.defunct_surfaces
  * is raised.
  */
-static inline void
-zxdg_surface_v6_destroy(struct zxdg_surface_v6 *zxdg_surface_v6)
-{
-	wl_proxy_marshal_flags((struct wl_proxy *) zxdg_surface_v6,
-			 ZXDG_SURFACE_V6_DESTROY, NULL, wl_proxy_get_version((struct wl_proxy *) zxdg_surface_v6), WL_MARSHAL_FLAG_DESTROY);
-}
+    static inline void
+    zxdg_surface_v6_destroy(struct zxdg_surface_v6* zxdg_surface_v6) {
+        wl_proxy_marshal_flags(
+            (struct wl_proxy*)zxdg_surface_v6,
+            ZXDG_SURFACE_V6_DESTROY,
+            NULL,
+            wl_proxy_get_version((struct wl_proxy*)zxdg_surface_v6),
+            WL_MARSHAL_FLAG_DESTROY
+        );
+    }
 
-/**
+    /**
  * @ingroup iface_zxdg_surface_v6
  *
  * This creates an xdg_toplevel object for the given xdg_surface and gives
@@ -993,18 +1091,23 @@ zxdg_surface_v6_destroy(struct zxdg_surface_v6 *zxdg_surface_v6)
  * See the documentation of xdg_toplevel for more details about what an
  * xdg_toplevel is and how it is used.
  */
-static inline struct zxdg_toplevel_v6 *
-zxdg_surface_v6_get_toplevel(struct zxdg_surface_v6 *zxdg_surface_v6)
-{
-	struct wl_proxy *id;
+    static inline struct zxdg_toplevel_v6*
+    zxdg_surface_v6_get_toplevel(struct zxdg_surface_v6* zxdg_surface_v6) {
+        struct wl_proxy* id;
 
-	id = wl_proxy_marshal_flags((struct wl_proxy *) zxdg_surface_v6,
-			 ZXDG_SURFACE_V6_GET_TOPLEVEL, &zxdg_toplevel_v6_interface, wl_proxy_get_version((struct wl_proxy *) zxdg_surface_v6), 0, NULL);
+        id = wl_proxy_marshal_flags(
+            (struct wl_proxy*)zxdg_surface_v6,
+            ZXDG_SURFACE_V6_GET_TOPLEVEL,
+            &zxdg_toplevel_v6_interface,
+            wl_proxy_get_version((struct wl_proxy*)zxdg_surface_v6),
+            0,
+            NULL
+        );
 
-	return (struct zxdg_toplevel_v6 *) id;
-}
+        return (struct zxdg_toplevel_v6*)id;
+    }
 
-/**
+    /**
  * @ingroup iface_zxdg_surface_v6
  *
  * This creates an xdg_popup object for the given xdg_surface and gives the
@@ -1014,18 +1117,28 @@ zxdg_surface_v6_get_toplevel(struct zxdg_surface_v6 *zxdg_surface_v6)
  * See the documentation of xdg_popup for more details about what an
  * xdg_popup is and how it is used.
  */
-static inline struct zxdg_popup_v6 *
-zxdg_surface_v6_get_popup(struct zxdg_surface_v6 *zxdg_surface_v6, struct zxdg_surface_v6 *parent, struct zxdg_positioner_v6 *positioner)
-{
-	struct wl_proxy *id;
+    static inline struct zxdg_popup_v6* zxdg_surface_v6_get_popup(
+        struct zxdg_surface_v6*    zxdg_surface_v6,
+        struct zxdg_surface_v6*    parent,
+        struct zxdg_positioner_v6* positioner
+    ) {
+        struct wl_proxy* id;
 
-	id = wl_proxy_marshal_flags((struct wl_proxy *) zxdg_surface_v6,
-			 ZXDG_SURFACE_V6_GET_POPUP, &zxdg_popup_v6_interface, wl_proxy_get_version((struct wl_proxy *) zxdg_surface_v6), 0, NULL, parent, positioner);
+        id = wl_proxy_marshal_flags(
+            (struct wl_proxy*)zxdg_surface_v6,
+            ZXDG_SURFACE_V6_GET_POPUP,
+            &zxdg_popup_v6_interface,
+            wl_proxy_get_version((struct wl_proxy*)zxdg_surface_v6),
+            0,
+            NULL,
+            parent,
+            positioner
+        );
 
-	return (struct zxdg_popup_v6 *) id;
-}
+        return (struct zxdg_popup_v6*)id;
+    }
 
-/**
+    /**
  * @ingroup iface_zxdg_surface_v6
  *
  * The window geometry of a surface is its "visible bounds" from the
@@ -1053,14 +1166,27 @@ zxdg_surface_v6_get_popup(struct zxdg_surface_v6 *zxdg_surface_v6, struct zxdg_s
  * combined geometry of the surface of the xdg_surface and the associated
  * subsurfaces.
  */
-static inline void
-zxdg_surface_v6_set_window_geometry(struct zxdg_surface_v6 *zxdg_surface_v6, int32_t x, int32_t y, int32_t width, int32_t height)
-{
-	wl_proxy_marshal_flags((struct wl_proxy *) zxdg_surface_v6,
-			 ZXDG_SURFACE_V6_SET_WINDOW_GEOMETRY, NULL, wl_proxy_get_version((struct wl_proxy *) zxdg_surface_v6), 0, x, y, width, height);
-}
+    static inline void zxdg_surface_v6_set_window_geometry(
+        struct zxdg_surface_v6* zxdg_surface_v6,
+        int32_t                 x,
+        int32_t                 y,
+        int32_t                 width,
+        int32_t                 height
+    ) {
+        wl_proxy_marshal_flags(
+            (struct wl_proxy*)zxdg_surface_v6,
+            ZXDG_SURFACE_V6_SET_WINDOW_GEOMETRY,
+            NULL,
+            wl_proxy_get_version((struct wl_proxy*)zxdg_surface_v6),
+            0,
+            x,
+            y,
+            width,
+            height
+        );
+    }
 
-/**
+    /**
  * @ingroup iface_zxdg_surface_v6
  *
  * When a configure event is received, if a client commits the
@@ -1086,38 +1212,47 @@ zxdg_surface_v6_set_window_geometry(struct zxdg_surface_v6 *zxdg_surface_v6, int
  * If an invalid serial is used, the zxdg_shell_v6.invalid_surface_state
  * error is raised.
  */
-static inline void
-zxdg_surface_v6_ack_configure(struct zxdg_surface_v6 *zxdg_surface_v6, uint32_t serial)
-{
-	wl_proxy_marshal_flags((struct wl_proxy *) zxdg_surface_v6,
-			 ZXDG_SURFACE_V6_ACK_CONFIGURE, NULL, wl_proxy_get_version((struct wl_proxy *) zxdg_surface_v6), 0, serial);
-}
+    static inline void zxdg_surface_v6_ack_configure(
+        struct zxdg_surface_v6* zxdg_surface_v6,
+        uint32_t                serial
+    ) {
+        wl_proxy_marshal_flags(
+            (struct wl_proxy*)zxdg_surface_v6,
+            ZXDG_SURFACE_V6_ACK_CONFIGURE,
+            NULL,
+            wl_proxy_get_version((struct wl_proxy*)zxdg_surface_v6),
+            0,
+            serial
+        );
+    }
 
 #ifndef ZXDG_TOPLEVEL_V6_RESIZE_EDGE_ENUM
-#define ZXDG_TOPLEVEL_V6_RESIZE_EDGE_ENUM
-/**
+#    define ZXDG_TOPLEVEL_V6_RESIZE_EDGE_ENUM
+
+    /**
  * @ingroup iface_zxdg_toplevel_v6
  * edge values for resizing
  *
  * These values are used to indicate which edge of a surface
  * is being dragged in a resize operation.
  */
-enum zxdg_toplevel_v6_resize_edge {
-	ZXDG_TOPLEVEL_V6_RESIZE_EDGE_NONE = 0,
-	ZXDG_TOPLEVEL_V6_RESIZE_EDGE_TOP = 1,
-	ZXDG_TOPLEVEL_V6_RESIZE_EDGE_BOTTOM = 2,
-	ZXDG_TOPLEVEL_V6_RESIZE_EDGE_LEFT = 4,
-	ZXDG_TOPLEVEL_V6_RESIZE_EDGE_TOP_LEFT = 5,
-	ZXDG_TOPLEVEL_V6_RESIZE_EDGE_BOTTOM_LEFT = 6,
-	ZXDG_TOPLEVEL_V6_RESIZE_EDGE_RIGHT = 8,
-	ZXDG_TOPLEVEL_V6_RESIZE_EDGE_TOP_RIGHT = 9,
-	ZXDG_TOPLEVEL_V6_RESIZE_EDGE_BOTTOM_RIGHT = 10,
-};
+    enum zxdg_toplevel_v6_resize_edge {
+        ZXDG_TOPLEVEL_V6_RESIZE_EDGE_NONE         = 0,
+        ZXDG_TOPLEVEL_V6_RESIZE_EDGE_TOP          = 1,
+        ZXDG_TOPLEVEL_V6_RESIZE_EDGE_BOTTOM       = 2,
+        ZXDG_TOPLEVEL_V6_RESIZE_EDGE_LEFT         = 4,
+        ZXDG_TOPLEVEL_V6_RESIZE_EDGE_TOP_LEFT     = 5,
+        ZXDG_TOPLEVEL_V6_RESIZE_EDGE_BOTTOM_LEFT  = 6,
+        ZXDG_TOPLEVEL_V6_RESIZE_EDGE_RIGHT        = 8,
+        ZXDG_TOPLEVEL_V6_RESIZE_EDGE_TOP_RIGHT    = 9,
+        ZXDG_TOPLEVEL_V6_RESIZE_EDGE_BOTTOM_RIGHT = 10,
+    };
 #endif /* ZXDG_TOPLEVEL_V6_RESIZE_EDGE_ENUM */
 
 #ifndef ZXDG_TOPLEVEL_V6_STATE_ENUM
-#define ZXDG_TOPLEVEL_V6_STATE_ENUM
-/**
+#    define ZXDG_TOPLEVEL_V6_STATE_ENUM
+
+    /**
  * @ingroup iface_zxdg_toplevel_v6
  * types of state on the surface
  *
@@ -1129,8 +1264,8 @@ enum zxdg_toplevel_v6_resize_edge {
  * States set in this way are double-buffered. They will get applied on
  * the next commit.
  */
-enum zxdg_toplevel_v6_state {
-	/**
+    enum zxdg_toplevel_v6_state {
+        /**
 	 * the surface is maximized
 	 * the surface is maximized
 	 *
@@ -1139,16 +1274,16 @@ enum zxdg_toplevel_v6_state {
 	 * geometry is not obyed, the zxdg_shell_v6.invalid_surface_state
 	 * error is raised.
 	 */
-	ZXDG_TOPLEVEL_V6_STATE_MAXIMIZED = 1,
-	/**
+        ZXDG_TOPLEVEL_V6_STATE_MAXIMIZED  = 1,
+        /**
 	 * the surface is fullscreen
 	 * the surface is fullscreen
 	 *
 	 * The surface is fullscreen. See set_fullscreen for more
 	 * information.
 	 */
-	ZXDG_TOPLEVEL_V6_STATE_FULLSCREEN = 2,
-	/**
+        ZXDG_TOPLEVEL_V6_STATE_FULLSCREEN = 2,
+        /**
 	 * the surface is being resized
 	 * the surface is being resized
 	 *
@@ -1159,8 +1294,8 @@ enum zxdg_toplevel_v6_state {
 	 * that have aspect ratio or cell sizing configuration can use a
 	 * smaller size, however.
 	 */
-	ZXDG_TOPLEVEL_V6_STATE_RESIZING = 3,
-	/**
+        ZXDG_TOPLEVEL_V6_STATE_RESIZING   = 3,
+        /**
 	 * the surface is now activated
 	 * the surface is now activated
 	 *
@@ -1168,16 +1303,16 @@ enum zxdg_toplevel_v6_state {
 	 * is active. Do not assume this means that the window actually has
 	 * keyboard or pointer focus.
 	 */
-	ZXDG_TOPLEVEL_V6_STATE_ACTIVATED = 4,
-};
+        ZXDG_TOPLEVEL_V6_STATE_ACTIVATED  = 4,
+    };
 #endif /* ZXDG_TOPLEVEL_V6_STATE_ENUM */
 
-/**
+    /**
  * @ingroup iface_zxdg_toplevel_v6
  * @struct zxdg_toplevel_v6_listener
  */
-struct zxdg_toplevel_v6_listener {
-	/**
+    struct zxdg_toplevel_v6_listener {
+        /**
 	 * suggest a surface change
 	 *
 	 * This configure event asks the client to resize its toplevel
@@ -1202,12 +1337,14 @@ struct zxdg_toplevel_v6_listener {
 	 * See xdg_surface.configure and xdg_surface.ack_configure for
 	 * details.
 	 */
-	void (*configure)(void *data,
-			  struct zxdg_toplevel_v6 *zxdg_toplevel_v6,
-			  int32_t width,
-			  int32_t height,
-			  struct wl_array *states);
-	/**
+        void (*configure)(
+            void*                    data,
+            struct zxdg_toplevel_v6* zxdg_toplevel_v6,
+            int32_t                  width,
+            int32_t                  height,
+            struct wl_array*         states
+        );
+        /**
 	 * surface wants to be closed
 	 *
 	 * The close event is sent by the compositor when the user wants
@@ -1219,35 +1356,38 @@ struct zxdg_toplevel_v6_listener {
 	 * window. The client may choose to ignore this request, or show a
 	 * dialog to ask the user to save their data, etc.
 	 */
-	void (*close)(void *data,
-		      struct zxdg_toplevel_v6 *zxdg_toplevel_v6);
-};
+        void (*close)(void* data, struct zxdg_toplevel_v6* zxdg_toplevel_v6);
+    };
 
-/**
+    /**
  * @ingroup iface_zxdg_toplevel_v6
  */
-static inline int
-zxdg_toplevel_v6_add_listener(struct zxdg_toplevel_v6 *zxdg_toplevel_v6,
-			      const struct zxdg_toplevel_v6_listener *listener, void *data)
-{
-	return wl_proxy_add_listener((struct wl_proxy *) zxdg_toplevel_v6,
-				     (void (**)(void)) listener, data);
-}
+    static inline int zxdg_toplevel_v6_add_listener(
+        struct zxdg_toplevel_v6*                zxdg_toplevel_v6,
+        const struct zxdg_toplevel_v6_listener* listener,
+        void*                                   data
+    ) {
+        return wl_proxy_add_listener(
+            (struct wl_proxy*)zxdg_toplevel_v6,
+            (void (**)(void))listener,
+            data
+        );
+    }
 
-#define ZXDG_TOPLEVEL_V6_DESTROY 0
-#define ZXDG_TOPLEVEL_V6_SET_PARENT 1
-#define ZXDG_TOPLEVEL_V6_SET_TITLE 2
-#define ZXDG_TOPLEVEL_V6_SET_APP_ID 3
+#define ZXDG_TOPLEVEL_V6_DESTROY          0
+#define ZXDG_TOPLEVEL_V6_SET_PARENT       1
+#define ZXDG_TOPLEVEL_V6_SET_TITLE        2
+#define ZXDG_TOPLEVEL_V6_SET_APP_ID       3
 #define ZXDG_TOPLEVEL_V6_SHOW_WINDOW_MENU 4
-#define ZXDG_TOPLEVEL_V6_MOVE 5
-#define ZXDG_TOPLEVEL_V6_RESIZE 6
-#define ZXDG_TOPLEVEL_V6_SET_MAX_SIZE 7
-#define ZXDG_TOPLEVEL_V6_SET_MIN_SIZE 8
-#define ZXDG_TOPLEVEL_V6_SET_MAXIMIZED 9
-#define ZXDG_TOPLEVEL_V6_UNSET_MAXIMIZED 10
-#define ZXDG_TOPLEVEL_V6_SET_FULLSCREEN 11
+#define ZXDG_TOPLEVEL_V6_MOVE             5
+#define ZXDG_TOPLEVEL_V6_RESIZE           6
+#define ZXDG_TOPLEVEL_V6_SET_MAX_SIZE     7
+#define ZXDG_TOPLEVEL_V6_SET_MIN_SIZE     8
+#define ZXDG_TOPLEVEL_V6_SET_MAXIMIZED    9
+#define ZXDG_TOPLEVEL_V6_UNSET_MAXIMIZED  10
+#define ZXDG_TOPLEVEL_V6_SET_FULLSCREEN   11
 #define ZXDG_TOPLEVEL_V6_UNSET_FULLSCREEN 12
-#define ZXDG_TOPLEVEL_V6_SET_MINIMIZED 13
+#define ZXDG_TOPLEVEL_V6_SET_MINIMIZED    13
 
 /**
  * @ingroup iface_zxdg_toplevel_v6
@@ -1256,24 +1396,24 @@ zxdg_toplevel_v6_add_listener(struct zxdg_toplevel_v6 *zxdg_toplevel_v6,
 /**
  * @ingroup iface_zxdg_toplevel_v6
  */
-#define ZXDG_TOPLEVEL_V6_CLOSE_SINCE_VERSION 1
+#define ZXDG_TOPLEVEL_V6_CLOSE_SINCE_VERSION     1
 
 /**
  * @ingroup iface_zxdg_toplevel_v6
  */
-#define ZXDG_TOPLEVEL_V6_DESTROY_SINCE_VERSION 1
+#define ZXDG_TOPLEVEL_V6_DESTROY_SINCE_VERSION          1
 /**
  * @ingroup iface_zxdg_toplevel_v6
  */
-#define ZXDG_TOPLEVEL_V6_SET_PARENT_SINCE_VERSION 1
+#define ZXDG_TOPLEVEL_V6_SET_PARENT_SINCE_VERSION       1
 /**
  * @ingroup iface_zxdg_toplevel_v6
  */
-#define ZXDG_TOPLEVEL_V6_SET_TITLE_SINCE_VERSION 1
+#define ZXDG_TOPLEVEL_V6_SET_TITLE_SINCE_VERSION        1
 /**
  * @ingroup iface_zxdg_toplevel_v6
  */
-#define ZXDG_TOPLEVEL_V6_SET_APP_ID_SINCE_VERSION 1
+#define ZXDG_TOPLEVEL_V6_SET_APP_ID_SINCE_VERSION       1
 /**
  * @ingroup iface_zxdg_toplevel_v6
  */
@@ -1281,31 +1421,31 @@ zxdg_toplevel_v6_add_listener(struct zxdg_toplevel_v6 *zxdg_toplevel_v6,
 /**
  * @ingroup iface_zxdg_toplevel_v6
  */
-#define ZXDG_TOPLEVEL_V6_MOVE_SINCE_VERSION 1
+#define ZXDG_TOPLEVEL_V6_MOVE_SINCE_VERSION             1
 /**
  * @ingroup iface_zxdg_toplevel_v6
  */
-#define ZXDG_TOPLEVEL_V6_RESIZE_SINCE_VERSION 1
+#define ZXDG_TOPLEVEL_V6_RESIZE_SINCE_VERSION           1
 /**
  * @ingroup iface_zxdg_toplevel_v6
  */
-#define ZXDG_TOPLEVEL_V6_SET_MAX_SIZE_SINCE_VERSION 1
+#define ZXDG_TOPLEVEL_V6_SET_MAX_SIZE_SINCE_VERSION     1
 /**
  * @ingroup iface_zxdg_toplevel_v6
  */
-#define ZXDG_TOPLEVEL_V6_SET_MIN_SIZE_SINCE_VERSION 1
+#define ZXDG_TOPLEVEL_V6_SET_MIN_SIZE_SINCE_VERSION     1
 /**
  * @ingroup iface_zxdg_toplevel_v6
  */
-#define ZXDG_TOPLEVEL_V6_SET_MAXIMIZED_SINCE_VERSION 1
+#define ZXDG_TOPLEVEL_V6_SET_MAXIMIZED_SINCE_VERSION    1
 /**
  * @ingroup iface_zxdg_toplevel_v6
  */
-#define ZXDG_TOPLEVEL_V6_UNSET_MAXIMIZED_SINCE_VERSION 1
+#define ZXDG_TOPLEVEL_V6_UNSET_MAXIMIZED_SINCE_VERSION  1
 /**
  * @ingroup iface_zxdg_toplevel_v6
  */
-#define ZXDG_TOPLEVEL_V6_SET_FULLSCREEN_SINCE_VERSION 1
+#define ZXDG_TOPLEVEL_V6_SET_FULLSCREEN_SINCE_VERSION   1
 /**
  * @ingroup iface_zxdg_toplevel_v6
  */
@@ -1313,43 +1453,46 @@ zxdg_toplevel_v6_add_listener(struct zxdg_toplevel_v6 *zxdg_toplevel_v6,
 /**
  * @ingroup iface_zxdg_toplevel_v6
  */
-#define ZXDG_TOPLEVEL_V6_SET_MINIMIZED_SINCE_VERSION 1
+#define ZXDG_TOPLEVEL_V6_SET_MINIMIZED_SINCE_VERSION    1
 
-/** @ingroup iface_zxdg_toplevel_v6 */
-static inline void
-zxdg_toplevel_v6_set_user_data(struct zxdg_toplevel_v6 *zxdg_toplevel_v6, void *user_data)
-{
-	wl_proxy_set_user_data((struct wl_proxy *) zxdg_toplevel_v6, user_data);
-}
+    /** @ingroup iface_zxdg_toplevel_v6 */
+    static inline void zxdg_toplevel_v6_set_user_data(
+        struct zxdg_toplevel_v6* zxdg_toplevel_v6,
+        void*                    user_data
+    ) {
+        wl_proxy_set_user_data((struct wl_proxy*)zxdg_toplevel_v6, user_data);
+    }
 
-/** @ingroup iface_zxdg_toplevel_v6 */
-static inline void *
-zxdg_toplevel_v6_get_user_data(struct zxdg_toplevel_v6 *zxdg_toplevel_v6)
-{
-	return wl_proxy_get_user_data((struct wl_proxy *) zxdg_toplevel_v6);
-}
+    /** @ingroup iface_zxdg_toplevel_v6 */
+    static inline void*
+    zxdg_toplevel_v6_get_user_data(struct zxdg_toplevel_v6* zxdg_toplevel_v6) {
+        return wl_proxy_get_user_data((struct wl_proxy*)zxdg_toplevel_v6);
+    }
 
-static inline uint32_t
-zxdg_toplevel_v6_get_version(struct zxdg_toplevel_v6 *zxdg_toplevel_v6)
-{
-	return wl_proxy_get_version((struct wl_proxy *) zxdg_toplevel_v6);
-}
+    static inline uint32_t
+    zxdg_toplevel_v6_get_version(struct zxdg_toplevel_v6* zxdg_toplevel_v6) {
+        return wl_proxy_get_version((struct wl_proxy*)zxdg_toplevel_v6);
+    }
 
-/**
+    /**
  * @ingroup iface_zxdg_toplevel_v6
  *
  * Unmap and destroy the window. The window will be effectively
  * hidden from the user's point of view, and all state like
  * maximization, fullscreen, and so on, will be lost.
  */
-static inline void
-zxdg_toplevel_v6_destroy(struct zxdg_toplevel_v6 *zxdg_toplevel_v6)
-{
-	wl_proxy_marshal_flags((struct wl_proxy *) zxdg_toplevel_v6,
-			 ZXDG_TOPLEVEL_V6_DESTROY, NULL, wl_proxy_get_version((struct wl_proxy *) zxdg_toplevel_v6), WL_MARSHAL_FLAG_DESTROY);
-}
+    static inline void
+    zxdg_toplevel_v6_destroy(struct zxdg_toplevel_v6* zxdg_toplevel_v6) {
+        wl_proxy_marshal_flags(
+            (struct wl_proxy*)zxdg_toplevel_v6,
+            ZXDG_TOPLEVEL_V6_DESTROY,
+            NULL,
+            wl_proxy_get_version((struct wl_proxy*)zxdg_toplevel_v6),
+            WL_MARSHAL_FLAG_DESTROY
+        );
+    }
 
-/**
+    /**
  * @ingroup iface_zxdg_toplevel_v6
  *
  * Set the "parent" of this surface. This window should be stacked
@@ -1360,14 +1503,21 @@ zxdg_toplevel_v6_destroy(struct zxdg_toplevel_v6 *zxdg_toplevel_v6)
  * "auxiliary" surfaces, so that the parent is raised when the dialog
  * is raised.
  */
-static inline void
-zxdg_toplevel_v6_set_parent(struct zxdg_toplevel_v6 *zxdg_toplevel_v6, struct zxdg_toplevel_v6 *parent)
-{
-	wl_proxy_marshal_flags((struct wl_proxy *) zxdg_toplevel_v6,
-			 ZXDG_TOPLEVEL_V6_SET_PARENT, NULL, wl_proxy_get_version((struct wl_proxy *) zxdg_toplevel_v6), 0, parent);
-}
+    static inline void zxdg_toplevel_v6_set_parent(
+        struct zxdg_toplevel_v6* zxdg_toplevel_v6,
+        struct zxdg_toplevel_v6* parent
+    ) {
+        wl_proxy_marshal_flags(
+            (struct wl_proxy*)zxdg_toplevel_v6,
+            ZXDG_TOPLEVEL_V6_SET_PARENT,
+            NULL,
+            wl_proxy_get_version((struct wl_proxy*)zxdg_toplevel_v6),
+            0,
+            parent
+        );
+    }
 
-/**
+    /**
  * @ingroup iface_zxdg_toplevel_v6
  *
  * Set a short title for the surface.
@@ -1378,14 +1528,21 @@ zxdg_toplevel_v6_set_parent(struct zxdg_toplevel_v6 *zxdg_toplevel_v6, struct zx
  *
  * The string must be encoded in UTF-8.
  */
-static inline void
-zxdg_toplevel_v6_set_title(struct zxdg_toplevel_v6 *zxdg_toplevel_v6, const char *title)
-{
-	wl_proxy_marshal_flags((struct wl_proxy *) zxdg_toplevel_v6,
-			 ZXDG_TOPLEVEL_V6_SET_TITLE, NULL, wl_proxy_get_version((struct wl_proxy *) zxdg_toplevel_v6), 0, title);
-}
+    static inline void zxdg_toplevel_v6_set_title(
+        struct zxdg_toplevel_v6* zxdg_toplevel_v6,
+        const char*              title
+    ) {
+        wl_proxy_marshal_flags(
+            (struct wl_proxy*)zxdg_toplevel_v6,
+            ZXDG_TOPLEVEL_V6_SET_TITLE,
+            NULL,
+            wl_proxy_get_version((struct wl_proxy*)zxdg_toplevel_v6),
+            0,
+            title
+        );
+    }
 
-/**
+    /**
  * @ingroup iface_zxdg_toplevel_v6
  *
  * Set an application identifier for the surface.
@@ -1409,14 +1566,21 @@ zxdg_toplevel_v6_set_title(struct zxdg_toplevel_v6 *zxdg_toplevel_v6, const char
  *
  * [0] http://standards.freedesktop.org/desktop-entry-spec/
  */
-static inline void
-zxdg_toplevel_v6_set_app_id(struct zxdg_toplevel_v6 *zxdg_toplevel_v6, const char *app_id)
-{
-	wl_proxy_marshal_flags((struct wl_proxy *) zxdg_toplevel_v6,
-			 ZXDG_TOPLEVEL_V6_SET_APP_ID, NULL, wl_proxy_get_version((struct wl_proxy *) zxdg_toplevel_v6), 0, app_id);
-}
+    static inline void zxdg_toplevel_v6_set_app_id(
+        struct zxdg_toplevel_v6* zxdg_toplevel_v6,
+        const char*              app_id
+    ) {
+        wl_proxy_marshal_flags(
+            (struct wl_proxy*)zxdg_toplevel_v6,
+            ZXDG_TOPLEVEL_V6_SET_APP_ID,
+            NULL,
+            wl_proxy_get_version((struct wl_proxy*)zxdg_toplevel_v6),
+            0,
+            app_id
+        );
+    }
 
-/**
+    /**
  * @ingroup iface_zxdg_toplevel_v6
  *
  * Clients implementing client-side decorations might want to show
@@ -1431,14 +1595,27 @@ zxdg_toplevel_v6_set_app_id(struct zxdg_toplevel_v6 *zxdg_toplevel_v6, const cha
  * This request must be used in response to some sort of user action
  * like a button press, key press, or touch down event.
  */
-static inline void
-zxdg_toplevel_v6_show_window_menu(struct zxdg_toplevel_v6 *zxdg_toplevel_v6, struct wl_seat *seat, uint32_t serial, int32_t x, int32_t y)
-{
-	wl_proxy_marshal_flags((struct wl_proxy *) zxdg_toplevel_v6,
-			 ZXDG_TOPLEVEL_V6_SHOW_WINDOW_MENU, NULL, wl_proxy_get_version((struct wl_proxy *) zxdg_toplevel_v6), 0, seat, serial, x, y);
-}
+    static inline void zxdg_toplevel_v6_show_window_menu(
+        struct zxdg_toplevel_v6* zxdg_toplevel_v6,
+        struct wl_seat*          seat,
+        uint32_t                 serial,
+        int32_t                  x,
+        int32_t                  y
+    ) {
+        wl_proxy_marshal_flags(
+            (struct wl_proxy*)zxdg_toplevel_v6,
+            ZXDG_TOPLEVEL_V6_SHOW_WINDOW_MENU,
+            NULL,
+            wl_proxy_get_version((struct wl_proxy*)zxdg_toplevel_v6),
+            0,
+            seat,
+            serial,
+            x,
+            y
+        );
+    }
 
-/**
+    /**
  * @ingroup iface_zxdg_toplevel_v6
  *
  * Start an interactive, user-driven move of the surface.
@@ -1458,14 +1635,23 @@ zxdg_toplevel_v6_show_window_menu(struct zxdg_toplevel_v6 *zxdg_toplevel_v6, str
  * updating a pointer cursor, during the move. There is no guarantee
  * that the device focus will return when the move is completed.
  */
-static inline void
-zxdg_toplevel_v6_move(struct zxdg_toplevel_v6 *zxdg_toplevel_v6, struct wl_seat *seat, uint32_t serial)
-{
-	wl_proxy_marshal_flags((struct wl_proxy *) zxdg_toplevel_v6,
-			 ZXDG_TOPLEVEL_V6_MOVE, NULL, wl_proxy_get_version((struct wl_proxy *) zxdg_toplevel_v6), 0, seat, serial);
-}
+    static inline void zxdg_toplevel_v6_move(
+        struct zxdg_toplevel_v6* zxdg_toplevel_v6,
+        struct wl_seat*          seat,
+        uint32_t                 serial
+    ) {
+        wl_proxy_marshal_flags(
+            (struct wl_proxy*)zxdg_toplevel_v6,
+            ZXDG_TOPLEVEL_V6_MOVE,
+            NULL,
+            wl_proxy_get_version((struct wl_proxy*)zxdg_toplevel_v6),
+            0,
+            seat,
+            serial
+        );
+    }
 
-/**
+    /**
  * @ingroup iface_zxdg_toplevel_v6
  *
  * Start a user-driven, interactive resize of the surface.
@@ -1499,14 +1685,25 @@ zxdg_toplevel_v6_move(struct zxdg_toplevel_v6 *zxdg_toplevel_v6, struct wl_seat 
  * use this information to adapt its behavior, e.g. choose an
  * appropriate cursor image.
  */
-static inline void
-zxdg_toplevel_v6_resize(struct zxdg_toplevel_v6 *zxdg_toplevel_v6, struct wl_seat *seat, uint32_t serial, uint32_t edges)
-{
-	wl_proxy_marshal_flags((struct wl_proxy *) zxdg_toplevel_v6,
-			 ZXDG_TOPLEVEL_V6_RESIZE, NULL, wl_proxy_get_version((struct wl_proxy *) zxdg_toplevel_v6), 0, seat, serial, edges);
-}
+    static inline void zxdg_toplevel_v6_resize(
+        struct zxdg_toplevel_v6* zxdg_toplevel_v6,
+        struct wl_seat*          seat,
+        uint32_t                 serial,
+        uint32_t                 edges
+    ) {
+        wl_proxy_marshal_flags(
+            (struct wl_proxy*)zxdg_toplevel_v6,
+            ZXDG_TOPLEVEL_V6_RESIZE,
+            NULL,
+            wl_proxy_get_version((struct wl_proxy*)zxdg_toplevel_v6),
+            0,
+            seat,
+            serial,
+            edges
+        );
+    }
 
-/**
+    /**
  * @ingroup iface_zxdg_toplevel_v6
  *
  * Set a maximum size for the window.
@@ -1544,14 +1741,23 @@ zxdg_toplevel_v6_resize(struct zxdg_toplevel_v6 *zxdg_toplevel_v6, struct wl_sea
  * strictly negative values for width and height will result in the
  * zxdg_shell_v6.invalid_surface_state error being raised.
  */
-static inline void
-zxdg_toplevel_v6_set_max_size(struct zxdg_toplevel_v6 *zxdg_toplevel_v6, int32_t width, int32_t height)
-{
-	wl_proxy_marshal_flags((struct wl_proxy *) zxdg_toplevel_v6,
-			 ZXDG_TOPLEVEL_V6_SET_MAX_SIZE, NULL, wl_proxy_get_version((struct wl_proxy *) zxdg_toplevel_v6), 0, width, height);
-}
+    static inline void zxdg_toplevel_v6_set_max_size(
+        struct zxdg_toplevel_v6* zxdg_toplevel_v6,
+        int32_t                  width,
+        int32_t                  height
+    ) {
+        wl_proxy_marshal_flags(
+            (struct wl_proxy*)zxdg_toplevel_v6,
+            ZXDG_TOPLEVEL_V6_SET_MAX_SIZE,
+            NULL,
+            wl_proxy_get_version((struct wl_proxy*)zxdg_toplevel_v6),
+            0,
+            width,
+            height
+        );
+    }
 
-/**
+    /**
  * @ingroup iface_zxdg_toplevel_v6
  *
  * Set a minimum size for the window.
@@ -1589,14 +1795,23 @@ zxdg_toplevel_v6_set_max_size(struct zxdg_toplevel_v6 *zxdg_toplevel_v6, int32_t
  * strictly negative values for width and height will result in the
  * zxdg_shell_v6.invalid_surface_state error being raised.
  */
-static inline void
-zxdg_toplevel_v6_set_min_size(struct zxdg_toplevel_v6 *zxdg_toplevel_v6, int32_t width, int32_t height)
-{
-	wl_proxy_marshal_flags((struct wl_proxy *) zxdg_toplevel_v6,
-			 ZXDG_TOPLEVEL_V6_SET_MIN_SIZE, NULL, wl_proxy_get_version((struct wl_proxy *) zxdg_toplevel_v6), 0, width, height);
-}
+    static inline void zxdg_toplevel_v6_set_min_size(
+        struct zxdg_toplevel_v6* zxdg_toplevel_v6,
+        int32_t                  width,
+        int32_t                  height
+    ) {
+        wl_proxy_marshal_flags(
+            (struct wl_proxy*)zxdg_toplevel_v6,
+            ZXDG_TOPLEVEL_V6_SET_MIN_SIZE,
+            NULL,
+            wl_proxy_get_version((struct wl_proxy*)zxdg_toplevel_v6),
+            0,
+            width,
+            height
+        );
+    }
 
-/**
+    /**
  * @ingroup iface_zxdg_toplevel_v6
  *
  * Maximize the surface.
@@ -1621,14 +1836,18 @@ zxdg_toplevel_v6_set_min_size(struct zxdg_toplevel_v6 *zxdg_toplevel_v6, int32_t
  * match this request to a specific future configure event is
  * futile.
  */
-static inline void
-zxdg_toplevel_v6_set_maximized(struct zxdg_toplevel_v6 *zxdg_toplevel_v6)
-{
-	wl_proxy_marshal_flags((struct wl_proxy *) zxdg_toplevel_v6,
-			 ZXDG_TOPLEVEL_V6_SET_MAXIMIZED, NULL, wl_proxy_get_version((struct wl_proxy *) zxdg_toplevel_v6), 0);
-}
+    static inline void
+    zxdg_toplevel_v6_set_maximized(struct zxdg_toplevel_v6* zxdg_toplevel_v6) {
+        wl_proxy_marshal_flags(
+            (struct wl_proxy*)zxdg_toplevel_v6,
+            ZXDG_TOPLEVEL_V6_SET_MAXIMIZED,
+            NULL,
+            wl_proxy_get_version((struct wl_proxy*)zxdg_toplevel_v6),
+            0
+        );
+    }
 
-/**
+    /**
  * @ingroup iface_zxdg_toplevel_v6
  *
  * Unmaximize the surface.
@@ -1654,14 +1873,19 @@ zxdg_toplevel_v6_set_maximized(struct zxdg_toplevel_v6 *zxdg_toplevel_v6)
  * this request and emitting corresponding configure event, so trying
  * to match the request with the event is futile.
  */
-static inline void
-zxdg_toplevel_v6_unset_maximized(struct zxdg_toplevel_v6 *zxdg_toplevel_v6)
-{
-	wl_proxy_marshal_flags((struct wl_proxy *) zxdg_toplevel_v6,
-			 ZXDG_TOPLEVEL_V6_UNSET_MAXIMIZED, NULL, wl_proxy_get_version((struct wl_proxy *) zxdg_toplevel_v6), 0);
-}
+    static inline void
+    zxdg_toplevel_v6_unset_maximized(struct zxdg_toplevel_v6* zxdg_toplevel_v6
+    ) {
+        wl_proxy_marshal_flags(
+            (struct wl_proxy*)zxdg_toplevel_v6,
+            ZXDG_TOPLEVEL_V6_UNSET_MAXIMIZED,
+            NULL,
+            wl_proxy_get_version((struct wl_proxy*)zxdg_toplevel_v6),
+            0
+        );
+    }
 
-/**
+    /**
  * @ingroup iface_zxdg_toplevel_v6
  *
  * Make the surface fullscreen.
@@ -1674,24 +1898,36 @@ zxdg_toplevel_v6_unset_maximized(struct zxdg_toplevel_v6 *zxdg_toplevel_v6)
  * position the surface in the center of the output and compensate with
  * black borders filling the rest of the output.
  */
-static inline void
-zxdg_toplevel_v6_set_fullscreen(struct zxdg_toplevel_v6 *zxdg_toplevel_v6, struct wl_output *output)
-{
-	wl_proxy_marshal_flags((struct wl_proxy *) zxdg_toplevel_v6,
-			 ZXDG_TOPLEVEL_V6_SET_FULLSCREEN, NULL, wl_proxy_get_version((struct wl_proxy *) zxdg_toplevel_v6), 0, output);
-}
+    static inline void zxdg_toplevel_v6_set_fullscreen(
+        struct zxdg_toplevel_v6* zxdg_toplevel_v6,
+        struct wl_output*        output
+    ) {
+        wl_proxy_marshal_flags(
+            (struct wl_proxy*)zxdg_toplevel_v6,
+            ZXDG_TOPLEVEL_V6_SET_FULLSCREEN,
+            NULL,
+            wl_proxy_get_version((struct wl_proxy*)zxdg_toplevel_v6),
+            0,
+            output
+        );
+    }
 
-/**
+    /**
  * @ingroup iface_zxdg_toplevel_v6
  */
-static inline void
-zxdg_toplevel_v6_unset_fullscreen(struct zxdg_toplevel_v6 *zxdg_toplevel_v6)
-{
-	wl_proxy_marshal_flags((struct wl_proxy *) zxdg_toplevel_v6,
-			 ZXDG_TOPLEVEL_V6_UNSET_FULLSCREEN, NULL, wl_proxy_get_version((struct wl_proxy *) zxdg_toplevel_v6), 0);
-}
+    static inline void
+    zxdg_toplevel_v6_unset_fullscreen(struct zxdg_toplevel_v6* zxdg_toplevel_v6
+    ) {
+        wl_proxy_marshal_flags(
+            (struct wl_proxy*)zxdg_toplevel_v6,
+            ZXDG_TOPLEVEL_V6_UNSET_FULLSCREEN,
+            NULL,
+            wl_proxy_get_version((struct wl_proxy*)zxdg_toplevel_v6),
+            0
+        );
+    }
 
-/**
+    /**
  * @ingroup iface_zxdg_toplevel_v6
  *
  * Request that the compositor minimize your surface. There is no
@@ -1703,29 +1939,34 @@ zxdg_toplevel_v6_unset_fullscreen(struct zxdg_toplevel_v6 *zxdg_toplevel_v6)
  * also work with live previews on windows in Alt-Tab, Expose or
  * similar compositor features.
  */
-static inline void
-zxdg_toplevel_v6_set_minimized(struct zxdg_toplevel_v6 *zxdg_toplevel_v6)
-{
-	wl_proxy_marshal_flags((struct wl_proxy *) zxdg_toplevel_v6,
-			 ZXDG_TOPLEVEL_V6_SET_MINIMIZED, NULL, wl_proxy_get_version((struct wl_proxy *) zxdg_toplevel_v6), 0);
-}
+    static inline void
+    zxdg_toplevel_v6_set_minimized(struct zxdg_toplevel_v6* zxdg_toplevel_v6) {
+        wl_proxy_marshal_flags(
+            (struct wl_proxy*)zxdg_toplevel_v6,
+            ZXDG_TOPLEVEL_V6_SET_MINIMIZED,
+            NULL,
+            wl_proxy_get_version((struct wl_proxy*)zxdg_toplevel_v6),
+            0
+        );
+    }
 
 #ifndef ZXDG_POPUP_V6_ERROR_ENUM
-#define ZXDG_POPUP_V6_ERROR_ENUM
-enum zxdg_popup_v6_error {
-	/**
+#    define ZXDG_POPUP_V6_ERROR_ENUM
+
+    enum zxdg_popup_v6_error {
+        /**
 	 * tried to grab after being mapped
 	 */
-	ZXDG_POPUP_V6_ERROR_INVALID_GRAB = 0,
-};
+        ZXDG_POPUP_V6_ERROR_INVALID_GRAB = 0,
+    };
 #endif /* ZXDG_POPUP_V6_ERROR_ENUM */
 
-/**
+    /**
  * @ingroup iface_zxdg_popup_v6
  * @struct zxdg_popup_v6_listener
  */
-struct zxdg_popup_v6_listener {
-	/**
+    struct zxdg_popup_v6_listener {
+        /**
 	 * configure the popup surface
 	 *
 	 * This event asks the popup surface to configure itself given
@@ -1740,41 +1981,46 @@ struct zxdg_popup_v6_listener {
 	 * @param width window geometry width
 	 * @param height window geometry height
 	 */
-	void (*configure)(void *data,
-			  struct zxdg_popup_v6 *zxdg_popup_v6,
-			  int32_t x,
-			  int32_t y,
-			  int32_t width,
-			  int32_t height);
-	/**
+        void (*configure)(
+            void*                 data,
+            struct zxdg_popup_v6* zxdg_popup_v6,
+            int32_t               x,
+            int32_t               y,
+            int32_t               width,
+            int32_t               height
+        );
+        /**
 	 * popup interaction is done
 	 *
 	 * The popup_done event is sent out when a popup is dismissed by
 	 * the compositor. The client should destroy the xdg_popup object
 	 * at this point.
 	 */
-	void (*popup_done)(void *data,
-			   struct zxdg_popup_v6 *zxdg_popup_v6);
-};
+        void (*popup_done)(void* data, struct zxdg_popup_v6* zxdg_popup_v6);
+    };
 
-/**
+    /**
  * @ingroup iface_zxdg_popup_v6
  */
-static inline int
-zxdg_popup_v6_add_listener(struct zxdg_popup_v6 *zxdg_popup_v6,
-			   const struct zxdg_popup_v6_listener *listener, void *data)
-{
-	return wl_proxy_add_listener((struct wl_proxy *) zxdg_popup_v6,
-				     (void (**)(void)) listener, data);
-}
+    static inline int zxdg_popup_v6_add_listener(
+        struct zxdg_popup_v6*                zxdg_popup_v6,
+        const struct zxdg_popup_v6_listener* listener,
+        void*                                data
+    ) {
+        return wl_proxy_add_listener(
+            (struct wl_proxy*)zxdg_popup_v6,
+            (void (**)(void))listener,
+            data
+        );
+    }
 
 #define ZXDG_POPUP_V6_DESTROY 0
-#define ZXDG_POPUP_V6_GRAB 1
+#define ZXDG_POPUP_V6_GRAB    1
 
 /**
  * @ingroup iface_zxdg_popup_v6
  */
-#define ZXDG_POPUP_V6_CONFIGURE_SINCE_VERSION 1
+#define ZXDG_POPUP_V6_CONFIGURE_SINCE_VERSION  1
 /**
  * @ingroup iface_zxdg_popup_v6
  */
@@ -1787,29 +2033,28 @@ zxdg_popup_v6_add_listener(struct zxdg_popup_v6 *zxdg_popup_v6,
 /**
  * @ingroup iface_zxdg_popup_v6
  */
-#define ZXDG_POPUP_V6_GRAB_SINCE_VERSION 1
+#define ZXDG_POPUP_V6_GRAB_SINCE_VERSION    1
 
-/** @ingroup iface_zxdg_popup_v6 */
-static inline void
-zxdg_popup_v6_set_user_data(struct zxdg_popup_v6 *zxdg_popup_v6, void *user_data)
-{
-	wl_proxy_set_user_data((struct wl_proxy *) zxdg_popup_v6, user_data);
-}
+    /** @ingroup iface_zxdg_popup_v6 */
+    static inline void zxdg_popup_v6_set_user_data(
+        struct zxdg_popup_v6* zxdg_popup_v6,
+        void*                 user_data
+    ) {
+        wl_proxy_set_user_data((struct wl_proxy*)zxdg_popup_v6, user_data);
+    }
 
-/** @ingroup iface_zxdg_popup_v6 */
-static inline void *
-zxdg_popup_v6_get_user_data(struct zxdg_popup_v6 *zxdg_popup_v6)
-{
-	return wl_proxy_get_user_data((struct wl_proxy *) zxdg_popup_v6);
-}
+    /** @ingroup iface_zxdg_popup_v6 */
+    static inline void*
+    zxdg_popup_v6_get_user_data(struct zxdg_popup_v6* zxdg_popup_v6) {
+        return wl_proxy_get_user_data((struct wl_proxy*)zxdg_popup_v6);
+    }
 
-static inline uint32_t
-zxdg_popup_v6_get_version(struct zxdg_popup_v6 *zxdg_popup_v6)
-{
-	return wl_proxy_get_version((struct wl_proxy *) zxdg_popup_v6);
-}
+    static inline uint32_t
+    zxdg_popup_v6_get_version(struct zxdg_popup_v6* zxdg_popup_v6) {
+        return wl_proxy_get_version((struct wl_proxy*)zxdg_popup_v6);
+    }
 
-/**
+    /**
  * @ingroup iface_zxdg_popup_v6
  *
  * This destroys the popup. Explicitly destroying the xdg_popup
@@ -1818,14 +2063,18 @@ zxdg_popup_v6_get_version(struct zxdg_popup_v6 *zxdg_popup_v6)
  * If this xdg_popup is not the "topmost" popup, a protocol error
  * will be sent.
  */
-static inline void
-zxdg_popup_v6_destroy(struct zxdg_popup_v6 *zxdg_popup_v6)
-{
-	wl_proxy_marshal_flags((struct wl_proxy *) zxdg_popup_v6,
-			 ZXDG_POPUP_V6_DESTROY, NULL, wl_proxy_get_version((struct wl_proxy *) zxdg_popup_v6), WL_MARSHAL_FLAG_DESTROY);
-}
+    static inline void zxdg_popup_v6_destroy(struct zxdg_popup_v6* zxdg_popup_v6
+    ) {
+        wl_proxy_marshal_flags(
+            (struct wl_proxy*)zxdg_popup_v6,
+            ZXDG_POPUP_V6_DESTROY,
+            NULL,
+            wl_proxy_get_version((struct wl_proxy*)zxdg_popup_v6),
+            WL_MARSHAL_FLAG_DESTROY
+        );
+    }
 
-/**
+    /**
  * @ingroup iface_zxdg_popup_v6
  *
  * This request makes the created popup take an explicit grab. An explicit
@@ -1870,14 +2119,23 @@ zxdg_popup_v6_destroy(struct zxdg_popup_v6 *zxdg_popup_v6)
  * "owner-events" grab in X11 parlance), while the top most grabbing popup
  * will always have keyboard focus.
  */
-static inline void
-zxdg_popup_v6_grab(struct zxdg_popup_v6 *zxdg_popup_v6, struct wl_seat *seat, uint32_t serial)
-{
-	wl_proxy_marshal_flags((struct wl_proxy *) zxdg_popup_v6,
-			 ZXDG_POPUP_V6_GRAB, NULL, wl_proxy_get_version((struct wl_proxy *) zxdg_popup_v6), 0, seat, serial);
-}
+    static inline void zxdg_popup_v6_grab(
+        struct zxdg_popup_v6* zxdg_popup_v6,
+        struct wl_seat*       seat,
+        uint32_t              serial
+    ) {
+        wl_proxy_marshal_flags(
+            (struct wl_proxy*)zxdg_popup_v6,
+            ZXDG_POPUP_V6_GRAB,
+            NULL,
+            wl_proxy_get_version((struct wl_proxy*)zxdg_popup_v6),
+            0,
+            seat,
+            serial
+        );
+    }
 
-#ifdef  __cplusplus
+#ifdef __cplusplus
 }
 #endif
 
