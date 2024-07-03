@@ -1,78 +1,92 @@
 #pragma once
 #include "core/window.h" // IWYU pragma: keep
-#include <cstring>
-#include <fcntl.h>
+#include <linux/input-event-codes.h>
 #include <sys/mman.h>
+#include <unistd.h>
+#include <wayland-client-protocol.h>
 #include <wayland-client.h>
 #include <xdg-shell.h>
 
 namespace core {
-
 struct WaylandWinState {
-    std::string           m_title{};
-    size_t                m_width{0};
-    size_t                m_height{0};
-    size_t                m_buffer_size{0};
-    int                   m_shm_fd{0};
-    /* Globals */
-    struct wl_display*    m_display{nullptr};
-    struct wl_registry*   m_registry{nullptr};
-    struct wl_shm*        m_shm{nullptr};
-    struct wl_compositor* m_compositor{nullptr};
-    /* Objects */
-    struct wl_surface*    m_surface{nullptr};
-    struct xdg_shell*     m_shell{nullptr};
-    struct xdg_surface*   m_xdg_surface{nullptr};
-    struct xdg_toplevel*  m_xdg_toplevel{nullptr};
-    struct wl_shm_pool*   m_pool{nullptr};
-    struct wl_buffer*     m_buffer{nullptr};
+    std::string m_title{};
+    size_t      m_width{0};
+    size_t      m_height{0};
+    size_t      m_buffer_size{0};
 };
+} // namespace core
 
-namespace window::impl::wayland {
+namespace core::window::wayland {} // namespace core::window::wayland
 
-void registry_handle_global(
-    void*               data,
-    struct wl_registry* registry,
-    uint32_t            name,
-    const char*         interface,
-    uint32_t            version
-);
+namespace {
+struct {
+    bool               m_configured = false;
+    struct wl_surface* m_surface    = nullptr;
+} wayland_state; //NOLINT
 
-void registry_handle_global_remove(
-    void*               data,
-    struct wl_registry* registry,
-    uint32_t            name
-);
+void xdg_wm_base_handle_ping(
+    [[maybe_unused]] void*               data,
+    [[maybe_unused]] struct xdg_wm_base* xdg_wm_base,
+    [[maybe_unused]] uint32_t            serial
+) {
+    xdg_wm_base_pong(xdg_wm_base, serial);
+}
+const struct xdg_wm_base_listener xdg_wm_base_listener = {
+    .ping = xdg_wm_base_handle_ping,
+};
+} // namespace
 
-void buffer_release(void* data, struct wl_buffer* wl_buffer);
+namespace {
+void xdg_surface_handle_configure(
+    [[maybe_unused]] void*               data,
+    [[maybe_unused]] struct xdg_surface* xdg_surface,
+    [[maybe_unused]] uint32_t            serial
+) {
+    // The compositor configures our surface, acknowledge the configure event
+    xdg_surface_ack_configure(xdg_surface, serial);
 
-void surface_enter_handler(
-    void*              data,
-    struct wl_surface* surface,
-    struct wl_output*  output
-);
+    if (wayland_state.m_configured) {
+        // If this isn't the first configure event we've received, we already
+        // have a buffer attached, so no need to do anything. Commit the
+        // surface to apply the configure acknowledgement.
+        wl_surface_commit(wayland_state.m_surface);
+    }
 
-void surface_leave_handler(
-    void*              data,
-    struct wl_surface* surface,
-    struct wl_output*  output
-);
+    wayland_state.m_configured = true;
+}
+const struct xdg_surface_listener xdg_surface_listener = {
+    .configure = xdg_surface_handle_configure,
+};
+} // namespace
 
-void xdg_surface_configure(
-    void*               data,
-    struct xdg_surface* xdg_surface,
-    uint32_t            serial
-);
-
-void xdg_toplevel_close_handler(void* data, struct xdg_toplevel* xdg_toplevel);
-
-void xdg_toplevel_configure_handler(
+namespace {
+void xdg_toplevel_handle_configure(
     void*                data,
     struct xdg_toplevel* xdg_toplevel,
     int32_t              width,
     int32_t              height,
     struct wl_array*     states
-);
+) {}
+const struct xdg_toplevel_listener xdg_toplevel_listener = {
+    .configure = xdg_toplevel_handle_configure,
+    .close     = xdg_toplevel_handle_close,
+};
 
-} // namespace window::impl::wayland
-} // namespace core
+const struct wl_pointer_listener pointer_listener = {
+    .enter  = []() {},
+    .leave  = []() {},
+    .motion = []() {},
+    .button = pointer_handle_button,
+    .axis   = []() {},
+};
+
+const struct wl_seat_listener seat_listener = {
+    .capabilities = seat_handle_capabilities,
+};
+
+const struct wl_registry_listener registry_listener = {
+    .global        = handle_global,
+    .global_remove = handle_global_remove,
+};
+
+} // namespace

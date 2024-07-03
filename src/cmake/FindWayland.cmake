@@ -16,7 +16,7 @@ if(RAYGAME_GUI_USE_WAYLAND)
         execute_process(COMMAND mkdir -p ${RAYGAME_WL_PROTO_DIR})
         execute_process(
             COMMAND
-                ${WaylandScanner} server-header
+                ${WaylandScanner} client-header
                 ${RAYGAME_WL_PROTO_IN}/${protoName}.xml
                 ${RAYGAME_WL_PROTO_DIR}/${protoName}.h
         )
