@@ -1,7 +1,5 @@
 #pragma once
-#include "core/config.h"
 #include "core/types.h"
-#include <memory>
 #include <string>
 
 namespace core {
@@ -25,6 +23,11 @@ constexpr core::WindowStyle DEFAULT_WINDOW_STYLE = core::WindowStyle::Windowed;
 } // namespace
 
 class Window {
+    std::string m_title{};
+    size_t      m_width{0};
+    size_t      m_height{0};
+    size_t      m_buffer_size{0};
+
 public:
     //! Window initialiser
     /*!
@@ -38,13 +41,13 @@ public:
     explicit Window(
         const size_t&      width  = DEFAULT_WINDOW_WIDTH,
         const size_t&      height = DEFAULT_WINDOW_HEIGHT,
-        const std::string& title  = DEFAULT_WINDOW_NAME,
+        std::string        title  = DEFAULT_WINDOW_NAME,
         const WindowStyle& style  = DEFAULT_WINDOW_STYLE
     );
     explicit Window(
-        const core::Vec2<size_t>& size,
-        const std::string&        title = DEFAULT_WINDOW_NAME,
-        const WindowStyle&        style = DEFAULT_WINDOW_STYLE
+        const core::Vec2<decltype(m_height)>& size,
+        std::string                           title = DEFAULT_WINDOW_NAME,
+        const WindowStyle&                    style = DEFAULT_WINDOW_STYLE
     );
     ~Window();
 
@@ -56,13 +59,6 @@ public:
     //! Reports if the window has been requested to close
     bool should_close();
     void render();
-
-private:
-#if defined(RAYGAME_GUI_WAYLAND)
-    using WinState = struct WaylandWinState;
-#endif
-
-    std::unique_ptr<WinState> m_win_state;
 };
 
 } // namespace core
