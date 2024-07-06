@@ -67,7 +67,12 @@ else()
     set(B_PRODUCTION_MODE ON)
 endif()
 
-include(FindWayland)
+if(RAYGAME_GUI_USE_WAYLAND)
+    include(FindWayland)
+    add_target_protocol(${PROJECT_NAME} wayland)
+    add_target_protocol(${PROJECT_NAME} xdg-shell)
+endif()
+
 include(FindBattery)
 
 if(RAYGAME_IGNORE_CONDITIONS)
