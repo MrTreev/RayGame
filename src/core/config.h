@@ -61,7 +61,7 @@ static_assert(__clang_major__ >= 17, "Only tested on clang 17 and higher");
 #elif defined(__GNUC__)
 #    define RAYGAME_CC_GCC
 static constexpr Compiler compiler = Compiler::GCC;
-static_assert(false, "Not tested on GCC yet");
+// static_assert(false, "Not tested on GCC yet");
 #elif defined(__MINGW32__)
 #    define RAYGAME_CC_MINGW
 static constexpr Compiler compiler = Compiler::MINGW;
@@ -191,6 +191,8 @@ static_assert(false, "Cannot run without an OS");
 #    define RAYGAME_GUI_WAYLAND
 #endif
 
+namespace core::detail {}
+
 #if defined(RAYGAME_LOG_LOCATION)
 #    if __has_include(<experimental/source_location>)
 #        include <experimental/source_location>
@@ -217,7 +219,7 @@ using std::source_location;
               core::detail::source_location::current()
 #    define RG_LOC_VAR , loc
 #else
-#    define RG_LOC
+#    define RG_LOC_DEF
 #    define RG_LOC_CUR
 #    define RG_LOC_VAR
 #endif

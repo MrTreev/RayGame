@@ -1,8 +1,11 @@
 cmake_minimum_required(VERSION 3.25...3.29)
+cmake_path(GET CMAKE_CURRENT_SOURCE_DIR PARENT_PATH RAYGAME_SUPER_DIR)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-set(RAYGAME_ETC ${CMAKE_CURRENT_SOURCE_DIR}/../etc)
-set(RAYGAME_EXT ${CMAKE_CURRENT_SOURCE_DIR}/../ext)
+set(RAYGAME_ETC ${RAYGAME_SUPER_DIR}/etc)
+include(CompilerArgs)
+include(CompilerWarnings)
+include(Linker)
 
 project(
     RayGame
@@ -10,7 +13,7 @@ project(
     DESCRIPTION "A top-down sprite-based game in C++"
     LANGUAGES CXX
 )
-add_executable(${PROJECT_NAME})
+add_executable(RayGame)
 
 option(BUILD_DOC "Build documentation" OFF)
 option(ENABLE_ASAN "Enable the Address Sanitiser" OFF)
@@ -21,64 +24,11 @@ option(ENABLE_UBSAN "Enable the Undefined Behaviour Sanitiser" OFF)
 option(ENABLE_STATIC_ANALYSIS "Do a bunch of extra checking" OFF)
 option(RAYGAME_IGNORE_CONDITIONS "Ignore all runtime condition checks" OFF)
 option(RAYGAME_GUI_USE_WAYLAND "Use Wayland for GUI backend" ON)
-
-if(ENABLE_STATIC_ANALYSIS)
-    set(CMAKE_CXX_CLANG_TIDY
-        clang-tidy
-        -checks=bugprone-*,clang-*,concurrency-*,cppcoreguidelines-*,hicpp-*,misc-*,modernize-*,performance-*,portability-*,readability-*,-*-use-trailing-return-type,-misc-include-cleaner
-    )
-endif()
-
-if(NOT CMAKE_BUILD_TYPE)
-    set(rg_def_type Debug)
-    message(
-        STATUS "Setting build type to '${rg_def_type}' as none was specified."
-    )
-    set(CMAKE_BUILD_TYPE "${rg_def_type}"
-        CACHE STRING "Choose the type of build." FORCE
-    )
-    set_property(
-        CACHE CMAKE_BUILD_TYPE
-        PROPERTY STRINGS
-                 "Debug"
-                 "Release"
-                 "MinSizeRel"
-                 "RelWithDebInfo"
-    )
-endif()
-
-target_sources(${PROJECT_NAME} PUBLIC main.cpp)
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_23)
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-add_subdirectory(core)
-add_subdirectory(system)
-add_subdirectory(world)
-
-if(CMAKE_BUILD_TYPE STREQUAL Debug)
-    add_compile_definitions("RAYGAME_LOG_DEBUG")
-    add_compile_definitions("RAYGAME_LOG_LOCATION")
-    add_compile_options(-Og)
-    add_compile_options(-ggdb)
-    add_compile_options(-fno-omit-frame-pointer)
-    set(B_EMBED_SILENCE_DEVMODE_WARNING ON)
-else()
-    add_compile_definitions("RAYGAME_LOG_INFO")
-    target_compile_options(${PROJECT_NAME} PUBLIC -Ofast)
-    set(B_PRODUCTION_MODE ON)
-endif()
-
-if(RAYGAME_GUI_USE_WAYLAND)
-    include(FindWayland)
-    add_target_protocol(${PROJECT_NAME} wayland)
-    add_target_protocol(${PROJECT_NAME} xdg-shell)
-endif()
-
-include(FindBattery)
+option(RAYGAME_EMBED_BATTERY "Use Battery for file embedding" ON)
+option(RAYGAME_WARNINGS_AS_ERRORS "Warnings as errors" ON)
 
 if(RAYGAME_IGNORE_CONDITIONS)
-    target_compile_definitions(
-        ${PROJECT_NAME} PUBLIC "RAYGAME_IGNORE_CONDITIONS"
-    )
+    target_compile_definitions(RayGame PUBLIC "RAYGAME_IGNORE_CONDITIONS")
 endif()
 
 if(ENABLE_AVX)
@@ -109,24 +59,43 @@ if(ENABLE_UBSAN)
 endif()
 
 if(BUILD_DOC)
-    find_package(Doxygen)
-    if(DOXYGEN_FOUND)
-        # set input and output files
-        set(DOXYFILE ../Doxyfile)
-        message("Doxygen build started")
-        add_custom_target(
-            doc_doxygen ALL
-            COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE}
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-            COMMENT "Generating API documentation with Doxygen"
-            VERBATIM
-        )
-    else(DOXYGEN_FOUND)
-        message(
-            "Doxygen need to be installed to generate the doxygen documentation"
-        )
-    endif(DOXYGEN_FOUND)
+    include(Doxygen)
+    rg_enable_doxygen(YES)
 endif(BUILD_DOC)
+
+rg_set_project_warnings(RayGame ${RAYGAME_WARNINGS_AS_ERRORS})
+rg_configure_linker(RayGame)
+if(CMAKE_BUILD_TYPE STREQUAL Debug)
+    target_compile_definitions(RayGame PUBLIC RAYGAME_LOG_DEBUG)
+    target_compile_definitions(RayGame PUBLIC RAYGAME_LOG_LOCATION)
+else()
+    target_compile_definitions(RayGame PUBLIC RAYGAME_LOG_INFO)
+endif()
+
+if(RAYGAME_GUI_USE_WAYLAND)
+    include(FindWayland)
+    target_compile_definitions(RayGame PUBLIC "RAYGAME_GUI_USE_WAYLAND")
+    add_wayland(RayGame ${RAYGAME_ETC}/wayland-sources)
+endif()
+
+if(RAYGAME_EMBED_BATTERY)
+    include(FindBattery)
+    add_battery_embed(RayGame)
+endif()
+
+if(ENABLE_STATIC_ANALYSIS)
+    include(StaticAnalysis)
+    rg_enable_clang_tidy(RayGame)
+    rg_enable_include_what_you_use(RayGame)
+endif()
+
+target_compile_features(RayGame PUBLIC cxx_std_23)
+target_compile_options(RayGame PUBLIC -std=c++23)
+target_include_directories(RayGame PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+add_subdirectory(core)
+add_subdirectory(system)
+add_subdirectory(world)
+target_sources(RayGame PUBLIC main.cpp)
 
 # Compiler Options
 add_compile_options(-std=c++23)
@@ -136,73 +105,3 @@ add_compile_options(-fsized-deallocation)
 add_compile_options(-fstack-protector)
 add_compile_options(-fstrict-enums)
 add_compile_options(-pedantic)
-
-add_compile_options(-Weverything)
-add_compile_options(-Wall)
-add_compile_options(-Wabi)
-add_compile_options(-Wdeprecated)
-add_compile_options(-Wextra)
-
-add_compile_options(-Wdirect-ivar-access)
-add_compile_options(-Wdouble-promotion)
-add_compile_options(-Wduplicated-branches)
-add_compile_options(-Wduplicated-cond)
-add_compile_options(-Weffc++)
-add_compile_options(-Wempty-init-stmt)
-add_compile_options(-Wempty-translation-unit)
-add_compile_options(-Werror)
-add_compile_options(-Wexplicit-ownership-type)
-add_compile_options(-Wformat)
-add_compile_options(-Wformat-pedantic)
-add_compile_options(-Wformat-type-confusion)
-add_compile_options(-Wformat-zero-length)
-add_compile_options(-Wfour-char-constants)
-add_compile_options(-Wframe-address)
-add_compile_options(-Wgcc-compat)
-add_compile_options(-Wgnu)
-add_compile_options(-Wheader-hygiene)
-add_compile_options(-Wimplicit-fallthrough)
-add_compile_options(-Wimplicit-function-declaration)
-add_compile_options(-Wimport-preprocessor-directive-pedantic)
-add_compile_options(-Wincompatible-function-pointer-types-strict)
-add_compile_options(-Wincomplete-module)
-add_compile_options(-Winconsistent-missing-destructor-override)
-add_compile_options(-Winfinite-recursion)
-add_compile_options(-Wint-in-bool-context)
-add_compile_options(-Wmicrosoft)
-add_compile_options(-Wmisleading-indentation)
-add_compile_options(-Wmissing-braces)
-add_compile_options(-Wmove)
-add_compile_options(-Wnewline-eof)
-add_compile_options(-Wnon-gcc)
-add_compile_options(-Wnon-virtual-dtor)
-add_compile_options(-Wnonportable-cfstrings)
-add_compile_options(-Wnonportable-include-path)
-add_compile_options(-Wnonportable-system-include-path)
-add_compile_options(-Wnonportable-vector-initialization)
-add_compile_options(-Wnull-dereference)
-add_compile_options(-Wnull-pointer-arithmetic)
-add_compile_options(-Wnull-pointer-subtraction)
-add_compile_options(-Wold-style-cast)
-add_compile_options(-Wpedantic)
-add_compile_options(-Wpedantic-core-features)
-add_compile_options(-Wpointer-arith)
-add_compile_options(-Wrange-loop-construct)
-add_compile_options(-Wredundant-move)
-add_compile_options(-Wreserved-macro-identifier)
-add_compile_options(-Wshadow)
-add_compile_options(-Wshadow-all)
-add_compile_options(-Wsign-compare)
-add_compile_options(-Wsign-conversion)
-add_compile_options(-Wtautological-compare)
-add_compile_options(-Wthread-safety)
-add_compile_options(-Wundef)
-add_compile_options(-Wundef-prefix)
-add_compile_options(-Wunused)
-add_compile_options(-Wuseless-cast)
-add_compile_options(-Wvariadic-macros)
-add_compile_options(-Wvector-conversion)
-add_compile_options(-Wvla)
-add_compile_options(-Wzero-as-null-pointer-constant)
-add_compile_options(-Wzero-length-array)
-add_compile_options(-Wlifetime)
