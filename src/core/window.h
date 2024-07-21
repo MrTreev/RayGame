@@ -58,6 +58,8 @@ public:
 
     //! Reports if the window has been requested to close
     bool should_close();
+
+    //! Renders a frame
     void render();
 };
 

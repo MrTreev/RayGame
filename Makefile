@@ -44,7 +44,7 @@ clean:
 
 ${WAYLAND_PROCESSED_DIR}%-protocol.c: ${WAYLAND_PROTOCOL_DIR}%.xml
 	@mkdir -p ${WAYLAND_PROCESSED_DIR}
-	wayland-scanner private-code $< $@
+	wayland-scanner public-code $< $@
 	@echo ""
 
 ${WAYLAND_PROCESSED_DIR}%-client-protocol.h: ${WAYLAND_PROTOCOL_DIR}%.xml
