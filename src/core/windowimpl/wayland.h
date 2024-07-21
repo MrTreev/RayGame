@@ -22,15 +22,16 @@ struct wl_buffer* create_buffer(
 );
 
 void init_window(
-    const size_t&      width,
-    const size_t&      height,
-    const size_t&      buffer_size,
-    const std::string& title
+    const size_t&            width,
+    const size_t&            height,
+    const size_t&            buffer_size,
+    const std::string&       title,
+    const core::WindowStyle& style
 );
 
 void destroy_window();
 
-void render_frame();
+void render_frame(const size_t& width, const size_t& height);
 
 struct wl_state_t {
     struct wl_compositor* m_compositor;

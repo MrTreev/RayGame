@@ -1,6 +1,7 @@
 #include "core/windowimpl/wayland.h" // IWYU pragma: keep
 #include "core/condition.h"
 #include "core/math.h"
+#include "core/window.h"
 #include <algorithm>
 #include <cstring>
 #include <ctime>
@@ -8,6 +9,7 @@
 #include <random>
 #include <sys/mman.h>
 #include <unistd.h>
+#include <wayland-client-protocol.h>
 using core::condition::check_condition;
 using core::condition::post_condition;
 using core::condition::pre_condition;
@@ -97,10 +99,11 @@ struct wl_buffer* core::window::wayland::create_buffer(
 namespace core::window::wayland {
 
 void init_window(
-    const size_t&      width,
-    const size_t&      height,
-    const size_t&      buffer_size,
-    const std::string& title
+    const size_t&            width,
+    const size_t&            height,
+    const size_t&            buffer_size,
+    const std::string&       title,
+    const core::WindowStyle& style
 ) {
     wayland_state.m_display = wl_display_connect(nullptr);
     check_condition(wayland_state.m_display != nullptr, "Display setup failed");
@@ -163,9 +166,19 @@ void init_window(
         wayland_state.m_buffer != nullptr,
         "Failed to setup buffer"
     );
+    memset(wayland_state.m_shm_data, 0x00'00'00'FFU, (width * height * 4));
+    xdg_toplevel_set_title(wayland_state.m_xdg_toplevel, title.c_str());
     wl_surface_attach(wayland_state.m_surface, wayland_state.m_buffer, 0, 0);
     wl_surface_commit(wayland_state.m_surface);
-    xdg_toplevel_set_title(wayland_state.m_xdg_toplevel, title.c_str());
+    if (style == WindowStyle::Fullscreen) {
+        xdg_toplevel_set_fullscreen(wayland_state.m_xdg_toplevel, nullptr);
+    } else if (style == WindowStyle::WindowedFullscreen) {
+        xdg_toplevel_unset_fullscreen(wayland_state.m_xdg_toplevel);
+        xdg_toplevel_set_maximized(wayland_state.m_xdg_toplevel);
+    } else if (style == WindowStyle::Windowed) {
+        xdg_toplevel_unset_fullscreen(wayland_state.m_xdg_toplevel);
+        xdg_toplevel_unset_maximized(wayland_state.m_xdg_toplevel);
+    }
     wayland_state.m_running = true;
 }
 
@@ -176,7 +189,7 @@ void destroy_window() {
     wl_buffer_destroy(wayland_state.m_buffer);
 }
 
-void render_frame() {
+void render_frame(const size_t& width, const size_t& height) {
     // handle bad dispatch, set to close
     if (wl_display_dispatch(wayland_state.m_display) == -1) {
         log::error("Bad display dispatch");
@@ -184,11 +197,9 @@ void render_frame() {
         return;
     }
     using core::window::wayland::wayland_state;
-    memset(
-        wayland_state.m_shm_data,
-        0xFFU,
-        (core::DEFAULT_WINDOW_WIDTH * core::DEFAULT_WINDOW_HEIGHT * 4)
-    );
+    wl_surface_damage(wayland_state.m_surface, 0, 0, width, height);
+    wl_surface_attach(wayland_state.m_surface, wayland_state.m_buffer, 0, 0);
+    wl_surface_commit(wayland_state.m_surface);
 }
 
 } // namespace core::window::wayland

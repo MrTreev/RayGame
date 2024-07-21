@@ -3,6 +3,7 @@
 #include "core/logger.h"
 #include "core/math.h"
 #include "core/types.h"
+
 #if defined(RAYGAME_GUI_WAYLAND)
 #    include "core/windowimpl/wayland.h"
 using core::window::wayland::wayland_state;
@@ -35,7 +36,8 @@ core::Window::Window(
         m_width,
         m_height,
         m_buffer_size,
-        m_title
+        m_title,
+        style
     );
 #endif
     log::debug("Constructed");
@@ -49,7 +51,7 @@ core::Window::~Window() {
     log::debug("Destructed");
 }
 
-bool core::Window::should_close() { // NOLINT *-member-functions-to-static
+bool core::Window::should_close() const {
 #if defined(RAYGAME_GUI_WAYLAND)
     return !wayland_state.m_running;
 #else
@@ -57,9 +59,9 @@ bool core::Window::should_close() { // NOLINT *-member-functions-to-static
 #endif
 }
 
-void core::Window::render() { // NOLINT *-member-functions-to-static
+void core::Window::render() const {
     condition::pre_condition(!should_close(), "Window should close");
 #if defined(RAYGAME_GUI_WAYLAND)
-	core::window::wayland::render_frame();
+    core::window::wayland::render_frame(m_width, m_height);
 #endif
 }

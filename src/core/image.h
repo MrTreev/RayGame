@@ -16,10 +16,9 @@ private:
     std::vector<Pixel> m_image_data;
     int32_t            m_width;
     int32_t            m_height;
-    int32_t            m_n_mipmaps;
 
 public:
-    explicit Image(auto embed);
+    explicit Image(auto& embed);
     ~Image();
     Image(const Image&)            = default;
     Image(Image&&)                 = default;
@@ -38,11 +37,6 @@ public:
     [[nodiscard]]
     inline int32_t height() const {
         return m_height;
-    }
-
-    [[nodiscard]]
-    inline int32_t n_mipmaps() const {
-        return m_n_mipmaps;
     }
 };
 
