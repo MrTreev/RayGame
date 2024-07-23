@@ -203,3 +203,182 @@ void render_frame(const size_t& width, const size_t& height) {
 }
 
 } // namespace core::window::wayland
+
+namespace {
+void rg_xdg_wm_base_handle_ping(
+    [[maybe_unused]] void*               data,
+    [[maybe_unused]] struct xdg_wm_base* xdg_wm_base,
+    [[maybe_unused]] uint32_t            serial
+) {
+    xdg_wm_base_pong(xdg_wm_base, serial);
+}
+
+void rg_xdg_surface_handle_configure(
+    [[maybe_unused]] void*               data,
+    [[maybe_unused]] struct xdg_surface* xdg_surface,
+    [[maybe_unused]] uint32_t            serial
+) {
+    xdg_surface_ack_configure(xdg_surface, serial);
+    if (core::window::wayland::wayland_state.m_configured) {
+        wl_surface_commit(core::window::wayland::wayland_state.m_surface);
+    }
+    core::window::wayland::wayland_state.m_configured = true;
+}
+
+void rg_xdg_toplevel_handle_configure(
+    [[maybe_unused]] void*                data,
+    [[maybe_unused]] struct xdg_toplevel* xdg_toplevel,
+    [[maybe_unused]] int32_t              width,
+    [[maybe_unused]] int32_t              height,
+    [[maybe_unused]] struct wl_array*     states
+) {}
+
+void rg_xdg_toplevel_handle_close(
+    [[maybe_unused]] void*                data,
+    [[maybe_unused]] struct xdg_toplevel* xdg_toplevel
+) {
+    core::window::wayland::wayland_state.m_running = false;
+}
+
+void rg_wl_pointer_handle_enter(
+    [[maybe_unused]] void*              data,
+    [[maybe_unused]] struct wl_pointer* wl_pointer,
+    [[maybe_unused]] uint32_t           serial,
+    [[maybe_unused]] struct wl_surface* surface,
+    [[maybe_unused]] wl_fixed_t         surface_x,
+    [[maybe_unused]] wl_fixed_t         surface_y
+) {}
+
+void rg_wl_pointer_handle_leave(
+    [[maybe_unused]] void*              data,
+    [[maybe_unused]] struct wl_pointer* wl_pointer,
+    [[maybe_unused]] uint32_t           serial,
+    [[maybe_unused]] struct wl_surface* surface
+) {}
+
+void rg_wl_pointer_handle_motion(
+    [[maybe_unused]] void*              data,
+    [[maybe_unused]] struct wl_pointer* wl_pointer,
+    [[maybe_unused]] uint32_t           time,
+    [[maybe_unused]] wl_fixed_t         surface_x,
+    [[maybe_unused]] wl_fixed_t         surface_y
+) {}
+
+void rg_wl_pointer_handle_button(
+    [[maybe_unused]] void*              data,
+    [[maybe_unused]] struct wl_pointer* pointer,
+    [[maybe_unused]] uint32_t           serial,
+    [[maybe_unused]] uint32_t           time,
+    [[maybe_unused]] uint32_t           button,
+    [[maybe_unused]] uint32_t           state
+) {
+    auto* seat = static_cast<struct wl_seat*>(data);
+    if (button == BTN_LEFT && state == WL_POINTER_BUTTON_STATE_PRESSED) {
+        xdg_toplevel_move(
+            core::window::wayland::wayland_state.m_xdg_toplevel,
+            seat,
+            serial
+        );
+    }
+}
+
+void rg_wl_pointer_handle_axis(
+    [[maybe_unused]] void*              data,
+    [[maybe_unused]] struct wl_pointer* wl_pointer,
+    [[maybe_unused]] uint32_t           time,
+    [[maybe_unused]] uint32_t           axis,
+    [[maybe_unused]] wl_fixed_t         value
+) {}
+
+void rg_wl_seat_handle_capabilities(
+    [[maybe_unused]] void*           data,
+    [[maybe_unused]] struct wl_seat* seat,
+    [[maybe_unused]] uint32_t        capabilities
+) {
+    // If the wl_seat has the pointer capability, start listening to pointer
+    // events
+    if ((capabilities & WL_SEAT_CAPABILITY_POINTER) != 0U) {
+        struct wl_pointer* pointer = wl_seat_get_pointer(seat);
+        wl_pointer_add_listener(pointer, &pointer_listener, seat);
+    }
+}
+
+void rg_wl_handle_global(
+    [[maybe_unused]] void*               data,
+    [[maybe_unused]] struct wl_registry* registry,
+    [[maybe_unused]] uint32_t            name,
+    [[maybe_unused]] const char*         interface,
+    [[maybe_unused]] uint32_t            version
+) {
+    core::log::debug(std::format("{}", interface));
+    if (strcmp(interface, wl_shm_interface.name) == 0) {
+        core::log::debug("Handling SHM");
+        core::log::debug(std::format("{}", size_t(registry)));
+        core::window::wayland::wayland_state.m_shm =
+            static_cast<struct wl_shm*>(
+                wl_registry_bind(registry, name, &wl_shm_interface, 1)
+            );
+        core::log::debug(std::format(
+            "{}",
+            size_t(core::window::wayland::wayland_state.m_shm)
+        ));
+    } else if (strcmp(interface, wl_seat_interface.name) == 0) {
+        auto* seat = static_cast<struct wl_seat*>(
+            wl_registry_bind(registry, name, &wl_seat_interface, 1)
+        );
+        wl_seat_add_listener(seat, &seat_listener, nullptr);
+    } else if (strcmp(interface, wl_compositor_interface.name) == 0) {
+        core::window::wayland::wayland_state.m_compositor =
+            static_cast<struct wl_compositor*>(
+                wl_registry_bind(registry, name, &wl_compositor_interface, 1)
+            );
+    } else if (strcmp(interface, xdg_wm_base_interface.name) == 0) {
+        core::window::wayland::wayland_state.m_xdg_wm_base =
+            static_cast<struct xdg_wm_base*>(
+                wl_registry_bind(registry, name, &xdg_wm_base_interface, 1)
+            );
+        xdg_wm_base_add_listener(
+            core::window::wayland::wayland_state.m_xdg_wm_base,
+            &xdg_wm_base_listener,
+            nullptr
+        );
+    }
+}
+
+void rg_wl_handle_global_remove(
+    [[maybe_unused]] void*               data,
+    [[maybe_unused]] struct wl_registry* registry,
+    [[maybe_unused]] uint32_t            name
+) {}
+
+} // namespace
+
+const struct xdg_wm_base_listener xdg_wm_base_listener = {
+    .ping = rg_xdg_wm_base_handle_ping,
+};
+
+const struct xdg_surface_listener xdg_surface_listener = {
+    .configure = rg_xdg_surface_handle_configure,
+};
+
+const struct xdg_toplevel_listener xdg_toplevel_listener = {
+    .configure = rg_xdg_toplevel_handle_configure,
+    .close     = rg_xdg_toplevel_handle_close,
+};
+
+const struct wl_pointer_listener pointer_listener = {
+    .enter  = rg_wl_pointer_handle_enter,
+    .leave  = rg_wl_pointer_handle_leave,
+    .motion = rg_wl_pointer_handle_motion,
+    .button = rg_wl_pointer_handle_button,
+    .axis   = rg_wl_pointer_handle_axis,
+};
+
+const struct wl_seat_listener seat_listener = {
+    .capabilities = rg_wl_seat_handle_capabilities,
+};
+
+const struct wl_registry_listener registry_listener = {
+    .global        = rg_wl_handle_global,
+    .global_remove = rg_wl_handle_global_remove,
+};
