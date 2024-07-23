@@ -1,5 +1,4 @@
-#include "core/window.h" // IWYU pragma: keep
-#include "core/colours.h"
+#include "core/window.h"
 #include "core/condition.h"
 #include "core/logger.h"
 #include "core/math.h"
@@ -7,7 +6,6 @@
 
 #if defined(RAYGAME_GUI_WAYLAND)
 #    include "core/windowimpl/wayland.h"
-using core::window::wayland::wayland_state;
 #endif
 
 namespace {
@@ -32,8 +30,6 @@ core::Window::Window(
     , m_width(numeric_cast<decltype(m_width)>(width))
     , m_buffer_size(numeric_cast<decltype(m_buffer_size)>(width * height)) {
     log::debug("Constructing");
-    m_pix_buf.reserve(m_buffer_size);
-    m_pix_buf.assign(m_buffer_size, core::colours::BLACK);
 #if defined(RAYGAME_GUI_WAYLAND)
     core::window::wayland::init_window(
         m_width,
@@ -56,7 +52,7 @@ core::Window::~Window() {
 
 bool core::Window::should_close() {
 #if defined(RAYGAME_GUI_WAYLAND)
-    return !wayland_state.m_running;
+    return core::window::wayland::should_close();
 #else
     return true;
 #endif

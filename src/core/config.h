@@ -11,8 +11,15 @@ static_assert(
 #    error "This game's code uses features from the C++23 standard"
 #endif
 
+namespace core::config {
+enum class Architecture;
+enum class Endian;
+enum class Compiler;
+enum class OperatingSystem;
+} // namespace core::config
+
 //! Architecture Definitions
-enum class Architecture {
+enum class core::config::Architecture {
     AMD64,
     X86_64,
     X86_32,
@@ -23,31 +30,55 @@ enum class Architecture {
 
 #if defined(__amd64__) || defined(_M_X64_M_AMD64)
 #    define RAYGAME_ARCH_AMD64
-static constexpr Architecture architecture = Architecture::AMD64;
+static constexpr core::config::Architecture architecture =
+    core::config::Architecture::AMD64;
 #elif defined(__x86_64__) || defined(_M_X64)
 #    define RAYGAME_ARCH_X86_64
-static constexpr Architecture architecture = Architecture::X86_64;
+static constexpr core::config::Architecture architecture =
+    core::config::Architecture::X86_64;
 #elif defined(i386) || defined(__i386__) || defined(__i386) || defined(_M_IX86)
 #    define RAYGAME_ARCH_X86_32
-static constexpr Architecture architecture = Architecture::X86_32;
+static constexpr core::config::Architecture architecture =
+    core::config::Architecture::X86_32;
 #elif defined(__rixscv) || defined(__rixscv_xlen)
 #    define RAYGAME_ARCH_RISCV
-static constexpr Architecture architecture = Architecture::RISCV;
+static constexpr core::config::Architecture architecture =
+    core::config::Architecture::RISCV;
 static_assert(false, "Not tested on RISCV yet");
 #elif defined(__aarch64) || defined(_M_ARM64)
 #    define RAYGAME_ARCH_ARM64
-static constexpr Architecture architecture = Architecture::ARM64;
+static constexpr core::config::Architecture architecture =
+    core::config::Architecture::ARM64;
 static_assert(false, "Not tested on ARM64 yet");
 #elif defined(__arm__) || defined(_M_ARM)
 #    define RAYGAME_ARCH_ARM
-static constexpr Architecture architecture = Architecture::ARM;
+static constexpr core::config::Architecture architecture =
+    core::config::Architecture::ARM;
 static_assert(false, "Not tested on ARM yet");
 #else
 static_assert(false, "Unknown Architecture");
 #endif
 
 //! Compiler Definitions
-enum class Compiler {
+enum class core::config::Endian {
+    LITTLE,
+    BIG,
+    LITTLE_BYTE,
+    BIG_BYTE,
+};
+
+#if defined(__BYTE_ORDER__)
+#    if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+#        define RAYGAME_LITTLE_ENDIAN
+static constexpr core::config::Endian endianness = core::config::Endian::LITTLE;
+#    elif __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+#        define RAYGAME_BIG_ENDIAN
+static constexpr core::config::Endian endianness = core::config::Endian::BIG;
+#    endif
+#endif
+
+//! Compiler Definitions
+enum class core::config::Compiler {
     CLANG,
     GCC,
     MSC,
@@ -56,19 +87,21 @@ enum class Compiler {
 
 #if defined(__clang__)
 #    define RAYGAME_CC_CLANG
-static constexpr Compiler compiler = Compiler::CLANG;
+static constexpr core::config::Compiler compiler =
+    core::config::Compiler::CLANG;
 static_assert(__clang_major__ >= 17, "Only tested on clang 17 and higher");
 #elif defined(__GNUC__)
 #    define RAYGAME_CC_GCC
-static constexpr Compiler compiler = Compiler::GCC;
+static constexpr core::config::Compiler compiler = core::config::Compiler::GCC;
 // static_assert(false, "Not tested on GCC yet");
 #elif defined(__MINGW32__)
 #    define RAYGAME_CC_MINGW
-static constexpr Compiler compiler = Compiler::MINGW;
+static constexpr core::config::Compiler compiler =
+    core::config::Compiler::MINGW;
 static_assert(false, "Not tested on MinGW yet");
 #elif defined(_MSC_VER)
 #    define RAYGAME_CC_MSC
-static constexpr Compiler compiler = Compiler::MSC;
+static constexpr core::config::Compiler compiler = core::config::Compiler::MSC;
 static_assert(false, "Not tested on MSC yet");
 #else
 static_assert(false, "Unknown Compiler");
@@ -84,14 +117,14 @@ static_assert(false, "Unknown Compiler");
 
 #if defined(__SSE2__)
 #    define RAYGAME_HAS_SSE2
-#    ifdef RAYGAME_HAS_SSE2
-#        ifdef __SSSE3__
+#    if defined(RAYGAME_HAS_SSE2)
+#        if defined(__SSSE3__)
 #            define RAYGAME_HAS_SSSE3
 #        endif
-#        ifdef __AVX__
+#        if defined(__AVX__)
 #            define RAYGAME_HAS_AVX
-#            ifdef RAYGAME_HAS_AVX
-#                ifdef __AVX2__
+#            if defined(RAYGAME_HAS_AVX)
+#                if defined(__AVX2__)
 #                    define RAYGAME_HAS_AVX2
 #                endif
 #            endif
@@ -115,7 +148,7 @@ static_assert(false, "Unknown Compiler");
 
 //! Operating System Definitions
 #if (__STDC_HOSTED__ == 1)
-enum class OperatingSystem {
+enum class core::config::OperatingSystem {
     ANDROID,
     BSD,
     CYGWIN,
@@ -130,54 +163,64 @@ enum class OperatingSystem {
 
 #    if defined(__ANDROID__)
 #        define RAYGAME_OS_ANDROID
-static constexpr OperatingSystem operatingsystem = OperatingSystem::ANDROID;
+static constexpr core::config::OperatingSystem operatingsystem =
+    core::config::OperatingSystem::ANDROID;
 static_assert(false, "Not tested on Android yet");
 #    elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)  \
         || defined(__bsdi__)
 #        define RAYGAME_OS_BSD
-static constexpr OperatingSystem operatingsystem = OperatingSystem::BSD;
+static constexpr core::config::OperatingSystem operatingsystem =
+    core::config::OperatingSystem::BSD;
 static_assert(false, "Not tested on BSD yet");
 #    elif defined(__CYGWIN__)
 #        define RAYGAME_OS_Cygwin
-static constexpr OperatingSystem operatingsystem = OperatingSystem::CYGWIN;
+static constexpr core::config::OperatingSystem operatingsystem =
+    core::config::OperatingSystem::CYGWIN;
 static_assert(false, "Not tested on Cygwin yet");
 #    elif defined(__GNU__) || defined(__gnu_hurd__)
 #        define RAYGAME_OS_HURD
 #        warning "Imagine using hurd, who are you? Richard Stallman?"
-static constexpr OperatingSystem operatingsystem = OperatingSystem::HURD;
+static constexpr core::config::OperatingSystem operatingsystem =
+    core::config::OperatingSystem::HURD;
 static_assert(false, "Not tested on HURD");
 #    elif defined(__gnu_linux__) || defined(__linux__)
 #        define RAYGAME_OS_LINUX
-static constexpr OperatingSystem operatingsystem = OperatingSystem::LINUX;
+static constexpr core::config::OperatingSystem operatingsystem =
+    core::config::OperatingSystem::LINUX;
 #    elif defined(__QNX__) || defined(__QNXNTO__)
 #        define RAYGAME_OS_QNX
 #        warning "Why? Just why?"
 #        warning "What possessed you to try running games on QNX?"
-static constexpr OperatingSystem operatingsystem = OperatingSystem::QNX;
+static constexpr core::config::OperatingSystem operatingsystem =
+    core::config::OperatingSystem::QNX;
 static_assert(false, "Not tested on QNX");
 #    elif defined(__INTEGRITY)
 #        define RAYGAME_OS_INTEGRITY
 #        warning "Why? Just why?"
 #        warning "What possessed you to try running games on GHS Integrity OS?"
-static constexpr OperatingSystem operatingsystem = OperatingSystem::INTEGRITY;
+static constexpr core::config::OperatingSystem operatingsystem =
+    core::config::OperatingSystem::INTEGRITY;
 static_assert(false, "Not tested on Integrity");
 #    elif defined(macintosh) || defined(Macintosh)                             \
         || (defined(__APPLE__) && defined(__MACH__))
 #        define RAYGAME_OS_MAC
-static constexpr OperatingSystem operatingsystem = OperatingSystem::MAC;
+static constexpr core::config::OperatingSystem operatingsystem =
+    core::config::OperatingSystem::MAC;
 static_assert(false, "Not tested on Apple Macintosh");
 #    elif defined(_WIN64)
 #        define RAYGAME_OS_WIN64
 #        warning "Imagine using a niche videogame operating system..."
 #        warning "Couldn't be me"
-static constexpr OperatingSystem operatingsystem = OperatingSystem::WIN64;
+static constexpr core::config::OperatingSystem operatingsystem =
+    core::config::OperatingSystem::WIN64;
 static_assert(false, "Not tested on Windows 64-bit yet");
 #    elif defined(_WIN32)
 #        define RAYGAME_OS_WIN32
 #        warning "Imagine using a niche videogame operating system..."
 #        warning                                                               \
             "Couldn't be me, but at least the 32-bit versions generally didn't have as much spyware"
-static constexpr OperatingSystem operatingsystem = OperatingSystem::WIN32;
+static constexpr core::config::OperatingSystem operatingsystem =
+    core::config::OperatingSystem::WIN32;
 static_assert(false, "Not tested on Windows 32-bit yet");
 #    else
 static_assert(false, "Unknown Architecture");

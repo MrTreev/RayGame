@@ -1,5 +1,4 @@
 #pragma once
-#include "core/image.h"
 #include "core/types.h"
 #include <string>
 
@@ -12,43 +11,37 @@ enum class WindowStyle {
     Fullscreen,         //< Fullscreen mode
 };
 
-namespace {
-constexpr size_t             DEFAULT_WINDOW_WIDTH  = 640;
-constexpr size_t             DEFAULT_WINDOW_HEIGHT = 480;
-constexpr core::Vec2<size_t> DEFAULT_WINDOW_SIZE   = {
-    DEFAULT_WINDOW_WIDTH,
-    DEFAULT_WINDOW_HEIGHT
-};
-constexpr std::string       DEFAULT_WINDOW_NAME  = "RayGame";
-constexpr core::WindowStyle DEFAULT_WINDOW_STYLE = core::WindowStyle::Windowed;
-} // namespace
-
 class Window {
-    std::string              m_title{DEFAULT_WINDOW_NAME};
-    size_t                   m_width{0};
-    size_t                   m_height{0};
-    size_t                   m_buffer_size{0};
-    std::vector<core::Pixel> m_pix_buf;
+    std::string m_title{DEFAULT_WINDOW_NAME};
+    size_t      m_width{0};
+    size_t      m_height{0};
+    size_t      m_buffer_size{0};
+
+    static constexpr decltype(m_height) DEFAULT_WINDOW_WIDTH  = 640;
+    static constexpr decltype(m_height) DEFAULT_WINDOW_HEIGHT = 480;
+    static constexpr decltype(m_title)  DEFAULT_WINDOW_NAME   = "RayGame";
+    static constexpr core::WindowStyle  DEFAULT_WINDOW_STYLE =
+        core::WindowStyle::Windowed;
 
 public:
     //! Window initialiser
     /*!
-     * @param   width    Width of the window
-     * @param   height    Height of the window
+     * @param   width   Width of the window
+     * @param   height  Height of the window
      * @param   name    Name of the window
-     * @param   style    Style of the window
+     * @param   style   Style of the window
      *
      * @post    The Window is created correctly
      */
     explicit Window(
-        const size_t&      width  = DEFAULT_WINDOW_WIDTH,
-        const size_t&      height = DEFAULT_WINDOW_HEIGHT,
-        std::string        title  = DEFAULT_WINDOW_NAME,
-        const WindowStyle& style  = DEFAULT_WINDOW_STYLE
+        const decltype(m_height)& width  = DEFAULT_WINDOW_WIDTH,
+        const decltype(m_height)& height = DEFAULT_WINDOW_HEIGHT,
+        decltype(m_title)         title  = DEFAULT_WINDOW_NAME,
+        const WindowStyle&        style  = DEFAULT_WINDOW_STYLE
     );
     explicit Window(
         const core::Vec2<decltype(m_height)>& size,
-        std::string                           title = DEFAULT_WINDOW_NAME,
+        decltype(m_title)                     title = DEFAULT_WINDOW_NAME,
         const WindowStyle&                    style = DEFAULT_WINDOW_STYLE
     );
     ~Window();
