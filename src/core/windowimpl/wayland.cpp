@@ -157,19 +157,16 @@ void init_window(
         log::error("Wayland display not configured");
     }
     log::debug("Display dispatched");
-    core::log::debug(
-        std::format("wayland_state.m_shm: {}", size_t(wayland_state.m_shm))
-    );
     wayland_state.m_buffer =
         core::window::wayland::create_buffer(width, height, buffer_size);
     check_condition(
         wayland_state.m_buffer != nullptr,
         "Failed to setup buffer"
     );
-    memset(wayland_state.m_shm_data, 0x00'00'00'FFU, (width * height * 4));
     xdg_toplevel_set_title(wayland_state.m_xdg_toplevel, title.c_str());
     wl_surface_attach(wayland_state.m_surface, wayland_state.m_buffer, 0, 0);
     wl_surface_commit(wayland_state.m_surface);
+    core::log::debug("First frame committed");
     if (style == WindowStyle::Fullscreen) {
         xdg_toplevel_set_fullscreen(wayland_state.m_xdg_toplevel, nullptr);
     } else if (style == WindowStyle::WindowedFullscreen) {

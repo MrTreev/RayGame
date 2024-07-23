@@ -34,18 +34,22 @@ void destroy_window();
 void render_frame(const size_t& width, const size_t& height);
 
 struct wl_state_t {
+    struct wl_buffer*     m_buffer;
     struct wl_compositor* m_compositor;
     struct wl_display*    m_display;
+    struct wl_keyboard*   m_wl_keyboard;
+    struct wl_pointer*    m_wl_pointer;
     struct wl_registry*   m_registry;
+    struct wl_seat*       m_wl_seat;
     struct wl_shm*        m_shm;
     struct wl_surface*    m_surface;
-    struct xdg_toplevel*  m_xdg_toplevel;
+    struct wl_touch*      m_wl_touch;
     struct xdg_surface*   m_xdg_surface;
+    struct xdg_toplevel*  m_xdg_toplevel;
     struct xdg_wm_base*   m_xdg_wm_base;
     void*                 m_shm_data;
     bool                  m_configured;
     bool                  m_running;
-    struct wl_buffer*     m_buffer;
 };
 
 extern wl_state_t wayland_state; // NOLINT: -avoid-non-const-global-variables
@@ -178,10 +182,19 @@ void seat_handle_capabilities(
         wl_pointer_add_listener(pointer, &pointer_listener, seat);
     }
 }
+
+void wl_seat_name(
+    [[maybe_unused]] void*           data,
+    [[maybe_unused]] struct wl_seat* wl_seat,
+    [[maybe_unused]] const char*     name
+) {
+    core::log::debug(std::format("seat name: {}", name));
+}
 } // namespace
 
 static const struct wl_seat_listener seat_listener = {
     .capabilities = seat_handle_capabilities,
+    .name         = wl_seat_name,
 };
 
 namespace {
@@ -192,29 +205,26 @@ void handle_global(
     [[maybe_unused]] const char*         interface,
     [[maybe_unused]] uint32_t            version
 ) {
-    core::log::debug(std::format("{}", interface));
     if (strcmp(interface, wl_shm_interface.name) == 0) {
-        core::log::debug("Handling SHM");
-        core::log::debug(std::format("{}", size_t(registry)));
+        core::log::debug(std::format("{}", interface));
         core::window::wayland::wayland_state.m_shm =
             static_cast<struct wl_shm*>(
                 wl_registry_bind(registry, name, &wl_shm_interface, 1)
             );
-        core::log::debug(std::format(
-            "{}",
-            size_t(core::window::wayland::wayland_state.m_shm)
-        ));
     } else if (strcmp(interface, wl_seat_interface.name) == 0) {
+        core::log::debug(std::format("{}", interface));
         auto* seat = static_cast<struct wl_seat*>(
             wl_registry_bind(registry, name, &wl_seat_interface, 1)
         );
         wl_seat_add_listener(seat, &seat_listener, nullptr);
     } else if (strcmp(interface, wl_compositor_interface.name) == 0) {
+        core::log::debug(std::format("{}", interface));
         core::window::wayland::wayland_state.m_compositor =
             static_cast<struct wl_compositor*>(
                 wl_registry_bind(registry, name, &wl_compositor_interface, 1)
             );
     } else if (strcmp(interface, xdg_wm_base_interface.name) == 0) {
+        core::log::debug(std::format("{}", interface));
         core::window::wayland::wayland_state.m_xdg_wm_base =
             static_cast<struct xdg_wm_base*>(
                 wl_registry_bind(registry, name, &xdg_wm_base_interface, 1)
@@ -224,6 +234,19 @@ void handle_global(
             &xdg_wm_base_listener,
             nullptr
         );
+    } else if (strcmp(interface, wl_seat_interface.name) == 0) {
+        core::log::debug(std::format("{}", interface));
+        core::window::wayland::wayland_state.m_wl_seat =
+            static_cast<struct wl_seat*>(
+                wl_registry_bind(registry, name, &wl_seat_interface, 7)
+            );
+        wl_seat_add_listener(
+            core::window::wayland::wayland_state.m_wl_seat,
+            &seat_listener,
+            nullptr
+        );
+    } else {
+        core::log::trace(std::format("Unhandled: {}", interface));
     }
 }
 
