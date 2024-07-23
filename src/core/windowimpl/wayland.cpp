@@ -157,19 +157,16 @@ void init_window(
         log::error("Wayland display not configured");
     }
     log::debug("Display dispatched");
-    core::log::debug(
-        std::format("wayland_state.m_shm: {}", size_t(wayland_state.m_shm))
-    );
     wayland_state.m_buffer =
         core::window::wayland::create_buffer(width, height, buffer_size);
     check_condition(
         wayland_state.m_buffer != nullptr,
         "Failed to setup buffer"
     );
-    memset(wayland_state.m_shm_data, 0x00'00'00'FFU, (width * height * 4));
     xdg_toplevel_set_title(wayland_state.m_xdg_toplevel, title.c_str());
     wl_surface_attach(wayland_state.m_surface, wayland_state.m_buffer, 0, 0);
     wl_surface_commit(wayland_state.m_surface);
+    core::log::debug("First frame committed");
     if (style == WindowStyle::Fullscreen) {
         xdg_toplevel_set_fullscreen(wayland_state.m_xdg_toplevel, nullptr);
     } else if (style == WindowStyle::WindowedFullscreen) {
@@ -310,29 +307,26 @@ void rg_wl_handle_global(
     [[maybe_unused]] const char*         interface,
     [[maybe_unused]] uint32_t            version
 ) {
-    core::log::debug(std::format("{}", interface));
     if (strcmp(interface, wl_shm_interface.name) == 0) {
-        core::log::debug("Handling SHM");
-        core::log::debug(std::format("{}", size_t(registry)));
+        core::log::debug(std::format("{}", interface));
         core::window::wayland::wayland_state.m_shm =
             static_cast<struct wl_shm*>(
                 wl_registry_bind(registry, name, &wl_shm_interface, 1)
             );
-        core::log::debug(std::format(
-            "{}",
-            size_t(core::window::wayland::wayland_state.m_shm)
-        ));
     } else if (strcmp(interface, wl_seat_interface.name) == 0) {
+        core::log::debug(std::format("{}", interface));
         auto* seat = static_cast<struct wl_seat*>(
             wl_registry_bind(registry, name, &wl_seat_interface, 1)
         );
         wl_seat_add_listener(seat, &seat_listener, nullptr);
     } else if (strcmp(interface, wl_compositor_interface.name) == 0) {
+        core::log::debug(std::format("{}", interface));
         core::window::wayland::wayland_state.m_compositor =
             static_cast<struct wl_compositor*>(
                 wl_registry_bind(registry, name, &wl_compositor_interface, 1)
             );
     } else if (strcmp(interface, xdg_wm_base_interface.name) == 0) {
+        core::log::debug(std::format("{}", interface));
         core::window::wayland::wayland_state.m_xdg_wm_base =
             static_cast<struct xdg_wm_base*>(
                 wl_registry_bind(registry, name, &xdg_wm_base_interface, 1)
@@ -342,6 +336,19 @@ void rg_wl_handle_global(
             &xdg_wm_base_listener,
             nullptr
         );
+    } else if (strcmp(interface, wl_seat_interface.name) == 0) {
+        core::log::debug(std::format("{}", interface));
+        core::window::wayland::wayland_state.m_wl_seat =
+            static_cast<struct wl_seat*>(
+                wl_registry_bind(registry, name, &wl_seat_interface, 7)
+            );
+        wl_seat_add_listener(
+            core::window::wayland::wayland_state.m_wl_seat,
+            &seat_listener,
+            nullptr
+        );
+    } else {
+        core::log::trace(std::format("Unhandled: {}", interface));
     }
 }
 

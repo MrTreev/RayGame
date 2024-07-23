@@ -34,18 +34,22 @@ void destroy_window();
 void render_frame(const size_t& width, const size_t& height);
 
 struct wl_state_t {
+    struct wl_buffer*     m_buffer;
     struct wl_compositor* m_compositor;
     struct wl_display*    m_display;
+    struct wl_keyboard*   m_wl_keyboard;
+    struct wl_pointer*    m_wl_pointer;
     struct wl_registry*   m_registry;
+    struct wl_seat*       m_wl_seat;
     struct wl_shm*        m_shm;
     struct wl_surface*    m_surface;
-    struct xdg_toplevel*  m_xdg_toplevel;
+    struct wl_touch*      m_wl_touch;
     struct xdg_surface*   m_xdg_surface;
+    struct xdg_toplevel*  m_xdg_toplevel;
     struct xdg_wm_base*   m_xdg_wm_base;
     void*                 m_shm_data;
     bool                  m_configured;
     bool                  m_running;
-    struct wl_buffer*     m_buffer;
 };
 
 extern wl_state_t wayland_state; // NOLINT: -avoid-non-const-global-variables

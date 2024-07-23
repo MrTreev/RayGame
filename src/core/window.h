@@ -1,4 +1,5 @@
 #pragma once
+#include "core/image.h"
 #include "core/types.h"
 #include <string>
 
@@ -23,10 +24,11 @@ constexpr core::WindowStyle DEFAULT_WINDOW_STYLE = core::WindowStyle::Windowed;
 } // namespace
 
 class Window {
-    std::string m_title{DEFAULT_WINDOW_NAME};
-    size_t      m_width{0};
-    size_t      m_height{0};
-    size_t      m_buffer_size{0};
+    std::string              m_title{DEFAULT_WINDOW_NAME};
+    size_t                   m_width{0};
+    size_t                   m_height{0};
+    size_t                   m_buffer_size{0};
+    std::vector<core::Pixel> m_pix_buf;
 
 public:
     //! Window initialiser
@@ -57,7 +59,8 @@ public:
     Window& operator=(Window&&)      = delete;
 
     //! Reports if the window has been requested to close
-    bool should_close() const;
+    [[nodiscard]]
+    static bool should_close();
 
     //! Renders a frame
     void render() const;
