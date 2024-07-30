@@ -313,6 +313,17 @@ constexpr wl_shm_format get_colour_format() {
 
 struct wl_buffer* core::window::wayland::create_buffer(
     const size_t& width,
+    const size_t& height
+) {
+    return create_buffer(
+        width,
+        height,
+        core::math::numeric_cast<size_t>(width * height)
+    );
+};
+
+struct wl_buffer* core::window::wayland::create_buffer(
+    const size_t& width,
     const size_t& height,
     const size_t& buffer_size
 ) {
