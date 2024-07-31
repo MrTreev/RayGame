@@ -262,14 +262,6 @@ const struct wl_registry_listener rg_wl_registry_listener = {
     .global_remove = rg_wl_handle_global_remove,
 };
 
-#define RR 00000000
-#define GG 11'111'111
-#define BB 00111100
-#define AA 11'000'011
-
-#define FORM(ii, jj, kk, ll)  XFORM(ii, jj, kk, ll)
-#define XFORM(ii, jj, kk, ll) (0b##ii##jj##kk##ll)
-
 constexpr wl_shm_format get_colour_format() {
     using core::colour::rgba;
     using std::bit_cast;
@@ -277,13 +269,13 @@ constexpr wl_shm_format get_colour_format() {
         rgba(0b00000000, 0b11111111, 0b00111100, 0b11000011);
 
     switch (bit_cast<uint32_t>(colourval)) {
-    case FORM(AA, RR, GG, BB):
+    case (0b11000011'00000000'11111111'00111100):
         return WL_SHM_FORMAT_ARGB8888;
-    case FORM(AA, BB, GG, RR):
+    case (0b11000011'00111100'11111111'00000000):
         return WL_SHM_FORMAT_ABGR8888;
-    case FORM(BB, GG, RR, AA):
+    case (0b00111100'11111111'00000000'11000011):
         return WL_SHM_FORMAT_BGRA8888;
-    case FORM(RR, GG, BB, AA):
+    case (0b00000000'11111111'00111100'11000011):
         return WL_SHM_FORMAT_RGBA8888;
     default:
         throw std::invalid_argument(std::format(
@@ -291,9 +283,9 @@ constexpr wl_shm_format get_colour_format() {
             "functdef: {:0>32b}\n"
             "RGBA DEF: {:0>32b}\n"
             "RGBA set: {:0>32b}{:0>32b}{:0>32b}{:0>32b}\n"
-            "          00000000111111112222222233333333\n",
+            "BYTE NO:  00000000111111112222222233333333\n",
             bit_cast<uint32_t>(colourval),
-            FORM(RR, GG, BB, AA),
+            (0b00000000'11111111'00111100'11000011),
             colourval.m_alpha,
             colourval.m_blue,
             colourval.m_green,
@@ -301,13 +293,6 @@ constexpr wl_shm_format get_colour_format() {
         ));
     }
 }
-
-#undef RR
-#undef GG
-#undef BB
-#undef AA
-#undef FORM
-#undef XFORM
 
 } // namespace
 
