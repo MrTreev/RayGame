@@ -63,3 +63,7 @@ cmake: ${WAYLAND_CLIENT_HEADERS} ${BUILD_LIB}
 	cmake ${CMAKE_ARGS}
 	@echo ""
 	cmake --build build
+
+.PHONY: run
+run: cmake
+	./build/RayGame
