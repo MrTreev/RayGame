@@ -1,6 +1,13 @@
 cmake_minimum_required(VERSION 3.25...3.29)
-cmake_path(GET CMAKE_CURRENT_SOURCE_DIR PARENT_PATH RAYGAME_SUPER_DIR)
+cmake_path(
+    GET
+    CMAKE_CURRENT_SOURCE_DIR
+    PARENT_PATH
+    RAYGAME_SUPER_DIR
+)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 set(RAYGAME_ETC ${RAYGAME_SUPER_DIR}/etc)
 include(CompilerArgs)
@@ -28,7 +35,9 @@ option(RAYGAME_EMBED_BATTERY "Use Battery for file embedding" ON)
 option(RAYGAME_WARNINGS_AS_ERRORS "Warnings as errors" ON)
 
 if(RAYGAME_IGNORE_CONDITIONS)
-    target_compile_definitions(${PROJECT_NAME} PUBLIC "RAYGAME_IGNORE_CONDITIONS")
+    target_compile_definitions(
+        ${PROJECT_NAME} PUBLIC "RAYGAME_IGNORE_CONDITIONS"
+    )
 endif()
 
 if(ENABLE_AVX)
@@ -73,9 +82,7 @@ else()
 endif()
 
 if(RAYGAME_GUI_USE_WAYLAND)
-    include(FindWayland)
     target_compile_definitions(${PROJECT_NAME} PUBLIC "RAYGAME_GUI_USE_WAYLAND")
-    add_wayland(${PROJECT_NAME} ${RAYGAME_ETC}/wayland-sources)
 endif()
 
 if(RAYGAME_EMBED_BATTERY)
