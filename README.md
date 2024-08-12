@@ -1,3 +1,3 @@
 # RayGame
 
-Playing around with Raylib in C++
+Playing around with making a game in C++
