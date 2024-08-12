@@ -1,11 +1,25 @@
-llvm_toolchain(
-    name = "clang_linux_x86_64",
-    exec_compatible_with = [
-        "@platforms//cpu:x86_64",
-        "@platforms//os:linux",
+platform(
+    name = "debug",
+    flags = [
+        "-Og",
+        "-ggdb",
+        "-fno-omit-frame-pointer",
     ],
-    target_compatible_with = [
-        "@platforms//cpu:x86_64",
-        "@platforms//os:linux",
+    constraint_values = [],
+    visibility = ["//visibility:public"],
+)
+
+platform(
+    name = "fast",
+    constraint_values = [],
+    visibility = ["//visibility:public"],
+)
+
+platform(
+    name = "linux",
+    flags = [
+        "",
     ],
+    constraint_values = [ "@platforms//os:linux" ],
+    visibility = [ "//visibility:public" ],
 )
