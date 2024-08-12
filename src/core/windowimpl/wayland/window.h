@@ -1,11 +1,14 @@
 #pragma once
-#include "core/windowimpl/wayland/region.h"
-#include "core/windowimpl/wayland/surface.h"
+#include "core/types.h"
 #include <memory>
 #include <wayland-client-protocol.h>
 #include <xdg-shell-client-protocol.h>
 
 namespace core::window::wayland {
+
+class Region;
+class Surface;
+class PixelBuffer;
 
 class WaylandWindow {
     using reg_del_t = decltype(&wl_compositor_destroy);
@@ -22,7 +25,7 @@ public:
     static void        add_listener();
     static void        roundtrip();
     static Surface     create_surface();
-    static Region      create_region();
+    static Region      create_region(const core::Rect<size_t>& rect);
     static PixelBuffer create_buffer(const core::Vec2<size_t>& size);
 };
 
