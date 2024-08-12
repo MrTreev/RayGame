@@ -1,26 +1,36 @@
-CXXSTD		=	c++2c
-
-CXXFLAGS	=	-lc++ -lc++abi -lunwind
 CFLAGS		=
+
 CXXFLAGS	+=	-isystem${INC_PATH}
 CXXFLAGS	+=	-iquote${SRC_PATH}
-CXXFLAGS	+=	-std=${CXXSTD}
-CXXFLAGS	+=	-DRAYGAME_LOG_${LOG_LEVEL}
-CXXFLAGS	+=	-Werror
-CXXFLAGS	+=	-Wall -Wextra -Wpedantic -Wdeprecated
 
+ifdef CXXSTD
+CXXFLAGS	+=	-std=${CXXSTD}
+endif
+ifdef CXXLIB
+CXXFLAGS	+=	-stdlib=${CXXLIB}
+endif
+ifdef RTLIB
+CXXFLAGS	+=	-rtlib=${RTLIB}
+endif
+ifdef ARCH
 CXXFLAGS	+=	-march=${ARCH}
 CXXFLAGS	+=	-mtune=${ARCH}
+endif
 
-ifeq(${COMPILER}, "gcc")
+CXXFLAGS	+=	-DRAYGAME_LOG_${LOG_LEVEL}
+WARNS		+=	-Werror
+WARNS		+=	-Wall -Wextra -Wpedantic -Wdeprecated
+LDFLAGS		+=	-lc++ -lc++abi -lunwind
+
+ifeq (${COMPILER}, "gcc")
 	CXX		?=	g++
 	CC		?=	gcc
-	include ${MAKEFILES}/gcc.mk
+	include ${MAKEFILES}/compilers/gcc.mk
 endif
-ifeq(${COMPILER}, "clang")
+ifeq (${COMPILER}, "clang")
 	CXX		?=	clang++
 	CC		?=	clang
-	include ${MAKEFILES}/clang.mk
+	include ${MAKEFILES}/compilers/clang.mk
 endif
 
 ifeq (${BUILD_TYPE}, DEBUG)
