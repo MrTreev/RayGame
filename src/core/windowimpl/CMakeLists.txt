@@ -1,6 +1,0 @@
-if(RAYGAME_GUI_USE_WAYLAND)
-    target_sources(${PROJECT_NAME}_core PUBLIC wayland.cpp)
-    add_subdirectory(wayland)
-    include(FindWayland)
-    add_wayland(${PROJECT_NAME} ${RAYGAME_ETC}/wayland-sources)
-endif()
