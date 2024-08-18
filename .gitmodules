@@ -1,3 +1,0 @@
-[submodule "battery-embed"]
-	path = etc/battery-embed
-	url = https://github.com/batterycenter/embed.git

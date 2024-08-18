@@ -6,9 +6,9 @@ namespace core {
 
 //! Window display styles
 enum class WindowStyle {
-    Windowed,           //< Windowed mode (resizable)
-    WindowedFullscreen, //< Windowed mode with no decorations (resizable)
-    Fullscreen,         //< Fullscreen mode
+    Windowed,           //!< Windowed mode (resizable)
+    WindowedFullscreen, //!< Windowed mode with no decorations (resizable)
+    Fullscreen,         //!< Fullscreen mode
 };
 
 class Window {
@@ -28,7 +28,7 @@ public:
     /*!
      * @param   width   Width of the window
      * @param   height  Height of the window
-     * @param   name    Name of the window
+     * @param   title   Title of the window
      * @param   style   Style of the window
      *
      * @post    The Window is created correctly
