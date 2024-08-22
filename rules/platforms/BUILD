@@ -1,3 +1,5 @@
+load("@llvm_toolchain//rules.bzl", "llvm_toolchain")
+
 llvm_toolchain(
     name = "clang_linux_x86_64",
     exec_compatible_with = [
