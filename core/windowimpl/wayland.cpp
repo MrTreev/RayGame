@@ -43,7 +43,7 @@ struct wl_state_t {
     bool                  m_running;
 };
 
-wl_state_t wayland_state; // NOLINT: -avoid-non-const-global-variables
+wl_state_t wayland_state;
 
 std::string random_string(
     const size_t&      length,
@@ -128,9 +128,11 @@ void rg_xdg_toplevel_handle_close(
 }
 
 const struct xdg_toplevel_listener rg_xdg_toplevel_listener = {
-    .configure = rg_xdg_toplevel_handle_configure,
-    .close     = rg_xdg_toplevel_handle_close,
-};
+    .configure        = rg_xdg_toplevel_handle_configure,
+    .close            = rg_xdg_toplevel_handle_close,
+    .configure_bounds = nullptr,
+    .wm_capabilities  = nullptr,
+}; // namespace
 
 void rg_wl_pointer_handle_enter(
     [[maybe_unused]] void*              data,
@@ -184,6 +186,13 @@ const struct wl_pointer_listener rg_wl_pointer_listener = {
     .motion = rg_wl_pointer_handle_motion,
     .button = rg_wl_pointer_handle_button,
     .axis   = rg_wl_pointer_handle_axis,
+
+    .frame                   = nullptr,
+    .axis_source             = nullptr,
+    .axis_stop               = nullptr,
+    .axis_discrete           = nullptr,
+    .axis_value120           = nullptr,
+    .axis_relative_direction = nullptr,
 };
 
 void rg_wl_seat_handle_capabilities(
@@ -201,6 +210,7 @@ void rg_wl_seat_handle_capabilities(
 
 const struct wl_seat_listener rg_wl_seat_listener = {
     .capabilities = rg_wl_seat_handle_capabilities,
+    .name         = nullptr,
 };
 
 void rg_wl_handle_global(
