@@ -2,7 +2,6 @@
 #include "core/config.h"
 #include "core/types.h"
 #include <string>
-#include <utility>
 
 namespace core::log {
 
@@ -59,45 +58,79 @@ inline std::string to_string(Level level) {
         return "ERROR";
     case Level::FATAL:
         return "FATAL";
-    default:
-        std::unreachable();
     }
 }
 
 namespace detail {
-void logger(const core::log::Level& level, const std::string& text RG_LOC_DEF);
+void logger(
+    const core::log::Level&              level,
+    const std::string&                   text,
+    const core::detail::source_location& loc
+);
 } // namespace detail
 
-inline void trace(const std::string& text RG_LOC_CUR) {
-    core::log::detail::logger(Level::TRACE, text RG_LOC_VAR);
+inline void trace(
+    const std::string&                   text,
+    const core::detail::source_location& loc =
+        core::detail::source_location::current()
+) {
+    core::log::detail::logger(Level::TRACE, text, loc);
 }
 
-inline void debug(const std::string& text RG_LOC_CUR) {
-    core::log::detail::logger(Level::DEBUG, text RG_LOC_VAR);
+inline void debug(
+    const std::string&                   text,
+    const core::detail::source_location& loc =
+        core::detail::source_location::current()
+) {
+    core::log::detail::logger(Level::DEBUG, text, loc);
 }
 
-inline void info(const std::string& text RG_LOC_CUR) {
-    core::log::detail::logger(Level::INFO, text RG_LOC_VAR);
+inline void info(
+    const std::string&                   text,
+    const core::detail::source_location& loc =
+        core::detail::source_location::current()
+) {
+    core::log::detail::logger(Level::INFO, text, loc);
 }
 
-inline void note(const std::string& text RG_LOC_CUR) {
-    core::log::detail::logger(Level::NOTE, text RG_LOC_VAR);
+inline void note(
+    const std::string&                   text,
+    const core::detail::source_location& loc =
+        core::detail::source_location::current()
+) {
+    core::log::detail::logger(Level::NOTE, text, loc);
 }
 
-inline void progress(const std::string& text RG_LOC_CUR) {
-    core::log::detail::logger(Level::PROGRESS, text RG_LOC_VAR);
+inline void progress(
+    const std::string&                   text,
+    const core::detail::source_location& loc =
+        core::detail::source_location::current()
+) {
+    core::log::detail::logger(Level::PROGRESS, text, loc);
 }
 
-inline void warning(const std::string& text RG_LOC_CUR) {
-    core::log::detail::logger(Level::WARNING, text RG_LOC_VAR);
+inline void warning(
+    const std::string&                   text,
+    const core::detail::source_location& loc =
+        core::detail::source_location::current()
+) {
+    core::log::detail::logger(Level::WARNING, text, loc);
 }
 
-inline void error(const std::string& text RG_LOC_CUR) {
-    core::log::detail::logger(Level::ERROR, text RG_LOC_VAR);
+inline void error(
+    const std::string&                   text,
+    const core::detail::source_location& loc =
+        core::detail::source_location::current()
+) {
+    core::log::detail::logger(Level::ERROR, text, loc);
 }
 
-inline void fatal(const std::string& text RG_LOC_CUR) {
-    core::log::detail::logger(Level::FATAL, text RG_LOC_VAR);
+inline void fatal(
+    const std::string&                   text,
+    const core::detail::source_location& loc =
+        core::detail::source_location::current()
+) {
+    core::log::detail::logger(Level::FATAL, text, loc);
 }
 
 } // namespace core::log

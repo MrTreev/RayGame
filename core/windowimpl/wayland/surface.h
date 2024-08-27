@@ -3,7 +3,7 @@
 #include "core/windowimpl/wayland/pixelbuffer.h"
 #include <memory>
 #include <wayland-client-protocol.h>
-#include <xdg-shell-client-protocol.h>
+#include <xdg-shell-protocol.h>
 
 namespace core::window::wayland {
 

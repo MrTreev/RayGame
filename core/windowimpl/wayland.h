@@ -10,7 +10,7 @@ namespace core::window::wayland {
 //! Create a pixel buffer for wayland
 /*!
  *  @param width         Width of the desired pixel buffer
- *  @param width         Height of the desired pixel buffer
+ *  @param height        Height of the desired pixel buffer
  *  @param buffer_size   Size of the desired pixel buffer
  */
 struct wl_buffer* create_buffer(
@@ -21,8 +21,8 @@ struct wl_buffer* create_buffer(
 
 /*!
  *  @overload
- *  @param width Width of the desired pixel buffer
- *  @param width Height of the desired pixel buffer
+ *  @param width  Width of the desired pixel buffer
+ *  @param height Height of the desired pixel buffer
  */
 struct wl_buffer* create_buffer(const size_t& width, const size_t& height);
 

@@ -2,8 +2,8 @@
 #include "core/windowimpl/wayland/region.h"
 #include "core/windowimpl/wayland/surface.h"
 #include <memory>
-#include <wayland-client-protocol.h>
-#include <xdg-shell-client-protocol.h>
+#include <wayland-protocol.h>
+#include <xdg-shell-protocol.h>
 
 namespace core::window::wayland {
 

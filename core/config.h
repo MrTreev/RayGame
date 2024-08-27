@@ -8,7 +8,6 @@ static_assert(
     "This game's code uses features from the C++23 standard, please do not "
     "attempt to compile without support for C++23 features"
 );
-#    error "This game's code uses features from the C++23 standard"
 #endif
 
 namespace core::config {
@@ -236,33 +235,20 @@ static_assert(false, "Cannot run without an OS");
 
 namespace core::detail {}
 
-#if defined(RAYGAME_LOG_LOCATION)
-#    if __has_include(<experimental/source_location>)
-#        include <experimental/source_location>
+#if __has_include(<experimental/source_location>)
+#    include <experimental/source_location>
 
 namespace core::detail {
 using std::experimental::source_location;
 }
-#    elif __has_include(<source_location>)
-#        include <source_location>
+
+#elif __has_include(<source_location>)
+#    include <source_location>
 
 namespace core::detail {
 using std::source_location;
 }
-#    else
-#        warn "source_location unsupported, disabling RAYGAME_LOG_LOCATION"
-#        undef RAYGAME_LOG_LOCATION
-#    endif
-#endif
 
-#if defined(RAYGAME_LOG_LOCATION)
-#    define RG_LOC_DEF , const core::detail::source_location& loc
-#    define RG_LOC_CUR                                                         \
-        , const core::detail::source_location& loc =                           \
-              core::detail::source_location::current()
-#    define RG_LOC_VAR , loc
 #else
-#    define RG_LOC_DEF
-#    define RG_LOC_CUR
-#    define RG_LOC_VAR
+#    error "source_location unsupported, cannot continue
 #endif

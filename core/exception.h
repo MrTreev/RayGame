@@ -5,10 +5,9 @@ namespace core::exception {
 
 class Condition: public std::logic_error {
 public:
-    explicit Condition(const std::string& message)
-        : ::std::logic_error(message){};
-    explicit Condition(const std::logic_error&& error)
-        : ::std::logic_error(error){};
+    explicit Condition(const std::string& message);
+    explicit Condition(const std::logic_error&& error);
+    virtual ~Condition() override;
 };
 
 //! Pre-Check-Condition exception
@@ -19,8 +18,8 @@ public:
  */
 class PreCondition: public Condition {
 public:
-    explicit PreCondition(const std::string& message)
-        : Condition(message){};
+    explicit PreCondition(const std::string& message);
+    virtual ~PreCondition() override;
 };
 
 //! Check-Condition exception
@@ -30,8 +29,8 @@ public:
  */
 class CheckCondition: public Condition {
 public:
-    explicit CheckCondition(const std::string& message)
-        : Condition(message){};
+    explicit CheckCondition(const std::string& message);
+    virtual ~CheckCondition() override;
 };
 
 //! Post-Check-Condition exception
@@ -41,7 +40,7 @@ public:
  */
 class PostCondition: public Condition {
 public:
-    explicit PostCondition(const std::string& message)
-        : Condition(message){};
+    explicit PostCondition(const std::string& message);
+    virtual ~PostCondition() override;
 };
 } // namespace core::exception
