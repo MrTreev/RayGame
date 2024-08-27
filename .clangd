@@ -2,7 +2,7 @@ Index:
   Background: Build
   StandardLibrary: True
 CompileFlags:
-  Add: [-Isrc, -std=c++2c]
+  Add: [-Isrc, -std=c++2c, -isystemetc/tts/standalone]
 Style:
   FullyQualifiedNamespaces: True
 Diagnostics:

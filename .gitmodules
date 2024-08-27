@@ -1,3 +1,3 @@
-[submodule "battery-embed"]
-	path = etc/battery-embed
-	url = https://github.com/batterycenter/embed.git
+[submodule "etc/tts"]
+	path = etc/tts
+	url = https://github.com/jfalcou/tts.git

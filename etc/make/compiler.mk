@@ -17,8 +17,8 @@ CXXFLAGS	+=	-march=${ARCH}
 CXXFLAGS	+=	-mtune=${ARCH}
 endif
 
-#WARNS		+=	-Werror
-WARNS		+=	-Wall -Wextra -Wpedantic -Wdeprecated
+CXXFLAGS	+=	-Qunused-arguments
+LDFLAGS		+=	-Qunused-arguments
 LDFLAGS		+=	-lc++ -lc++abi -lunwind
 
 ifeq (${COMPILER}, gcc)

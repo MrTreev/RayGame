@@ -27,5 +27,6 @@ INC_PATH	=	${PROJECT}/out/include
 LIB_PATH	=	${PROJECT}/out/lib
 MAKEPATH	=	${ETC_PATH}/make
 EXE			=	${BIN_PATH}/${EXE_NAME}
+TEST_RUNNER	=	${BIN_PATH}/TestRunner
 
 include ${MAKEPATH}/compiler.mk

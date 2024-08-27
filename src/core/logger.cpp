@@ -30,7 +30,6 @@ constexpr std::string location_string(const core::detail::source_location& loc
         loc.line(),
         loc.function_name()
     );
-    return {};
 }
 
 } // namespace
@@ -46,7 +45,7 @@ void core::log::detail::logger(
             "{:%T} [{}] {}- {}",
             std::chrono::zoned_time{
                 std::chrono::current_zone(),
-                std::chrono::time_point{std::chrono::system_clock::now()}
+                std::chrono::system_clock::now()
             },
             to_string(level),
             location_string(loc),
