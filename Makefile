@@ -1,4 +1,7 @@
-include make/config.mk
+COMPILER=clang
+export COMPILER
+
+include etc/make/config.mk
 
 .PHONY: all
 all: build
@@ -6,7 +9,9 @@ all: build
 .PHONY: build
 build: ${EXE}
 ${EXE}:
-	cd ${SRC_PATH} && ${MAKE} ${EXE}
+	@mkdir -p ${OUT_PATH} ${BIN_PATH} ${BLD_PATH} ${DOC_PATH} ${INC_PATH} ${LIB_PATH}
+	${MAKE} -C ${ETC_PATH} all
+	${MAKE} -C ${SRC_PATH} all
 
 .PHONY: run
 run: ${EXE}
@@ -14,4 +19,4 @@ run: ${EXE}
 
 .PHONY: clean
 clean:
-	rm -rf ${CLEAN}
+	rm -rf ${OUT_PATH} ${BIN_PATH} ${BLD_PATH} ${DOC_PATH} ${INC_PATH} ${LIB_PATH}

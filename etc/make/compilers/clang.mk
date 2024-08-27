@@ -1,12 +1,23 @@
-CPPFLAGS	+=	-stdlib=libc++
-CXXFLAGS	+=	-stdlib=libc++
+.EXPORT_ALL_VARIABLES:
+#CXXFLAGS	+=	-stdlib=libc++
 
+CXXFLAGS		+=	-Og -ggdb -fno-omit-frame-pointer
+CXXFLAGS	+=	-ggdb
+LDFLAGS		+=	-ggdb
+LDFLAGS		+=	-O0
 CXXFLAGS	+=	-fdelete-null-pointer-checks
 CXXFLAGS	+=	-fsanitize=undefined
 CXXFLAGS	+=	-fsized-deallocation
 CXXFLAGS	+=	-fstack-protector
 CXXFLAGS	+=	-fstrict-enums
 
+#WARNS	+=	-Weverything
+WARNS	+=	-Wno-padded
+WARNS	+=	-Wno-c++98-compat
+WARNS	+=	-Wno-c++98-compat-pedantic
+WARNS	+=	-Wno-pre-c++20-compat-pedantic
+WARNS	+=	-Wno-pre-c++17-compat-pedantic
+WARNS	+=	-Wno-switch-default
 WARNS	+=	-Wabi
 WARNS	+=	-Wdirect-ivar-access
 WARNS	+=	-Weffc++

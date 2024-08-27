@@ -30,4 +30,4 @@ static constexpr Pixel RED   = rgb(0xFF, 0x00, 0x00);
 static constexpr Pixel GREEN = rgb(0x00, 0xFF, 0x00);
 static constexpr Pixel BLUE  = rgb(0x00, 0x00, 0xFF);
 
-} // namespace core::colours
+} // namespace core::colour

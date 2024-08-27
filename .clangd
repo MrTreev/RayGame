@@ -2,8 +2,7 @@ Index:
   Background: Build
   StandardLibrary: True
 CompileFlags:
-  Add: [-Isrc]
-  CompilationDatabase: build
+  Add: [-Isrc, -std=c++2c]
 Style:
   FullyQualifiedNamespaces: True
 Diagnostics:

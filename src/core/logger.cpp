@@ -24,15 +24,13 @@ constexpr std::string_view shorten_name(std::string_view full_loc) {
 
 constexpr std::string location_string(const core::detail::source_location& loc
 ) {
-#if defined(RAYGAME_LOG_LOCATION)
     return std::format(
         "{}:{}:{} ",
         shorten_name(loc.file_name()),
         loc.line(),
         loc.function_name()
     );
-#endif
-    return "";
+    return {};
 }
 
 } // namespace

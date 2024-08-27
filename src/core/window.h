@@ -1,14 +1,15 @@
 #pragma once
 #include "core/types.h"
 #include <string>
+#define DEFAULT_WINDOW_NAME "RayGame"
 
 namespace core {
 
 //! Window display styles
 enum class WindowStyle {
-    Windowed,           //< Windowed mode (resizable)
-    WindowedFullscreen, //< Windowed mode with no decorations (resizable)
-    Fullscreen,         //< Fullscreen mode
+    Windowed,           //!< Windowed mode (resizable)
+    WindowedFullscreen, //!< Windowed mode with no decorations (resizable)
+    Fullscreen,         //!< Fullscreen mode
 };
 
 class Window {
@@ -19,7 +20,6 @@ class Window {
 
     static constexpr decltype(m_height) DEFAULT_WINDOW_WIDTH  = 640;
     static constexpr decltype(m_height) DEFAULT_WINDOW_HEIGHT = 480;
-    static constexpr decltype(m_title)  DEFAULT_WINDOW_NAME   = "RayGame";
     static constexpr core::WindowStyle  DEFAULT_WINDOW_STYLE =
         core::WindowStyle::Windowed;
 
@@ -28,7 +28,7 @@ public:
     /*!
      * @param   width   Width of the window
      * @param   height  Height of the window
-     * @param   name    Name of the window
+     * @param   title   Title of the window
      * @param   style   Style of the window
      *
      * @post    The Window is created correctly

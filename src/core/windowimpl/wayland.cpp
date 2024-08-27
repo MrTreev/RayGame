@@ -312,8 +312,8 @@ struct wl_buffer* core::window::wayland::create_buffer(
     const size_t& height,
     const size_t& buffer_size
 ) {
-    const auto size   = numeric_cast<int32_t>(buffer_size * COLOUR_CHANNELS);
-    const int  shm_fd = allocate_shm_file(size);
+    const size_t size   = numeric_cast<size_t>(buffer_size * COLOUR_CHANNELS);
+    const int    shm_fd = allocate_shm_file(size);
     check_condition(shm_fd >= 0, "creation of shm buffer file failed");
     wayland_state.m_shm_data =
         mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0);
@@ -438,7 +438,13 @@ void core::window::wayland::render_frame(
         wayland_state.m_running = false;
         return;
     }
-    wl_surface_damage(wayland_state.m_surface, 0, 0, width, height);
+    wl_surface_damage(
+        wayland_state.m_surface,
+        0,
+        0,
+        numeric_cast<int32_t>(width),
+        numeric_cast<int32_t>(height)
+    );
     wl_surface_attach(wayland_state.m_surface, wayland_state.m_buffer, 0, 0);
     wl_surface_commit(wayland_state.m_surface);
 }

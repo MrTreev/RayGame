@@ -64,6 +64,7 @@ struct Quad {
     T br;
     T tr;
 };
+
 // NOLINTEND(readability-identifier-naming)
 //
 } // namespace core

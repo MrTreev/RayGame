@@ -3,10 +3,10 @@
 #include <cstring>
 
 int main() {
-    constexpr size_t       screen_width  = 640;
-    constexpr size_t       screen_height = 480;
-    const std::string_view filename      = "etc/images/Weapon-Asset-Part1.png";
-    core::Window           game_window{
+    constexpr size_t screen_width  = 640;
+    constexpr size_t screen_height = 480;
+    //const std::string_view filename      = "etc/images/Weapon-Asset-Part1.png";
+    core::Window     game_window{
         screen_width,
         screen_height,
         "RayGame",

@@ -26,8 +26,8 @@ core::Window::Window(
     [[maybe_unused]] const WindowStyle& style
 )
     : m_title(std::move(title))
-    , m_height(numeric_cast<decltype(m_height)>(height))
     , m_width(numeric_cast<decltype(m_width)>(width))
+    , m_height(numeric_cast<decltype(m_height)>(height))
     , m_buffer_size(numeric_cast<decltype(m_buffer_size)>(width * height)) {
     log::debug("Constructing");
 #if defined(RAYGAME_GUI_WAYLAND)
