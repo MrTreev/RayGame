@@ -8,26 +8,30 @@
 namespace {
 
 void rg_xdg_surface_handle_configure(
-    [[maybe_unused]] void* data,
-    xdg_surface*           xdg_surface,
-    uint32_t               serial
+    void*        data,
+    xdg_surface* xdg_surface,
+    uint32_t     serial
 ) {
+    std::ignore = data;
     xdg_surface_ack_configure(xdg_surface, serial);
 }
 
 void registry_handle_global_remove(
-    [[maybe_unused]] void*    data,
-    wl_registry*              registry,
-    [[maybe_unused]] uint32_t name
+    void*        data,
+    wl_registry* registry,
+    uint32_t     name
 ) {
+    std::ignore = data;
     wl_registry_destroy(registry);
+    core::log::debug(std::format("remove registry: {}", name));
 }
 
 void xdg_wm_base_handle_ping(
-    [[maybe_unused]] void* data,
-    xdg_wm_base*           xdg_wm_base,
-    uint32_t               serial
+    void*        data,
+    xdg_wm_base* xdg_wm_base,
+    uint32_t     serial
 ) {
+    std::ignore = data;
     xdg_wm_base_pong(xdg_wm_base, serial);
 }
 
@@ -56,16 +60,13 @@ void wl_pointer_handle_motion(
 ) {}
 
 void wl_pointer_handle_button(
-    void*                        data,
+    [[maybe_unused]] void*       data,
     [[maybe_unused]] wl_pointer* pointer,
     [[maybe_unused]] uint32_t    serial,
     [[maybe_unused]] uint32_t    time,
     [[maybe_unused]] uint32_t    button,
     [[maybe_unused]] uint32_t    state
-) {
-    [[maybe_unused]]
-    auto* seat = static_cast<wl_seat*>(data);
-}
+) {}
 
 void wl_pointer_handle_axis(
     [[maybe_unused]] void*       data,
@@ -80,12 +81,14 @@ void wl_pointer_handle_axis(
 namespace core::window::wayland {
 
 void WaylandWindow::registry_handle_global(
-    [[maybe_unused]] void*    data,
-    wl_registry*              registry,
-    uint32_t                  name,
-    const char*               interface,
-    [[maybe_unused]] uint32_t version
+    void*        data,
+    wl_registry* registry,
+    uint32_t     name,
+    const char*  interface,
+    uint32_t     version
 ) {
+    std::ignore = data;
+    std::ignore = version;
     const std::string interface_str{interface};
     if (interface_str == wl_shm_interface.name) {
         core::log::debug(std::format("{}", interface));
@@ -119,10 +122,11 @@ void WaylandWindow::registry_handle_global(
 }
 
 void WaylandWindow::wl_seat_handle_capabilities(
-    [[maybe_unused]] void* data,
-    wl_seat*               seat,
-    uint32_t               capabilities
+    void*    data,
+    wl_seat* seat,
+    uint32_t capabilities
 ) {
+    std::ignore = data;
     if ((capabilities & WL_SEAT_CAPABILITY_POINTER) != 0U) {
         wl_pointer* pointer = wl_seat_get_pointer(seat);
         wl_pointer_add_listener(pointer, &m_wl_pointer_listener, seat);
