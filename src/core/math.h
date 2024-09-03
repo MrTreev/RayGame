@@ -5,6 +5,7 @@
 #include <concepts>
 #include <format>
 #include <limits>
+#include <utility>
 
 #if defined(RAYGAME_CC_GCC) || defined(RAYGAME_CC_CLANG)
 #    include <cxxabi.h>
@@ -46,30 +47,16 @@ inline constexpr core::deg_t rad2deg(core::rad_t rad) {
 template<typename Out_T, typename In_T>
 requires std::integral<Out_T> && std::integral<In_T>
 inline constexpr Out_T numeric_cast(In_T input) {
-    constexpr auto out_max = std::numeric_limits<Out_T>::max();
-    constexpr auto out_min = std::numeric_limits<Out_T>::lowest();
-    if (static_cast<size_t>(input) > static_cast<size_t>(out_max)) {
-        throw exception::Condition(std::format(
-            "Input of type '{}' is above the max for output type '{}': "
-            "{}",
-            type_name<In_T>(),
-            type_name<Out_T>(),
-            input
-        ));
+    if (std::in_range<Out_T>(input)) {
+        return static_cast<Out_T>(input);
     }
-    if (input < out_min) {
-        throw exception::Condition(std::format(
-            "Input of type '{}' is below the min for output type '{}': "
-            "{}",
-            type_name<In_T>(),
-            type_name<Out_T>(),
-            input
-        ));
-        throw exception::Condition(
-            std::format("{} too low for {}", input, type_name<Out_T>())
-        );
-    }
-    return static_cast<Out_T>(input);
+    throw exception::Condition(std::format(
+        "Input of type '{}' is above the max for output type '{}': "
+        "{}",
+        type_name<In_T>(),
+        type_name<Out_T>(),
+        input
+    ));
 }
 
 } // namespace core::math

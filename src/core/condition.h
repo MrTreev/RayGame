@@ -5,40 +5,19 @@
 
 namespace core::condition {
 
+namespace detail {
+template<typename T>
+concept checkable = requires(T t) { !t; };
+} // namespace detail
+
 //! Pre-Condition Checker
 /*!
  *  @see PreCondition
  */
+template<typename Checkable_T>
+requires detail::checkable<Checkable_T>
 inline constexpr void pre_condition(
-    const bool&                          check,
-    const std::string&                   message,
-    const core::detail::source_location& loc
-);
-
-//! Condition Checker
-/*!
- *  @see CheckCondition
- */
-inline constexpr void check_condition(
-    const bool&                          check,
-    const std::string&                   message,
-    const core::detail::source_location& loc
-);
-
-//! Post-Condition Checker
-/*!
- *  @see PostCondition
- */
-inline constexpr void post_condition(
-    const bool&                          check,
-    const std::string&                   message,
-    const core::detail::source_location& loc
-);
-
-} // namespace core::condition
-
-inline constexpr void core::condition::pre_condition(
-    const bool&                          check,
+    const Checkable_T&                   check,
     const std::string&                   message,
     const core::detail::source_location& loc =
         core::detail::source_location::current()
@@ -49,8 +28,14 @@ inline constexpr void core::condition::pre_condition(
     }
 }
 
-inline constexpr void core::condition::check_condition(
-    const bool&                          check,
+//! Condition Checker
+/*!
+ *  @see CheckCondition
+ */
+template<typename Checkable_T>
+requires detail::checkable<Checkable_T>
+inline constexpr void check_condition(
+    const Checkable_T&                   check,
     const std::string&                   message,
     const core::detail::source_location& loc =
         core::detail::source_location::current()
@@ -61,8 +46,14 @@ inline constexpr void core::condition::check_condition(
     }
 }
 
-inline constexpr void core::condition::post_condition(
-    const bool&                          check,
+//! Post-Condition Checker
+/*!
+ *  @see PostCondition
+ */
+template<typename Checkable_T>
+requires detail::checkable<Checkable_T>
+inline constexpr void post_condition(
+    const Checkable_T&                   check,
     const std::string&                   message,
     const core::detail::source_location& loc =
         core::detail::source_location::current()
@@ -72,3 +63,23 @@ inline constexpr void core::condition::post_condition(
         throw core::exception::PostCondition(message);
     }
 }
+
+//! Null ptr checker
+/*!
+ *  @see CheckCondition
+ */
+template<typename T>
+inline constexpr void check_ptr(
+    const T&                             check,
+    const std::string&                   message,
+    const core::detail::source_location& loc =
+        core::detail::source_location::current()
+) {
+    static_assert(std::is_pointer_v<T>);
+    if (check == nullptr) {
+        core::log::fatal(message, loc);
+        throw core::exception::CheckCondition(message);
+    }
+}
+
+} // namespace core::condition

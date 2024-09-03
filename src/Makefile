@@ -16,7 +16,10 @@ GAME_SRCS	=	$(shell find ${GAME_PATH} -type f -name '*.cpp')
 GAME_OBJS	=	$(GAME_SRCS:${SRC_PATH}/%.cpp=${BLD_PATH}/%.o)
 FULL_LIBS	=	${LIB_PATH}/libcore.so ${LIB_PATH}/libraygame_wayland.so
 
-${BLD_PATH}%.o: ${SRC_PATH}%.cpp
+.PHONY: all
+all: ${EXE}
+
+${BLD_PATH}/%.o: ${SRC_PATH}/%.cpp
 	@mkdir -p $(shell dirname $@)
 	@${CXX} -c -fPIC ${CXXFLAGS} ${WARNS} $< -o $@
 
@@ -36,9 +39,6 @@ ${EXE}: ${GAME_OBJS} ${FULL_LIBS}
 	@mkdir -p $(shell dirname $@)
 	@${CXX} ${LDFLAGS} ${GAME_LDFLAGS} ${WARNS} $^ -o $@
 
-.PHONY: all
-all: ${EXE}
-
 ################################################################################
 ### TEST                                                                     ###
 ################################################################################
@@ -48,9 +48,12 @@ TEST_SRCS		=	$(shell find ${TEST_PATH} -type f -name '*.cpp')
 TEST_OBJS		=	$(TEST_SRCS:${SRC_PATH}/%.cpp=${BLD_PATH}/%.o)
 TEST_CXXFLAGS	+=	-isystem${ETC_PATH}/tts/standalone
 TEST_CXXFLAGS	+=	-Wno-global-constructors
+TEST_CXXFLAGS	+=	-Wno-c99-designator
+TEST_CXXFLAGS	+=	-Wno-c99-extensions
+TEST_CXXFLAGS	+=	-Wno-c99-compat
 
 ${BLD_PATH}/test/%.o: ${SRC_PATH}/test/%.cpp
-	@${CXX} -c -fPIC ${CXXFLAGS} ${TEST_CXXFLAGS} ${WARNS} $< -o $@
+	@${CXX} -c -fPIC ${CXXFLAGS} ${WARNS} ${TEST_CXXFLAGS} $< -o $@
 ${TEST_RUNNER}: ${TEST_OBJS} ${FULL_LIBS}
 	@${CXX} ${TEST_LDFLAGS} ${LDFLAGS} ${WARNS} $^ -o $@
 ${TEST_OBJS}: ${TEST_SRCS}
