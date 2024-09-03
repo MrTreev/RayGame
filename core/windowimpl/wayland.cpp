@@ -85,9 +85,9 @@ int allocate_shm_file(size_t size) {
 }
 
 void rg_xdg_wm_base_handle_ping(
-    [[maybe_unused]] void*               data,
-    [[maybe_unused]] struct xdg_wm_base* xdg_wm_base,
-    [[maybe_unused]] uint32_t            serial
+    [[maybe_unused]] void* data,
+    struct xdg_wm_base*    xdg_wm_base,
+    uint32_t               serial
 ) {
     xdg_wm_base_pong(xdg_wm_base, serial);
 }
@@ -97,9 +97,9 @@ const struct xdg_wm_base_listener rg_xdg_wm_base_listener = {
 };
 
 void rg_xdg_surface_handle_configure(
-    [[maybe_unused]] void*               data,
-    [[maybe_unused]] struct xdg_surface* xdg_surface,
-    [[maybe_unused]] uint32_t            serial
+    [[maybe_unused]] void* data,
+    struct xdg_surface*    xdg_surface,
+    uint32_t               serial
 ) {
     xdg_surface_ack_configure(xdg_surface, serial);
     if (wayland_state.m_configured) {
@@ -127,6 +127,7 @@ void rg_xdg_toplevel_handle_close(
     wayland_state.m_running = false;
 }
 
+[[maybe_unused]]
 const struct xdg_toplevel_listener rg_xdg_toplevel_listener = {
     .configure        = rg_xdg_toplevel_handle_configure,
     .close            = rg_xdg_toplevel_handle_close,
@@ -161,10 +162,10 @@ void rg_wl_pointer_handle_motion(
 void rg_wl_pointer_handle_button(
     [[maybe_unused]] void*              data,
     [[maybe_unused]] struct wl_pointer* pointer,
-    [[maybe_unused]] uint32_t           serial,
+    uint32_t                            serial,
     [[maybe_unused]] uint32_t           time,
-    [[maybe_unused]] uint32_t           button,
-    [[maybe_unused]] uint32_t           state
+    uint32_t                            button,
+    uint32_t                            state
 ) {
     auto* seat = static_cast<struct wl_seat*>(data);
     if (button == BTN_LEFT && state == WL_POINTER_BUTTON_STATE_PRESSED) {
@@ -277,7 +278,6 @@ constexpr wl_shm_format get_colour_format() {
     using std::bit_cast;
     constexpr auto colourval =
         rgba(0b00000000, 0b11111111, 0b00111100, 0b11000011);
-
     switch (bit_cast<uint32_t>(colourval)) {
     case (0b11000011'00000000'11111111'00111100):
         return WL_SHM_FORMAT_ARGB8888;

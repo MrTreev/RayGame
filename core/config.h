@@ -107,11 +107,14 @@ static_assert(false, "Unknown Compiler");
 #endif
 
 #if defined(RAYGAME_CC_CLANG)
-#    define RAYGAME_SYSTEM_HEADER _Pragma("clang system_header")
+#    define RAYGAME_SYSTEM_HEADER  _Pragma("clang system_header")
+#    define RAYGAME_ALWAYS_DESTROY [[clang::always_destroy]]
 #elif defined(RAYGAME_CC_GCC)
-#    define RAYGAME_SYSTEM_HEADER _Pragma("GCC system_header")
+#    define RAYGAME_SYSTEM_HEADER  _Pragma("GCC system_header")
+#    define RAYGAME_ALWAYS_DESTROY [[always_destroy]]
 #else
 #    define RAYGAME_SYSTEM_HEADER
+#    define RAYGAME_ALWAYS_DESTROY
 #endif // defined (RAYGAME_CC_CLANG)
 
 #if defined(__SSE2__)
@@ -251,4 +254,20 @@ using std::source_location;
 
 #else
 #    error "source_location unsupported, cannot continue
+#endif
+
+#if __has_include(<experimental/propagate_const>)
+#    include <experimental/propagate_const>
+
+namespace core::detail {
+using std::experimental::propagate_const;
+}
+#elif __has_include(<propagate_const>)
+#    include <propagate_const>
+
+namespace core::detail {
+using std::propagate_const;
+}
+#else
+#    error "propagate_const unsupported, cannot continue
 #endif

@@ -1,9 +1,7 @@
 #pragma once
 #include "core/window.h"
-#include "core/windowimpl/wayland/pixelbuffer.h"
-#include "core/windowimpl/wayland/region.h"
-#include "core/windowimpl/wayland/surface.h"
-#include "core/windowimpl/wayland/window.h"
+#include <wayland-protocol.h>
+#include <xdg-shell-protocol.h>
 
 namespace core::window::wayland {
 
