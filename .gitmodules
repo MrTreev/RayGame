@@ -1,3 +1,0 @@
-[submodule "etc/tts"]
-	path = etc/tts
-	url = https://github.com/jfalcou/tts.git
