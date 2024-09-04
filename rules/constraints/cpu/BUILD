@@ -1,3 +1,8 @@
+constraint_setting(
+    name = "cpu",
+    visibility = ["//visibility:public"],
+)
+
 constraint_value(
     name = "amd64",
     constraint_setting = "//rules/constraints:cpu",

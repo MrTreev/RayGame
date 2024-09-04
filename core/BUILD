@@ -1,34 +1,17 @@
 cc_library(
     name = "core",
-    srcs = [
-        "colours.cpp",
-        "condition.cpp",
-        "config.cpp",
-        "exception.cpp",
-        "image.cpp",
-        "logger.cpp",
-        "math.cpp",
-        "pixel.cpp",
-        "spritesheet.cpp",
-        "texture.cpp",
-        "types.cpp",
-        "window.cpp",
-    ],
-    hdrs = [
-        "colours.h",
-        "condition.h",
-        "config.h",
-        "exception.h",
-        "image.h",
-        "logger.h",
-        "math.h",
-        "pixel.h",
-        "spritesheet.h",
-        "texture.h",
-        "types.h",
-        "window.h",
-    ],
-    deps = [ "//core/windowimpl", ],
+    srcs = glob([
+        "*.h",
+        "windowimpl/*.h",
+    ]) + select({
+        "//rules/constraints/os:linux": glob(["windowimpl/wayland/*.h"]),
+    }),
+    hdrs = glob([
+        "*.cpp",
+        "windowimpl/*.cpp",
+    ]) + select({
+        "//rules/constraints/os:linux": glob(["windowimpl/wayland/*.cpp"]),
+    }),
     visibility = ["//visibility:public"],
 )
 

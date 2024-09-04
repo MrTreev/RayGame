@@ -1,8 +1,4 @@
-load(":cc_toolchain_config.bzl", "cc_toolchain_config")
 filegroup(name = "empty")
-
-cc_toolchain_config(name = "linux_x86_64_toolchain_config")
-
 
 cc_toolchain(
     name = "linux_x86_64_toolchain",

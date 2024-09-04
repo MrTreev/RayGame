@@ -1,3 +1,8 @@
+constraint_setting(
+    name = "os",
+    visibility = ["//visibility:public"],
+)
+
 constraint_value(
     name = "linux",
     constraint_setting = "//rules/constraints:cpu",
