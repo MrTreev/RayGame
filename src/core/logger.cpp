@@ -24,15 +24,12 @@ constexpr std::string_view shorten_name(std::string_view full_loc) {
 
 constexpr std::string location_string(const core::detail::source_location& loc
 ) {
-#if defined(RAYGAME_LOG_LOCATION)
     return std::format(
         "{}:{}:{} ",
         shorten_name(loc.file_name()),
         loc.line(),
         loc.function_name()
     );
-#endif
-    return "";
 }
 
 } // namespace
@@ -48,7 +45,7 @@ void core::log::detail::logger(
             "{:%T} [{}] {}- {}",
             std::chrono::zoned_time{
                 std::chrono::current_zone(),
-                std::chrono::time_point{std::chrono::system_clock::now()}
+                std::chrono::system_clock::now()
             },
             to_string(level),
             location_string(loc),

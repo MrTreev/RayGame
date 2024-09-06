@@ -1,19 +1,4 @@
-add_library(
-    ${PROJECT_NAME}_core
-    colours.cpp
-    condition.cpp
-    config.cpp
-    exception.cpp
-    image.cpp
-    logger.cpp
-    math.cpp
-    pixel.cpp
-    spritesheet.cpp
-    texture.cpp
-    types.cpp
-    window.cpp
-)
-
+file(GLOB SRCS *.cpp)
+file(GLOB HDRS *.h)
+target_sources(${PROJECT_NAME} PUBLIC ${SRCS} ${HDRS})
 add_subdirectory(windowimpl)
-
-add_library(${PROJECT_NAME}::core ALIAS ${PROJECT_NAME}_core)

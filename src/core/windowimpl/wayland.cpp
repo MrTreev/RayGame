@@ -12,6 +12,7 @@
 #include <sys/mman.h>
 #include <unistd.h>
 #include <wayland-client-protocol.h>
+#include <wayland-client-protocol.h>
 
 using core::condition::check_condition;
 using core::condition::post_condition;
@@ -43,7 +44,7 @@ struct wl_state_t {
     bool                  m_running;
 };
 
-wl_state_t wayland_state; // NOLINT: -avoid-non-const-global-variables
+wl_state_t wayland_state;
 
 std::string random_string(
     const size_t&      length,
@@ -85,9 +86,9 @@ int allocate_shm_file(size_t size) {
 }
 
 void rg_xdg_wm_base_handle_ping(
-    [[maybe_unused]] void*               data,
-    [[maybe_unused]] struct xdg_wm_base* xdg_wm_base,
-    [[maybe_unused]] uint32_t            serial
+    [[maybe_unused]] void* data,
+    struct xdg_wm_base*    xdg_wm_base,
+    uint32_t               serial
 ) {
     xdg_wm_base_pong(xdg_wm_base, serial);
 }
@@ -97,9 +98,9 @@ const struct xdg_wm_base_listener rg_xdg_wm_base_listener = {
 };
 
 void rg_xdg_surface_handle_configure(
-    [[maybe_unused]] void*               data,
-    [[maybe_unused]] struct xdg_surface* xdg_surface,
-    [[maybe_unused]] uint32_t            serial
+    [[maybe_unused]] void* data,
+    struct xdg_surface*    xdg_surface,
+    uint32_t               serial
 ) {
     xdg_surface_ack_configure(xdg_surface, serial);
     if (wayland_state.m_configured) {
@@ -127,10 +128,13 @@ void rg_xdg_toplevel_handle_close(
     wayland_state.m_running = false;
 }
 
+[[maybe_unused]]
 const struct xdg_toplevel_listener rg_xdg_toplevel_listener = {
-    .configure = rg_xdg_toplevel_handle_configure,
-    .close     = rg_xdg_toplevel_handle_close,
-};
+    .configure        = rg_xdg_toplevel_handle_configure,
+    .close            = rg_xdg_toplevel_handle_close,
+    .configure_bounds = nullptr,
+    .wm_capabilities  = nullptr,
+}; // namespace
 
 void rg_wl_pointer_handle_enter(
     [[maybe_unused]] void*              data,
@@ -159,10 +163,10 @@ void rg_wl_pointer_handle_motion(
 void rg_wl_pointer_handle_button(
     [[maybe_unused]] void*              data,
     [[maybe_unused]] struct wl_pointer* pointer,
-    [[maybe_unused]] uint32_t           serial,
+    uint32_t                            serial,
     [[maybe_unused]] uint32_t           time,
-    [[maybe_unused]] uint32_t           button,
-    [[maybe_unused]] uint32_t           state
+    uint32_t                            button,
+    uint32_t                            state
 ) {
     auto* seat = static_cast<struct wl_seat*>(data);
     if (button == BTN_LEFT && state == WL_POINTER_BUTTON_STATE_PRESSED) {
@@ -184,6 +188,13 @@ const struct wl_pointer_listener rg_wl_pointer_listener = {
     .motion = rg_wl_pointer_handle_motion,
     .button = rg_wl_pointer_handle_button,
     .axis   = rg_wl_pointer_handle_axis,
+
+    .frame                   = nullptr,
+    .axis_source             = nullptr,
+    .axis_stop               = nullptr,
+    .axis_discrete           = nullptr,
+    .axis_value120           = nullptr,
+    .axis_relative_direction = nullptr,
 };
 
 void rg_wl_seat_handle_capabilities(
@@ -201,6 +212,7 @@ void rg_wl_seat_handle_capabilities(
 
 const struct wl_seat_listener rg_wl_seat_listener = {
     .capabilities = rg_wl_seat_handle_capabilities,
+    .name         = nullptr,
 };
 
 void rg_wl_handle_global(
@@ -267,7 +279,6 @@ constexpr wl_shm_format get_colour_format() {
     using std::bit_cast;
     constexpr auto colourval =
         rgba(0b00000000, 0b11111111, 0b00111100, 0b11000011);
-
     switch (bit_cast<uint32_t>(colourval)) {
     case (0b11000011'00000000'11111111'00111100):
         return WL_SHM_FORMAT_ARGB8888;
@@ -312,8 +323,8 @@ struct wl_buffer* core::window::wayland::create_buffer(
     const size_t& height,
     const size_t& buffer_size
 ) {
-    const auto size   = numeric_cast<int32_t>(buffer_size * COLOUR_CHANNELS);
-    const int  shm_fd = allocate_shm_file(size);
+    const size_t size   = numeric_cast<size_t>(buffer_size * COLOUR_CHANNELS);
+    const int    shm_fd = allocate_shm_file(size);
     check_condition(shm_fd >= 0, "creation of shm buffer file failed");
     wayland_state.m_shm_data =
         mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0);
@@ -438,7 +449,13 @@ void core::window::wayland::render_frame(
         wayland_state.m_running = false;
         return;
     }
-    wl_surface_damage(wayland_state.m_surface, 0, 0, width, height);
+    wl_surface_damage(
+        wayland_state.m_surface,
+        0,
+        0,
+        numeric_cast<int32_t>(width),
+        numeric_cast<int32_t>(height)
+    );
     wl_surface_attach(wayland_state.m_surface, wayland_state.m_buffer, 0, 0);
     wl_surface_commit(wayland_state.m_surface);
 }
@@ -446,3 +463,5 @@ void core::window::wayland::render_frame(
 bool core::window::wayland::should_close() {
     return !wayland_state.m_running;
 }
+
+static_assert(core::IsWindow<core::window::wayland::WaylandWindow>);

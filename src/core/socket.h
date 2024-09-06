@@ -34,7 +34,7 @@ private:
     int m_fd{0};
 
     struct sockaddr_un m_sockaddr {
-        .sun_family = AF_UNIX,
+        .sun_family = AF_UNIX, .sun_path = {},
     };
 };
 #endif

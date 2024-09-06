@@ -13,7 +13,7 @@ WAYLAND_PROTOCOL_DIR	=	${ETC}/wayland-protocols
 WAYLAND_PROCESSED_DIR	=	${ETC}/wayland-sources
 WAYLAND_PROTOCOLS		=	$(wildcard ${WAYLAND_PROTOCOL_DIR}/*.xml)
 WAYLAND_SOURCES			=	$(WAYLAND_PROTOCOLS:${WAYLAND_PROTOCOL_DIR}%.xml=${WAYLAND_PROCESSED_DIR}%-protocol.c)
-WAYLAND_CLIENT_HEADERS	=	$(WAYLAND_PROTOCOLS:${WAYLAND_PROTOCOL_DIR}%.xml=${WAYLAND_PROCESSED_DIR}%-client-protocol.h)
+WAYLAND_CLIENT_HEADERS	=	$(WAYLAND_PROTOCOLS:${WAYLAND_PROTOCOL_DIR}%.xml=${WAYLAND_PROCESSED_DIR}%-protocol.h)
 
 LIB_NAME				=	raygame_wayland
 LIB_SUFFIX				=	.so
@@ -47,7 +47,7 @@ ${WAYLAND_PROCESSED_DIR}%-protocol.c: ${WAYLAND_PROTOCOL_DIR}%.xml
 	wayland-scanner public-code $< $@
 	@echo ""
 
-${WAYLAND_PROCESSED_DIR}%-client-protocol.h: ${WAYLAND_PROTOCOL_DIR}%.xml
+${WAYLAND_PROCESSED_DIR}%-protocol.h: ${WAYLAND_PROTOCOL_DIR}%.xml
 	@mkdir -p ${WAYLAND_PROCESSED_DIR}
 	wayland-scanner client-header $< $@
 	@sed -i 's/"wayland-client.h"/<wayland-client.h>/' $@

@@ -83,11 +83,7 @@ endif()
 
 if(RAYGAME_GUI_USE_WAYLAND)
     target_compile_definitions(${PROJECT_NAME} PUBLIC "RAYGAME_GUI_USE_WAYLAND")
-endif()
-
-if(RAYGAME_EMBED_BATTERY)
-    include(FindBattery)
-    add_battery_embed(${PROJECT_NAME})
+    target_include_directories(${PROJECT_NAME} PUBLIC ${RAYGAME_ETC}/wayland-sources)
 endif()
 
 if(ENABLE_STATIC_ANALYSIS)
@@ -102,7 +98,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(core)
 add_subdirectory(system)
 add_subdirectory(world)
-target_sources(${PROJECT_NAME} PUBLIC main.cpp)
+add_subdirectory(game)
 
 # Compiler Options
 add_compile_options(-std=c++23)

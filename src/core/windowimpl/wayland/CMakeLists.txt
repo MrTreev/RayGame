@@ -1,7 +1,3 @@
-target_sources(
-    ${PROJECT_NAME}_core
-    PUBLIC pixelbuffer.cpp
-           region.cpp
-           surface.cpp
-           window.cpp
-)
+file(GLOB SRCS *.cpp)
+file(GLOB HDRS *.h)
+target_sources(${PROJECT_NAME} PUBLIC ${SRCS} ${HDRS})
