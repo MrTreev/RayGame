@@ -1,6 +1,7 @@
 #pragma once
 #include "core/exception.h"
 #include "core/logger.h"
+#include <format>
 #include <string>
 
 namespace core::condition {
@@ -83,3 +84,15 @@ inline constexpr void check_ptr(
 }
 
 } // namespace core::condition
+
+#define RG_PRE_CONDITION(expr)   ::core::condition::pre_condition(expr, #expr)
+#define RG_POST_CONDITION(expr)  ::core::condition::post_condition(expr, #expr)
+#define RG_CHECK_CONDITION(expr) ::core::condition::check_condition(expr, #expr)
+#define RG_PRE_CONDITION_MSG(expr, ...)                                        \
+    ::core::condition::pre_condition(expr, std::format(__VA_ARGS__))
+#define RG_POST_CONDITION_MSG(expr, ...)                                       \
+    ::core::condition::post_condition(expr, std::format(__VA_ARGS__))
+#define RG_CHECK_CONDITION_MSG(expr, ...)                                      \
+    ::core::condition::check_condition(expr, std::format(__VA_ARGS__))
+#define RG_THROW_CONDITION(...)                                                 \
+    throw ::core::exception::Condition(std::format(__VA_ARGS__))

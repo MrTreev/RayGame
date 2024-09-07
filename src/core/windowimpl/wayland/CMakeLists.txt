@@ -1,3 +1,5 @@
-file(GLOB SRCS *.cpp)
-file(GLOB HDRS *.h)
-target_sources(${PROJECT_NAME} PUBLIC ${SRCS} ${HDRS})
+target_sources(
+    Core
+    PUBLIC wayland_fwd.h util.h
+    PRIVATE util.cpp window.cpp window_impl.cpp
+)

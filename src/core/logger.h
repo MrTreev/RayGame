@@ -2,6 +2,7 @@
 #include "core/config.h"
 #include "core/types.h"
 #include <string>
+#include <utility>
 
 namespace core::log {
 
@@ -58,6 +59,8 @@ inline std::string to_string(Level level) {
         return "ERROR";
     case Level::FATAL:
         return "FATAL";
+    default:
+        std::unreachable();
     }
 }
 

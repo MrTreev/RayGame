@@ -1,33 +1,18 @@
 #pragma once
-#include "core/config.h"
-#include "core/exception.h"
+#include "core/condition.h"
+#include "core/debug.h"
 #include "core/types.h"
+#include <cassert>
 #include <concepts>
-#include <format>
 #include <limits>
+#include <random>
+#include <type_traits>
 #include <utility>
 
-#if defined(RAYGAME_CC_GCC) || defined(RAYGAME_CC_CLANG)
-#    include <cxxabi.h>
-#    include <typeinfo>
-#endif
-
-template<typename T>
-inline constexpr std::string type_name() {
-    int         status = 0;
-    std::string tname  = typeid(T).name();
-#if defined(RAYGAME_CC_GCC) || defined(RAYGAME_CC_CLANG)
-    char* demangled_name =
-        abi::__cxa_demangle(tname.c_str(), nullptr, nullptr, &status);
-    if (status == 0) {
-        tname = demangled_name;
-        free(demangled_name);
-    }
-#endif
-    return tname;
-}
-
 namespace core::math {
+namespace detail {
+extern std::mt19937 rng;
+}
 
 namespace constants {
 constexpr float pi      = 3.14159265358979323846F;
@@ -44,19 +29,92 @@ inline constexpr core::deg_t rad2deg(core::rad_t rad) {
     return rad * constants::rad2deg;
 };
 
+template<typename Out_T, typename A_T, typename B_T>
+inline constexpr Out_T safe_add(A_T a, B_T b) {
+    if constexpr (std::is_unsigned_v<A_T> && std::is_unsigned_v<B_T>) {
+        const auto      ai  = static_cast<uintmax_t>(a);
+        const auto      bi  = static_cast<uintmax_t>(b);
+        const uintmax_t res = a + b;
+        assert((res > a) && (res > b));
+        return numeric_cast<Out_T>(a + b);
+    }
+}
+
 template<typename Out_T, typename In_T>
 requires std::integral<Out_T> && std::integral<In_T>
 inline constexpr Out_T numeric_cast(In_T input) {
     if (std::in_range<Out_T>(input)) {
         return static_cast<Out_T>(input);
     }
-    throw exception::Condition(std::format(
+    RG_THROW_CONDITION(
         "Input of type '{}' is above the max for output type '{}': "
         "{}",
-        type_name<In_T>(),
-        type_name<Out_T>(),
+        debug::type_name<In_T>(),
+        debug::type_name<Out_T>(),
         input
-    ));
+    );
+}
+
+//! Returns an array of N random values in a range
+/*!
+ * @param min minimum random value
+ * @param max maximum random value
+ */
+template<typename T, size_t N>
+requires std::is_integral_v<T> && std::is_trivial_v<T>
+std::array<T, N> rand_n(T min, T max) {
+    RG_PRE_CONDITION(min < max);
+    std::uniform_int_distribution<T> dist(min, max);
+    std::array<T, N>                 results;
+    for (T& res: results) {
+        res = dist(detail::rng);
+    }
+    return results;
+}
+
+template<typename T, size_t N>
+requires std::is_integral_v<T> && std::is_trivial_v<T>
+inline std::array<T, N> rand_n() {
+    return rand_n<T, N>(
+        std::numeric_limits<T>::min(),
+        std::numeric_limits<T>::max()
+    );
+};
+
+template<typename T>
+requires std::is_integral_v<T> && std::is_trivial_v<T>
+std::vector<T> rand_n(T min, T max, size_t amount) {
+    std::uniform_int_distribution<T> dist(min, max);
+    RG_PRE_CONDITION(min < max);
+    std::vector<T> results;
+    results.reserve(amount);
+    while (results.size() < amount) {
+        results.push_back(dist(detail::rng));
+    }
+    return results;
+}
+
+template<typename T>
+requires std::is_integral_v<T> && std::is_trivial_v<T>
+std::vector<T> rand_n(size_t amount) {
+    return rand_n<T>(
+        std::numeric_limits<T>::min(),
+        std::numeric_limits<T>::max(),
+        amount
+    );
+}
+
+template<typename T>
+requires std::is_integral_v<T> && std::is_trivial_v<T>
+T rand(T min, T max) {
+    std::uniform_int_distribution<T> dist(min, max);
+    return dist(core::math::detail::rng);
+}
+
+template<typename T>
+requires std::is_integral_v<T> && std::is_trivial_v<T>
+inline T rand() {
+    return rand(std::numeric_limits<T>::min(), std::numeric_limits<T>::max());
 }
 
 } // namespace core::math

@@ -1,4 +1,4 @@
-#include "core/windowimpl/wayland.h"
+#include "core/windowimpl/wayland.h" // IWYU pragma: keep
 #include "core/colours.h"
 #include "core/condition.h"
 #include "core/logger.h"
@@ -11,7 +11,6 @@
 #include <random>
 #include <sys/mman.h>
 #include <unistd.h>
-#include <wayland-client-protocol.h>
 #include <wayland-client-protocol.h>
 
 using core::condition::check_condition;

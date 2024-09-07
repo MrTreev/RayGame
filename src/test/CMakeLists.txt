@@ -1,0 +1,5 @@
+include(RgTest)
+add_executable(Tests)
+target_compile_features(Tests PRIVATE cxx_std_23)
+target_link_libraries(Tests PRIVATE Core doctest::doctest)
+target_sources(Tests PUBLIC main.cpp math.cpp)
