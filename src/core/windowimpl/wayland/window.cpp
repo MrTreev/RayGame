@@ -4,8 +4,8 @@
 #include "core/windowimpl/wayland/util.h"
 #include <sys/mman.h>
 #include <unistd.h>
-#include <wayland-protocol.h>
-#include <xdg-shell-protocol.h>
+#include <wayland-client-protocol.h>
+#include <xdg-shell-client-protocol.h>
 
 using core::condition::check_condition;
 using core::condition::check_ptr;
@@ -27,8 +27,7 @@ WaylandWindow::WaylandWindow(
     size_t      height,
     std::string title,
     WindowStyle style
-)
-    : Window(width, height, title) {
+) {
     if (m_display == nullptr) {
         m_display = wl_display_connect(nullptr);
         check_ptr(m_display, "Display setup failed");

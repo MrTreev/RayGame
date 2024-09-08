@@ -4,7 +4,7 @@ project(
     RayGame
     VERSION 0.0.0
     DESCRIPTION "A simple game and engine in C++"
-    LANGUAGES CXX
+	LANGUAGES CXX C
 )
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)

@@ -1,5 +1,5 @@
 #include "core/logger.h"
-#include "core/windowimpl/wayland.h" // IWYU pragma: keep
+#include "core/windowimpl/wayland.h"
 #include <format>
 #include <linux/input-event-codes.h>
 #include <wayland-protocol.h>

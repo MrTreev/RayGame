@@ -8,7 +8,7 @@
 #include <string>
 #include <sys/mman.h>
 #include <unistd.h>
-#include <wayland-protocol.h>
+#include <wayland-client-protocol.h>
 
 using core::condition::check_condition;
 using core::condition::post_condition;
