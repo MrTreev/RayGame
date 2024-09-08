@@ -1,4 +1,4 @@
-add_library(Core SHARED)
+add_library(Core)
 add_library(RayGame::Core ALIAS Core)
 rg_add_args(Core)
 target_compile_definitions(Core PUBLIC "RAYGAME_LOG_${RG_LOG_LEVEL}")
