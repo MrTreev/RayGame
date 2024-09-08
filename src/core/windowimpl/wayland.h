@@ -1,30 +1,33 @@
 #pragma once
 #include "core/window.h"
-#include "core/windowimpl/wayland/wayland_fwd.h"
-#include <wayland-util.h>
+#include <wayland-client-protocol.h>
+#include <xdg-shell-client-protocol.h>
 
 namespace core::window::wayland {
 
 class WaylandWindow {
-    bool   m_should_close = false;
-    size_t m_width        = 0;
-    size_t m_height       = 0;
+    bool         m_should_close = false;
+    Vec2<size_t> m_size;
 
 public:
     WaylandWindow(
-        size_t      width,
-        size_t      height,
-        std::string title = "RayGame",
-        WindowStyle style = WindowStyle::Windowed
+        Vec2<size_t> size  = DEFAULT_WINDOW_SIZE,
+        std::string  title = DEFAULT_WINDOW_TITLE,
+        WindowStyle  style = DEFAULT_WINDOW_STYLE
     );
     ~WaylandWindow();
+    WaylandWindow(WaylandWindow&)             = delete;
+    WaylandWindow(WaylandWindow&&)            = delete;
+    WaylandWindow  operator=(WaylandWindow&)  = delete;
+    WaylandWindow& operator=(WaylandWindow&&) = delete;
 
     void set_style(WindowStyle style);
-    void new_buffer(size_t width, size_t height);
+    void new_buffer(Vec2<size_t> size);
+    bool should_close();
 
     inline void new_buffer() {
-        new_buffer(m_width, m_height);
-    };
+        new_buffer(m_size);
+    }
 
 private:
     static wl_compositor* m_compositor;

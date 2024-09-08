@@ -4,6 +4,10 @@ function(rg_target_client_protocol)
     set(multiValueArgs PROTOCOLS)
     cmake_parse_arguments(RG_ARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     find_package(PkgConfig)
+    pkg_check_modules(RG_WL REQUIRED wayland-client)
+    if(NOT RG_WL_FOUND)
+        message(SEND_ERROR "wayland-client module could not be found")
+    endif()
 
     find_program(WAYLAND_SCANNER_EXECUTABLE NAMES wayland-scanner)
     set(${RG_ARGS_TARGET}_proto_dir "${CMAKE_CURRENT_BINARY_DIR}/wayland")
@@ -12,6 +16,7 @@ function(rg_target_client_protocol)
     set_target_properties(
         ${RG_ARGS_TARGET}_wayland
         PROPERTIES COMPILER_WARNING_AS_ERROR OFF
+                   LANGUAGE C
                    C_EXTENSIONS OFF
                    C_STANDARD 23
                    LINKER_LANGUAGE C
@@ -22,14 +27,12 @@ function(rg_target_client_protocol)
         set(${protocol}_header "${${RG_ARGS_TARGET}_proto_dir}/${protocol}-client-protocol.h")
         set(${protocol}_source "${${RG_ARGS_TARGET}_proto_dir}/${protocol}-protocol.c")
         set(${protocol}_xml "${RG_PATH_ETC}/wayland-protocols/${protocol}.xml")
-
         set_source_files_properties(${${protocol}_source} GENERATED)
         set_source_files_properties(${${protocol}_header} GENERATED)
         set_property(SOURCE ${${protocol}_header} ${${protocol}_source} PROPERTY SKIP_AUTOMOC ON)
-
         add_custom_command(
             OUTPUT "${${protocol}_source}"
-            COMMAND ${WAYLAND_SCANNER_EXECUTABLE} private-code ${${protocol}_xml} ${${protocol}_source}
+            COMMAND ${WAYLAND_SCANNER_EXECUTABLE} public-code ${${protocol}_xml} ${${protocol}_source}
             DEPENDS ${${protocol}_xml}
             VERBATIM
         )
@@ -46,16 +49,14 @@ function(rg_target_client_protocol)
         )
     endforeach()
 
-    pkg_check_modules(RG_WL REQUIRED wayland-client)
-    if(NOT RG_WL_FOUND)
-        message(SEND_ERROR "wayland-client module could not be found")
-    endif()
     target_include_directories(
         ${RG_ARGS_TARGET}_wayland
-        PRIVATE ${RG_WL_INCLUDE_DIRS}
         PUBLIC ${${RG_ARGS_TARGET}_proto_dir}
+        PRIVATE ${RG_WL_INCLUDE_DIRS}
     )
     target_link_libraries(${RG_ARGS_TARGET}_wayland PUBLIC ${RG_WL_LINK_LIBRARIES})
     target_link_options(${RG_ARGS_TARGET}_wayland PRIVATE ${RG_WL_LDFLAGS})
     target_compile_options(${RG_ARGS_TARGET}_wayland PRIVATE ${RG_WL_CFLAGS})
+    target_include_directories(${RG_ARGS_TARGET} PUBLIC ${${RG_ARGS_TARGET}_proto_dir})
+    target_link_libraries(${RG_ARGS_TARGET} PUBLIC ${RG_ARGS_TARGET}_wayland)
 endfunction()

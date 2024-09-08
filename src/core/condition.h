@@ -1,8 +1,10 @@
 #pragma once
 #include "core/exception.h"
 #include "core/logger.h"
-#include <format>
 #include <string>
+
+// Keep for macro
+#include <format> // IWYU pragma: keep
 
 namespace core::condition {
 
@@ -94,5 +96,5 @@ inline constexpr void check_ptr(
     ::core::condition::post_condition(expr, std::format(__VA_ARGS__))
 #define RG_CHECK_CONDITION_MSG(expr, ...)                                      \
     ::core::condition::check_condition(expr, std::format(__VA_ARGS__))
-#define RG_THROW_CONDITION(...)                                                 \
+#define RG_THROW_CONDITION(...)                                                \
     throw ::core::exception::Condition(std::format(__VA_ARGS__))

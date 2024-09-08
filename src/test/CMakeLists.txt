@@ -1,6 +1,11 @@
-include(RgTest)
-add_executable(Tests)
-target_compile_features(Tests PRIVATE cxx_std_23)
-set_target_properties(Tests PROPERTIES CXX_STANDARD 23)
-target_link_libraries(Tests PRIVATE Core doctest::doctest)
-target_sources(Tests PUBLIC main.cpp math.cpp)
+#include(RgTest)
+#add_executable(Tests)
+#rg_make_test(Tests LIBS Core)
+#rg_add_args(Tests)
+#target_sources(Tests PUBLIC main.cpp math.cpp)
+#add_custom_target(
+#    RunTest ALL
+#    COMMAND Tests
+#    DEPENDS Tests
+#    VERBATIM
+#)

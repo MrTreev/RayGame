@@ -1,11 +1,9 @@
 #include "core/condition.h"
 #include "core/math.h"
-#include "core/windowimpl/wayland.h" // IWYU pragma: keep
+#include "core/windowimpl/wayland.h"
 #include "core/windowimpl/wayland/util.h"
 #include <sys/mman.h>
 #include <unistd.h>
-#include <wayland-client-protocol.h>
-#include <xdg-shell-client-protocol.h>
 
 using core::condition::check_condition;
 using core::condition::check_ptr;
@@ -23,11 +21,11 @@ xdg_wm_base*   WaylandWindow::m_xdg_wm_base = nullptr;
 wl_seat*       WaylandWindow::m_wl_seat     = nullptr;
 
 WaylandWindow::WaylandWindow(
-    size_t      width,
-    size_t      height,
-    std::string title,
-    WindowStyle style
-) {
+    Vec2<size_t> size,
+    std::string  title,
+    WindowStyle  style
+)
+    : m_size(size) {
     if (m_display == nullptr) {
         m_display = wl_display_connect(nullptr);
         check_ptr(m_display, "Display setup failed");
@@ -65,25 +63,25 @@ WaylandWindow::~WaylandWindow() {
     xdg_toplevel_destroy(m_xdg_toplevel);
 }
 
-void WaylandWindow::new_buffer(size_t width, size_t height) {
-    const size_t buflen = numeric_cast<size_t>(width * height);
-    const size_t size   = numeric_cast<size_t>(buflen * COLOUR_CHANNELS);
-    const int    shm_fd = allocate_shm_file(size);
+void WaylandWindow::new_buffer(Vec2<size_t> size) {
+    const size_t buflen  = numeric_cast<size_t>(size.x * size.y);
+    const size_t bufsize = numeric_cast<size_t>(buflen * COLOUR_CHANNELS);
+    const int    shm_fd  = allocate_shm_file(bufsize);
     check_condition(shm_fd >= 0, "creation of shm buffer file failed");
     auto shm_data =
-        mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0);
+        mmap(nullptr, bufsize, PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0);
     if (shm_data == MAP_FAILED) {
         close(shm_fd);
         check_condition(false, "Could not setup shm data");
     }
     wl_shm_pool* pool =
-        wl_shm_create_pool(m_shm, shm_fd, numeric_cast<int32_t>(size));
+        wl_shm_create_pool(m_shm, shm_fd, numeric_cast<int32_t>(bufsize));
     m_buffer = wl_shm_pool_create_buffer(
         pool,
         0,
-        numeric_cast<int32_t>(width),
-        numeric_cast<int32_t>(height),
-        numeric_cast<int32_t>(width * COLOUR_CHANNELS),
+        numeric_cast<int32_t>(size.x),
+        numeric_cast<int32_t>(size.y),
+        numeric_cast<int32_t>(size.x * COLOUR_CHANNELS),
         get_colour_format()
     );
     wl_shm_pool_destroy(pool);
@@ -105,6 +103,10 @@ void WaylandWindow::set_style(WindowStyle style) {
         xdg_toplevel_set_fullscreen(m_xdg_toplevel, nullptr);
         break;
     }
+}
+
+bool WaylandWindow::should_close() {
+    return m_should_close;
 }
 
 } // namespace core::window::wayland

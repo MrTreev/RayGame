@@ -16,20 +16,22 @@ static constexpr size_t            DEFAULT_WINDOW_HEIGHT = 480;
 static constexpr std::string       DEFAULT_WINDOW_TITLE  = "RayGame";
 static constexpr core::WindowStyle DEFAULT_WINDOW_STYLE =
     core::WindowStyle::Windowed;
+static constexpr Vec2<size_t> DEFAULT_WINDOW_SIZE = {
+    DEFAULT_WINDOW_WIDTH,
+    DEFAULT_WINDOW_HEIGHT
+};
 
 template<typename T>
 concept IsWindow =
-    std::is_destructible<T>() && std::is_constructible<T>()
-    && (!std::is_copy_assignable<T>())(!std::is_copy_constructible<T>())
+    (!std::is_copy_assignable<T>()) && (!std::is_copy_constructible<T>())
     && requires(T window) { window.should_close(); };
 
 template<typename T>
 requires IsWindow<T>
 T create_window(
-    size_t      width  = DEFAULT_WINDOW_WIDTH,
-    size_t      height = DEFAULT_WINDOW_HEIGHT,
-    std::string title  = DEFAULT_WINDOW_TITLE,
-    WindowStyle style  = DEFAULT_WINDOW_STYLE
+    Vec2<size_t> size  = DEFAULT_WINDOW_SIZE,
+    std::string  title = DEFAULT_WINDOW_TITLE,
+    WindowStyle  style = DEFAULT_WINDOW_STYLE
 );
 
 } // namespace core

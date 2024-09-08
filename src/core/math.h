@@ -10,9 +10,11 @@
 #include <utility>
 
 namespace core::math {
-namespace detail {
-extern std::mt19937 rng;
-}
+
+namespace {
+std::random_device dev;
+std::mt19937       rng(dev());
+} // namespace
 
 namespace constants {
 constexpr float pi      = 3.14159265358979323846F;
@@ -32,9 +34,9 @@ inline constexpr core::deg_t rad2deg(core::rad_t rad) {
 template<typename Out_T, typename A_T, typename B_T>
 inline constexpr Out_T safe_add(A_T a, B_T b) {
     if constexpr (std::is_unsigned_v<A_T> && std::is_unsigned_v<B_T>) {
-        const auto      ai  = static_cast<uintmax_t>(a);
-        const auto      bi  = static_cast<uintmax_t>(b);
-        const uintmax_t res = a + b;
+        const uintmax_t ai  = static_cast<uintmax_t>(a);
+        const uintmax_t bi  = static_cast<uintmax_t>(b);
+        const uintmax_t res = ai + bi;
         assert((res > a) && (res > b));
         return numeric_cast<Out_T>(a + b);
     }
@@ -67,7 +69,7 @@ std::array<T, N> rand_n(T min, T max) {
     std::uniform_int_distribution<T> dist(min, max);
     std::array<T, N>                 results;
     for (T& res: results) {
-        res = dist(detail::rng);
+        res = dist(rng);
     }
     return results;
 }
@@ -89,7 +91,7 @@ std::vector<T> rand_n(T min, T max, size_t amount) {
     std::vector<T> results;
     results.reserve(amount);
     while (results.size() < amount) {
-        results.push_back(dist(detail::rng));
+        results.push_back(dist(rng));
     }
     return results;
 }
@@ -108,7 +110,7 @@ template<typename T>
 requires std::is_integral_v<T> && std::is_trivial_v<T>
 T rand(T min, T max) {
     std::uniform_int_distribution<T> dist(min, max);
-    return dist(core::math::detail::rng);
+    return dist(rng);
 }
 
 template<typename T>
