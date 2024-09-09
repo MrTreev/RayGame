@@ -6,6 +6,7 @@ namespace core::exception {
 class Condition: public std::logic_error {
 public:
     explicit Condition(const std::string& message);
+    explicit Condition(const char* const message);
     explicit Condition(const std::logic_error&& error);
     virtual ~Condition() override;
 };
@@ -44,3 +45,6 @@ public:
     virtual ~PostCondition() override;
 };
 } // namespace core::exception
+
+#define RG_THROW_CONDITION(...)                                                \
+    throw ::core::exception::Condition(std::format(__VA_ARGS__))

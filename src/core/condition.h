@@ -96,5 +96,3 @@ inline constexpr void check_ptr(
     ::core::condition::post_condition(expr, std::format(__VA_ARGS__))
 #define RG_CHECK_CONDITION_MSG(expr, ...)                                      \
     ::core::condition::check_condition(expr, std::format(__VA_ARGS__))
-#define RG_THROW_CONDITION(...)                                                \
-    throw ::core::exception::Condition(std::format(__VA_ARGS__))
