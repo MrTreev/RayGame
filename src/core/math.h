@@ -11,10 +11,7 @@
 
 namespace core::math {
 
-namespace {
-std::random_device dev;
-std::mt19937       rng(dev());
-} // namespace
+namespace {} // namespace
 
 namespace constants {
 constexpr float pi      = 3.14159265358979323846F;
@@ -49,10 +46,9 @@ inline constexpr Out_T numeric_cast(In_T input) {
         return static_cast<Out_T>(input);
     }
     RG_THROW_CONDITION(
-        "Input of type '{}' is above the max for output type '{}': "
-        "{}",
-        debug::type_name<In_T>(),
-        debug::type_name<Out_T>(),
+        "Input of type '{}' is above the max for output type '{}': {}",
+        core::debug::type_name<In_T>(),
+        core::debug::type_name<Out_T>(),
         input
     );
 }
@@ -66,6 +62,8 @@ template<typename T, size_t N>
 requires std::is_integral_v<T> && std::is_trivial_v<T>
 std::array<T, N> rand_n(T min, T max) {
     RG_PRE_CONDITION(min < max);
+    std::random_device               dev;
+    std::mt19937                     rng(dev());
     std::uniform_int_distribution<T> dist(min, max);
     std::array<T, N>                 results;
     for (T& res: results) {
@@ -86,9 +84,11 @@ inline std::array<T, N> rand_n() {
 template<typename T>
 requires std::is_integral_v<T> && std::is_trivial_v<T>
 std::vector<T> rand_n(T min, T max, size_t amount) {
-    std::uniform_int_distribution<T> dist(min, max);
     RG_PRE_CONDITION(min < max);
-    std::vector<T> results;
+    std::random_device               dev;
+    std::mt19937                     rng(dev());
+    std::uniform_int_distribution<T> dist(min, max);
+    std::vector<T>                   results;
     results.reserve(amount);
     while (results.size() < amount) {
         results.push_back(dist(rng));
@@ -109,6 +109,9 @@ std::vector<T> rand_n(size_t amount) {
 template<typename T>
 requires std::is_integral_v<T> && std::is_trivial_v<T>
 T rand(T min, T max) {
+    RG_PRE_CONDITION(min < max);
+    std::random_device               dev;
+    std::mt19937                     rng(dev());
     std::uniform_int_distribution<T> dist(min, max);
     return dist(rng);
 }
