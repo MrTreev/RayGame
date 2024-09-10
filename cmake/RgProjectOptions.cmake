@@ -38,3 +38,8 @@ endif()
 if(RG_WARNINGS_AS_ERRORS)
     add_compile_options(-Werror)
 endif()
+
+if(RG_LIBCPP)
+    add_compile_options(-stdlib=libc++ -lc++abi)
+    add_link_options(-stdlib=libc++ -lc++abi)
+endif()

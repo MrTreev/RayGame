@@ -1,13 +1,22 @@
-include(RgTest)
-add_executable(Tests)
-rg_make_test(Tests LIBS Core)
-rg_add_args(Tests)
-target_sources(Tests PUBLIC main.cpp math.cpp)
-target_compile_definitions(Tests PUBLIC "RAYGAME_LOG_${RG_LOG_LEVEL}")
+enable_testing()
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+add_subdirectory(${RG_PATH_ETC}/fuzztest ${CMAKE_CURRENT_BINARY_DIR}/fuzztest)
+include(GoogleTest)
+add_executable(Testing)
+target_link_libraries(Testing PRIVATE GTest::gtest_main)
+target_compile_options(Testing PRIVATE -Wno-global-constructors -Wno-unsafe-buffer-usage -Wno-shorten-64-to-32)
+include(GoogleTest)
+
+rg_add_args(Testing)
+target_link_libraries(Testing PRIVATE Core)
+target_sources(Testing PUBLIC math.cpp)
+link_fuzztest(Testing)
+gtest_discover_tests(Testing)
 
 add_custom_target(
-    RunTest ALL
-    COMMAND Tests
-    DEPENDS Tests
+    RunTesting ALL
+    COMMAND Testing
+    DEPENDS Testing
     VERBATIM
 )

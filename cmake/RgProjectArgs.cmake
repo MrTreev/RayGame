@@ -88,10 +88,8 @@ function(rg_add_args _target)
         set(PROJECT_WARNINGS_CXX ${GCC_WARNINGS})
     else()
         message(AUTHOR_WARNING "No compiler warnings set for CXX compiler: '${CMAKE_CXX_COMPILER_ID}'")
-        # TODO support Intel compiler
     endif()
 
-    # use the same warning flags for C
     set(PROJECT_WARNINGS_C "${PROJECT_WARNINGS_CXX}")
 
     target_compile_options(
@@ -100,7 +98,5 @@ function(rg_add_args _target)
                   $<$<COMPILE_LANGUAGE:CXX>:${PROJECT_WARNINGS_CXX}>
                   # C warnings
                   $<$<COMPILE_LANGUAGE:C>:${PROJECT_WARNINGS_C}>
-                  # Cuda warnings
-                  $<$<COMPILE_LANGUAGE:CUDA>:${PROJECT_WARNINGS_CUDA}>
     )
 endfunction()

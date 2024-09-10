@@ -1,6 +1,7 @@
 #pragma once
 #include "core/condition.h"
 #include "core/debug.h"
+#include "core/exception.h"
 #include "core/types.h"
 #include <cassert>
 #include <concepts>
@@ -10,8 +11,6 @@
 #include <utility>
 
 namespace core::math {
-
-namespace {} // namespace
 
 namespace constants {
 constexpr float pi      = 3.14159265358979323846F;
@@ -40,17 +39,17 @@ inline constexpr Out_T safe_add(A_T a, B_T b) {
 }
 
 template<typename Out_T, typename In_T>
-requires std::integral<Out_T> && std::integral<In_T>
+requires(std::integral<Out_T> && std::integral<In_T>)
 inline constexpr Out_T numeric_cast(In_T input) {
     if (std::in_range<Out_T>(input)) {
         return static_cast<Out_T>(input);
+    } else {
+        RG_THROW_CONDITION(
+            "Input of type '{}' is above the max for output type '{}'",
+            core::debug::type_name(input),
+            input
+        );
     }
-    RG_THROW_CONDITION(
-        "Input of type '{}' is above the max for output type '{}': {}",
-        core::debug::type_name<In_T>(),
-        core::debug::type_name<Out_T>(),
-        input
-    );
 }
 
 //! Returns an array of N random values in a range
@@ -60,7 +59,7 @@ inline constexpr Out_T numeric_cast(In_T input) {
  */
 template<typename T, size_t N>
 requires std::is_integral_v<T> && std::is_trivial_v<T>
-std::array<T, N> rand_n(T min, T max) {
+inline constexpr std::array<T, N> rand_n(T min, T max) {
     RG_PRE_CONDITION(min < max);
     std::random_device               dev;
     std::mt19937                     rng(dev());
@@ -74,7 +73,7 @@ std::array<T, N> rand_n(T min, T max) {
 
 template<typename T, size_t N>
 requires std::is_integral_v<T> && std::is_trivial_v<T>
-inline std::array<T, N> rand_n() {
+inline constexpr std::array<T, N> rand_n() {
     return rand_n<T, N>(
         std::numeric_limits<T>::min(),
         std::numeric_limits<T>::max()
@@ -83,7 +82,7 @@ inline std::array<T, N> rand_n() {
 
 template<typename T>
 requires std::is_integral_v<T> && std::is_trivial_v<T>
-std::vector<T> rand_n(T min, T max, size_t amount) {
+inline constexpr std::vector<T> rand_n(T min, T max, size_t amount) {
     RG_PRE_CONDITION(min < max);
     std::random_device               dev;
     std::mt19937                     rng(dev());
@@ -98,7 +97,7 @@ std::vector<T> rand_n(T min, T max, size_t amount) {
 
 template<typename T>
 requires std::is_integral_v<T> && std::is_trivial_v<T>
-std::vector<T> rand_n(size_t amount) {
+inline constexpr std::vector<T> rand_n(size_t amount) {
     return rand_n<T>(
         std::numeric_limits<T>::min(),
         std::numeric_limits<T>::max(),
@@ -108,7 +107,7 @@ std::vector<T> rand_n(size_t amount) {
 
 template<typename T>
 requires std::is_integral_v<T> && std::is_trivial_v<T>
-T rand(T min, T max) {
+inline constexpr T rand(T min, T max) {
     RG_PRE_CONDITION(min < max);
     std::random_device               dev;
     std::mt19937                     rng(dev());
@@ -118,7 +117,7 @@ T rand(T min, T max) {
 
 template<typename T>
 requires std::is_integral_v<T> && std::is_trivial_v<T>
-inline T rand() {
+inline constexpr T rand() {
     return rand(std::numeric_limits<T>::min(), std::numeric_limits<T>::max());
 }
 
