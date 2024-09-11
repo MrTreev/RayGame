@@ -1,6 +1,6 @@
 #include "core/math.h"
 #include <algorithm>
-#include <fuzztest/fuzztest.h>
+#include <cstdint>
 #include <gtest/gtest.h>
 #include <limits>
 
@@ -9,7 +9,10 @@
 #define FWINTS   U_FWINTS, S_FWINTS
 using core::exception::Condition;
 
-namespace {
+namespace rg::test {
+
+constexpr size_t test_len = 16;
+
 template<
     typename T,
     typename M =
@@ -47,9 +50,6 @@ inline constexpr bool all_same(std::array<T, N> arr) {
         return a == b;
     });
 }
-} // namespace
-
-constexpr size_t test_len = 16;
 
 template<typename T>
 class SignedMathTest: public testing::Test {};
@@ -131,3 +131,5 @@ TYPED_TEST(UnsignedMathTest, NumericCast) {
         Condition
     );
 }
+
+} // namespace rg::test
