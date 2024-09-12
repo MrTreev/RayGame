@@ -1,7 +1,6 @@
 #include "core/math.h"
 #include <algorithm>
-#include <cstdint>
-#include <gtest/gtest.h>
+#include <doctest/doctest.h>
 #include <limits>
 
 #define S_FWINTS uint8_t, uint16_t, uint32_t
@@ -9,10 +8,7 @@
 #define FWINTS   U_FWINTS, S_FWINTS
 using core::exception::Condition;
 
-namespace rg::test {
-
-constexpr size_t test_len = 16;
-
+namespace {
 template<
     typename T,
     typename M =
@@ -50,86 +46,70 @@ inline constexpr bool all_same(std::array<T, N> arr) {
         return a == b;
     });
 }
+} // namespace
 
-template<typename T>
-class SignedMathTest: public testing::Test {};
+constexpr size_t test_len = 16;
 
-template<typename T>
-class UnsignedMathTest: public testing::Test {};
-
-template<typename T>
-class AllMathTest: public testing::Test {};
-
-using SignedInts   = ::testing::Types<S_FWINTS>;
-using UnsignedInts = ::testing::Types<U_FWINTS>;
-using AllInts      = ::testing::Types<FWINTS>;
-TYPED_TEST_SUITE(SignedMathTest, SignedInts);
-TYPED_TEST_SUITE(UnsignedMathTest, UnsignedInts);
-TYPED_TEST_SUITE(AllMathTest, AllInts);
-
-TYPED_TEST(AllMathTest, RandNArray) {
-    std::array<TypeParam, test_len> rands =
-        core::math::rand_n<TypeParam, test_len>();
-    EXPECT_EQ(rands.size(), test_len);
-    EXPECT_FALSE(all_same(rands));
-    std::array<TypeParam, test_len> rand_01 =
-        core::math::rand_n<TypeParam, test_len>(0, 1);
-    EXPECT_EQ(rand_01.size(), test_len);
-    EXPECT_FALSE(all_same(rand_01));
-    for (const auto& val: rand_01) {
-        EXPECT_GE(val, 0);
-        EXPECT_LE(val, 1);
+TEST_SUITE("rand_n") {
+    TEST_CASE_TEMPLATE("std::array", T, FWINTS) {
+        std::array<T, test_len> rands = core::math::rand_n<T, test_len>();
+        CHECK_EQ(rands.size(), test_len);
+        CHECK_FALSE(all_same(rands));
+        std::array<T, test_len> rand_01 = core::math::rand_n<T, test_len>(0, 1);
+        CHECK_EQ(rand_01.size(), test_len);
+        CHECK_FALSE(all_same(rand_01));
+        for (const auto& val: rand_01) {
+            CHECK_GE(val, 0);
+            CHECK_LE(val, 1);
+        }
+    }
+    TEST_CASE_TEMPLATE("std::vector", T, FWINTS) {
+        std::vector<T> rands = core::math::rand_n<T>(test_len);
+        CHECK_EQ(rands.size(), test_len);
+        CHECK_FALSE(all_same(rands));
+        std::vector<T> rand_01 = core::math::rand_n<T>(0, 1, test_len);
+        CHECK_EQ(rand_01.size(), test_len);
+        CHECK_FALSE(all_same(rand_01));
+        for (const auto& val: rand_01) {
+            CHECK_GE(val, 0);
+            CHECK_LE(val, 1);
+        }
     }
 }
 
-TYPED_TEST(AllMathTest, RandNVector) {
-    std::vector<TypeParam> rands = core::math::rand_n<TypeParam>(test_len);
-    EXPECT_EQ(rands.size(), test_len);
-    EXPECT_FALSE(all_same(rands));
-    std::vector<TypeParam> rand_01 =
-        core::math::rand_n<TypeParam>(0, 1, test_len);
-    EXPECT_EQ(rand_01.size(), test_len);
-    EXPECT_FALSE(all_same(rand_01));
-    for (const auto& val: rand_01) {
-        EXPECT_GE(val, 0);
-        EXPECT_LE(val, 1);
+TEST_SUITE("numeric_cast") {
+    TEST_CASE_TEMPLATE("In-range does not throw", T, FWINTS) {
+        CHECK_NOTHROW(core::math::numeric_cast<T>(max<T>()));
+        CHECK_NOTHROW(core::math::numeric_cast<T>(min<T>()));
+        CHECK_NOTHROW(core::math::numeric_cast<T>(lowest<T>()));
+        const auto test_vec =
+            core::math::rand_n<T>(min<T>(), max<T>(), test_len);
+        for (const T& num: test_vec) {
+            CHECK_NOTHROW(core::math::numeric_cast<T>(num));
+        }
+    }
+    TEST_CASE_TEMPLATE("Signed out-of-range throws", T, S_FWINTS) {
+        CHECK_THROWS_AS(core::math::numeric_cast<T>(max<T>() + 1), Condition);
+        CHECK_THROWS_AS(core::math::numeric_cast<T>(min<T>() - 1), Condition);
+    }
+    TEST_CASE_TEMPLATE("Unsigned out-of-range throws", T, U_FWINTS) {
+        CHECK_THROWS_AS(core::math::numeric_cast<T>(max<T>() + 1), Condition);
+        CHECK_THROWS_AS(core::math::numeric_cast<T>(min<T>() - 1), Condition);
     }
 }
 
-TYPED_TEST(AllMathTest, NumericCast) {
-    EXPECT_NO_THROW(core::math::numeric_cast<TypeParam>(max<TypeParam>()));
-    EXPECT_NO_THROW(core::math::numeric_cast<TypeParam>(min<TypeParam>()));
-    EXPECT_NO_THROW(core::math::numeric_cast<TypeParam>(lowest<TypeParam>()));
-    const auto test_vec = core::math::rand_n<TypeParam>(
-        min<TypeParam>(),
-        max<TypeParam>(),
-        test_len
-    );
-    for (const TypeParam& num: test_vec) {
-        EXPECT_NO_THROW(core::math::numeric_cast<TypeParam>(num));
+TEST_SUITE("safe_add") {
+    TEST_CASE_TEMPLATE("In-range does not throw", T, FWINTS) {
+        for (size_t i = 0; i > 100; ++i) {
+            const T a = core::math::rand<T>();
+            const T b = core::math::rand<T>();
+            if (a + b > max<T>()) {
+                CHECK_THROWS_AS(core::math::safe_add<T>(a, b), Condition);
+            } else if (a + b < min<T>()) {
+                CHECK_THROWS_AS(core::math::safe_add<T>(a, b), Condition);
+            } else {
+                CHECK_NOTHROW(core::math::safe_add<T>(a, b));
+            }
+        }
     }
 }
-
-TYPED_TEST(SignedMathTest, NumericCast) {
-    EXPECT_THROW(
-        core::math::numeric_cast<TypeParam>(max<TypeParam>() + 1),
-        Condition
-    );
-    EXPECT_THROW(
-        core::math::numeric_cast<TypeParam>(min<TypeParam>() - 1),
-        Condition
-    );
-}
-
-TYPED_TEST(UnsignedMathTest, NumericCast) {
-    EXPECT_THROW(
-        core::math::numeric_cast<TypeParam>(max<TypeParam>() + 1),
-        Condition
-    );
-    EXPECT_THROW(
-        core::math::numeric_cast<TypeParam>(min<TypeParam>() - 1),
-        Condition
-    );
-}
-
-} // namespace rg::test
