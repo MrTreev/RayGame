@@ -17,6 +17,8 @@ option(RG_ENABLE_UBSAN "Enable the Undefined Behaviour Sanitiser" OFF)
 
 option(RG_ENABLE_COMPILE_COMMANDS "Create compile_commands.json file" ON)
 option(RG_ENABLE_CLANG_TIDY "Enable Clang Tidy" ON)
+option(RG_ENABLE_SOURCE_LOCATION "Enable source_location in logs" ON)
+
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
 set_property(
     CACHE RG_LOG_LEVEL

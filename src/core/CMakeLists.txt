@@ -2,6 +2,10 @@ add_library(Core)
 add_library(RayGame::Core ALIAS Core)
 rg_add_args(Core)
 target_compile_definitions(Core PUBLIC "RAYGAME_LOG_${RG_LOG_LEVEL}")
+if(RG_ENABLE_SOURCE_LOCATION)
+    target_compile_definitions(Core PUBLIC "RG_ENABLE_SOURCE_LOC")
+endif()
+target_compile_definitions(Core PUBLIC "RAYGAME_LOG_${RG_LOG_LEVEL}")
 target_sources(
     Core
     PUBLIC colours.h
