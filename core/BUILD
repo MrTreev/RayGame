@@ -4,13 +4,13 @@ cc_library(
         "*.h",
         "windowimpl/*.h",
     ]) + select({
-        "//rules/constraints/os:linux": glob(["windowimpl/wayland/*.h"]),
+        "@platforms//os:linux": glob(["windowimpl/wayland/*.h"]),
     }),
     hdrs = glob([
         "*.cpp",
         "windowimpl/*.cpp",
     ]) + select({
-        "//rules/constraints/os:linux": glob(["windowimpl/wayland/*.cpp"]),
+        "@platforms//os:linux": glob(["windowimpl/wayland/*.cpp"]),
     }),
     visibility = ["//visibility:public"],
 )
