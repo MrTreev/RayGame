@@ -13,6 +13,7 @@ target_sources(
            config.h
            debug.h
            exception.h
+           file.h
            image.h
            logger.h
            math.h
@@ -26,6 +27,7 @@ target_sources(
            config.cpp
            debug.cpp
            exception.cpp
+           file.cpp
            image.cpp
            logger.cpp
            math.cpp
