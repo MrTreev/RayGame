@@ -10,7 +10,20 @@
 #include <type_traits>
 #include <utility>
 
+namespace {
+#if defined(RAYGAME_USE_FULL_RANDOM)
+constexpr bool random_seed = true;
+#else
+constexpr bool random_seed = false;
+#endif
+} // namespace
+
 namespace core::math {
+
+namespace detail {
+extern uint64_t           seed;
+extern std::random_device dev;
+} // namespace detail
 
 namespace constants {
 constexpr float pi      = 3.14159265358979323846F;
@@ -68,8 +81,14 @@ template<typename T, size_t N>
 requires std::is_integral_v<T> && std::is_trivial_v<T>
 inline constexpr std::array<T, N> rand_n(T min, T max) {
     RG_PRE_CONDITION(min < max);
-    std::random_device               dev;
-    std::mt19937                     rng(dev());
+    uint64_t seed;
+    if constexpr (random_seed) {
+        seed = detail::dev();
+    } else {
+        seed = detail::seed;
+        ++detail::seed;
+    }
+    std::mt19937                     rng(seed);
     std::uniform_int_distribution<T> dist(min, max);
     std::array<T, N>                 results;
     for (T& res: results) {
@@ -91,8 +110,14 @@ template<typename T>
 requires std::is_integral_v<T> && std::is_trivial_v<T>
 inline constexpr std::vector<T> rand_n(T min, T max, size_t amount) {
     RG_PRE_CONDITION(min < max);
-    std::random_device               dev;
-    std::mt19937                     rng(dev());
+    uint64_t seed;
+    if constexpr (random_seed) {
+        seed = detail::dev();
+    } else {
+        seed = detail::seed;
+        ++detail::seed;
+    }
+    std::mt19937                     rng(seed);
     std::uniform_int_distribution<T> dist(min, max);
     std::vector<T>                   results;
     results.reserve(amount);
@@ -116,8 +141,14 @@ template<typename T>
 requires std::is_integral_v<T> && std::is_trivial_v<T>
 inline constexpr T rand(T min, T max) {
     RG_PRE_CONDITION(min < max);
-    std::random_device               dev;
-    std::mt19937                     rng(dev());
+    uint64_t seed;
+    if constexpr (random_seed) {
+        seed = detail::dev();
+    } else {
+        seed = detail::seed;
+        ++detail::seed;
+    }
+    std::mt19937                     rng(seed);
     std::uniform_int_distribution<T> dist(min, max);
     return dist(rng);
 }

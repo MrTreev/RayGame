@@ -1,20 +1,26 @@
 #pragma once
 #include <filesystem>
+#include <fstream>
 #include <vector>
 
 namespace core {
 
+enum class OpenMode {
+    ReadOnly,
+    WriteOnly,
+    ReadWrite,
+};
+
 class File {
     std::filesystem::path m_path;
+    std::fstream          m_fstream;
 
 public:
-    constexpr File(std::string fpath) {};
+    File(std::filesystem::path fpath, OpenMode mode = OpenMode::ReadOnly);
+    ~File();
 
-    constexpr std::vector<char8_t> to_vector() {};
-
-    constexpr std::string filepath() {
-        return m_path.string();
-    };
+    std::vector<char8_t>  to_vector();
+    std::filesystem::path filepath();
 };
 
 } // namespace core

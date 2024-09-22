@@ -7,11 +7,12 @@ if(RG_TEST_ENABLE)
     target_link_libraries(Test PUBLIC doctest)
     target_sources(Test PUBLIC main.cpp math.cpp)
     rg_add_args(Test)
-endif()
 
-add_custom_target(
-    RunTest ALL
-    COMMAND Test
-    DEPENDS Test
-    VERBATIM
-)
+    add_custom_target(
+        RunTest ALL
+        COMMAND Test
+        DEPENDS Test
+        VERBATIM
+    )
+
+endif()
