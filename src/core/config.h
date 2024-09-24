@@ -253,21 +253,5 @@ using std::source_location;
 }
 
 #else
-#    error "source_location unsupported, cannot continue
-#endif
-
-#if __has_include(<experimental/propagate_const>)
-#    include <experimental/propagate_const>
-
-namespace core::detail {
-using std::experimental::propagate_const;
-}
-#elif __has_include(<propagate_const>)
-#    include <propagate_const>
-
-namespace core::detail {
-using std::propagate_const;
-}
-#else
-#    error "propagate_const unsupported, cannot continue
+#    error "source_location unsupported, cannot continue"
 #endif

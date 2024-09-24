@@ -1,9 +1,9 @@
 #include "core/logger.h"
-#include "core/windowimpl/wayland/window.h" // IWYU pragma: keep
+#include "core/windowimpl/wayland.h"
 #include <format>
 #include <linux/input-event-codes.h>
-#include <wayland-protocol.h>
-#include <xdg-shell-protocol.h>
+#include <wayland-client-protocol.h>
+#include <xdg-shell-client-protocol.h>
 
 namespace {
 

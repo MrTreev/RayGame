@@ -44,3 +44,6 @@ public:
     virtual ~PostCondition() override;
 };
 } // namespace core::exception
+
+#define RG_THROW_CONDITION(...)                                                \
+    throw ::core::exception::Condition(std::format(__VA_ARGS__))

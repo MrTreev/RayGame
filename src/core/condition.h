@@ -3,6 +3,9 @@
 #include "core/logger.h"
 #include <string>
 
+// Keep for macro
+#include <format> // IWYU pragma: keep
+
 namespace core::condition {
 
 namespace detail {
@@ -83,3 +86,13 @@ inline constexpr void check_ptr(
 }
 
 } // namespace core::condition
+
+#define RG_PRE_CONDITION(expr)   ::core::condition::pre_condition(expr, #expr)
+#define RG_POST_CONDITION(expr)  ::core::condition::post_condition(expr, #expr)
+#define RG_CHECK_CONDITION(expr) ::core::condition::check_condition(expr, #expr)
+#define RG_PRE_CONDITION_MSG(expr, ...)                                        \
+    ::core::condition::pre_condition(expr, std::format(__VA_ARGS__))
+#define RG_POST_CONDITION_MSG(expr, ...)                                       \
+    ::core::condition::post_condition(expr, std::format(__VA_ARGS__))
+#define RG_CHECK_CONDITION_MSG(expr, ...)                                      \
+    ::core::condition::check_condition(expr, std::format(__VA_ARGS__))

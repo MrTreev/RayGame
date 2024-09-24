@@ -19,17 +19,17 @@ public:
     Image& operator=(const Image&) = default;
     Image& operator=(Image&&)      = default;
 
-    inline Pixel* data() {
+    inline constexpr Pixel* data() {
         return m_image_data.data();
     }
 
     [[nodiscard]]
-    inline int32_t width() const {
+    inline constexpr int32_t width() const {
         return m_width;
     }
 
     [[nodiscard]]
-    inline int32_t height() const {
+    inline constexpr int32_t height() const {
         return m_height;
     }
 };
