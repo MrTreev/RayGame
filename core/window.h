@@ -1,7 +1,6 @@
 #pragma once
 #include "core/types.h"
 #include <string>
-#define DEFAULT_WINDOW_NAME "RayGame"
 
 namespace core {
 
@@ -12,51 +11,27 @@ enum class WindowStyle {
     Fullscreen,         //!< Fullscreen mode
 };
 
-class Window {
-    std::string m_title{DEFAULT_WINDOW_NAME};
-    size_t      m_width{0};
-    size_t      m_height{0};
-    size_t      m_buffer_size{0};
-
-    static constexpr decltype(m_height) DEFAULT_WINDOW_WIDTH  = 640;
-    static constexpr decltype(m_height) DEFAULT_WINDOW_HEIGHT = 480;
-    static constexpr core::WindowStyle  DEFAULT_WINDOW_STYLE =
-        core::WindowStyle::Windowed;
-
-public:
-    //! Window initialiser
-    /*!
-     * @param   width   Width of the window
-     * @param   height  Height of the window
-     * @param   title   Title of the window
-     * @param   style   Style of the window
-     *
-     * @post    The Window is created correctly
-     */
-    explicit Window(
-        const decltype(m_height)& width  = DEFAULT_WINDOW_WIDTH,
-        const decltype(m_height)& height = DEFAULT_WINDOW_HEIGHT,
-        decltype(m_title)         title  = DEFAULT_WINDOW_NAME,
-        const WindowStyle&        style  = DEFAULT_WINDOW_STYLE
-    );
-    explicit Window(
-        const core::Vec2<decltype(m_height)>& size,
-        decltype(m_title)                     title = DEFAULT_WINDOW_NAME,
-        const WindowStyle&                    style = DEFAULT_WINDOW_STYLE
-    );
-    ~Window();
-
-    Window(const Window&)            = delete;
-    Window(Window&&)                 = delete;
-    Window& operator=(const Window&) = delete;
-    Window& operator=(Window&&)      = delete;
-
-    //! Reports if the window has been requested to close
-    [[nodiscard]]
-    static bool should_close();
-
-    //! Renders a frame
-    void render() const;
+static constexpr size_t            DEFAULT_WINDOW_WIDTH  = 640;
+static constexpr size_t            DEFAULT_WINDOW_HEIGHT = 480;
+static constexpr std::string       DEFAULT_WINDOW_TITLE  = "RayGame";
+static constexpr core::WindowStyle DEFAULT_WINDOW_STYLE =
+    core::WindowStyle::Windowed;
+static constexpr Vec2<size_t> DEFAULT_WINDOW_SIZE = {
+    DEFAULT_WINDOW_WIDTH,
+    DEFAULT_WINDOW_HEIGHT
 };
+
+template<typename T>
+concept IsWindow =
+    (!std::is_copy_assignable<T>()) && (!std::is_copy_constructible<T>())
+    && requires(T window) { window.should_close(); };
+
+template<typename T>
+requires IsWindow<T>
+T create_window(
+    Vec2<size_t> size  = DEFAULT_WINDOW_SIZE,
+    std::string  title = DEFAULT_WINDOW_TITLE,
+    WindowStyle  style = DEFAULT_WINDOW_STYLE
+);
 
 } // namespace core

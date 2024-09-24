@@ -36,19 +36,37 @@ constexpr std::string location_string(const core::detail::source_location& loc
 
 void core::log::detail::logger(
     const core::log::Level&              level,
-    const std::string&                   text,
-    const core::detail::source_location& loc
+    const core::detail::source_location& loc,
+    const std::string&                   text
 ) {
     if (logging_level <= level) {
         std::println(
             std::cout,
-            "{:%T} [{}] {}- {}",
+            "{:%T} [{}] {} - {}",
             std::chrono::zoned_time{
                 std::chrono::current_zone(),
                 std::chrono::system_clock::now()
             },
             to_string(level),
             location_string(loc),
+            text
+        );
+    }
+}
+
+void core::log::detail::logger(
+    const core::log::Level& level,
+    const std::string&      text
+) {
+    if (logging_level <= level) {
+        std::println(
+            std::cout,
+            "{:%T} [{}] - {}",
+            std::chrono::zoned_time{
+                std::chrono::current_zone(),
+                std::chrono::system_clock::now()
+            },
+            to_string(level),
             text
         );
     }

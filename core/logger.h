@@ -1,7 +1,16 @@
 #pragma once
 #include "core/config.h"
 #include "core/types.h"
+#include <format>
 #include <string>
+
+namespace {
+#if defined(RG_ENABLE_SOURCE_LOC)
+constexpr bool enable_source_loc = true;
+#else
+constexpr bool enable_source_loc = false;
+#endif
+} // namespace
 
 namespace core::log {
 
@@ -62,75 +71,62 @@ inline std::string to_string(Level level) {
 }
 
 namespace detail {
+void logger(const core::log::Level& level, const std::string& text);
 void logger(
     const core::log::Level&              level,
-    const std::string&                   text,
-    const core::detail::source_location& loc
+    const core::detail::source_location& loc,
+    const std::string&                   text
 );
 } // namespace detail
 
-inline void trace(
-    const std::string&                   text,
-    const core::detail::source_location& loc =
-        core::detail::source_location::current()
-) {
-    core::log::detail::logger(Level::TRACE, text, loc);
-}
+#define MAKE_LOG_STRUCT(level, lvl)                                            \
+    template<typename... Args>                                                 \
+    struct level {                                                             \
+        level(                                                                 \
+            std::string                   msg,                                 \
+            core::detail::source_location loc =                                \
+                core::detail::source_location::current()                       \
+        ) {                                                                    \
+            if constexpr (enable_source_loc) {                                 \
+                core::log::detail::logger(core::log::Level::lvl, loc, msg);    \
+            } else {                                                           \
+                std::ignore = loc;                                             \
+                core::log::detail::logger(core::log::Level::lvl, msg);         \
+            }                                                                  \
+        }                                                                      \
+        level(                                                                 \
+            Args... args,                                                      \
+            core::detail::source_location loc =                                \
+                core::detail::source_location::current()                       \
+        ) {                                                                    \
+            if constexpr (enable_source_loc) {                                 \
+                core::log::detail::logger(                                     \
+                    core::log::Level::lvl,                                     \
+                    loc,                                                       \
+                    std::format(args...)                                       \
+                );                                                             \
+            } else {                                                           \
+                std::ignore = loc;                                             \
+                core::log::detail::logger(                                     \
+                    core::log::Level::lvl,                                     \
+                    std::format(args...)                                       \
+                );                                                             \
+            }                                                                  \
+        }                                                                      \
+    };                                                                         \
+    template<typename... Args>                                                 \
+    level(const char msg[]) -> level<>;                                        \
+    template<typename... Args>                                                 \
+    level(Args&&... args) -> level<Args...>;
 
-inline void debug(
-    const std::string&                   text,
-    const core::detail::source_location& loc =
-        core::detail::source_location::current()
-) {
-    core::log::detail::logger(Level::DEBUG, text, loc);
-}
+MAKE_LOG_STRUCT(trace, TRACE);
+MAKE_LOG_STRUCT(debug, DEBUG);
+MAKE_LOG_STRUCT(info, INFO);
+MAKE_LOG_STRUCT(note, NOTE);
+MAKE_LOG_STRUCT(progress, PROGRESS);
+MAKE_LOG_STRUCT(warning, WARNING);
+MAKE_LOG_STRUCT(error, ERROR);
+MAKE_LOG_STRUCT(fatal, FATAL);
 
-inline void info(
-    const std::string&                   text,
-    const core::detail::source_location& loc =
-        core::detail::source_location::current()
-) {
-    core::log::detail::logger(Level::INFO, text, loc);
-}
-
-inline void note(
-    const std::string&                   text,
-    const core::detail::source_location& loc =
-        core::detail::source_location::current()
-) {
-    core::log::detail::logger(Level::NOTE, text, loc);
-}
-
-inline void progress(
-    const std::string&                   text,
-    const core::detail::source_location& loc =
-        core::detail::source_location::current()
-) {
-    core::log::detail::logger(Level::PROGRESS, text, loc);
-}
-
-inline void warning(
-    const std::string&                   text,
-    const core::detail::source_location& loc =
-        core::detail::source_location::current()
-) {
-    core::log::detail::logger(Level::WARNING, text, loc);
-}
-
-inline void error(
-    const std::string&                   text,
-    const core::detail::source_location& loc =
-        core::detail::source_location::current()
-) {
-    core::log::detail::logger(Level::ERROR, text, loc);
-}
-
-inline void fatal(
-    const std::string&                   text,
-    const core::detail::source_location& loc =
-        core::detail::source_location::current()
-) {
-    core::log::detail::logger(Level::FATAL, text, loc);
-}
-
+#undef MAKE_LOG_STRUCT
 } // namespace core::log

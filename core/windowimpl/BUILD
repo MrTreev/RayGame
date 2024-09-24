@@ -1,24 +1,16 @@
 cc_library(
-    name = "core",
+    name = "windowimpl",
     srcs = glob(["**/*.h"]),
     hdrs = glob(["**/*.cpp"]),
     visibility = ["//visibility:public"],
-    deps = ["//core/windowimpl"],
 )
 
 filegroup(
     name = "doxygen_files",
-    srcs = [
-        "//core/windowimpl:doxygen_files",
-    ] + glob([
+    srcs = glob([
         "**/*.h",
         "**/*.dox",
     ]),
     visibility = [ "//visibility:public" ],
 )
 
-filegroup(
-    name = "doxygen_data_files",
-    srcs = [],
-    visibility = [ "//visibility:public" ],
-)
