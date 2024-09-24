@@ -17,6 +17,7 @@ CXXFLAGS	+=	-march=${ARCH}
 CXXFLAGS	+=	-mtune=${ARCH}
 endif
 
+CXXFLAGS	+=	-MD
 CXXFLAGS	+=	-Qunused-arguments
 LDFLAGS		+=	-Qunused-arguments
 LDFLAGS		+=	-lc++ -lc++abi -lunwind
