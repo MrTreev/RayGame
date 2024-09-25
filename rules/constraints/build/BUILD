@@ -20,3 +20,9 @@ constraint_value(
     constraint_setting = ":build",
     visibility = ["//visibility:public"],
 )
+
+constraint_value(
+    name = "release",
+    constraint_setting = ":build",
+    visibility = ["//visibility:public"],
+)

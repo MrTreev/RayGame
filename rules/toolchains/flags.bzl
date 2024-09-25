@@ -61,12 +61,66 @@ msvc_warnings = [
     "/permissive-",
 ]
 
+clang_analysis = [
+    "-fverify-intermediate-code",
+]
+
+opt_args = [
+    "-Ofast",
+    "-DNDEBUG",
+    "-ffast-math",
+    "-flto=full",
+    "-fshort-enums",
+    "-funroll-loops",
+    "-fvectorize",
+    "-fvirtual-function-elimination",
+    "-fwhole-program-vtables",
+]
+
+safety_args = [
+    "-fstack-protector-all",
+]
+
+main_args = [
+    "-fstrict-enums",
+]
+
+debug_info = [
+    "-DDEBUG"
+    "-g"
+    "-gfull"
+    "-gsplit-dwarf"
+    "-ggdb"
+]
+
 def conlyopts(buildtype, arch, cpu, compiler, version):
     conlyopts = []
     return conlyopts
 
 def copts(buildtype, arch, cpu, compiler, version):
     copts = []
+    if buildtype == "release":
+        copts.extend(
+            opt_args
+        )
+    if buildtype == "opt":
+        copts.extend(
+            opt_args
+        )
+    if buildtype == "fast":
+        copts.extend(
+        )
+    if buildtype == "dbg":
+        copts.extend(
+            [
+                "-fno-unroll-loops"
+                "-fno-omit-frame-pointer"
+                "-fno-inline"
+                "-funwind-tables"
+            ] +
+            safety_args +
+            debug_info
+        )
     return copts
 
 def cxxopts(buildtype, arch, cpu, compiler, version):
