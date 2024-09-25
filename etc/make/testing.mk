@@ -1,0 +1,3 @@
+.EXPORT_ALL_VARIABLES:
+
+TEST_CXXFLAGS	+=	-isystem${ETC_PATH}/doctest

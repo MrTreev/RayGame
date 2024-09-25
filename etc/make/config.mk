@@ -56,6 +56,6 @@ ALL_OBJS	+=	${SYST_OBJS}
 ALL_OBJS	+=	${WORL_OBJS}
 ALL_OBJS	+=	${TEST_OBJS}
 
-FULL_LIBS	=	${LIB_PATH}/libcore.so ${LIB_PATH}/libraygame_wayland.so
+FULL_LIBS	=	${LIB_PATH}/libcore.so
 
 include ${MAKEPATH}/compiler.mk

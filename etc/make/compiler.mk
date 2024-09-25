@@ -20,7 +20,8 @@ endif
 CXXFLAGS	+=	-MD
 CXXFLAGS	+=	-Qunused-arguments
 LDFLAGS		+=	-Qunused-arguments
-LDFLAGS		+=	-lc++ -lc++abi -lunwind
+LDFLAGS		+=	-lc++ -lc++abi -Wl,--export-dynamic
+LIBFLAGS	+=	-fPIC -shared
 
 ifeq (${COMPILER}, gcc)
 	CXX		=	g++
