@@ -4,13 +4,19 @@ constraint_setting(
 )
 
 constraint_value(
-    name = "debug",
+    name = "dbg",
     constraint_setting = ":build",
     visibility = ["//visibility:public"],
 )
 
 constraint_value(
     name = "fast",
+    constraint_setting = ":build",
+    visibility = ["//visibility:public"],
+)
+
+constraint_value(
+    name = "opt",
     constraint_setting = ":build",
     visibility = ["//visibility:public"],
 )

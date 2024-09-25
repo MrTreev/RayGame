@@ -1,13 +1,6 @@
 bazel_dep(name = "platforms", version = "0.0.10")
 bazel_dep(name = "bazel_skylib", version = "1.7.1")
-bazel_dep(name = "toolchains_llvm", version = "v1.1.2")
 bazel_dep(name = "hedron_compile_commands", dev_dependency = True)
-git_override(
-  module_name = "toolchains_llvm",
-  commit = "e0ffa169a2572e9f35a52de60fe746831d1e2a0a",
-  remote = "https://github.com/bazel-contrib/toolchains_llvm",
-)
-
 git_override(
     module_name = "hedron_compile_commands",
     remote = "https://github.com/hedronvision/bazel-compile-commands-extractor.git",
@@ -15,6 +8,7 @@ git_override(
 )
 
 http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
 http_archive(
     name = "linux_x64_doxygen",
     strip_prefix = "doxygen-1.12.0",
@@ -22,18 +16,3 @@ http_archive(
     sha256 = "3c42c3f3fb206732b503862d9c9c11978920a8214f223a3950bbf2520be5f647",
     build_file = "@//subprojects/doxygen:doxygen.BUILD",
 )
-
-# Configure and register the toolchain.
-llvm = use_extension("@toolchains_llvm//toolchain/extensions:llvm.bzl", "llvm")
-
-LLVM_VERSIONS = {
-    "": "16.0.0",
-}
-
-llvm.toolchain(
-    name = "llvm_toolchain",
-    llvm_versions = LLVM_VERSIONS,
-)
-use_repo(llvm, "llvm_toolchain", "llvm_toolchain_llvm")
-
-register_toolchains("@llvm_toolchain//:all")
