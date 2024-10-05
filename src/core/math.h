@@ -1,10 +1,10 @@
 #pragma once
-#include "core/condition.h" // IWYU pragma: keep
 #include "core/debug.h"
 #include "core/exception.h"
 #include "core/types.h"
 #include <cassert>
 #include <concepts>
+#include <iostream>
 #include <limits>
 #include <utility>
 
@@ -15,6 +15,8 @@ enum class MathRule {
     ALLOW,
     CLAMP,
 };
+
+static constexpr MathRule MR_Default = MathRule::STRICT;
 
 namespace constants {
 constexpr float pi      = 3.14159265358979323846F;
@@ -37,7 +39,7 @@ inline constexpr core::deg_t rad2deg(core::rad_t rad) {
 /*!
  * @tparam MR Defines the out-of-range behaviour
  */
-template<typename Out_T, typename In_T, MathRule MR = MathRule::STRICT>
+template<typename Out_T, typename In_T, MathRule MR = MR_Default>
 requires(std::integral<Out_T> && std::integral<In_T>)
 inline constexpr Out_T numeric_cast(In_T input) {
     constexpr Out_T outmax = std::numeric_limits<Out_T>::max();
@@ -46,11 +48,11 @@ inline constexpr Out_T numeric_cast(In_T input) {
         if (std::in_range<Out_T>(input)) {
             return static_cast<Out_T>(input);
         } else {
-            RG_THROW_CONDITION(
+            throw core::exception::Condition(std::format(
                 "Input of type '{}' is above the max for output type '{}'",
                 core::debug::type_name(input),
                 input
-            );
+            ));
         }
     }
     if constexpr (MR == MathRule::CLAMP) {
@@ -65,3 +67,5 @@ inline constexpr Out_T numeric_cast(In_T input) {
 }
 
 } // namespace core::math
+
+std::ostream& operator<<(std::ostream& os, core::math::MathRule c);

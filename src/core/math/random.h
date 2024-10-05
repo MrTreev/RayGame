@@ -1,4 +1,5 @@
 #pragma once
+#include "core/condition.h"
 #include "core/types.h"
 #include <limits>
 #include <random>

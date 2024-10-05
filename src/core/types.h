@@ -1,6 +1,7 @@
 #pragma once
 #include <cstddef> // IWYU pragma: export
 #include <cstdint> // IWYU pragma: export
+#include <ostream>
 
 using std::int16_t;
 using std::int32_t;
@@ -65,3 +66,18 @@ struct Quad {
 };
 
 } // namespace core
+
+template<typename T>
+std::ostream& operator<<(std::ostream& os, core::Vec2<T> c);
+
+template<typename T>
+std::ostream& operator<<(std::ostream& os, core::Vec3<T> c);
+
+template<typename T>
+std::ostream& operator<<(std::ostream& os, core::Vec4<T> c);
+
+template<typename Pos_t, typename Dis_t>
+std::ostream& operator<<(std::ostream& os, core::Rect<Pos_t, Dis_t> c);
+
+template<typename T>
+std::ostream& operator<<(std::ostream& os, core::Quad<T> c);
