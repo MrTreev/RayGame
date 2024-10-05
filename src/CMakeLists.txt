@@ -22,3 +22,8 @@ add_subdirectory(game)
 add_subdirectory(system)
 add_subdirectory(world)
 add_subdirectory(test)
+
+if(RG_BUILD_DOC)
+    include(RgDoxygen)
+	rg_enable_doxygen()
+endif()

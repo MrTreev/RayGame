@@ -1,4 +1,6 @@
 #include "core/math.h"
+#include "core/math/arithmetic.h"
+#include "core/math/random.h"
 #include <algorithm>
 #include <doctest/doctest.h>
 #include <limits>
@@ -67,7 +69,7 @@ TEST_SUITE("rand_n") {
         std::vector<T> rands = core::math::rand_n<T>(test_len);
         CHECK_EQ(rands.size(), test_len);
         CHECK_FALSE(all_same(rands));
-        std::vector<T> rand_01 = core::math::rand_n<T>(0, 1, test_len);
+        std::vector<T> rand_01 = core::math::rand_n<T>(test_len, 0, 1);
         CHECK_EQ(rand_01.size(), test_len);
         CHECK_FALSE(all_same(rand_01));
         for (const auto& val: rand_01) {
@@ -83,7 +85,7 @@ TEST_SUITE("numeric_cast") {
         CHECK_NOTHROW(core::math::numeric_cast<T>(min<T>()));
         CHECK_NOTHROW(core::math::numeric_cast<T>(lowest<T>()));
         const auto test_vec =
-            core::math::rand_n<T>(min<T>(), max<T>(), test_len);
+            core::math::rand_n<T>(test_len, min<T>(), max<T>());
         for (const T& num: test_vec) {
             CHECK_NOTHROW(core::math::numeric_cast<T>(num));
         }
