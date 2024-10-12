@@ -4,7 +4,6 @@
 #include "core/types.h"
 #include <cassert>
 #include <concepts>
-#include <cstdint>
 #include <iostream>
 #include <limits>
 #include <type_traits>

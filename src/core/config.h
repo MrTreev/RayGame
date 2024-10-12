@@ -11,14 +11,8 @@ static_assert(
 #endif
 
 namespace core::config {
-enum class Architecture;
-enum class Endian;
-enum class Compiler;
-enum class OperatingSystem;
-
 //! Architecture Definitions
 enum class Architecture {
-    AMD64,
     X86_64,
     X86_32,
     ARM,
@@ -26,10 +20,8 @@ enum class Architecture {
     RISCV,
 };
 
-#if defined(__amd64__) || defined(_M_X64_M_AMD64)
-#    define RAYGAME_ARCH_AMD64
-static constexpr Architecture ARCHITECTURE = Architecture::AMD64;
-#elif defined(__x86_64__) || defined(_M_X64)
+#if defined(__amd64__) || defined(_M_X64_M_AMD64) || defined(__x86_64__)       \
+    || defined(_M_X64)
 #    define RAYGAME_ARCH_X86_64
 static constexpr Architecture ARCHITECTURE = Architecture::X86_64;
 #elif defined(i386) || defined(__i386__) || defined(__i386) || defined(_M_IX86)
@@ -97,10 +89,8 @@ static_assert(false, "Not tested on MSC yet");
 static_assert(false, "Unknown Compiler");
 #endif
 
-namespace compiler {
-static constexpr bool GCC_LIKE =
+static constexpr bool COMPILER_IS_GCC_LIKE =
     (COMPILER == Compiler::GCC || COMPILER == Compiler::CLANG);
-}
 
 #if defined(RAYGAME_CC_CLANG)
 #    define RAYGAME_SYSTEM_HEADER _Pragma("clang system_header")
@@ -216,9 +206,14 @@ static_assert(false, "Unknown Architecture");
 static_assert(false, "Cannot run without an OS");
 #endif
 
-#if defined(RAYGAME_OS_LINUX) && defined(RAYGAME_GUI_USE_WAYLAND)
-#    define RAYGAME_GUI_WAYLAND
-#endif
+//! Window System Definitions
+enum class WindowBackend {
+    WAYLAND,
+    X11,
+    DWM,
+    COCOA,
+};
+
 } // namespace core::config
 
 namespace core::detail {}

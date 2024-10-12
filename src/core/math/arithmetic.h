@@ -27,7 +27,7 @@ inline constexpr Out_T safe_add(const auto a, const auto b) {
     constexpr Out_T outmax = std::numeric_limits<Out_T>::max();
     constexpr Out_T outmin = std::numeric_limits<Out_T>::lowest();
 
-    if constexpr (core::config::compiler::GCC_LIKE) {
+    if constexpr (core::config::COMPILER_IS_GCC_LIKE) {
         Out_T res = 0;
         if (!__builtin_add_overflow(a, b, &res)) {
             return res;
@@ -96,7 +96,7 @@ inline constexpr Out_T safe_sub(const auto a, const auto b) {
     using core::exception::Condition;
     using core::math::numeric_cast;
 
-    if constexpr (core::config::compiler::GCC_LIKE) {
+    if constexpr (core::config::COMPILER_IS_GCC_LIKE) {
         Out_T res = 0;
         if (!__builtin_sub_overflow(a, b, &res)) {
             return res;
@@ -213,7 +213,7 @@ inline constexpr Out_T safe_mult(const auto a, const auto b) {
         return 0;
     }
 
-    if constexpr (core::config::compiler::GCC_LIKE) {
+    if constexpr (core::config::COMPILER_IS_GCC_LIKE) {
         Out_T res = 0;
         if (!__builtin_mul_overflow(a, b, &res)) {
             return res;

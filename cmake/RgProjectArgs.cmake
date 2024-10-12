@@ -48,6 +48,7 @@ function(rg_add_args _target)
         -Wno-pre-c++17-compat-pedantic
         -Wno-switch-default
         -Wno-c++20-extensions
+        -Wno-unused-macros
     )
 
     set(GCC_WARNINGS

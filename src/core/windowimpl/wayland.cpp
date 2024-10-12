@@ -1,69 +1,156 @@
 #include "core/windowimpl/wayland.h" //IWYU pragma: keep
+#include "core/colours.h"
 #include "core/condition.h"
 #include "core/math.h"
 #include "core/math/arithmetic.h"
-#include "core/windowimpl/wayland/util.h"
+#include "core/math/random.h"
+#include <fcntl.h>
 #include <sys/mman.h>
 #include <unistd.h>
+#include <wayland-client-core.h>
+#include <wayland-client-protocol.h>
 
 using core::condition::check_condition;
 using core::condition::check_ptr;
+using core::condition::post_condition;
+using core::condition::pre_condition;
 using core::math::numeric_cast;
 using core::math::safe_mult;
 
-static constexpr size_t COLOUR_CHANNELS = 4;
+namespace {
 
-wl_compositor* core::window::wayland::WaylandWindow::m_compositor  = nullptr;
-wl_display*    core::window::wayland::WaylandWindow::m_display     = nullptr;
-wl_registry*   core::window::wayland::WaylandWindow::m_registry    = nullptr;
-wl_shm*        core::window::wayland::WaylandWindow::m_shm         = nullptr;
-xdg_wm_base*   core::window::wayland::WaylandWindow::m_xdg_wm_base = nullptr;
-wl_seat*       core::window::wayland::WaylandWindow::m_wl_seat     = nullptr;
+constexpr std::string_view alnum =
+    "abcdefghijklmnaoqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 
-core::window::wayland::WaylandWindow::WaylandWindow(
-    Vec2<size_t> size,
-    std::string  title,
-    WindowStyle  style
-)
-    : Window(size, title, style) {
-    if (m_display == nullptr) {
-        m_display = wl_display_connect(nullptr);
-        check_ptr(m_display, "Display setup failed");
-        m_registry = wl_display_get_registry(m_display);
-        check_ptr(m_registry, "Registry setup failed");
-        wl_registry_add_listener(m_registry, &m_registry_listener, nullptr);
-        check_condition(
-            wl_display_roundtrip(m_display) != 0,
-            "Display roundtrip failed"
-        );
-        check_ptr(m_shm, "shm global setup failed");
-        check_ptr(m_compositor, "compositor global setup failed");
-        check_ptr(m_xdg_wm_base, "xdg_wm_base global setup failed");
-    }
-    m_surface = wl_compositor_create_surface(m_compositor);
-    check_ptr(m_surface, "wl_surface setup failed");
-    m_xdg_surface = xdg_wm_base_get_xdg_surface(m_xdg_wm_base, m_surface);
-    check_ptr(m_xdg_surface, "xdg_surface setup failed");
-    xdg_surface_add_listener(m_xdg_surface, &m_xdg_surface_listener, nullptr);
-    wl_surface_commit(m_surface);
-    while (wl_display_dispatch(m_display) != -1) {
-        log::error("Wayland display not configured");
-    }
-    xdg_toplevel_set_title(m_xdg_toplevel, title.c_str());
-    new_buffer();
-    set_style(style);
-    wl_surface_attach(m_surface, m_buffer, 0, 0);
-    wl_surface_commit(m_surface);
+std::string random_string(
+    const size_t&      length,
+    const std::string& valid_chars = alnum.data()
+) {
+    std::string  ret;
+    const size_t charlen = valid_chars.size() - 1;
+    std::generate_n(std::back_inserter(ret), length, [&] {
+        return valid_chars[core::math::rand<size_t>(0, charlen)];
+    });
+    return ret;
 }
 
-core::window::wayland::WaylandWindow::~WaylandWindow() {
-    wl_buffer_destroy(m_buffer);
-    wl_surface_destroy(m_surface);
+int create_shm_file() {
+    constexpr int N_RETRIES = 100;
+    constexpr int RAND_LEN  = 6;
+    for (int retries = N_RETRIES; retries > 0; --retries) {
+        std::string name("/wl_shm-");
+        name.append(random_string(RAND_LEN));
+        const int shm_fd =
+            shm_open(name.c_str(), O_RDWR | O_CREAT | O_EXCL, 0600);
+        if (shm_fd >= 0) {
+            shm_unlink(name.c_str());
+            return shm_fd;
+        }
+    }
+
+    post_condition(false, "Failed to create SHM File Descriptor");
+    return -1;
+}
+
+int allocate_shm_file(size_t size) {
+    pre_condition(size > 0, "Cannot allocate file with size 0");
+    const int shm_fd = create_shm_file();
+    check_condition(shm_fd >= 0, "Failed to create valid SHM File Descriptor");
+    const int ret = ftruncate(shm_fd, numeric_cast<__off_t>(size));
+    post_condition(ret == 0, "Could not resize SHM memory-mapped file");
+    return shm_fd;
+}
+
+wl_shm_format get_colour_format() {
+    using core::colour::rgba;
+    using std::bit_cast;
+    constexpr auto colourval =
+        rgba(0b00000000, 0b11111111, 0b00111100, 0b11000011);
+    switch (bit_cast<uint32_t>(colourval)) {
+    case (0b11000011'00000000'11111111'00111100):
+        return WL_SHM_FORMAT_ARGB8888;
+    case (0b11000011'00111100'11111111'00000000):
+        return WL_SHM_FORMAT_ABGR8888;
+    case (0b00111100'11111111'00000000'11000011):
+        return WL_SHM_FORMAT_BGRA8888;
+    case (0b00000000'11111111'00111100'11000011):
+        return WL_SHM_FORMAT_RGBA8888;
+    default:
+        throw std::invalid_argument(std::format(
+            "Could not determine colour format:\n"
+            "functdef: {:0>32b}\n"
+            "RGBA DEF: {:0>32b}\n"
+            "RGBA set: {:0>32b}{:0>32b}{:0>32b}{:0>32b}\n"
+            "BYTE NO:  00000000111111112222222233333333\n",
+            bit_cast<uint32_t>(colourval),
+            (0b00000000'11111111'00111100'11000011),
+            colourval.m_alpha,
+            colourval.m_blue,
+            colourval.m_green,
+            colourval.m_red
+        ));
+    }
+}
+
+constexpr size_t COLOUR_CHANNELS = 4;
+
+} // namespace
+
+
+core::window::WaylandWindow::WaylandWindow(
+    core::Vec2<size_t>        size,
+    std::string               title,
+    core::window::WindowStyle style,
+    bool                      use_callbacks
+)
+    : Window(size, title, style, use_callbacks) {
+    m_wl_display = wl_display_connect(nullptr);
+    check_ptr(m_wl_display, "Display setup failed");
+    m_wl_registry = wl_display_get_registry(m_wl_display);
+    check_ptr(m_wl_registry, "Registry setup failed");
+    wl_registry_add_listener(m_wl_registry, &m_wl_registry_listener, this);
+    check_condition(
+        wl_display_roundtrip(m_wl_display) != 0,
+        "Display roundtrip failed"
+    );
+    check_ptr(m_wl_shm, "shm global setup failed");
+    check_ptr(m_wl_compositor, "compositor global setup failed");
+    check_ptr(m_xdg_wm_base, "xdg_wm_base global setup failed");
+    m_wl_surface = wl_compositor_create_surface(m_wl_compositor);
+    check_ptr(m_wl_surface, "wl_surface setup failed");
+    m_xdg_surface = xdg_wm_base_get_xdg_surface(m_xdg_wm_base, m_wl_surface);
+    check_ptr(m_xdg_surface, "xdg_surface setup failed");
+    m_xdg_toplevel = xdg_surface_get_toplevel(m_xdg_surface);
+    check_ptr(m_xdg_toplevel, "xdg_toplevel setup failed");
+    xdg_surface_add_listener(m_xdg_surface, &m_xdg_surface_listener, this);
+    wl_surface_commit(m_wl_surface);
+    core::log::trace("Surface Committed");
+    while ((wl_display_dispatch(m_wl_display) != -1) && (!m_configured)) {
+        core::log::error("Wayland display not configured");
+    }
+    core::log::debug("Display Dispatched");
+    xdg_toplevel_set_title(m_xdg_toplevel, title.c_str());
+    new_buffer(m_size);
+    set_style(style);
+    wl_surface_attach(m_wl_surface, m_wl_buffer, 0, 0);
+    wl_surface_commit(m_wl_surface);
+    m_wl_callback = wl_surface_frame(m_wl_surface);
+    check_ptr(m_wl_callback, "Failed to create callback");
+    wl_callback_add_listener(m_wl_callback, &m_wl_surface_frame_listener, this);
+}
+
+core::window::WaylandWindow::~WaylandWindow() {
+    wl_buffer_destroy(m_wl_buffer);
+    wl_surface_destroy(m_wl_surface);
     xdg_surface_destroy(m_xdg_surface);
     xdg_toplevel_destroy(m_xdg_toplevel);
 }
 
-void core::window::wayland::WaylandWindow::new_buffer(Vec2<size_t> size) {
+void core::window::WaylandWindow::new_buffer() {
+    new_buffer(m_size);
+}
+
+void core::window::WaylandWindow::new_buffer(const Vec2<size_t>& size) {
     const size_t buflen  = safe_mult<size_t>(size.x, size.y);
     const size_t bufsize = safe_mult<size_t>(buflen, COLOUR_CHANNELS);
     const int    shm_fd  = allocate_shm_file(bufsize);
@@ -75,8 +162,8 @@ void core::window::wayland::WaylandWindow::new_buffer(Vec2<size_t> size) {
         check_condition(false, "Could not setup shm data");
     }
     wl_shm_pool* pool =
-        wl_shm_create_pool(m_shm, shm_fd, numeric_cast<int32_t>(bufsize));
-    m_buffer = wl_shm_pool_create_buffer(
+        wl_shm_create_pool(m_wl_shm, shm_fd, numeric_cast<int32_t>(bufsize));
+    m_wl_buffer = wl_shm_pool_create_buffer(
         pool,
         0,
         numeric_cast<int32_t>(size.x),
@@ -86,10 +173,10 @@ void core::window::wayland::WaylandWindow::new_buffer(Vec2<size_t> size) {
     );
     wl_shm_pool_destroy(pool);
     close(shm_fd);
-    check_ptr(m_buffer, "Failed to create buffer");
+    check_ptr(m_wl_buffer, "Failed to create buffer");
 }
 
-void core::window::wayland::WaylandWindow::set_style(WindowStyle style) {
+void core::window::WaylandWindow::set_style(core::window::WindowStyle style) {
     switch (style) {
     case WindowStyle::Windowed:
         xdg_toplevel_unset_fullscreen(m_xdg_toplevel);
@@ -105,6 +192,9 @@ void core::window::wayland::WaylandWindow::set_style(WindowStyle style) {
     }
 }
 
-bool core::window::wayland::WaylandWindow::should_close() {
-    return m_should_close;
+bool core::window::WaylandWindow::next_frame() {
+    if (!should_close()) {
+        wl_display_dispatch(m_wl_display);
+    }
+    return !should_close();
 }

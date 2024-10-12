@@ -8,11 +8,12 @@ if(RG_TEST_ENABLE)
     target_sources(Test PUBLIC main.cpp math.cpp test.cpp)
     rg_add_args(Test)
 
-    add_custom_target(
-        RunTest ALL
-        COMMAND Test
-        DEPENDS Test
-        VERBATIM
-    )
-
+    if(RG_RUN_TESTS)
+        add_custom_target(
+            RunTest ALL
+            COMMAND Test
+            DEPENDS Test
+            VERBATIM
+        )
+    endif()
 endif()

@@ -3,10 +3,7 @@
 #include <string>
 
 namespace core {
-
-enum class WindowBackend {
-    Wayland,
-};
+namespace window {
 
 //! Window display styles
 enum class WindowStyle {
@@ -15,42 +12,65 @@ enum class WindowStyle {
     Fullscreen,         //!< Fullscreen mode
 };
 
-static constexpr size_t            DEFAULT_WINDOW_WIDTH  = 640;
-static constexpr size_t            DEFAULT_WINDOW_HEIGHT = 480;
-static constexpr std::string       DEFAULT_WINDOW_TITLE  = "RayGame";
-static constexpr core::WindowStyle DEFAULT_WINDOW_STYLE =
-    core::WindowStyle::Windowed;
+static constexpr size_t                    DEFAULT_WINDOW_WIDTH  = 640;
+static constexpr size_t                    DEFAULT_WINDOW_HEIGHT = 480;
+static constexpr std::string               DEFAULT_WINDOW_TITLE  = "RayGame";
+static constexpr core::window::WindowStyle DEFAULT_WINDOW_STYLE =
+    core::window::WindowStyle::Windowed;
 static constexpr Vec2<size_t> DEFAULT_WINDOW_SIZE = {
     DEFAULT_WINDOW_WIDTH,
     DEFAULT_WINDOW_HEIGHT
 };
 
+} // namespace window
+
+template<typename Derived>
 class Window {
 protected:
-    bool         m_should_close = false;
-    Vec2<size_t> m_size;
-    std::string  m_title;
-    WindowStyle  m_style;
+    bool                      m_should_close = false;
+    core::Vec2<size_t>        m_size;
+    std::string               m_title;
+    core::window::WindowStyle m_style;
+    bool                      m_use_callbacks;
 
     Window(
-        Vec2<size_t> size  = DEFAULT_WINDOW_SIZE,
-        std::string  title = DEFAULT_WINDOW_TITLE,
-        WindowStyle  style = DEFAULT_WINDOW_STYLE
-    );
-    ~Window();
+        core::Vec2<size_t>        size  = core::window::DEFAULT_WINDOW_SIZE,
+        std::string               title = core::window::DEFAULT_WINDOW_TITLE,
+        core::window::WindowStyle style = core::window::DEFAULT_WINDOW_STYLE,
+        bool                      use_callbacks = false
+    )
+        : m_size(std::move(size))
+        , m_title(std::move(title))
+        , m_style(std::move(style))
+        , m_use_callbacks(use_callbacks) {}
+
+    ~Window() = default;
 
 public:
-    Window(Window&)             = delete;
-    Window(Window&&)            = delete;
-    Window  operator=(Window&)  = delete;
-    Window& operator=(Window&&) = delete;
+    Window(Window&)           = delete;
+    Window operator=(Window&) = delete;
 
-    void set_style(WindowStyle style);
-    void new_buffer(Vec2<size_t> size);
-    bool should_close();
+    Window(Window&&)            = default;
+    Window& operator=(Window&&) = default;
 
-    inline void new_buffer() {
-        new_buffer(m_size);
+    inline void set_style(this Derived& self, core::window::WindowStyle style) {
+        self.set_style(style);
+    }
+
+    inline bool next_frame(this Derived& self) {
+        self.next_frame();
+    }
+
+    inline void new_buffer(this Derived& self, core::Vec2<size_t> size) {
+        self.new_buffer(self.m_size, std::move(size));
+    }
+
+    inline void new_buffer(this Derived& self) {
+        self.new_buffer(self.m_size);
+    }
+
+    inline bool should_close() {
+        return m_should_close;
     }
 };
 

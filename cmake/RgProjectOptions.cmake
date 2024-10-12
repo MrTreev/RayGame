@@ -3,6 +3,8 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
 option(RG_BUILD_DOC "Build documentation" ON)
 option(RG_TEST_ENABLE "Build and run tests" ON)
+option(RG_RUN_TESTS "Run tests in build" ON)
+option(RG_RUN_GAME "Run game in build" ON)
 
 option(RG_WARNINGS_AS_ERRORS "Warnings as errors" ON)
 
