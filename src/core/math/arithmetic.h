@@ -1,4 +1,5 @@
 #pragma once
+#include "core/config.h"
 #include "core/debug.h"
 #include "core/exception.h"
 #include "core/math.h"
@@ -26,56 +27,56 @@ inline constexpr Out_T safe_add(const auto a, const auto b) {
     constexpr Out_T outmax = std::numeric_limits<Out_T>::max();
     constexpr Out_T outmin = std::numeric_limits<Out_T>::lowest();
 
-#if defined(RAYGAME_CC_CLANG) || defined(RAYGAME_CC_GCC)
-    Out_T res = 0;
-    if (!__builtin_add_overflow(a, b, &res)) {
-        return res;
-    } else if constexpr (MR == MathRule::STRICT) {
-        throw Condition(std::format(
-            "Result of addition ({} + {}) is outside the range of "
-            "output type '{}'",
-            a,
-            b,
-            type_name<Out_T>()
-        ));
-    } else if constexpr (MR == MathRule::CLAMP) {
-        if (std::cmp_greater(b, outmax - a)
-            || std::cmp_greater(a, outmax - b)) {
-            return outmax;
-        } else {
-            return outmin;
-        }
-    } else if constexpr (MR == MathRule::ALLOW) {
-        return res;
-    }
-#else
-    if (std::cmp_greater(a, 0) && std::cmp_greater(b, outmax - a)) {
-        if constexpr (MR == MathRule::STRICT) {
+    if constexpr (core::config::compiler::GCC_LIKE) {
+        Out_T res = 0;
+        if (!__builtin_add_overflow(a, b, &res)) {
+            return res;
+        } else if constexpr (MR == MathRule::STRICT) {
             throw Condition(std::format(
-                "Result of addition ({} + {}) is above the max for output type "
-                "'{}'",
+                "Result of addition ({} + {}) is outside the range of "
+                "output type '{}'",
                 a,
                 b,
                 type_name<Out_T>()
             ));
         } else if constexpr (MR == MathRule::CLAMP) {
-            return outmax;
+            if (std::cmp_greater(b, outmax - a)
+                || std::cmp_greater(a, outmax - b)) {
+                return outmax;
+            } else {
+                return outmin;
+            }
+        } else if constexpr (MR == MathRule::ALLOW) {
+            return res;
         }
-    } else if (std::cmp_less(a, 0) && std::cmp_less(b, outmin - a)) {
-        if constexpr (MR == MathRule::STRICT) {
-            throw Condition(std::format(
-                "Result of addition ({} + {}) is below the min for output type "
-                "'{}'",
-                a,
-                b,
-                type_name<Out_T>()
-            ));
-        } else if constexpr (MR == MathRule::CLAMP) {
-            return outmin;
+    } else {
+        if (std::cmp_greater(a, 0) && std::cmp_greater(b, outmax - a)) {
+            if constexpr (MR == MathRule::STRICT) {
+                throw Condition(std::format(
+                    "Result of addition ({} + {}) is above the max for output "
+                    "type '{}'",
+                    a,
+                    b,
+                    type_name<Out_T>()
+                ));
+            } else if constexpr (MR == MathRule::CLAMP) {
+                return outmax;
+            }
+        } else if (std::cmp_less(a, 0) && std::cmp_less(b, outmin - a)) {
+            if constexpr (MR == MathRule::STRICT) {
+                throw Condition(std::format(
+                    "Result of addition ({} + {}) is below the min for output "
+                    "type '{}'",
+                    a,
+                    b,
+                    type_name<Out_T>()
+                ));
+            } else if constexpr (MR == MathRule::CLAMP) {
+                return outmin;
+            }
         }
+        return numeric_cast<Out_T, MR>(a + b);
     }
-    return numeric_cast<Out_T, MR>(a + b);
-#endif
 }
 
 //! Subtract two numeric types ensuring no undesired change in value
@@ -95,56 +96,57 @@ inline constexpr Out_T safe_sub(const auto a, const auto b) {
     using core::exception::Condition;
     using core::math::numeric_cast;
 
-#if defined(RAYGAME_CC_CLANG) || defined(RAYGAME_CC_GCC)
-    Out_T res = 0;
-    if (!__builtin_sub_overflow(a, b, &res)) {
-        return res;
-    } else if constexpr (MR == MathRule::STRICT) {
-        throw Condition(std::format(
-            "Result of subtraction ({} - {}) is outside the range of "
-            "output type '{}'",
-            a,
-            b,
-            type_name<Out_T>()
-        ));
-    } else if constexpr (MR == MathRule::CLAMP) {
-        if (std::cmp_greater(b, outmin + a)
-            || std::cmp_greater(a, outmin + b)) {
-            return outmin;
-        } else {
-            return outmax;
-        }
-    } else if constexpr (MR == MathRule::ALLOW) {
-        return res;
-    }
-#else
-    if (std::cmp_less(a, 0) && std::cmp_greater(b, outmax + a)) {
-        if constexpr (MR == MathRule::STRICT) {
+    if constexpr (core::config::compiler::GCC_LIKE) {
+        Out_T res = 0;
+        if (!__builtin_sub_overflow(a, b, &res)) {
+            return res;
+        } else if constexpr (MR == MathRule::STRICT) {
             throw Condition(std::format(
-                "Result of subtraction ({} - {}) is above the max for output "
-                "type '{}'",
+                "Result of subtraction ({} - {}) is outside the range of "
+                "output type '{}'",
                 a,
                 b,
                 type_name<Out_T>()
             ));
         } else if constexpr (MR == MathRule::CLAMP) {
-            return outmax;
+            if (std::cmp_greater(b, outmin + a)
+                || std::cmp_greater(a, outmin + b)) {
+                return outmin;
+            } else {
+                return outmax;
+            }
+        } else if constexpr (MR == MathRule::ALLOW) {
+            return res;
         }
-    } else if (std::cmp_greater(a, 0) && std::cmp_less(b, outmin + a)) {
-        if constexpr (MR == MathRule::STRICT) {
-            throw Condition(std::format(
-                "Result of subtraction ({} - {}) is below the min for output "
-                "type '{}'",
-                a,
-                b,
-                type_name<Out_T>()
-            ));
-        } else if constexpr (MR == MathRule::CLAMP) {
-            return outmin;
+    } else {
+        if (std::cmp_less(a, 0) && std::cmp_greater(b, outmax + a)) {
+            if constexpr (MR == MathRule::STRICT) {
+                throw Condition(std::format(
+                    "Result of subtraction ({} - {}) is above the max for "
+                    "output "
+                    "type '{}'",
+                    a,
+                    b,
+                    type_name<Out_T>()
+                ));
+            } else if constexpr (MR == MathRule::CLAMP) {
+                return outmax;
+            }
+        } else if (std::cmp_greater(a, 0) && std::cmp_less(b, outmin + a)) {
+            if constexpr (MR == MathRule::STRICT) {
+                throw Condition(std::format(
+                    "Result of subtraction ({} - {}) is below the min for "
+                    "output type '{}'",
+                    a,
+                    b,
+                    type_name<Out_T>()
+                ));
+            } else if constexpr (MR == MathRule::CLAMP) {
+                return outmin;
+            }
         }
+        return numeric_cast<Out_T, MR>(a + b);
     }
-    return numeric_cast<Out_T, MR>(a + b);
-#endif
 }
 
 //! Divide two numeric types ensuring no undesired change in value
@@ -211,30 +213,13 @@ inline constexpr Out_T safe_mult(const auto a, const auto b) {
         return 0;
     }
 
-#if defined(RAYGAME_CC_CLANG) || defined(RAYGAME_CC_GCC)
-    Out_T res = 0;
-    if (!__builtin_mul_overflow(a, b, &res)) {
-        return res;
-    } else if constexpr (MR == MathRule::STRICT) {
-        throw Condition(std::format(
-            "Result of multiplication ({} * {}) is outside the range of "
-            "output type '{}'",
-            a,
-            b,
-            type_name<Out_T>()
-        ));
-    } else if constexpr (MR == MathRule::CLAMP) {
-        return outmax;
-    } else if constexpr (MR == MathRule::ALLOW) {
-        return res;
-    }
-#else
-    if (std::cmp_greater(b, outmax / a)
-        || (std::cmp_less_equal(a, -1) && std::cmp_less_equal(b, outmin))
-        || (std::cmp_less_equal(b, -1) && std::cmp_less_equal(a, outmin))) {
-        if constexpr (MR == MathRule::STRICT) {
+    if constexpr (core::config::compiler::GCC_LIKE) {
+        Out_T res = 0;
+        if (!__builtin_mul_overflow(a, b, &res)) {
+            return res;
+        } else if constexpr (MR == MathRule::STRICT) {
             throw Condition(std::format(
-                "Result of multiplication ({} * {}) is above the max for "
+                "Result of multiplication ({} * {}) is outside the range of "
                 "output type '{}'",
                 a,
                 b,
@@ -242,23 +227,40 @@ inline constexpr Out_T safe_mult(const auto a, const auto b) {
             ));
         } else if constexpr (MR == MathRule::CLAMP) {
             return outmax;
+        } else if constexpr (MR == MathRule::ALLOW) {
+            return res;
         }
-    } else if (std::is_unsigned<Out_T>()
-               && (std::cmp_less(a, 0) || std::cmp_less(b, 0))) {
-        if constexpr (MR == MathRule::STRICT) {
-            throw Condition(std::format(
-                "Result of multiplication ({} * {}) is below the min for "
-                "output type '{}'",
-                a,
-                b,
-                type_name<Out_T>()
-            ));
-        } else if constexpr (MR == MathRule::CLAMP) {
-            return outmin;
+    } else {
+        if (std::cmp_greater(b, outmax / a)
+            || (std::cmp_less_equal(a, -1) && std::cmp_less_equal(b, outmin))
+            || (std::cmp_less_equal(b, -1) && std::cmp_less_equal(a, outmin))) {
+            if constexpr (MR == MathRule::STRICT) {
+                throw Condition(std::format(
+                    "Result of multiplication ({} * {}) is above the max for "
+                    "output type '{}'",
+                    a,
+                    b,
+                    type_name<Out_T>()
+                ));
+            } else if constexpr (MR == MathRule::CLAMP) {
+                return outmax;
+            }
+        } else if (std::is_unsigned<Out_T>()
+                   && (std::cmp_less(a, 0) || std::cmp_less(b, 0))) {
+            if constexpr (MR == MathRule::STRICT) {
+                throw Condition(std::format(
+                    "Result of multiplication ({} * {}) is below the min for "
+                    "output type '{}'",
+                    a,
+                    b,
+                    type_name<Out_T>()
+                ));
+            } else if constexpr (MR == MathRule::CLAMP) {
+                return outmin;
+            }
         }
+        return numeric_cast<Out_T, MR>(a * b);
     }
-    return numeric_cast<Out_T, MR>(a * b);
-#endif
 }
 
 } // namespace core::math
