@@ -4,6 +4,10 @@
 
 namespace core {
 
+enum class WindowBackend {
+    Wayland,
+};
+
 //! Window display styles
 enum class WindowStyle {
     Windowed,           //!< Windowed mode (resizable)
@@ -21,17 +25,31 @@ static constexpr Vec2<size_t> DEFAULT_WINDOW_SIZE = {
     DEFAULT_WINDOW_HEIGHT
 };
 
-template<typename T>
-concept IsWindow =
-    (!std::is_copy_assignable<T>()) && (!std::is_copy_constructible<T>())
-    && requires(T window) { window.should_close(); };
+class Window {
+protected:
+    bool         m_should_close = false;
+    Vec2<size_t> m_size;
 
-template<typename T>
-requires IsWindow<T>
-T create_window(
-    Vec2<size_t> size  = DEFAULT_WINDOW_SIZE,
-    std::string  title = DEFAULT_WINDOW_TITLE,
-    WindowStyle  style = DEFAULT_WINDOW_STYLE
-);
+    Window(
+        Vec2<size_t> size  = DEFAULT_WINDOW_SIZE,
+        std::string  title = DEFAULT_WINDOW_TITLE,
+        WindowStyle  style = DEFAULT_WINDOW_STYLE
+    );
+    ~Window();
+
+public:
+    Window(Window&)             = delete;
+    Window(Window&&)            = delete;
+    Window  operator=(Window&)  = delete;
+    Window& operator=(Window&&) = delete;
+
+    void set_style(WindowStyle style);
+    void new_buffer(Vec2<size_t> size);
+    bool should_close();
+
+    inline void new_buffer() {
+        new_buffer(m_size);
+    }
+};
 
 } // namespace core

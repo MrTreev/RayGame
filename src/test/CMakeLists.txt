@@ -5,7 +5,7 @@ if(RG_TEST_ENABLE)
     target_compile_options(Test PRIVATE -Wno-unsafe-buffer-usage)
     target_link_libraries(Test PUBLIC Core)
     target_link_libraries(Test PUBLIC doctest)
-    target_sources(Test PUBLIC main.cpp math.cpp)
+    target_sources(Test PUBLIC main.cpp math.cpp test.cpp)
     rg_add_args(Test)
 
     add_custom_target(

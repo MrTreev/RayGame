@@ -15,8 +15,8 @@ constexpr bool random_seed = true;
 #else
 constexpr bool random_seed = false;
 #endif
-
 uint64_t rand_seed();
+
 } // namespace detail
 
 //! Returns an array of N random values in a range

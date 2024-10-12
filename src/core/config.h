@@ -107,14 +107,11 @@ static_assert(false, "Unknown Compiler");
 #endif
 
 #if defined(RAYGAME_CC_CLANG)
-#    define RAYGAME_SYSTEM_HEADER  _Pragma("clang system_header")
-#    define RAYGAME_ALWAYS_DESTROY [[clang::always_destroy]]
+#    define RAYGAME_SYSTEM_HEADER _Pragma("clang system_header")
 #elif defined(RAYGAME_CC_GCC)
-#    define RAYGAME_SYSTEM_HEADER  _Pragma("GCC system_header")
-#    define RAYGAME_ALWAYS_DESTROY [[always_destroy]]
+#    define RAYGAME_SYSTEM_HEADER _Pragma("GCC system_header")
 #else
 #    define RAYGAME_SYSTEM_HEADER
-#    define RAYGAME_ALWAYS_DESTROY
 #endif // defined (RAYGAME_CC_CLANG)
 
 #if defined(__SSE2__)

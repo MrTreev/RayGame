@@ -5,10 +5,7 @@
 
 namespace core::window::wayland {
 
-class WaylandWindow {
-    bool         m_should_close = false;
-    Vec2<size_t> m_size;
-
+class WaylandWindow: public Window {
 public:
     WaylandWindow(
         Vec2<size_t> size  = DEFAULT_WINDOW_SIZE,
