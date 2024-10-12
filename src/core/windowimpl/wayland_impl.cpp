@@ -75,7 +75,7 @@ void core::window::WaylandWindow::wl_pointer_handle_enter(
     void*                        data,
     [[maybe_unused]] wl_pointer* wl_pointer,
     uint32_t                     serial,
-    wl_surface*                  surface,
+    [[maybe_unused]] wl_surface* surface,
     wl_fixed_t                   surface_x,
     wl_fixed_t                   surface_y
 ) {
@@ -83,7 +83,7 @@ void core::window::WaylandWindow::wl_pointer_handle_enter(
     core::log::trace(std::format("({}, {})", surface_x, surface_y));
     thiswindow->m_pointer_event.event_mask |= POINTER_EVENT_ENTER;
     thiswindow->m_pointer_event.serial      = serial;
-    thiswindow->m_pointer_event.surface_x   = surface_x,
+    thiswindow->m_pointer_event.surface_x   = surface_x;
     thiswindow->m_pointer_event.surface_y   = surface_y;
 }
 
