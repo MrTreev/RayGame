@@ -28,14 +28,34 @@ namespace core {
 using rad_t = float;
 using deg_t = float;
 
+template<typename first, typename second>
+struct Pair {
+    using A = first;
+    using B = second;
+    A a;
+    B b;
+};
+
+template<typename first, typename second, typename third>
+struct Triple {
+    using A = first;
+    using B = second;
+    using C = third;
+    A a;
+    B b;
+    C c;
+};
+
 template<typename T>
 struct Vec2 {
+    using type = T;
     T x;
     T y;
 };
 
 template<typename T>
 struct Vec3 {
+    using type = T;
     T x;
     T y;
     T z;
@@ -43,6 +63,7 @@ struct Vec3 {
 
 template<typename T>
 struct Vec4 {
+    using type = T;
     T x;
     T y;
     T z;
@@ -51,6 +72,8 @@ struct Vec4 {
 
 template<typename Pos_t, typename Dis_t = Pos_t>
 struct Rect {
+    using PositionType = Pos_t;
+    using DistanceType = Dis_t;
     Pos_t x;
     Pos_t y;
     Dis_t width;
@@ -59,6 +82,7 @@ struct Rect {
 
 template<typename T>
 struct Quad {
+    using type = T;
     T tl;
     T bl;
     T br;

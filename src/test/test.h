@@ -9,14 +9,6 @@
 namespace test {
 
 template<typename first, typename second>
-struct Pair {
-    using A = first;
-    using B = second;
-    A a;
-    B b;
-};
-
-template<typename first, typename second>
 struct TypePair {
     using A = first;
     using B = second;
