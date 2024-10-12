@@ -28,11 +28,11 @@ inline constexpr Out_T safe_add(const auto a, const auto b) {
 
 #if defined(RAYGAME_CC_CLANG) || defined(RAYGAME_CC_GCC)
     Out_T res = 0;
-    if (__builtin_add_overflow(a, b, &res)) {
+    if (!__builtin_add_overflow(a, b, &res)) {
         return res;
     } else if constexpr (MR == MathRule::STRICT) {
         throw Condition(std::format(
-            "Result of subtraction ({} * {}) is outside the range of "
+            "Result of addition ({} + {}) is outside the range of "
             "output type '{}'",
             a,
             b,
@@ -97,19 +97,19 @@ inline constexpr Out_T safe_sub(const auto a, const auto b) {
 
 #if defined(RAYGAME_CC_CLANG) || defined(RAYGAME_CC_GCC)
     Out_T res = 0;
-    if (__builtin_sub_overflow(a, b, &res)) {
+    if (!__builtin_sub_overflow(a, b, &res)) {
         return res;
     } else if constexpr (MR == MathRule::STRICT) {
         throw Condition(std::format(
-            "Result of subtraction ({} * {}) is outside the range of "
+            "Result of subtraction ({} - {}) is outside the range of "
             "output type '{}'",
             a,
             b,
             type_name<Out_T>()
         ));
     } else if constexpr (MR == MathRule::CLAMP) {
-        return outmax;
-        if (std::cmp_less(b, outmin + a) || std::cmp_less(a, outmin + b)) {
+        if (std::cmp_greater(b, outmin + a)
+            || std::cmp_greater(a, outmin + b)) {
             return outmin;
         } else {
             return outmax;
@@ -185,7 +185,7 @@ inline constexpr Out_T safe_div(const auto a, const auto b) {
         return numeric_cast<Out_T, MR>(a / b);
     } else {
         const auto maxs = max_type(a, b);
-        return numeric_cast<Out_T, MR>(maxs.a / maxs.b);
+        return numeric_cast<Out_T, MR>(maxs.x / maxs.y);
     }
 }
 
@@ -213,7 +213,7 @@ inline constexpr Out_T safe_mult(const auto a, const auto b) {
 
 #if defined(RAYGAME_CC_CLANG) || defined(RAYGAME_CC_GCC)
     Out_T res = 0;
-    if (__builtin_mul_overflow(a, b, &res)) {
+    if (!__builtin_mul_overflow(a, b, &res)) {
         return res;
     } else if constexpr (MR == MathRule::STRICT) {
         throw Condition(std::format(

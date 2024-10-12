@@ -29,6 +29,8 @@ class Window {
 protected:
     bool         m_should_close = false;
     Vec2<size_t> m_size;
+    std::string  m_title;
+    WindowStyle  m_style;
 
     Window(
         Vec2<size_t> size  = DEFAULT_WINDOW_SIZE,

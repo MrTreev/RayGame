@@ -4,6 +4,7 @@
 #include "core/types.h"
 #include "test/test.h"
 #include <doctest/doctest.h>
+#include <type_traits>
 
 #define S_FWINTS uint8_t, uint16_t, uint32_t
 #define U_FWINTS int8_t, int16_t, int32_t
@@ -139,7 +140,7 @@ TEST_SUITE("core::math::safe_mult") {
     }
 }
 
-TEST_SUITE("core::math::safe_sub") {
+TEST_SUITE("core::math::safe_div") {
     using core::math::safe_div;
     TEST_CASE_TEMPLATE("in-range", T, FWINTS) {
         const T a    = 2;
@@ -163,10 +164,10 @@ TEST_SUITE("core::math::safe_sub") {
         CHECK_THROWS(safe_div<T, STRICT>(zero, zero));
         CHECK_THROWS(safe_div<T, CLAMP>(zero, zero));
         CHECK_THROWS(safe_div<T, ALLOW>(zero, zero));
-        const T sub = 1;
+        const std::make_signed_t<T> sub = -1;
         CHECK_THROWS(safe_div<T, STRICT>(min<T>(), sub));
         CHECK_NOTHROW(safe_div<T, ALLOW>(min<T>(), sub));
-        CHECK_EQ(safe_div<T, CLAMP>(min<T>(), sub), min<T>());
-        CHECK_EQ(safe_div<T, CLAMP>(min<T>(), sub), min<T>());
+        CHECK_EQ(safe_div<T, CLAMP>(min<T>(), sub), max<T>());
+        CHECK_EQ(safe_div<T, CLAMP>(min<T>(), sub), max<T>());
     }
 }

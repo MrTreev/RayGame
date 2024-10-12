@@ -13,21 +13,19 @@ using core::math::safe_mult;
 
 static constexpr size_t COLOUR_CHANNELS = 4;
 
-namespace core::window::wayland {
+wl_compositor* core::window::wayland::WaylandWindow::m_compositor  = nullptr;
+wl_display*    core::window::wayland::WaylandWindow::m_display     = nullptr;
+wl_registry*   core::window::wayland::WaylandWindow::m_registry    = nullptr;
+wl_shm*        core::window::wayland::WaylandWindow::m_shm         = nullptr;
+xdg_wm_base*   core::window::wayland::WaylandWindow::m_xdg_wm_base = nullptr;
+wl_seat*       core::window::wayland::WaylandWindow::m_wl_seat     = nullptr;
 
-wl_compositor* WaylandWindow::m_compositor  = nullptr;
-wl_display*    WaylandWindow::m_display     = nullptr;
-wl_registry*   WaylandWindow::m_registry    = nullptr;
-wl_shm*        WaylandWindow::m_shm         = nullptr;
-xdg_wm_base*   WaylandWindow::m_xdg_wm_base = nullptr;
-wl_seat*       WaylandWindow::m_wl_seat     = nullptr;
-
-WaylandWindow::WaylandWindow(
+core::window::wayland::WaylandWindow::WaylandWindow(
     Vec2<size_t> size,
     std::string  title,
     WindowStyle  style
-) {
-    m_size = size;
+)
+    : Window(size, title, style) {
     if (m_display == nullptr) {
         m_display = wl_display_connect(nullptr);
         check_ptr(m_display, "Display setup failed");
@@ -58,14 +56,14 @@ WaylandWindow::WaylandWindow(
     wl_surface_commit(m_surface);
 }
 
-WaylandWindow::~WaylandWindow() {
+core::window::wayland::WaylandWindow::~WaylandWindow() {
     wl_buffer_destroy(m_buffer);
     wl_surface_destroy(m_surface);
     xdg_surface_destroy(m_xdg_surface);
     xdg_toplevel_destroy(m_xdg_toplevel);
 }
 
-void WaylandWindow::new_buffer(Vec2<size_t> size) {
+void core::window::wayland::WaylandWindow::new_buffer(Vec2<size_t> size) {
     const size_t buflen  = safe_mult<size_t>(size.x, size.y);
     const size_t bufsize = safe_mult<size_t>(buflen, COLOUR_CHANNELS);
     const int    shm_fd  = allocate_shm_file(bufsize);
@@ -91,7 +89,7 @@ void WaylandWindow::new_buffer(Vec2<size_t> size) {
     check_ptr(m_buffer, "Failed to create buffer");
 }
 
-void WaylandWindow::set_style(WindowStyle style) {
+void core::window::wayland::WaylandWindow::set_style(WindowStyle style) {
     switch (style) {
     case WindowStyle::Windowed:
         xdg_toplevel_unset_fullscreen(m_xdg_toplevel);
@@ -107,8 +105,6 @@ void WaylandWindow::set_style(WindowStyle style) {
     }
 }
 
-bool WaylandWindow::should_close() {
+bool core::window::wayland::WaylandWindow::should_close() {
     return m_should_close;
 }
-
-} // namespace core::window::wayland
