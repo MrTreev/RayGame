@@ -92,6 +92,8 @@ static_assert(false, "Unknown Compiler");
 static constexpr bool COMPILER_IS_GCC_LIKE =
     (COMPILER == Compiler::GCC || COMPILER == Compiler::CLANG);
 
+#define RAYGAME_DO_PRAGMA(x) _Pragma(#x)
+
 #if defined(RAYGAME_CC_CLANG)
 #    define RAYGAME_SYSTEM_HEADER _Pragma("clang system_header")
 #elif defined(RAYGAME_CC_GCC)
@@ -216,17 +218,14 @@ enum class WindowBackend {
 
 enum class BuildType {
     DEBUG,
-    RELWITHDEBUG,
     RELEASE,
 };
 
 #if defined(NDEBUG)
-#    if defined(DEBUG_SYMBOLS)
+#    define RG_BUILD_RELEASE
 static constexpr BuildType BUILD_TYPE = BuildType::RELEASE;
-#    else
-static constexpr BuildType BUILD_TYPE = BuildType::RELWITHDEBUG;
-#    endif
 #else
+#    define RG_BUILD_DEBUG
 static constexpr BuildType BUILD_TYPE = BuildType::DEBUG;
 #endif
 

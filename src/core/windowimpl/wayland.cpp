@@ -96,7 +96,6 @@ constexpr size_t COLOUR_CHANNELS = 4;
 
 } // namespace
 
-
 core::window::WaylandWindow::WaylandWindow(
     core::Vec2<size_t>        size,
     std::string               title,
@@ -108,6 +107,8 @@ core::window::WaylandWindow::WaylandWindow(
     check_ptr(m_wl_display, "Display setup failed");
     m_wl_registry = wl_display_get_registry(m_wl_display);
     check_ptr(m_wl_registry, "Registry setup failed");
+    init_pointer_event();
+    init_keyboard_state();
     wl_registry_add_listener(m_wl_registry, &m_wl_registry_listener, this);
     check_condition(
         wl_display_roundtrip(m_wl_display) != 0,
@@ -140,6 +141,8 @@ core::window::WaylandWindow::WaylandWindow(
 }
 
 core::window::WaylandWindow::~WaylandWindow() {
+    destroy_pointer_event();
+    destroy_keyboard_state();
     wl_buffer_destroy(m_wl_buffer);
     wl_surface_destroy(m_wl_surface);
     xdg_surface_destroy(m_xdg_surface);
