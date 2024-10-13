@@ -61,14 +61,6 @@ public:
         self.next_frame();
     }
 
-    inline void new_buffer(this Derived& self, core::Vec2<size_t> size) {
-        self.new_buffer(self.m_size, std::move(size));
-    }
-
-    inline void new_buffer(this Derived& self) {
-        self.new_buffer(self.m_size);
-    }
-
     inline bool should_close() {
         return m_should_close;
     }

@@ -1,4 +1,5 @@
 #pragma once
+#include "core/config.h"
 #include "core/debug.h"
 #include "core/exception.h"
 #include "core/types.h"
@@ -11,13 +12,28 @@
 
 namespace core::math {
 
+//! Rule for dealing with out-of-range errors
 enum class MathRule {
+    //! Throw an exception
     STRICT,
+    //! Do nothing, return whatever would be normally returned
     ALLOW,
+    //! Clamp to the range representable by the desired type
     CLAMP,
 };
 
-static constexpr MathRule MR_DEFAULT = MathRule::STRICT;
+namespace {
+consteval MathRule default_mathrule() {
+    if constexpr (core::config::BUILD_TYPE == core::config::BuildType::DEBUG) {
+        return MathRule::STRICT;
+    } else {
+        return MathRule::ALLOW;
+    }
+}
+} // namespace
+
+//! Default MathRule, STRICT for debug, ALLOW for production
+static constexpr MathRule MR_DEFAULT = default_mathrule();
 
 namespace constants {
 constexpr float pi      = 3.14159265358979323846F;
@@ -34,11 +50,6 @@ inline constexpr core::rad_t deg2rad(core::deg_t deg) {
 //! Convert Radians to Degrees
 inline constexpr core::deg_t rad2deg(core::rad_t rad) {
     return rad * constants::rad2deg;
-};
-
-template<typename T>
-struct type_holder {
-    using type = T;
 };
 
 //! Cast one numeric type to another ensuring no undesired change in value
@@ -72,12 +83,17 @@ inline constexpr Out_T numeric_cast(auto input) {
     return static_cast<Out_T>(input);
 }
 
+//! Convert unsigned type to signed type
+/*!
+ * @tparam MR Defines the out-of-range behaviour
+ */
 template<MathRule MR = core::math::MR_DEFAULT>
 inline constexpr auto make_signed(auto number) {
     static_assert(std::is_unsigned<decltype(number)>());
     return numeric_cast<std::make_signed_t<decltype(number)>, MR>(number);
 }
 
+//! Create a Vec2 of a and b using the larger of the two types
 inline constexpr auto max_type(auto a, auto b) {
     static_assert(
         std::is_integral<decltype(a)>() && std::is_integral<decltype(b)>()

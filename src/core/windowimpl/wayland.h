@@ -14,12 +14,15 @@ public:
         bool         use_callbacks = true
     );
     ~WaylandWindow();
+
     void set_style(WindowStyle style);
+
     bool next_frame();
+
+private:
     void new_buffer(const Vec2<size_t>& size);
     void new_buffer();
 
-private:
     struct axis_t {
         bool       valid;
         wl_fixed_t value;
@@ -34,17 +37,6 @@ private:
         uint32_t   serial;
         axis_t     axes[2];
         uint32_t   axis_source;
-    };
-
-    enum pointer_event_mask : uint32_t {
-        POINTER_EVENT_ENTER         = 1 << 0,
-        POINTER_EVENT_LEAVE         = 1 << 1,
-        POINTER_EVENT_MOTION        = 1 << 2,
-        POINTER_EVENT_BUTTON        = 1 << 3,
-        POINTER_EVENT_AXIS          = 1 << 4,
-        POINTER_EVENT_AXIS_SOURCE   = 1 << 5,
-        POINTER_EVENT_AXIS_STOP     = 1 << 6,
-        POINTER_EVENT_AXIS_DISCRETE = 1 << 7,
     };
 
     bool          m_configured = false;

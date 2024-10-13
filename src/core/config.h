@@ -214,6 +214,22 @@ enum class WindowBackend {
     COCOA,
 };
 
+enum class BuildType {
+    DEBUG,
+    RELWITHDEBUG,
+    RELEASE,
+};
+
+#if defined(NDEBUG)
+#    if defined(DEBUG_SYMBOLS)
+static constexpr BuildType BUILD_TYPE = BuildType::RELEASE;
+#    else
+static constexpr BuildType BUILD_TYPE = BuildType::RELWITHDEBUG;
+#    endif
+#else
+static constexpr BuildType BUILD_TYPE = BuildType::DEBUG;
+#endif
+
 } // namespace core::config
 
 namespace core::detail {}
