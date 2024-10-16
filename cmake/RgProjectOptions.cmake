@@ -9,6 +9,7 @@ option(RG_RUN_GAME "Run game in build" OFF)
 option(RG_WARNINGS_AS_ERRORS "Warnings as errors" ON)
 
 option(RG_ENABLE_WAYLAND "Enable Wayland Backend" ON)
+option(RG_ENABLE_X11 "Enable X11 Backend" ON)
 option(RG_IGNORE_CONDITIONS "Ignore all runtime condition checks" OFF)
 
 option(RG_ENABLE_AVX "Enable AVX instructions" ON)

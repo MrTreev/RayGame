@@ -1,7 +1,7 @@
 #pragma once
 #include <cstddef> // IWYU pragma: export
 #include <cstdint> // IWYU pragma: export
-#include <ostream>
+#include <string>
 
 using std::int16_t;
 using std::int32_t;
@@ -34,6 +34,10 @@ struct Pair {
     using B = second;
     A a;
     B b;
+
+    constexpr inline operator std::string() {
+        return {};
+    }
 };
 
 template<typename first, typename second, typename third>
@@ -44,64 +48,75 @@ struct Triple {
     A a;
     B b;
     C c;
+
+    constexpr inline operator std::string() {
+        return {};
+    }
 };
 
 template<typename T>
 struct Vec2 {
-    using type = T;
-    T x;
-    T y;
+    using Type = T;
+    Type x;
+    Type y;
+
+    constexpr inline operator std::string() {
+        return "Vec2(x: " + x + ", y: " + y + ")";
+    }
 };
 
 template<typename T>
 struct Vec3 {
-    using type = T;
-    T x;
-    T y;
-    T z;
+    using Type = T;
+    Type x;
+    Type y;
+    Type z;
+
+    constexpr inline operator std::string() {
+        return "Vec3(x: " + x + ", y: " + y + ", z: " + z + ")";
+    }
 };
 
 template<typename T>
 struct Vec4 {
-    using type = T;
-    T x;
-    T y;
-    T z;
-    T w;
+    using Type = T;
+    Type x;
+    Type y;
+    Type z;
+    Type w;
+
+    constexpr inline operator std::string() {
+        return "Vec4(x: " + x + ", y: " + y + ", z: " + z + ", w: " + w + ")";
+    }
 };
 
 template<typename Pos_t, typename Dis_t = Pos_t>
 struct Rect {
     using PositionType = Pos_t;
     using DistanceType = Dis_t;
-    Pos_t x;
-    Pos_t y;
-    Dis_t width;
-    Dis_t height;
+    PositionType x;
+    PositionType y;
+    DistanceType width;
+    DistanceType height;
+
+    constexpr inline operator std::string() {
+        return "Rect(x: " + x + ", y: " + y + ", width: " + width
+               + ", height: " + height + ")";
+    }
 };
 
 template<typename T>
 struct Quad {
-    using type = T;
-    T tl;
-    T bl;
-    T br;
-    T tr;
+    using Type = T;
+    Type tl;
+    Type bl;
+    Type br;
+    Type tr;
+
+    constexpr inline operator std::string() {
+        return "Quad(tl: " + tl + ", bl: " + bl + ", br: " + br + ", tr: " + tr
+               + ")";
+    }
 };
 
 } // namespace core
-
-template<typename T>
-std::ostream& operator<<(std::ostream& os, core::Vec2<T> c);
-
-template<typename T>
-std::ostream& operator<<(std::ostream& os, core::Vec3<T> c);
-
-template<typename T>
-std::ostream& operator<<(std::ostream& os, core::Vec4<T> c);
-
-template<typename Pos_t, typename Dis_t>
-std::ostream& operator<<(std::ostream& os, core::Rect<Pos_t, Dis_t> c);
-
-template<typename T>
-std::ostream& operator<<(std::ostream& os, core::Quad<T> c);

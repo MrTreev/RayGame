@@ -1,10 +1,6 @@
-#include "core/logger.h"
-#include "core/windowimpl/wayland.h"
-#include <format>
+#include "core/windowimpl/x11.h"
 
 int main() {
-    std::string tmp = std::format("test");
-    core::log::debug("test");
-    core::window::WaylandWindow my_window{};
-    while (my_window.next_frame()) {}
+    auto mywindow = core::window::X11Window();
+    while (mywindow.next_frame()) {}
 }
