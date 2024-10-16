@@ -1,6 +1,6 @@
 if(RG_ENABLE_WAYLAND)
     include(RgWayland)
-    target_sources(Core PUBLIC wayland.h wayland.cpp wayland_impl.cpp)
+    target_sources(Core PUBLIC wayland.cpp wayland_impl.cpp)
     rg_target_client_protocol(TARGET Core PROTOCOLS wayland xdg-shell)
     target_link_libraries(Core PUBLIC xkbcommon)
 endif()

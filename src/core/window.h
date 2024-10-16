@@ -31,18 +31,15 @@ protected:
     core::Vec2<size_t>        m_size;
     std::string               m_title;
     core::window::WindowStyle m_style;
-    bool                      m_use_callbacks;
 
     Window(
         core::Vec2<size_t>        size  = core::window::DEFAULT_WINDOW_SIZE,
         std::string               title = core::window::DEFAULT_WINDOW_TITLE,
-        core::window::WindowStyle style = core::window::DEFAULT_WINDOW_STYLE,
-        bool                      use_callbacks = false
+        core::window::WindowStyle style = core::window::DEFAULT_WINDOW_STYLE
     )
         : m_size(std::move(size))
         , m_title(std::move(title))
-        , m_style(std::move(style))
-        , m_use_callbacks(use_callbacks) {}
+        , m_style(std::move(style)) {}
 
     ~Window() = default;
 
