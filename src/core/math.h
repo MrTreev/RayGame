@@ -3,6 +3,7 @@
 #include "core/debug.h"
 #include "core/exception.h"
 #include "core/types.h"
+#include "core/vector.h"
 #include <cassert>
 #include <concepts>
 #include <iostream>

@@ -7,23 +7,10 @@ if(RG_ENABLE_SOURCE_LOCATION)
 endif()
 target_compile_definitions(Core PUBLIC "RAYGAME_LOG_${RG_LOG_LEVEL}")
 
+target_include_directories(Core INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 target_sources(
     Core
-    PUBLIC colours.h
-           condition.h
-           config.h
-           debug.h
-           exception.h
-           file.h
-           image.h
-           logger.h
-           math.h
-           pixel.h
-           spritesheet.h
-           texture.h
-           types.h
-           window.h
-           colours.cpp
+    PUBLIC colours.cpp
            condition.cpp
            config.cpp
            debug.cpp
@@ -33,9 +20,11 @@ target_sources(
            logger.cpp
            math.cpp
            pixel.cpp
+           rect.cpp
            spritesheet.cpp
            texture.cpp
            types.cpp
+           vector.cpp
            window.cpp
 )
 add_subdirectory(math)

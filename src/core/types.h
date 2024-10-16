@@ -1,4 +1,5 @@
 #pragma once
+#include "core/debug.h"
 #include <cstddef> // IWYU pragma: export
 #include <cstdint> // IWYU pragma: export
 #include <string>
@@ -36,7 +37,9 @@ struct Pair {
     B b;
 
     constexpr inline operator std::string() {
-        return {};
+        return "Pair<" + core::debug::type_name<A>() + ", "
+               + core::debug::type_name<B>() + ">(" + ": " + std::to_string(a)
+               + ", " + ": " + std::to_string(b) + ")";
     }
 };
 
@@ -50,63 +53,17 @@ struct Triple {
     C c;
 
     constexpr inline operator std::string() {
-        return {};
-    }
-};
-
-template<typename T>
-struct Vec2 {
-    using Type = T;
-    Type x;
-    Type y;
-
-    constexpr inline operator std::string() {
-        return "Vec2(x: " + x + ", y: " + y + ")";
-    }
-};
-
-template<typename T>
-struct Vec3 {
-    using Type = T;
-    Type x;
-    Type y;
-    Type z;
-
-    constexpr inline operator std::string() {
-        return "Vec3(x: " + x + ", y: " + y + ", z: " + z + ")";
-    }
-};
-
-template<typename T>
-struct Vec4 {
-    using Type = T;
-    Type x;
-    Type y;
-    Type z;
-    Type w;
-
-    constexpr inline operator std::string() {
-        return "Vec4(x: " + x + ", y: " + y + ", z: " + z + ", w: " + w + ")";
-    }
-};
-
-template<typename Pos_t, typename Dis_t = Pos_t>
-struct Rect {
-    using PositionType = Pos_t;
-    using DistanceType = Dis_t;
-    PositionType x;
-    PositionType y;
-    DistanceType width;
-    DistanceType height;
-
-    constexpr inline operator std::string() {
-        return "Rect(x: " + x + ", y: " + y + ", width: " + width
-               + ", height: " + height + ")";
+        return "Triple<" + core::debug::type_name<A>() + ", "
+               + core::debug::type_name<B>() + ", "
+               + core::debug::type_name<C>() + ">(" + ": " + std::to_string(a)
+               + ", " + ": " + std::to_string(b) + ", " + ": "
+               + std::to_string(c) + ")";
     }
 };
 
 template<typename T>
 struct Quad {
+    static_assert(std::is_integral<T>() || std::is_floating_point<T>());
     using Type = T;
     Type tl;
     Type bl;
@@ -114,9 +71,19 @@ struct Quad {
     Type tr;
 
     constexpr inline operator std::string() {
-        return "Quad(tl: " + tl + ", bl: " + bl + ", br: " + br + ", tr: " + tr
-               + ")";
+        return "Quad<" + core::debug::type_name<Type>() + ">(tl: "
+               + std::to_string(tl) + ", bl: " + std::to_string(bl) + ", br: "
+               + std::to_string(br) + ", tr: " + std::to_string(tr) + ")";
     }
 };
+
+extern template struct Quad<uint8_t>;
+extern template struct Quad<uint16_t>;
+extern template struct Quad<uint32_t>;
+extern template struct Quad<uint64_t>;
+extern template struct Quad<int8_t>;
+extern template struct Quad<int16_t>;
+extern template struct Quad<int32_t>;
+extern template struct Quad<int64_t>;
 
 } // namespace core

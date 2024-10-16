@@ -23,8 +23,8 @@ core::window::X11Window::X11Window(
         numeric_cast<uint32_t>(size.x),
         numeric_cast<uint32_t>(size.y),
         1U,
-        BlackPixel(m_display, m_screen),
-        WhitePixel(m_display, m_screen)
+        WhitePixel(m_display, m_screen),
+        BlackPixel(m_display, m_screen)
     );
     XSelectInput(m_display, m_window, ExposureMask | KeyPressMask);
     XMapWindow(m_display, m_window);
@@ -43,24 +43,7 @@ bool core::window::X11Window::next_frame() {
 #pragma clang diagnostic ignored "-Wunsafe-buffer-usage"
     XNextEvent(m_display, &m_event);
     if (m_event.type == Expose) {
-        XFillRectangle(
-            m_display,
-            m_window,
-            DefaultGC(m_display, m_screen),
-            20,
-            20,
-            10,
-            10
-        );
-        XDrawString(
-            m_display,
-            m_window,
-            DefaultGC(m_display, m_screen),
-            10,
-            50,
-            msg.c_str(),
-            static_cast<int32_t>(msg.length())
-        );
+        // Draw stuff here
     }
     if (m_event.type == KeyPress) {
         return false;

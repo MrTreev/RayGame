@@ -1,5 +1,7 @@
 #pragma once
 #include "core/image.h"
+#include "core/rect.h"
+#include "core/vector.h"
 
 namespace core {
 

@@ -1,1 +1,1 @@
-target_sources(Core PUBLIC arithmetic.h arithmetic.cpp random.h random.cpp)
+target_sources(Core PUBLIC arithmetic.cpp random.cpp)
