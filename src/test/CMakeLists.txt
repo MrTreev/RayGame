@@ -1,7 +1,4 @@
 if(RG_TEST_ENABLE)
-    include(CTest)
-    add_subdirectory(${RG_PATH_ETC}/doctest ${RG_PATH_EXT}/doctest)
-
     add_executable(RayGameTest)
     target_compile_options(RayGameTest PRIVATE -Wno-unsafe-buffer-usage)
     target_link_libraries(RayGameTest PUBLIC Core)

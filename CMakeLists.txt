@@ -50,7 +50,11 @@ option(RG_ENABLE_COMPILE_COMMANDS "Create compile_commands.json file" ON)
 option(RG_ENABLE_CLANG_TIDY "Enable Clang Tidy" ON)
 option(RG_ENABLE_SOURCE_LOCATION "Enable source_location in logs" ON)
 
-set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
+set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "RelWithDebInfo")
+set(RG_LOG_LEVEL
+    "DEBUG"
+    CACHE STRING "Minimum log level to be displayed"
+)
 set_property(
     CACHE RG_LOG_LEVEL
     PROPERTY STRINGS
@@ -66,6 +70,11 @@ set_property(
 
 if(RG_ENABLE_COMPILE_COMMANDS)
     set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+endif()
+
+if(RG_TEST_ENABLE)
+    include(CTest)
+    add_subdirectory(${RG_PATH_ETC}/doctest)
 endif()
 
 add_subdirectory(src)
