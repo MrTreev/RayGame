@@ -22,4 +22,5 @@ RUN apt-get update && apt-get install -y \
 RUN echo "root:password" | chpasswd
 
 USER jenkins
-RUN jenkins-plugin-cli --plugins "blueocean docker-workflow"
+
+CMD ["curl", "-s", "-o", "/home/jenkins/agent.jar", "http://localhost:8080/jnlpJars/agent.jar", "&&", "java", "-jar", "/home/jenkins/agent.jar", "-url", "http://localhost:8080/", "-secret", "00c82c45d3c4065ff99275e5483961aca5e16bd867ff9bf8b72a60766cde5fd3", "-name", "RayGameBuilder", "-workDir", "/home/jenkins"]
