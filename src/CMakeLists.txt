@@ -78,6 +78,8 @@ function(rg_add_args _target)
         -Wlogical-op # warn about logical operations being used where bitwise were probably wanted
         -Wuseless-cast # warn if you perform a cast to the same type
         -Wsuggest-override # warn if an overridden member function is not marked 'override' or 'final'
+        -Wno-return-type # Too many false-positives
+        -Wno-duplicate-branches # Too many false-positives
     )
 
     if(RG_WARNINGS_AS_ERRORS)
