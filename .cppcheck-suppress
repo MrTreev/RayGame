@@ -1,5 +1,5 @@
 missingInclude
 missingIncludeSystem
-noExplicitConstructor:etc/doctest/doctest/parts/doctest_fwd.h
-noExplicitConstructor:etc/doctest/doctest/doctest.h
-noExplicitConstructor:etc/doctest/doctest/doctest.cpp
+*:etc/doctest/doctest/parts/doctest_fwd.h
+*:etc/doctest/doctest/doctest.h
+*:etc/doctest/doctest/doctest.cpp
