@@ -32,7 +32,7 @@ if [ "${REBUILD}" -eq 1 ]; then
 	rm -rf "${CMAKE_BLD_DIR}";
 fi
 
-# run_build "clang++" "libstdc++" "Debug"
+run_build "clang++" "libstdc++" "Debug"
 run_build "clang++" "libstdc++" "Release"
-# run_build "g++" "libstdc++" "Debug"
-# run_build "g++" "libstdc++" "Release"
+run_build "g++" "libstdc++" "Debug"
+run_build "g++" "libstdc++" "Release"
