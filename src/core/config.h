@@ -222,10 +222,10 @@ enum class BuildType {
 };
 
 #if defined(NDEBUG)
-#    define RG_BUILD_RELEASE
+#    define RAYGAME_BUILD_TYPE_RELEASE
 static constexpr BuildType BUILD_TYPE = BuildType::RELEASE;
 #else
-#    define RG_BUILD_DEBUG
+#    define RAYGAME_BUILD_TYPE_DEBUG
 static constexpr BuildType BUILD_TYPE = BuildType::DEBUG;
 #endif
 

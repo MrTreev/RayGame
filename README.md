@@ -1,3 +1,3 @@
 # RayGame
 
-Playing around with Raylib in C++
+An experimental game engine in C++

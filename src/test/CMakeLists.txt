@@ -1,19 +1,12 @@
-include(RgTest)
-
 if(RG_TEST_ENABLE)
-    add_executable(Test)
-    target_compile_options(Test PRIVATE -Wno-unsafe-buffer-usage)
-    target_link_libraries(Test PUBLIC Core)
-    target_link_libraries(Test PUBLIC doctest)
-    target_sources(Test PUBLIC main.cpp math.cpp test.cpp)
-    rg_add_args(Test)
+    include(CTest)
+    add_subdirectory(${RG_PATH_ETC}/doctest ${RG_PATH_EXT}/doctest)
 
-    if(RG_RUN_TESTS)
-        add_custom_target(
-            RunTest ALL
-            COMMAND Test
-            DEPENDS Test
-            VERBATIM
-        )
-    endif()
+    add_executable(RayGameTest)
+    target_compile_options(RayGameTest PRIVATE -Wno-unsafe-buffer-usage)
+    target_link_libraries(RayGameTest PUBLIC Core)
+    target_link_libraries(RayGameTest PUBLIC doctest)
+    target_sources(RayGameTest PUBLIC main.cpp math.cpp test.cpp)
+    rg_add_args(RayGameTest)
+    add_test(NAME RayGameTest COMMAND RayGameTest)
 endif()

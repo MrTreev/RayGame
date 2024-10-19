@@ -98,13 +98,13 @@ inline constexpr void check_ptr(
 #define RG_CHECK_CONDITION_MSG(expr, ...)                                      \
     ::core::condition::check_condition((expr), std::format(__VA_ARGS__))
 
-#if defined(RG_BUILD_RELEASE)
+#if defined(RAYGAME_BUILD_TYPE_RELEASE)
 #    define RG_ELSE_UNKNOWN(item_name)                                         \
         else {                                                                 \
             ::core::log::debug("Unknown " item_name);                          \
         }                                                                      \
         static_assert(true)
-#elif defined(RG_BUILD_DEBUG)
+#elif defined(RAYGAME_BUILD_TYPE_DEBUG)
 #    define RG_ELSE_UNKNOWN(item_name)                                         \
         else {                                                                 \
             throw ::core::exception::Condition("Unknown " item_name);          \
