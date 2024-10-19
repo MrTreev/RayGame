@@ -5,27 +5,36 @@ DIR_BASE="$(git rev-parse --show-toplevel)"
 CMAKE_BLD_DIR="${DIR_BASE}/build-multi"
 CMAKE_SRC_DIR="${DIR_BASE}"
 CMAKE_GENERATOR="Ninja"
-CMAKE_ARGS="-DRG_BUILD_DOC=OFF -DRG_LOG_LEVEL=DEBUG"
 REBUILD=0
 
 run_build(){
 	compiler="${1}"
 	library="${2}"
 	build_type="${3}"
-	build_args="${CMAKE_ARGS} \
-        -DCMAKE_CXX_COMPILER=${compiler} \
-        -DCMAKE_BUILD_TYPE=${build_type}"
-	build_name="${compiler}-${library}-${build_type}"
+    extra_args="${4:-}"
+	build_name="${compiler}-${library}-${build_type}${extra_args:+-sanitize}"
 	build_dir="${CMAKE_BLD_DIR}/${build_name}"
 	if ! [ -f "${CMAKE_BLD_DIR}" ]; then
 		# shellcheck disable=SC2086 # We want the args to expand
 		cmake \
+            -DCMAKE_CXX_COMPILER="${compiler}" \
+            -DCMAKE_BUILD_TYPE="${build_type}" \
+            -DCMAKE_CXX_FLAGS="${extra_args}" \
             -S "${CMAKE_SRC_DIR}" \
             -G "${CMAKE_GENERATOR}" \
-            -B "${build_dir}" \
-            ${build_args}
+            -B "${build_dir}"
 	fi
 	cmake --build "${build_dir}"
+	ctest --test-dir "${build_dir}" --output-junit "${build_dir}-junit.xml"
+    mkdir -p "${build_dir}/cppcheck"
+    cppcheck \
+        --xml --xml-version=2 \
+        --cppcheck-build-dir="${build_dir}/cppcheck" \
+        --check-level=exhaustive \
+        --enable=all \
+        --project="${build_dir}/compile_commands.json" \
+        --language=c++ \
+        2> "${build_dir}-cppcheck.xml"
 }
 
 if [ "${REBUILD}" -eq 1 ]; then
@@ -33,6 +42,7 @@ if [ "${REBUILD}" -eq 1 ]; then
 fi
 
 run_build "clang++" "libstdc++" "Debug"
+run_build "clang++" "libstdc++" "Debug" "-fsanitize=address -fsanitize=undefined"
 run_build "clang++" "libstdc++" "Release"
-run_build "g++" "libstdc++" "Debug"
-run_build "g++" "libstdc++" "Release"
+run_build "g++"     "libstdc++" "Debug"
+run_build "g++"     "libstdc++" "Release"

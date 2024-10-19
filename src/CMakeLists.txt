@@ -1,8 +1,3 @@
-if(RG_LIBCPP)
-    add_compile_options(-stdlib=libc++ -lc++abi)
-    add_link_options(-stdlib=libc++ -lc++abi)
-endif()
-
 function(rg_add_args _target)
     target_include_directories(${_target} PUBLIC ${RG_PATH_SRC})
     target_compile_features(${_target} PUBLIC cxx_std_23)
