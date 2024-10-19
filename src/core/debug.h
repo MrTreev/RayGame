@@ -12,25 +12,29 @@ namespace core::debug {
 
 template<typename T>
 constexpr std::string type_name(T item) {
-    const char* tname = typeid(item).name();
-#if defined(RAYGAME_CC_GCC) || defined(RAYGAME_CC_CLANG)
-    const char* demangled_name =
-        abi::__cxa_demangle(tname, nullptr, nullptr, nullptr);
-    tname = demangled_name;
-#endif
-    return {tname};
+    if constexpr (core::config::COMPILER_IS_GCC_LIKE) {
+        char* demangled_name =
+            abi::__cxa_demangle(typeid(item).name(), nullptr, nullptr, nullptr);
+        std::string ret_name{demangled_name};
+        free(demangled_name);
+        return ret_name;
+    } else {
+        return {typeid(item).name()};
+    }
 }
 
 template<typename T>
 constexpr std::string type_name() {
-    const T     item{};
-    const char* tname = typeid(item).name();
-#if defined(RAYGAME_CC_GCC) || defined(RAYGAME_CC_CLANG)
-    const char* demangled_name =
-        abi::__cxa_demangle(tname, nullptr, nullptr, nullptr);
-    tname = demangled_name;
-#endif
-    return {tname};
+    const T item{};
+    if constexpr (core::config::COMPILER_IS_GCC_LIKE) {
+        char* demangled_name =
+            abi::__cxa_demangle(typeid(item).name(), nullptr, nullptr, nullptr);
+        std::string ret_name{demangled_name};
+        free(demangled_name);
+        return ret_name;
+    } else {
+        return {typeid(item).name()};
+    }
 }
 
 } // namespace core::debug
