@@ -48,7 +48,7 @@ if(RG_BUILD_DOC)
     set(DOXYGEN_USE_MDFILE_AS_MAINPAGE "${PROJECT_SOURCE_DIR}/README.md")
     message(STATUS "Adding `doxygen-docs` target that builds the documentation.")
     doxygen_add_docs(
-        doxygen-docs ALL ${PROJECT_SOURCE_DIR}
+		doxygen-docs ALL ${RG_PATH_SRC}
         COMMENT "Generating documentation - entry file: ${CMAKE_CURRENT_BINARY_DIR}/html/index.html"
     )
 endif()
