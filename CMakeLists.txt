@@ -28,9 +28,9 @@ rg_assure_out_of_source_builds()
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
-option(RG_BUILD_DOC "Build documentation" ON)
+option(RG_BUILD_DOC "Build documentation" OFF)
 option(RG_TEST_ENABLE "Build and run tests" ON)
-option(RG_RUN_TESTS "Run tests in build" ON)
+option(RG_RUN_TESTS "Run tests in build" OFF)
 option(RG_RUN_GAME "Run game in build" OFF)
 
 option(RG_WARNINGS_AS_ERRORS "Warnings as errors" ON)
@@ -40,11 +40,6 @@ option(RG_ENABLE_X11 "Enable X11 Backend" ON)
 option(RG_IGNORE_CONDITIONS "Ignore all runtime condition checks" OFF)
 
 option(RG_ENABLE_AVX "Enable AVX instructions" ON)
-option(RG_ENABLE_LTO "Enable Link-Time Optimisation" OFF)
-
-option(RG_ENABLE_ASAN "Enable the Address Sanitiser" OFF)
-option(RG_ENABLE_MSAN "Enable the Memory Sanitiser" OFF)
-option(RG_ENABLE_UBSAN "Enable the Undefined Behaviour Sanitiser" OFF)
 
 option(RG_ENABLE_COMPILE_COMMANDS "Create compile_commands.json file" ON)
 option(RG_ENABLE_CLANG_TIDY "Enable Clang Tidy" ON)
