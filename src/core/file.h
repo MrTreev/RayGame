@@ -16,7 +16,7 @@ class File {
     std::fstream          m_fstream;
 
 public:
-    File(std::filesystem::path fpath, OpenMode mode = OpenMode::ReadOnly);
+    explicit File(std::filesystem::path fpath, OpenMode mode = OpenMode::ReadOnly);
     ~File();
 
     std::vector<char8_t>  to_vector();

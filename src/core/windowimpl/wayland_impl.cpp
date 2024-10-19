@@ -391,7 +391,7 @@ void core::window::detail::WaylandImpl::
         [[maybe_unused]] uint32_t    direction
     ) {
     [[maybe_unused]]
-    WaylandImpl* this_impl = static_cast<WaylandImpl*>(data);
+    const WaylandImpl* const this_impl = static_cast<WaylandImpl*>(data);
 }
 
 void core::window::detail::WaylandImpl::wl_pointer_handle_axis_source(
@@ -430,7 +430,7 @@ void core::window::detail::WaylandImpl::wl_pointer_handle_axis_value120(
     [[maybe_unused]] int32_t     value120
 ) {
     [[maybe_unused]]
-    WaylandImpl* this_impl = static_cast<WaylandImpl*>(data);
+    const WaylandImpl* const this_impl = static_cast<WaylandImpl*>(data);
 }
 
 void core::window::detail::WaylandImpl::wl_pointer_handle_button(

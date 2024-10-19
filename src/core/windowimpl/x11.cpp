@@ -38,7 +38,6 @@ core::window::X11Window::~X11Window() {
 bool core::window::X11Window::next_frame() {
     using core::condition::check_ptr;
     using core::math::numeric_cast;
-    std::string msg = "test_str";
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunsafe-buffer-usage"
     XNextEvent(m_display, &m_event);

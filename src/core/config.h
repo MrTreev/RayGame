@@ -204,7 +204,6 @@ static_assert(false, "Not tested on Windows 32-bit yet");
 static_assert(false, "Unknown Architecture");
 #    endif
 #else
-#    error "Cannot run without an OS"
 static_assert(false, "Cannot run without an OS");
 #endif
 

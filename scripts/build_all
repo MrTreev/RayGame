@@ -24,7 +24,7 @@ run_build(){
             -G "${CMAKE_GENERATOR}" \
             -B "${build_dir}"
 	fi
-	cmake --build "${build_dir}"
+    cmake --build "${build_dir}" 2>&1 | tee -a "${build_dir}-compilation.log"
 	ctest --test-dir "${build_dir}" --output-junit "${build_dir}-junit.xml"
     mkdir -p "${build_dir}/cppcheck"
     cppcheck \
@@ -33,7 +33,10 @@ run_build(){
         --check-level=exhaustive \
         --enable=all \
         --project="${build_dir}/compile_commands.json" \
+        --suppressions-list=".cppcheck-suppress" \
         --language=c++ \
+        -I "${CMAKE_SRC_DIR}/src" \
+        -I "${build_dir}/src/core/windowimpl/wayland" \
         2> "${build_dir}-cppcheck.xml"
 }
 
