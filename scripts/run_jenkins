@@ -1,0 +1,138 @@
+#!/bin/sh
+set -eu
+
+DIR_BASE="$(git rev-parse --show-toplevel)"
+
+PORT_JENKINS="2376";
+PORT_WEBPAGE="8080";
+PORT_BLUEOCEAN="50000";
+
+CONTAINER_DIND="docker:dind";
+CONTAINER_NETWORK="jenkins";
+CONTAINER_DOCKER="jenkins-docker"
+CONTAINER_RUNNER="jenkins-myblueocean";
+CONTAINER_DIR_HOME="/home/jenkins"
+CONTAINER_VOL_BASE="${DIR_BASE}"
+
+DIR_BUILD_CONTAINER="${DIR_BASE}/etc/jenkins"
+
+printhelp(){
+    echo "Usage: ${0##*/} start|stop";
+};
+
+container_exists(){
+    docker ps | grep "${1}" >/dev/null 2>&1;
+    return $?;
+};
+
+network_exists(){
+    docker network ls | grep "${1}" >/dev/null 2>&1;
+    return $?;
+};
+
+start_docker(){
+    if [ "$(systemctl is-active docker.service)" != "active" ]; then
+        systemctl start docker;
+    fi;
+};
+
+build_docker(){
+    docker rm "${CONTAINER_RUNNER}"
+    docker build \
+        -t "${CONTAINER_RUNNER}" \
+        "${DIR_BUILD_CONTAINER}";
+};
+
+start_network(){
+    network_name="${1}";
+    if ! network_exists "${network_name}"; then
+        docker network create "${network_name}";
+    fi;
+};
+
+stop_network(){
+    network_name="${1}";
+    if network_exists "${network_name}"; then
+        docker network rm "${network_name}" >/dev/null \
+        && echo "Stopped Network: ${network_name}";
+    else
+        echo "Network Already Stopped: ${network_name}";
+    fi;
+};
+
+start_container(){
+    container_name="${1}";
+    if ! container_exists "${container_name}"; then
+        docker run "$@";
+    fi;
+};
+
+stop_container(){
+    container_name="${1}";
+    if container_exists "${container_name}"; then
+        docker stop "${container_name}" >/dev/null \
+        && echo "Stopped Container: ${container_name}";
+    else
+        echo "Container Already Stopped: ${container_name}";
+    fi;
+};
+
+start_all(){
+    start_docker;
+    build_docker;
+    start_network "${CONTAINER_NETWORK}";
+    stop_container "${CONTAINER_DOCKER}";
+    stop_container "${CONTAINER_RUNNER}";
+    start_container \
+        --name "${CONTAINER_DOCKER}" \
+        --rm \
+        --detach \
+        --privileged \
+        --network "${CONTAINER_NETWORK}" \
+        --network-alias docker \
+        --env "DOCKER_TLS_CERTDIR=/certs" \
+        --volume "jenkins-docker-certs:/certs/client" \
+        --volume "${CONTAINER_VOL_BASE}:${CONTAINER_DIR_HOME}" \
+        --publish "${PORT_JENKINS}:${PORT_JENKINS}" \
+        "${CONTAINER_DIND}" \
+        --storage-driver overlay2;
+    start_container \
+        --name "${CONTAINER_RUNNER}" \
+        --restart=on-failure \
+        --detach \
+        --network ${CONTAINER_NETWORK} \
+        --env "DOCKER_HOST=tcp://docker:${PORT_JENKINS}" \
+        --env "DOCKER_CERT_PATH=/certs/client" \
+        --env "DOCKER_TLS_VERIFY=1" \
+        --publish "${PORT_WEBPAGE}:${PORT_WEBPAGE}" \
+        --publish "${PORT_BLUEOCEAN}:${PORT_BLUEOCEAN}" \
+        --volume "${CONTAINER_VOL_BASE}:${CONTAINER_DIR_HOME}" \
+        --volume "jenkins-docker-certs:/certs/client:ro" \
+        "${CONTAINER_RUNNER}";
+}
+
+stop_all(){
+    stop_container "${CONTAINER_DOCKER}";
+    stop_container "${CONTAINER_RUNNER}";
+    stop_network "${CONTAINER_NETWORK}";
+}
+
+run_bash(){
+    docker container exec -it "${CONTAINER_RUNNER}" bash
+}
+
+get_status(){
+    printf 'Systemd: %s\n' "$([ "$(systemctl is-active docker.service)" = "active" ] && printf "Running" || printf "Stopped")"
+    printf 'Docker:  %s "%s"\n' "$(container_exists "${CONTAINER_DOCKER}" && printf "Running" || printf "Stopped")" "${CONTAINER_DOCKER}"
+    printf 'Runner:  %s "%s"\n' "$(container_exists "${CONTAINER_RUNNER}" && printf "Running" || printf "Stopped")" "${CONTAINER_RUNNER}"
+    printf 'Network: %s "%s"\n' "$(network_exists "${CONTAINER_NETWORK}" && printf "Running" || printf "Stopped")" "${CONTAINER_NETWORK}"
+}
+
+while [ "$#" -gt 0 ]; do case "$1" in
+    start)      start_all; shift;;
+    stop)       stop_all;  shift;;
+    bash)       run_bash;  shift;;
+    restart)    stop_all; start_all;  shift;;
+    status)     get_status;  shift;;
+    *) echo "Invalid Argument"; printhelp; exit 1;;
+esac done;

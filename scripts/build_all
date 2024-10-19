@@ -1,0 +1,38 @@
+#!/bin/sh
+set -eu
+
+DIR_BASE="$(git rev-parse --show-toplevel)"
+CMAKE_BLD_DIR="${DIR_BASE}/build-multi"
+CMAKE_SRC_DIR="${DIR_BASE}"
+CMAKE_GENERATOR="Ninja"
+CMAKE_ARGS="-DRG_BUILD_DOC=OFF -DRG_LOG_LEVEL=DEBUG"
+REBUILD=0
+
+run_build(){
+	compiler="${1}"
+	library="${2}"
+	build_type="${3}"
+	build_args="${CMAKE_ARGS} \
+        -DCMAKE_CXX_COMPILER=${compiler} \
+        -DCMAKE_BUILD_TYPE=${build_type}"
+	build_name="${compiler}-${library}-${build_type}"
+	build_dir="${CMAKE_BLD_DIR}/${build_name}"
+	if ! [ -f "${CMAKE_BLD_DIR}" ]; then
+		# shellcheck disable=SC2086 # We want the args to expand
+		cmake \
+            -S "${CMAKE_SRC_DIR}" \
+            -G "${CMAKE_GENERATOR}" \
+            -B "${build_dir}" \
+            ${build_args}
+	fi
+	cmake --build "${build_dir}"
+}
+
+if [ "${REBUILD}" -eq 1 ]; then
+	rm -rf "${CMAKE_BLD_DIR}";
+fi
+
+# run_build "clang++" "libstdc++" "Debug"
+run_build "clang++" "libstdc++" "Release"
+# run_build "g++" "libstdc++" "Debug"
+# run_build "g++" "libstdc++" "Release"
