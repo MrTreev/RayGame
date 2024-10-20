@@ -1,5 +1,5 @@
 #pragma once
-#include "core/window.h"
+#include "core/window/window.h"
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunsafe-buffer-usage"

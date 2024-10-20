@@ -1,7 +1,7 @@
-#include "core/math.h"
+#include "core/math/math.h"
+#include "core/base/types.h"
 #include "core/math/arithmetic.h"
 #include "core/math/random.h"
-#include "core/types.h"
 #include "test/test.h"
 #include <doctest/doctest.h>
 #include <type_traits>

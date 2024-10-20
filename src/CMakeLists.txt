@@ -33,7 +33,6 @@ function(rg_add_args _target)
         /w14928 # illegal copy-initialization; more than one user-defined conversion has been implicitly applied
         /permissive- # standards conformance mode for MSVC compiler.
     )
-
     set(CLANG_WARNINGS
         -Weverything
         -pedantic
@@ -50,7 +49,6 @@ function(rg_add_args _target)
         -Wno-c++20-extensions
         -Wno-unused-macros
     )
-
     set(GCC_WARNINGS
         -Wall
         -Wextra # reasonable and standard
@@ -76,14 +74,12 @@ function(rg_add_args _target)
         -Wno-return-type # Too many false-positives
         -Wno-duplicate-branches # Too many false-positives
     )
-
     if(RG_WARNINGS_AS_ERRORS)
         message(TRACE "Warnings are treated as errors")
         list(APPEND CLANG_WARNINGS -Werror)
         list(APPEND GCC_WARNINGS -Werror)
         list(APPEND MSVC_WARNINGS /WX)
     endif()
-
     if(MSVC)
         set(PROJECT_WARNINGS_CXX ${MSVC_WARNINGS})
     elseif(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
@@ -93,9 +89,7 @@ function(rg_add_args _target)
     else()
         message(AUTHOR_WARNING "No compiler warnings set for CXX compiler: '${CMAKE_CXX_COMPILER_ID}'")
     endif()
-
     set(PROJECT_WARNINGS_C "${PROJECT_WARNINGS_CXX}")
-
     target_compile_options(
         ${_target}
         INTERFACE # C++ warnings
@@ -103,6 +97,14 @@ function(rg_add_args _target)
                   # C warnings
                   $<$<COMPILE_LANGUAGE:C>:${PROJECT_WARNINGS_C}>
     )
+endfunction()
+
+function(rg_add_defs _target)
+    target_compile_definitions(${_target} PUBLIC "RAYGAME_LOG_${RG_LOG_LEVEL}")
+    if(RG_ENABLE_SOURCE_LOCATION)
+        target_compile_definitions(${_target} PUBLIC "RG_ENABLE_SOURCE_LOC")
+    endif()
+    target_compile_definitions(${_target} PUBLIC "RAYGAME_LOG_${RG_LOG_LEVEL}")
 endfunction()
 
 add_subdirectory(core)

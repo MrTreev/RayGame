@@ -1,6 +1,6 @@
 #pragma once
-#include "core/types.h"
-#include "core/window.h"
+#include "core/base/types.h"
+#include "core/window/window.h"
 #include <wayland-client-protocol.h>
 #include <xdg-shell-client-protocol.h>
 #include <xkbcommon/xkbcommon.h>

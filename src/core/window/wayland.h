@@ -1,5 +1,5 @@
 #pragma once
-#include "core/window.h"
+#include "core/window/window.h"
 
 namespace core::window {
 namespace detail {

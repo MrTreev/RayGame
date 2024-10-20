@@ -1,4 +1,4 @@
-#include "core/exception.h" // IWYU pragma: keep
+#include "core/base/exception.h" // IWYU pragma: keep
 
 core::exception::Condition::Condition(const std::string& message)
     : ::std::logic_error(message) {}

@@ -1,35 +1,25 @@
+function(rg_core_lib _target)
+    set(options)
+    set(oneValueArgs)
+    set(multiValueArgs SOURCES HEADERS DEPENDS)
+    cmake_parse_arguments(RG_COREARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+    add_library(${_target})
+    rg_add_args(${_target})
+    rg_add_defs(${_target})
+    set_target_properties(${_target} PROPERTIES LINKER_LANGUAGE CXX)
+    target_include_directories(${_target} INTERFACE ${RG_PATH_SRC})
+    # target_sources(${_target} PUBLIC ${RG_COREARGS_HEADERS})
+    target_sources(${_target} PUBLIC ${RG_COREARGS_SOURCES})
+    add_library(RayGame::Core::${_target} ALIAS ${_target})
+endfunction()
+
+add_subdirectory(base)
+add_subdirectory(math)
+add_subdirectory(window)
+
 add_library(Core)
 rg_add_args(Core)
-
-target_compile_definitions(Core PUBLIC "RAYGAME_LOG_${RG_LOG_LEVEL}")
-
-if(RG_ENABLE_SOURCE_LOCATION)
-    target_compile_definitions(Core PUBLIC "RG_ENABLE_SOURCE_LOC")
-endif()
-
-target_compile_definitions(Core PUBLIC "RAYGAME_LOG_${RG_LOG_LEVEL}")
-
-target_include_directories(Core INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
-target_sources(
-    Core
-    PUBLIC colours.cpp
-           condition.cpp
-           config.cpp
-           debug.cpp
-           exception.cpp
-           file.cpp
-           image.cpp
-           logger.cpp
-           math.cpp
-           pixel.cpp
-           rect.cpp
-           spritesheet.cpp
-           texture.cpp
-           types.cpp
-           vector.cpp
-           window.cpp
-)
-add_subdirectory(math)
-add_subdirectory(windowimpl)
-
+rg_add_defs(Core)
+target_include_directories(Core INTERFACE ${RG_PATH_SRC})
+target_link_libraries(Core PUBLIC Base Math Window)
 add_library(RayGame::Core ALIAS Core)

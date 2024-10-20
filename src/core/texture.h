@@ -1,7 +1,7 @@
 #pragma once
 #include "core/image.h"
-#include "core/rect.h"
-#include "core/vector.h"
+#include "core/math/rect.h"
+#include "core/math/vector.h"
 
 namespace core {
 

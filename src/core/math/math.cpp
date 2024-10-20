@@ -1,4 +1,4 @@
-#include "core/math.h" // IWYU pragma: keep
+#include "core/math/math.h" // IWYU pragma: keep
 
 std::ostream& operator<<(std::ostream& os, core::math::MathRule c) {
     switch (c) {

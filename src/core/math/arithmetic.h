@@ -1,8 +1,8 @@
 #pragma once
-#include "core/config.h"
-#include "core/debug.h"
-#include "core/exception.h"
-#include "core/math.h"
+#include "core/base/config.h"
+#include "core/base/debug.h"
+#include "core/base/exception.h"
+#include "core/math/math.h"
 #include <concepts>
 #include <limits>
 #include <type_traits>

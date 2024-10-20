@@ -1,4 +1,4 @@
-#include "core/types.h" // IWYU pragma: keep
+#include "core/base/types.h" // IWYU pragma: keep
 
 template struct core::Quad<uint8_t>;
 template struct core::Quad<uint16_t>;

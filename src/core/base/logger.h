@@ -1,6 +1,6 @@
 #pragma once
-#include "core/config.h"
-#include "core/types.h"
+#include "core/base/config.h"
+#include "core/base/types.h"
 #include <format>
 #include <string>
 

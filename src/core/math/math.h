@@ -1,9 +1,9 @@
 #pragma once
-#include "core/config.h"
-#include "core/debug.h"
-#include "core/exception.h"
-#include "core/types.h"
-#include "core/vector.h"
+#include "core/base/config.h"
+#include "core/base/debug.h"
+#include "core/base/exception.h"
+#include "core/base/types.h"
+#include "core/math/vector.h"
 #include <cassert>
 #include <concepts>
 #include <iostream>

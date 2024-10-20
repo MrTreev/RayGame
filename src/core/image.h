@@ -1,6 +1,6 @@
 #pragma once
+#include "core/base/types.h"
 #include "core/pixel.h"
-#include "core/types.h"
 #include <vector>
 
 namespace core {

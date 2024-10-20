@@ -1,1 +1,17 @@
-target_sources(Core PUBLIC arithmetic.cpp random.cpp)
+rg_core_lib(
+    Math
+    SOURCES
+    arithmetic.cpp
+    math.cpp
+    random.cpp
+    rect.cpp
+    vector.cpp
+    HEADERS
+    arithmetic.h
+    math.h
+    random.h
+    rect.h
+    vector.h
+    DEPENDS
+    Base
+)

@@ -1,4 +1,4 @@
-#include "core/math.h"
+#include "core/math/math.h"
 #include <fuzztest/fuzztest.h>
 #include <gtest/gtest.h>
 

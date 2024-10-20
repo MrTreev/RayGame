@@ -1,6 +1,6 @@
 #pragma once
-#include "core/exception.h"
-#include "core/logger.h"
+#include "core/base/exception.h"
+#include "core/base/logger.h"
 #include <string>
 
 // Keep for macro

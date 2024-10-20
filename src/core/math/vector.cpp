@@ -1,4 +1,4 @@
-#include "core/vector.h" // IWYU pragma: keep
+#include "core/math/vector.h" // IWYU pragma: keep
 
 template<typename T>
 core::Vec2<T>::operator std::string() {
