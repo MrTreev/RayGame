@@ -73,6 +73,7 @@ function(rg_add_args _target)
         -Wsuggest-override # warn if an overridden member function is not marked 'override' or 'final'
         -Wno-return-type # Too many false-positives
         -Wno-duplicate-branches # Too many false-positives
+        -Wno-unknown-pragmas # Allow pragmas from other compilers
     )
     if(RG_WARNINGS_AS_ERRORS)
         message(TRACE "Warnings are treated as errors")
