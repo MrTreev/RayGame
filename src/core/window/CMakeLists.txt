@@ -7,6 +7,7 @@ rg_core_lib(
     DEPENDS
     Base
     Math
+    Drawing
 )
 
 if(RG_ENABLE_WAYLAND)

@@ -1,0 +1,11 @@
+rg_core_lib(
+	Drawing
+    SOURCES
+	colour.cpp
+	pixel.cpp
+    HEADERS
+	colour.h
+	pixel.h
+	DEPENDS
+    Base
+)

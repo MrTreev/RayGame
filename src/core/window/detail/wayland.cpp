@@ -1,7 +1,7 @@
 #include "core/window/detail/wayland.h" // IWYU pragma: keep
 #include "core/base/condition.h"
 #include "core/base/logger.h"
-#include "core/colours.h"
+#include "core/drawing/colour.h"
 #include "core/math/arithmetic.h"
 #include "core/math/math.h"
 #include "core/math/random.h"

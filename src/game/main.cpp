@@ -1,6 +1,6 @@
-#include "core/window/x11.h"
+#include "core/window/wayland.h"
 
 int main() {
-    auto mywindow = core::window::X11Window();
+    auto mywindow = core::window::WaylandWindow();
     while (mywindow.next_frame()) {}
 }

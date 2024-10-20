@@ -1,23 +1,23 @@
 #pragma once
-#include "core/pixel.h"
+#include "core/drawing/pixel.h"
 
 namespace core::colour {
 
 static constexpr core::Pixel
-rgba(uint8_t rval, uint8_t gval, uint8_t bval, uint8_t aval) {
+rgba(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) {
     return {
-        .m_red   = rval,
-        .m_green = gval,
-        .m_blue  = bval,
-        .m_alpha = aval,
+        .m_red   = red,
+        .m_green = green,
+        .m_blue  = blue,
+        .m_alpha = alpha,
     };
 }
 
-static constexpr core::Pixel rgb(uint8_t rval, uint8_t gval, uint8_t bval) {
+static constexpr core::Pixel rgb(uint8_t red, uint8_t green, uint8_t blue) {
     return {
-        .m_red   = rval,
-        .m_green = gval,
-        .m_blue  = bval,
+        .m_red   = red,
+        .m_green = green,
+        .m_blue  = blue,
         .m_alpha = 0xFF,
     };
 }
