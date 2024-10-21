@@ -3,6 +3,7 @@
 #include "core/base/types.h"
 #include <format>
 #include <string>
+#include <utility>
 
 namespace {
 #if defined(RAYGAME_ENABLE_SOURCE_LOC)
@@ -68,6 +69,7 @@ inline std::string to_string(Level level) {
     case Level::FATAL:
         return "FATAL";
     }
+    std::unreachable();
 }
 
 namespace detail {

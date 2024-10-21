@@ -92,7 +92,11 @@ static_assert(false, "Unknown Compiler");
 static constexpr bool COMPILER_IS_GCC_LIKE =
     (COMPILER == Compiler::GCC || COMPILER == Compiler::CLANG);
 
-#define RAYGAME_DO_PRAGMA(x) _Pragma(#x)
+#if defined(RAYGAME_FORCE_GENERIC_IMPL)
+static constexpr bool FORCE_GENERIC_IMPL = true;
+#else
+static constexpr bool FORCE_GENERIC_IMPL = false;
+#endif
 
 #if defined(RAYGAME_CC_CLANG)
 #    define RAYGAME_PRAGMA_TO_STR(x)            _Pragma(#x)
