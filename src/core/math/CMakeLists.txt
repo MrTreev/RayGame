@@ -1,4 +1,4 @@
-rg_core_lib(
+raygame_core_lib(
     Math
     SOURCES
     arithmetic.cpp
@@ -12,6 +12,6 @@ rg_core_lib(
     random.h
     rect.h
     vector.h
-    DEPENDS
+	PUBLIC_DEPENDS
     Base
 )

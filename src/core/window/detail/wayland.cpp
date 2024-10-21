@@ -361,7 +361,7 @@ void core::window::detail::WaylandImpl::wl_pointer_handle_axis(
         this_impl->m_pointer_event.axis_horizontal.valid = true;
         this_impl->m_pointer_event.axis_horizontal.value = value;
     }
-    RG_ELSE_UNKNOWN("axis");
+    RAYGAME_ELSE_UNKNOWN("axis");
 }
 
 void core::window::detail::WaylandImpl::wl_pointer_handle_axis_discrete(
@@ -380,7 +380,7 @@ void core::window::detail::WaylandImpl::wl_pointer_handle_axis_discrete(
         this_impl->m_pointer_event.axis_horizontal.valid    = true;
         this_impl->m_pointer_event.axis_horizontal.discrete = discrete;
     }
-    RG_ELSE_UNKNOWN("axis");
+    RAYGAME_ELSE_UNKNOWN("axis");
 }
 
 void core::window::detail::WaylandImpl::
@@ -420,7 +420,7 @@ void core::window::detail::WaylandImpl::wl_pointer_handle_axis_stop(
     } else if (axis == WL_POINTER_AXIS_HORIZONTAL_SCROLL) {
         this_impl->m_pointer_event.axis_horizontal.valid = true;
     }
-    RG_ELSE_UNKNOWN("axis");
+    RAYGAME_ELSE_UNKNOWN("axis");
 }
 
 void core::window::detail::WaylandImpl::wl_pointer_handle_axis_value120(
@@ -493,7 +493,7 @@ void core::window::detail::WaylandImpl::wl_pointer_handle_frame(
         } else if (event.state & WL_POINTER_BUTTON_STATE_RELEASED) {
             core::log::trace(std::format("Button {} released", event.button));
         }
-        RG_ELSE_UNKNOWN("button state");
+        RAYGAME_ELSE_UNKNOWN("button state");
     }
     if (event.event_mask & ALL_AXIS_EVENTS) {
         const auto handle_axis = [event](const axis_t& axis) {

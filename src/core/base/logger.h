@@ -5,7 +5,7 @@
 #include <string>
 
 namespace {
-#if defined(RG_ENABLE_SOURCE_LOC)
+#if defined(RAYGAME_ENABLE_SOURCE_LOC)
 constexpr bool enable_source_loc = true;
 #else
 constexpr bool enable_source_loc = false;

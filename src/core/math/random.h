@@ -34,7 +34,7 @@ inline std::array<T, N> rand_n(
     T min = std::numeric_limits<T>::min(),
     T max = std::numeric_limits<T>::max()
 ) {
-    RG_PRE_CONDITION(min < max);
+    RAYGAME_PRE_CONDITION(min < max);
     std::mt19937                     rng(detail::rand_seed());
     std::uniform_int_distribution<T> dist(min, max);
     std::array<T, N>                 results;
@@ -60,7 +60,7 @@ inline std::vector<T> rand_n(
     T      min = std::numeric_limits<T>::min(),
     T      max = std::numeric_limits<T>::max()
 ) {
-    RG_PRE_CONDITION(min < max);
+    RAYGAME_PRE_CONDITION(min < max);
     std::mt19937                     rng(detail::rand_seed());
     std::uniform_int_distribution<T> dist(min, max);
     std::vector<T>                   results;
@@ -85,7 +85,7 @@ inline T rand(
     T min = std::numeric_limits<T>::min(),
     T max = std::numeric_limits<T>::max()
 ) {
-    RG_PRE_CONDITION(min < max);
+    RAYGAME_PRE_CONDITION(min < max);
     std::mt19937                     rng(detail::rand_seed());
     std::uniform_int_distribution<T> dist(min, max);
     return dist(rng);

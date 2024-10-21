@@ -87,25 +87,25 @@ inline constexpr void check_ptr(
 
 } // namespace core::condition
 
-#define RG_PRE_CONDITION(expr)  ::core::condition::pre_condition((expr), #expr)
-#define RG_POST_CONDITION(expr) ::core::condition::post_condition((expr), #expr)
-#define RG_CHECK_CONDITION(expr)                                               \
+#define RAYGAME_PRE_CONDITION(expr)  ::core::condition::pre_condition((expr), #expr)
+#define RAYGAME_POST_CONDITION(expr) ::core::condition::post_condition((expr), #expr)
+#define RAYGAME_CHECK_CONDITION(expr)                                               \
     ::core::condition::check_condition((expr), #expr)
-#define RG_PRE_CONDITION_MSG(expr, ...)                                        \
+#define RAYGAME_PRE_CONDITION_MSG(expr, ...)                                        \
     ::core::condition::pre_condition((expr), std::format(__VA_ARGS__))
-#define RG_POST_CONDITION_MSG(expr, ...)                                       \
+#define RAYGAME_POST_CONDITION_MSG(expr, ...)                                       \
     ::core::condition::post_condition((expr), std::format(__VA_ARGS__))
-#define RG_CHECK_CONDITION_MSG(expr, ...)                                      \
+#define RAYGAME_CHECK_CONDITION_MSG(expr, ...)                                      \
     ::core::condition::check_condition((expr), std::format(__VA_ARGS__))
 
 #if defined(RAYGAME_BUILD_TYPE_RELEASE)
-#    define RG_ELSE_UNKNOWN(item_name)                                         \
+#    define RAYGAME_ELSE_UNKNOWN(item_name)                                         \
         else {                                                                 \
             ::core::log::debug("Unknown " item_name);                          \
         }                                                                      \
         static_assert(true)
 #elif defined(RAYGAME_BUILD_TYPE_DEBUG)
-#    define RG_ELSE_UNKNOWN(item_name)                                         \
+#    define RAYGAME_ELSE_UNKNOWN(item_name)                                         \
         else {                                                                 \
             throw ::core::exception::Condition("Unknown " item_name);          \
         }                                                                      \

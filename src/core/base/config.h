@@ -95,12 +95,38 @@ static constexpr bool COMPILER_IS_GCC_LIKE =
 #define RAYGAME_DO_PRAGMA(x) _Pragma(#x)
 
 #if defined(RAYGAME_CC_CLANG)
-#    define RAYGAME_SYSTEM_HEADER _Pragma("clang system_header")
-#elif defined(RAYGAME_CC_GCC)
-#    define RAYGAME_SYSTEM_HEADER _Pragma("GCC system_header")
+#    define RAYGAME_PRAGMA_TO_STR(x)            _Pragma(#x)
+#    define RAYGAME_CLANG_SUPPRESS_WARNING_PUSH _Pragma("clang diagnostic push")
+#    define RAYGAME_CLANG_SUPPRESS_WARNING(warnstr)                            \
+        RAYGAME_PRAGMA_TO_STR(clang diagnostic ignored warnstr)
+#    define RAYGAME_CLANG_SUPPRESS_WARNING_POP _Pragma("clang diagnostic pop")
 #else
-#    define RAYGAME_SYSTEM_HEADER
-#endif // defined (RAYGAME_CC_CLANG)
+#    define RAYGAME_CLANG_SUPPRESS_WARNING_PUSH
+#    define RAYGAME_CLANG_SUPPRESS_WARNING(warnstr)
+#    define RAYGAME_CLANG_SUPPRESS_WARNING_POP
+#endif
+
+#if defined(RAYGAME_CC_GCC)
+#    define RAYGAME_PRAGMA_TO_STR(x)          _Pragma(#x)
+#    define RAYGAME_GCC_SUPPRESS_WARNING_PUSH _Pragma("GCC diagnostic push")
+#    define RAYGAME_GCC_SUPPRESS_WARNING(warnstr)                              \
+        RAYGAME_PRAGMA_TO_STR(GCC diagnostic ignored warnstr)
+#    define RAYGAME_GCC_SUPPRESS_WARNING_POP _Pragma("GCC diagnostic pop")
+#else
+#    define RAYGAME_GCC_SUPPRESS_WARNING_PUSH
+#    define RAYGAME_GCC_SUPPRESS_WARNING(warnstr)
+#    define RAYGAME_GCC_SUPPRESS_WARNING_POP
+#endif
+
+#if defined(RAYGAME_CC_MSC)
+#    define RAYGAME_MSC_SUPPRESS_WARNING_PUSH     __pragma(warning(push))
+#    define RAYGAME_MSC_SUPPRESS_WARNING(warnstr) __pragma(warning(disable : w))
+#    define RAYGAME_MSC_SUPPRESS_WARNING_POP      __pragma(warning(pop))
+#else
+#    define RAYGAME_MSC_SUPPRESS_WARNING_PUSH
+#    define RAYGAME_MSC_SUPPRESS_WARNING(warnstr)
+#    define RAYGAME_MSC_SUPPRESS_WARNING_POP
+#endif
 
 #if defined(__SSE2__)
 #    define RAYGAME_HAS_SSE2

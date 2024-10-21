@@ -1,4 +1,4 @@
-rg_core_lib(
+raygame_core_lib(
     Base
     SOURCES
     condition.cpp

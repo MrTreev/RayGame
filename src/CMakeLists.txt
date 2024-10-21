@@ -1,5 +1,5 @@
-function(rg_add_args _target)
-    target_include_directories(${_target} PUBLIC ${RG_PATH_SRC})
+function(raygame_add_args _target)
+    target_include_directories(${_target} PUBLIC ${RAYGAME_PATH_SRC})
     target_compile_features(${_target} PUBLIC cxx_std_23)
     set_target_properties(
         ${_target}
@@ -75,7 +75,7 @@ function(rg_add_args _target)
         -Wno-duplicate-branches # Too many false-positives
         -Wno-unknown-pragmas # Allow pragmas from other compilers
     )
-    if(RG_WARNINGS_AS_ERRORS)
+    if(RAYGAME_WARNINGS_AS_ERRORS)
         message(TRACE "Warnings are treated as errors")
         list(APPEND CLANG_WARNINGS -Werror)
         list(APPEND GCC_WARNINGS -Werror)
@@ -100,12 +100,12 @@ function(rg_add_args _target)
     )
 endfunction()
 
-function(rg_add_defs _target)
-    target_compile_definitions(${_target} PUBLIC "RAYGAME_LOG_${RG_LOG_LEVEL}")
-    if(RG_ENABLE_SOURCE_LOCATION)
-        target_compile_definitions(${_target} PUBLIC "RG_ENABLE_SOURCE_LOC")
+function(raygame_add_defs _target)
+    target_compile_definitions(${_target} PUBLIC "RAYGAME_LOG_${RAYGAME_LOG_LEVEL}")
+    if(RAYGAME_ENABLE_SOURCE_LOCATION)
+        target_compile_definitions(${_target} PUBLIC "RAYGAME_ENABLE_SOURCE_LOC")
     endif()
-    target_compile_definitions(${_target} PUBLIC "RAYGAME_LOG_${RG_LOG_LEVEL}")
+    target_compile_definitions(${_target} PUBLIC "RAYGAME_LOG_${RAYGAME_LOG_LEVEL}")
 endfunction()
 
 add_subdirectory(core)

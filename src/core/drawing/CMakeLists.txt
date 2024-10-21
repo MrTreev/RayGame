@@ -1,4 +1,4 @@
-rg_core_lib(
+raygame_core_lib(
 	Drawing
     SOURCES
 	colour.cpp
@@ -6,6 +6,6 @@ rg_core_lib(
     HEADERS
 	colour.h
 	pixel.h
-	DEPENDS
+	PUBLIC_DEPENDS
     Base
 )

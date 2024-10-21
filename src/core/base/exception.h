@@ -43,4 +43,5 @@ public:
     explicit PostCondition(const std::string& message);
     virtual ~PostCondition() override;
 };
+
 } // namespace core::exception

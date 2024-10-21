@@ -1,10 +1,10 @@
 #pragma once
 #include "core/window/window.h"
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunsafe-buffer-usage"
+RAYGAME_CLANG_SUPPRESS_WARNING_PUSH
+RAYGAME_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage")
 #include <X11/Xlib.h>
-#pragma clang diagnostic pop
+RAYGAME_CLANG_SUPPRESS_WARNING_POP
 
 namespace core::window {
 
