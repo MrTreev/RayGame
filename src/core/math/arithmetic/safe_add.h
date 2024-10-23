@@ -4,6 +4,7 @@
 #include "core/base/debug.h"
 #include "core/base/exception.h"
 #include "core/math/math.h"
+#include "core/math/numeric_cast.h"
 #include <concepts>
 #include <limits>
 #include <type_traits>

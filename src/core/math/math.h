@@ -1,11 +1,8 @@
 #pragma once
 #include "core/base/config.h"
-#include "core/base/debug.h"
-#include "core/base/exception.h"
 #include "core/base/types.h"
 #include "core/math/vector.h"
 #include <cassert>
-#include <concepts>
 #include <iostream>
 #include <limits>
 #include <type_traits>
@@ -52,37 +49,6 @@ inline constexpr core::rad_t deg2rad(core::deg_t deg) {
 inline constexpr core::deg_t rad2deg(core::rad_t rad) {
     return rad * constants::rad2deg;
 };
-
-//! Cast one numeric type to another ensuring no undesired change in value
-/*!
- * @tparam MR Defines the out-of-range behaviour
- */
-template<typename Out_T, MathRule MR = core::math::MR_DEFAULT>
-requires(std::integral<Out_T>)
-inline constexpr Out_T numeric_cast(auto input) {
-    static_assert(std::is_integral<decltype(input)>());
-    constexpr Out_T outmax = std::numeric_limits<Out_T>::max();
-    constexpr Out_T outmin = std::numeric_limits<Out_T>::lowest();
-    if constexpr (MR == MathRule::STRICT) {
-        if (std::in_range<Out_T>(input)) {
-            return static_cast<Out_T>(input);
-        } else {
-            throw core::exception::Condition(std::format(
-                "Input of type '{}' is above the max for output type '{}'",
-                core::debug::type_name(input),
-                input
-            ));
-        }
-    } else if constexpr (MR == MathRule::CLAMP) {
-        if (std::cmp_less(input, outmin)) {
-            return outmin;
-        }
-        if (std::cmp_greater(input, outmax)) {
-            return outmax;
-        }
-    }
-    return static_cast<Out_T>(input);
-}
 
 //! Convert unsigned type to signed type
 /*!

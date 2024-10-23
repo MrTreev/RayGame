@@ -3,7 +3,7 @@
 #include "core/base/logger.h"
 #include "core/drawing/colour.h"
 #include "core/math/arithmetic.h"
-#include "core/math/math.h"
+#include "core/math/numeric_cast.h"
 #include "core/math/random.h"
 #include "core/window/wayland.h"
 #include <cstring>

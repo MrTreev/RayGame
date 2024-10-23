@@ -2,7 +2,7 @@
 #include "core/base/debug.h"
 #include "core/base/exception.h"
 #include "core/math/math.h"
-#include <concepts>
+#include "core/math/numeric_cast.h"
 #include <limits>
 #include <type_traits>
 #include <utility>
@@ -14,7 +14,6 @@ namespace core::math {
  * @tparam MR Defines the out-of-range behaviour
  */
 template<typename Out_T, MathRule MR = core::math::MR_DEFAULT>
-requires(std::integral<Out_T>)
 inline constexpr Out_T safe_div(const auto a, const auto b) {
     static_assert(
         std::is_integral<Out_T>() && std::is_integral<decltype(a)>()

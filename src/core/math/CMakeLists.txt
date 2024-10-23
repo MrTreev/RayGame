@@ -2,16 +2,49 @@ raygame_core_lib(
     Math
     SOURCES
     arithmetic.cpp
+    arithmetic/safe_add.cpp
+    arithmetic/safe_div.cpp
+    arithmetic/safe_mult.cpp
+    arithmetic/safe_sub.cpp
     math.cpp
+    numeric_cast.cpp
     random.cpp
     rect.cpp
     vector.cpp
     HEADERS
     arithmetic.h
+    arithmetic/safe_add.h
+    arithmetic/safe_div.h
+    arithmetic/safe_mult.h
+    arithmetic/safe_sub.h
     math.h
+    numeric_cast.h
     random.h
     rect.h
     vector.h
-	PUBLIC_DEPENDS
+    PUBLIC_DEPENDS
     Base
 )
+
+raygame_test(
+    MathInline
+    SOURCES
+    arithmetic/safe_add.cpp
+    arithmetic/safe_div.cpp
+    arithmetic/safe_mult.cpp
+    arithmetic/safe_sub.cpp
+    DEPENDS
+    Base
+)
+
+raygame_test(
+    MathGenericInline
+    SOURCES
+    arithmetic/safe_add.cpp
+    arithmetic/safe_div.cpp
+    arithmetic/safe_mult.cpp
+    arithmetic/safe_sub.cpp
+    DEPENDS
+    Base
+)
+target_compile_definitions(MathGenericInline PUBLIC "RAYGAME_FORCE_GENERIC_IMPL")

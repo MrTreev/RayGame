@@ -68,25 +68,6 @@ TEST_SUITE("core::math::numeric_cast") {
     }
 }
 
-TEST_SUITE("core::math::safe_add") {
-    using core::math::safe_add;
-    TEST_CASE_TEMPLATE("in-range", T, FWINTS) {
-        const T a = 0;
-        const T b = 1;
-        CHECK_EQ(safe_add<T, STRICT>(a, b), 1);
-        CHECK_EQ(safe_add<T, STRICT>(max<T>() - b, b), max<T>());
-        CHECK_EQ(safe_add<T, CLAMP>(a, b), 1);
-        CHECK_EQ(safe_add<T, ALLOW>(a, b), 1);
-    }
-    TEST_CASE_TEMPLATE("out-of-range", T, FWINTS) {
-        const T one = 1;
-        CHECK_THROWS(safe_add<T, STRICT>(max<T>(), max<T>()));
-        CHECK_NOTHROW(safe_add<T, ALLOW>(max<T>(), max<T>()));
-        CHECK_EQ(safe_add<T, CLAMP>(max<T>(), max<T>()), max<T>());
-        CHECK_EQ(safe_add<T, CLAMP>(max<T>(), one), max<T>());
-    }
-}
-
 TEST_SUITE("core::math::safe_sub") {
     using core::math::safe_sub;
     TEST_CASE_TEMPLATE("in-range", T, FWINTS) {
@@ -137,37 +118,5 @@ TEST_SUITE("core::math::safe_mult") {
         CHECK_NOTHROW(safe_mult<T, ALLOW>(max<T>() / 2, mult));
         CHECK_EQ(safe_mult<T, CLAMP>(max<T>() / 2, mult), max<T>());
         CHECK_EQ(safe_mult<T, CLAMP>(max<T>() / 2, mult), max<T>());
-    }
-}
-
-TEST_SUITE("core::math::safe_div") {
-    using core::math::safe_div;
-    TEST_CASE_TEMPLATE("in-range", T, FWINTS) {
-        const T a    = 2;
-        const T one  = 1;
-        const T zero = 0;
-
-        CHECK_EQ(safe_div<T, STRICT>(zero, a), zero);
-        CHECK_EQ(safe_div<T, CLAMP>(zero, a), zero);
-        CHECK_EQ(safe_div<T, ALLOW>(zero, a), zero);
-
-        CHECK_EQ(safe_div<T, STRICT>(a, one), a);
-        CHECK_EQ(safe_div<T, CLAMP>(a, one), a);
-        CHECK_EQ(safe_div<T, ALLOW>(a, one), a);
-    }
-    TEST_CASE_TEMPLATE("out-of-range", T, FWINTS) {
-        const T a    = 2;
-        const T zero = 0;
-        CHECK_THROWS(safe_div<T, STRICT>(a, zero));
-        CHECK_THROWS(safe_div<T, CLAMP>(a, zero));
-        CHECK_THROWS(safe_div<T, ALLOW>(a, zero));
-        CHECK_THROWS(safe_div<T, STRICT>(zero, zero));
-        CHECK_THROWS(safe_div<T, CLAMP>(zero, zero));
-        CHECK_THROWS(safe_div<T, ALLOW>(zero, zero));
-        const std::make_signed_t<T> sub = -1;
-        CHECK_THROWS(safe_div<T, STRICT>(min<T>(), sub));
-        CHECK_NOTHROW(safe_div<T, ALLOW>(min<T>(), sub));
-        CHECK_EQ(safe_div<T, CLAMP>(min<T>(), sub), max<T>());
-        CHECK_EQ(safe_div<T, CLAMP>(min<T>(), sub), max<T>());
     }
 }

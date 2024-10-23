@@ -1,6 +1,6 @@
 #include "core/window/x11.h" // IWYU pragma: keep
 #include "core/base/condition.h"
-#include "core/math/math.h"
+#include "core/math/numeric_cast.h"
 
 core::window::X11Window::X11Window(
     core::Vec2<size_t>        size,

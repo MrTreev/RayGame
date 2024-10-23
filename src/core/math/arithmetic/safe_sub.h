@@ -4,6 +4,7 @@
 #include "core/base/debug.h"
 #include "core/base/exception.h"
 #include "core/math/math.h"
+#include "core/math/numeric_cast.h"
 #include <concepts>
 #include <limits>
 #include <type_traits>
@@ -51,7 +52,7 @@ inline constexpr Out_T safe_sub(const auto a, const auto b) {
         }
         RAYGAME_ELSE_UNKNOWN("");
     } else {
-        if (std::cmp_less(a, 0) && std::cmp_greater(b, outmax + a)) {
+        if (std::cmp_less(a, 0) && std::cmp_greater(b, (+outmax) + (+a))) {
             if constexpr (MR == MathRule::STRICT) {
                 throw Condition(std::format(
                     "Result of subtraction ({} - {}) is above the max for "
@@ -64,7 +65,8 @@ inline constexpr Out_T safe_sub(const auto a, const auto b) {
             } else if constexpr (MR == MathRule::CLAMP) {
                 return outmax;
             }
-        } else if (std::cmp_greater(a, 0) && std::cmp_less(b, outmin + a)) {
+        } else if (std::cmp_greater(a, 0)
+                   && std::cmp_less(b, ((+outmin) + (+a)))) {
             if constexpr (MR == MathRule::STRICT) {
                 throw Condition(std::format(
                     "Result of subtraction ({} - {}) is below the min for "
