@@ -3,6 +3,7 @@
 #include "core/base/exception.h"
 #include "core/math/math.h"
 #include <concepts>
+#include <format>
 
 namespace core::math {
 
@@ -37,4 +38,4 @@ inline constexpr Out_T numeric_cast(auto input) {
     return static_cast<Out_T>(input);
 }
 
-}
+} // namespace core::math

@@ -1,48 +1,9 @@
 #pragma once
-#include "core/base/condition.h"
 #include "core/base/types.h"
 #include <limits>
-#include <random>
-
-uint64_t rand_seed();
+#include <vector>
 
 namespace core::math {
-
-namespace detail {
-
-#if defined(RAYGAME_USE_FULL_RANDOM)
-constexpr bool random_seed = true;
-#else
-constexpr bool random_seed = false;
-#endif
-uint64_t rand_seed();
-
-} // namespace detail
-
-//! Returns an array of N random values in a range
-/*!
- * @tparam N number of elements
- * @param min minimum random value
- * @param max maximum random value
- * @return array of N random values in range
- *
- * @pre min < max
- */
-template<typename T, size_t N>
-requires std::is_integral_v<T> && std::is_trivial_v<T>
-inline std::array<T, N> rand_n(
-    T min = std::numeric_limits<T>::min(),
-    T max = std::numeric_limits<T>::max()
-) {
-    RAYGAME_PRE_CONDITION(min < max);
-    std::mt19937                     rng(detail::rand_seed());
-    std::uniform_int_distribution<T> dist(min, max);
-    std::array<T, N>                 results;
-    for (T& res: results) {
-        res = dist(rng);
-    }
-    return results;
-}
 
 //! Returns a vector of N random values in a range
 /*!
@@ -55,21 +16,11 @@ inline std::array<T, N> rand_n(
  */
 template<typename T>
 requires std::is_integral_v<T> && std::is_trivial_v<T>
-inline std::vector<T> rand_n(
+std::vector<T> rand_n(
     size_t amount,
     T      min = std::numeric_limits<T>::min(),
     T      max = std::numeric_limits<T>::max()
-) {
-    RAYGAME_PRE_CONDITION(min < max);
-    std::mt19937                     rng(detail::rand_seed());
-    std::uniform_int_distribution<T> dist(min, max);
-    std::vector<T>                   results;
-    results.reserve(amount);
-    while (results.size() < amount) {
-        results.push_back(dist(rng));
-    }
-    return results;
-}
+);
 
 //! Returns a random value in a range
 /*!
@@ -81,14 +32,27 @@ inline std::vector<T> rand_n(
  */
 template<typename T>
 requires std::is_integral_v<T> && std::is_trivial_v<T>
-inline T rand(
+T rand(
     T min = std::numeric_limits<T>::min(),
     T max = std::numeric_limits<T>::max()
-) {
-    RAYGAME_PRE_CONDITION(min < max);
-    std::mt19937                     rng(detail::rand_seed());
-    std::uniform_int_distribution<T> dist(min, max);
-    return dist(rng);
-}
+);
+
+extern std::vector<uint8_t>  rand_n(size_t amount, uint8_t  min, uint8_t  max);
+extern std::vector<uint16_t> rand_n(size_t amount, uint16_t min, uint16_t max);
+extern std::vector<uint32_t> rand_n(size_t amount, uint32_t min, uint32_t max);
+extern std::vector<uint64_t> rand_n(size_t amount, uint64_t min, uint64_t max);
+extern std::vector<int8_t>   rand_n(size_t amount, int8_t   min, int8_t   max);
+extern std::vector<int16_t>  rand_n(size_t amount, int16_t  min, int16_t  max);
+extern std::vector<int32_t>  rand_n(size_t amount, int32_t  min, int32_t  max);
+extern std::vector<int64_t>  rand_n(size_t amount, int64_t  min, int64_t  max);
+
+extern template uint8_t  rand(uint8_t min, uint8_t max);
+extern template uint16_t rand(uint16_t min, uint16_t max);
+extern template uint32_t rand(uint32_t min, uint32_t max);
+extern template uint64_t rand(uint64_t min, uint64_t max);
+extern template int8_t   rand(int8_t min, int8_t max);
+extern template int16_t  rand(int16_t min, int16_t max);
+extern template int32_t  rand(int32_t min, int32_t max);
+extern template int64_t  rand(int64_t min, int64_t max);
 
 } // namespace core::math

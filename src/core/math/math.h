@@ -3,7 +3,6 @@
 #include "core/base/types.h"
 #include "core/math/vector.h"
 #include <cassert>
-#include <iostream>
 #include <limits>
 #include <type_traits>
 #include <utility>
@@ -98,5 +97,3 @@ inline constexpr auto max_type(auto a, auto b) {
 }
 
 } // namespace core::math
-
-std::ostream& operator<<(std::ostream& os, core::math::MathRule c);
