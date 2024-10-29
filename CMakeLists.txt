@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.25...3.29)
+cmake_minimum_required(VERSION 3.6...3.29)
 
 project(
     RayGame
@@ -7,6 +7,7 @@ project(
     LANGUAGES CXX C
 )
 
+cmake_policy(SET CMP0063 NEW)
 set(RAYGAME_PATH_ETC ${PROJECT_SOURCE_DIR}/etc)
 set(RAYGAME_PATH_SRC ${PROJECT_SOURCE_DIR}/src)
 set(RAYGAME_PATH_EXT ${CMAKE_CURRENT_BINARY_DIR}/ext)
@@ -69,7 +70,16 @@ endif()
 
 if(RAYGAME_TEST_ENABLE)
     include(CTest)
+    set(rg_no_dev_warnings_backup "$CACHE{CMAKE_SUPPRESS_DEVELOPER_WARNINGS}")
+    set(CMAKE_SUPPRESS_DEVELOPER_WARNINGS
+        ON
+        CACHE INTERNAL "" FORCE
+    )
     add_subdirectory(${RAYGAME_PATH_ETC}/doctest)
+    set(CMAKE_SUPPRESS_DEVELOPER_WARNINGS
+        ${rg_no_dev_warnings_backup}
+        CACHE INTERNAL "" FORCE
+    )
 endif()
 
 add_subdirectory(src)

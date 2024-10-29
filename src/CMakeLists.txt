@@ -116,9 +116,10 @@ function(raygame_test _target)
     set(RAYGAME_TEST_USE_MAIN $<NOT:$<BOOL:${RAYGAME_TESTARGS_NO_MAIN}>>)
     add_executable(${_target})
     target_compile_options(${_target} PRIVATE -Wno-unsafe-buffer-usage)
+	target_compile_definitions(${_target} PUBLIC ${RAYGAME_TESTARGS_DEFINES})
+    target_compile_definitions(${_target} PUBLIC "RAYGAME_ENABLE_TESTS")
     target_link_libraries(${_target} PUBLIC ${RAYGAME_TESTARGS_DEPENDS})
     target_link_libraries(${_target} PUBLIC doctest::doctest)
-    target_compile_definitions(${_target} PUBLIC ${RAYGAME_TESTARGS_DEPENDS})
     target_sources(
         ${_target} PUBLIC $<${RAYGAME_TEST_USE_MAIN}:${RAYGAME_PATH_SRC}/test/main.cpp> ${RAYGAME_TESTARGS_SOURCES}
     )
