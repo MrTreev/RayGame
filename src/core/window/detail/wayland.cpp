@@ -527,7 +527,7 @@ void core::window::detail::WaylandImpl::wl_pointer_handle_frame(
             core::log::trace(handle_axis(event.axis_vertical));
         }
     }
-    std::memset(&event, 0, sizeof(event));
+    event = {};
 }
 
 void core::window::detail::WaylandImpl::wl_pointer_handle_leave(
