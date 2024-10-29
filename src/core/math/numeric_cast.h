@@ -1,9 +1,10 @@
 #pragma once
 #include "core/base/debug.h"
 #include "core/base/exception.h"
-#include "core/math/math.h"
+#include "core/math/mathrule.h"
 #include <concepts>
 #include <format>
+#include <utility>
 
 namespace core::math {
 
@@ -22,7 +23,7 @@ inline constexpr Out_T numeric_cast(auto input) {
             return static_cast<Out_T>(input);
         } else {
             throw core::exception::Condition(std::format(
-                "Input of type '{}' is above the max for output type '{}'",
+                "Input of type '{}' is outside the range for output type '{}'",
                 core::debug::type_name(input),
                 input
             ));

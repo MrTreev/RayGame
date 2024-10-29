@@ -1,7 +1,6 @@
 #pragma once
 
 #include "core/math/arithmetic.h"
-#include "core/math/math.h"
 #include "core/math/vector.h"
 #include <string>
 

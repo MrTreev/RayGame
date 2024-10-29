@@ -23,28 +23,33 @@ inline constexpr Out_T safe_sub(const auto a, const auto b) {
         std::is_integral<Out_T>() && std::is_integral<decltype(a)>()
         && std::is_integral<decltype(b)>()
     );
+    const std::string oor_string = std::format(
+        "Result of subtraction ({} - {}) is outside the range of "
+        "output type '{}'",
+        a,
+        b,
+        core::debug::type_name<Out_T>()
+    );
     constexpr Out_T outmax = std::numeric_limits<Out_T>::max();
     constexpr Out_T outmin = std::numeric_limits<Out_T>::lowest();
+    using core::config::COMPILER_IS_GCC_LIKE;
+    using core::config::FORCE_GENERIC_IMPL;
     using core::debug::type_name;
     using core::exception::Condition;
     using core::math::numeric_cast;
+    using work_t       = decltype(work_type(work_type(a, b), Out_T{}));
+    const auto worka   = static_cast<work_t>(a);
+    const auto workb   = static_cast<work_t>(b);
+    const auto workmin = static_cast<work_t>(outmin);
 
-    if constexpr (core::config::COMPILER_IS_GCC_LIKE
-                  && !core::config::FORCE_GENERIC_IMPL) {
+    if constexpr (COMPILER_IS_GCC_LIKE && !FORCE_GENERIC_IMPL) {
         Out_T res = 0;
         if ((!__builtin_sub_overflow(a, b, &res)) || (MR == MathRule::ALLOW)) {
-            return res;
+            return numeric_cast<Out_T, MR>(res);
         } else if constexpr (MR == MathRule::STRICT) {
-            throw Condition(std::format(
-                "Result of subtraction ({} - {}) is outside the range of "
-                "output type '{}'",
-                a,
-                b,
-                type_name<Out_T>()
-            ));
+            throw Condition(oor_string);
         } else if constexpr (MR == MathRule::CLAMP) {
-            if (std::cmp_greater(b, outmin + a)
-                || std::cmp_greater(a, outmin + b)) {
+            if (std::cmp_greater(workb, workmin + worka)) {
                 return outmin;
             } else {
                 return outmax;
@@ -52,34 +57,29 @@ inline constexpr Out_T safe_sub(const auto a, const auto b) {
         }
         RAYGAME_ELSE_UNKNOWN("");
     } else {
-        if (std::cmp_less(a, 0) && std::cmp_greater(b, (+outmax) + (+a))) {
-            if constexpr (MR == MathRule::STRICT) {
-                throw Condition(std::format(
-                    "Result of subtraction ({} - {}) is above the max for "
-                    "output "
-                    "type '{}'",
-                    a,
-                    b,
-                    type_name<Out_T>()
-                ));
-            } else if constexpr (MR == MathRule::CLAMP) {
-                return outmax;
-            }
-        } else if (std::cmp_greater(a, 0)
-                   && std::cmp_less(b, ((+outmin) + (+a)))) {
-            if constexpr (MR == MathRule::STRICT) {
-                throw Condition(std::format(
-                    "Result of subtraction ({} - {}) is below the min for "
-                    "output type '{}'",
-                    a,
-                    b,
-                    type_name<Out_T>()
-                ));
-            } else if constexpr (MR == MathRule::CLAMP) {
-                return outmin;
+        if ((b == 0) || MR == MathRule::ALLOW) {
+            return numeric_cast<Out_T, MR>(worka - workb);
+        } else {
+            const work_t res = worka - workb;
+            if ((b > 0) && (worka >= workb)) {
+                return numeric_cast<Out_T, MR>(res);
+            } else if ((b > 0) && (res > worka)) {
+                if constexpr (MR == MathRule::STRICT) {
+                    throw Condition(oor_string);
+                } else {
+                    return outmin;
+                }
+            } else if ((b < 0) && (res < worka)) {
+                core::log::debug("max");
+                if constexpr (MR == MathRule::STRICT) {
+                    throw Condition(oor_string);
+                } else {
+                    return outmax;
+                }
+            } else {
+                return numeric_cast<Out_T, MR>(res);
             }
         }
-        return numeric_cast<Out_T, MR>(a - b);
     }
 }
 

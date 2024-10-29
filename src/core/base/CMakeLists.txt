@@ -15,3 +15,22 @@ raygame_core_lib(
     logger.h
     types.h
 )
+
+raygame_core_lib(
+    BaseGeneric
+    SOURCES
+    condition.cpp
+    config.cpp
+    debug.cpp
+    exception.cpp
+    logger.cpp
+    types.cpp
+    HEADERS
+    condition.h
+    config.h
+    debug.h
+    exception.h
+    logger.h
+    types.h
+)
+target_compile_definitions(BaseGeneric PUBLIC "RAYGAME_FORCE_GENERIC_IMPL")

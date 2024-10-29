@@ -1,37 +1,11 @@
 #pragma once
-#include "core/base/config.h"
 #include "core/base/types.h"
-#include "core/math/vector.h"
+#include "core/math/mathrule.h"
 #include <cassert>
 #include <limits>
 #include <type_traits>
-#include <utility>
 
 namespace core::math {
-
-//! Rule for dealing with out-of-range errors
-enum class MathRule {
-    //! Throw an exception
-    STRICT,
-    //! Do nothing, return whatever would be normally returned
-    ALLOW,
-    //! Clamp to the range representable by the desired type
-    CLAMP,
-};
-
-namespace {
-consteval MathRule default_mathrule() {
-    if constexpr (core::config::BUILD_TYPE == core::config::BuildType::DEBUG) {
-        return MathRule::STRICT;
-    } else {
-        return MathRule::ALLOW;
-    }
-}
-} // namespace
-
-//! Default MathRule, STRICT for debug, ALLOW for production
-static constexpr MathRule MR_DEFAULT = default_mathrule();
-
 namespace constants {
 constexpr float pi      = 3.14159265358979323846F;
 constexpr float deg2rad = (pi / 180.0F);
@@ -59,39 +33,34 @@ inline constexpr auto make_signed(auto number) {
     return numeric_cast<std::make_signed_t<decltype(number)>, MR>(number);
 }
 
-//! Create a Vec2 of a and b using the larger of the two types
-inline constexpr auto max_type(auto a, auto b) {
-    static_assert(
-        std::is_integral<decltype(a)>() && std::is_integral<decltype(b)>()
-    );
-    if constexpr (std::is_unsigned<decltype(a)>()
-                  == std::is_unsigned<decltype(b)>()) {
-        if constexpr (std::cmp_greater(
-                          std::numeric_limits<decltype(a)>::max(),
-                          std::numeric_limits<decltype(b)>::max()
-                      )) {
-            return core::Vec2(a, static_cast<decltype(a)>(b));
+inline consteval auto work_type(const auto a, const auto b) {
+    using a_t = decltype(a);
+    using b_t = decltype(b);
+    if constexpr (std::is_same<a_t, b_t>()) {
+        return a_t{};
+    }
+    if constexpr (std::is_signed<a_t>() == std::is_signed<b_t>()) {
+        if constexpr (std::numeric_limits<a_t>::max()
+                      > std::numeric_limits<b_t>::max()) {
+            return a_t{};
         } else {
-            return core::Vec2(static_cast<decltype(b)>(a), b);
+            return b_t{};
         }
     } else {
-        if constexpr (std::cmp_equal(
-                          std::numeric_limits<decltype(a)>::max(),
-                          std::numeric_limits<decltype(b)>::max()
-                      )) {
-            if constexpr (std::is_signed<decltype(a)>()) {
-                return core::Vec2(a, static_cast<decltype(a)>(b));
+        if constexpr (std::is_signed<a_t>()) {
+            if constexpr (sizeof(a_t) <= sizeof(b_t)) {
+                using ret_t = std::make_signed<decltype(+b)>::type;
+                return ret_t{};
             } else {
-                return core::Vec2(static_cast<decltype(b)>(a), b);
+                return a_t{};
             }
-        }
-        if constexpr (std::cmp_greater(
-                          std::numeric_limits<decltype(a)>::max(),
-                          std::numeric_limits<decltype(b)>::max()
-                      )) {
-            return core::Vec2(a, static_cast<decltype(a)>(b));
         } else {
-            return core::Vec2(static_cast<decltype(b)>(a), b);
+            if constexpr (sizeof(b_t) <= sizeof(a_t)) {
+                using ret_t = std::make_signed<decltype(+a)>::type;
+                return ret_t{};
+            } else {
+                return b_t{};
+            }
         }
     }
 }

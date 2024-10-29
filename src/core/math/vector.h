@@ -1,5 +1,7 @@
 #pragma once
 #include "core/base/types.h"
+#include "core/math/arithmetic.h"
+#include "core/math/mathrule.h"
 #include <string>
 
 namespace core {
@@ -11,6 +13,22 @@ struct Vec2 {
     Type y;
 
     operator std::string();
+
+    template<typename U, core::math::MathRule MR = core::math::MR_DEFAULT>
+    Vec2<T> operator+(U other) {
+        return {
+            core::math::safe_add<T>(x, other),
+            core::math::safe_add<T>(y, other)
+        };
+    }
+
+    template<typename U, core::math::MathRule MR = core::math::MR_DEFAULT>
+    Vec2<T> operator+(Vec2<U> other) {
+        return {
+            core::math::safe_add<T>(x, other.x),
+            core::math::safe_add<T>(y, other.y)
+        };
+    }
 };
 
 template<typename T>
@@ -21,6 +39,24 @@ struct Vec3 {
     Type z;
 
     operator std::string();
+
+    template<typename U, core::math::MathRule MR = core::math::MR_DEFAULT>
+    Vec3<T> operator+(U other) {
+        return {
+            core::math::safe_add<T>(x, other),
+            core::math::safe_add<T>(y, other),
+            core::math::safe_add<T>(z, other)
+        };
+    }
+
+    template<typename U, core::math::MathRule MR = core::math::MR_DEFAULT>
+    Vec3<T> operator+(Vec3<U> other) {
+        return {
+            core::math::safe_add<T>(x, other.x),
+            core::math::safe_add<T>(y, other.y),
+            core::math::safe_add<T>(z, other.z)
+        };
+    }
 };
 
 template<typename T>
@@ -32,6 +68,26 @@ struct Vec4 {
     Type w;
 
     operator std::string();
+
+    template<typename U, core::math::MathRule MR = core::math::MR_DEFAULT>
+    Vec4<T> operator+(U other) {
+        return {
+            core::math::safe_add<T>(x, other),
+            core::math::safe_add<T>(y, other),
+            core::math::safe_add<T>(z, other),
+            core::math::safe_add<T>(w, other)
+        };
+    }
+
+    template<typename U, core::math::MathRule MR = core::math::MR_DEFAULT>
+    Vec4<T> operator+(Vec4<U> other) {
+        return {
+            core::math::safe_add<T>(x, other.x),
+            core::math::safe_add<T>(y, other.y),
+            core::math::safe_add<T>(z, other.z),
+            core::math::safe_add<T>(w, other.w)
+        };
+    }
 };
 
 // Vec2 Specialisations

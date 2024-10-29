@@ -45,8 +45,10 @@ inline constexpr Out_T safe_div(const auto a, const auto b) {
                   == std::is_signed<decltype(b)>()) {
         return numeric_cast<Out_T, MR>(a / b);
     } else {
-        const auto maxs = max_type(a, b);
-        return numeric_cast<Out_T, MR>(maxs.x / maxs.y);
+        using work_t       = decltype(work_type(work_type(a, b), Out_T{}));
+        const work_t worka = static_cast<work_t>(a);
+        const work_t workb = static_cast<work_t>(b);
+        return numeric_cast<Out_T, MR>(worka / workb);
     }
 }
 

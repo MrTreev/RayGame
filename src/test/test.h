@@ -41,4 +41,18 @@ inline constexpr bool all_same(std::array<T, N> arr) {
         return a == b;
     });
 }
+
+template<typename first, typename second>
+struct TypePair {
+    using A = first;
+    using B = second;
+};
+
+template<typename first, typename second, typename third>
+struct TypeTriple {
+    using A = first;
+    using B = second;
+    using C = third;
+};
+
 } // namespace test
