@@ -4,9 +4,9 @@ set -eu
 DIR_BASE="$(git rev-parse --show-toplevel)"
 CMAKE_BLD_DIR="${DIR_BASE}/build-multi"
 CMAKE_SRC_DIR="${DIR_BASE}"
-CMAKE_GENERATOR="Ninja"
-REBUILD=0
-RUN_BUILD="${1:-no}"
+CMAKE_GENERATOR="${CMAKE_GENERATOR:-Ninja}"
+RUN_CHECKS="${RUN_CHECKS:-no}"
+REBUILD="${REBUILD:-no}"
 
 run_build(){
 	compiler="${1}"
@@ -14,9 +14,10 @@ run_build(){
 	build_type="${3}"
     extra_args="${4:-}"
 	build_name="${compiler}-${library}-${build_type}${extra_args:+-sanitize}"
+	echo "Running build: ${build_name}"
 	build_dir="${CMAKE_BLD_DIR}/${build_name}"
-	if ! [ -f "${CMAKE_BLD_DIR}" ]; then
-		# shellcheck disable=SC2086 # We want the args to expand
+	if ! [ -e "${build_dir}" ]; then
+		mkdir -p "${build_dir}"
 		cmake \
             -DCMAKE_CXX_COMPILER="${compiler}" \
             -DCMAKE_BUILD_TYPE="${build_type}" \
@@ -24,12 +25,21 @@ run_build(){
             -Wno-dev \
             -S "${CMAKE_SRC_DIR}" \
             -G "${CMAKE_GENERATOR}" \
-            -B "${build_dir}"
+            -B "${build_dir}" \
+			> "${build_dir}-config.log" \
+			|| return 1
 	fi
-    cmake --build "${build_dir}" 2>&1 | tee -a "${build_dir}-compilation.log"
-	ctest --test-dir "${build_dir}" --output-junit "${build_dir}-junit.xml"
+    cmake --build "${build_dir}" \
+		> "${build_dir}-compilation.log" \
+		|| return 2
+	ctest \
+		--test-dir "${build_dir}" \
+		--output-junit "${build_dir}-junit.xml" \
+		--output-on-failure \
+		> "${build_dir}-test.log" \
+		|| return 3
     mkdir -p "${build_dir}/cppcheck"
-    if [ "${RUN_BUILD}" = "checks" ]; then
+    if [ "${RUN_CHECKS}" = "yes" ]; then
         cppcheck \
             --xml --xml-version=2 \
             --cppcheck-build-dir="${build_dir}/cppcheck" \
@@ -44,12 +54,40 @@ run_build(){
     fi
 }
 
-if [ "${REBUILD}" -eq 1 ]; then
+retval_to_str(){
+	retval="${1}"
+	if [ "${retval}" -eq 0 ]; then
+		echo "Success"
+	elif [ "${retval}" -eq 1 ]; then
+		echo "Failed in Config"
+	elif [ "${retval}" -eq 2 ]; then
+		echo "Failed in Build"
+	elif [ "${retval}" -eq 3 ]; then
+		echo "Failed in Tests"
+	elif [ "${retval}" -eq 4 ]; then
+		echo "Failed in Check"
+	else
+		echo "Unknown"
+	fi
+}
+
+if [ "${REBUILD}" = "yes" ]; then
+	echo "Removing builds"
 	rm -rf "${CMAKE_BLD_DIR}";
 fi
 
-run_build "clang++" "libstdc++" "Debug"
-run_build "clang++" "libstdc++" "Debug" "-fsanitize=address -fsanitize=undefined"
-run_build "clang++" "libstdc++" "Release"
-run_build "g++"     "libstdc++" "Debug"
-run_build "g++"     "libstdc++" "Release"
+run_build "clang++" "libstdc++" "Debug" 											|| BUILD_1=$?
+run_build "clang++" "libstdc++" "Debug" "-fsanitize=address -fsanitize=undefined" 	|| BUILD_2=$?
+run_build "clang++" "libstdc++" "Release" 											|| BUILD_3=$?
+run_build "g++"     "libstdc++" "Debug" 											|| BUILD_4=$?
+run_build "g++"     "libstdc++" "Release" 											|| BUILD_5=$?
+
+printf "+-----------------------------------------------------+\n"
+printf "| Results                                             |\n"
+printf "+-----------------------------------------------------+\n"
+printf "| clang debug:    %-35s |\n" "$(retval_to_str "${BUILD_1:-0}")"
+printf "| clang sanitize: %-35s |\n" "$(retval_to_str "${BUILD_2:-0}")"
+printf "| clang release:  %-35s |\n" "$(retval_to_str "${BUILD_3:-0}")"
+printf "| gnu++ debug:    %-35s |\n" "$(retval_to_str "${BUILD_4:-0}")"
+printf "| gnu++ release:  %-35s |\n" "$(retval_to_str "${BUILD_5:-0}")"
+printf "+-----------------------------------------------------+\n"
