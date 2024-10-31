@@ -57,19 +57,19 @@ inline constexpr Out_T safe_sub(const auto a, const auto b) {
         }
         RAYGAME_ELSE_UNKNOWN("");
     } else {
-        if ((b == 0) || MR == MathRule::ALLOW) {
+        if (std::cmp_equal(b, 0) || MR == MathRule::ALLOW) {
             return numeric_cast<Out_T, MR>(worka - workb);
         } else {
             const work_t res = worka - workb;
-            if ((b > 0) && (worka >= workb)) {
+            if (std::cmp_less(b, 0) && std::cmp_greater_equal(a, b)) {
                 return numeric_cast<Out_T, MR>(res);
-            } else if ((b > 0) && (res > worka)) {
+            } else if (std::cmp_greater(b, 0) && std::cmp_greater(res, a)) {
                 if constexpr (MR == MathRule::STRICT) {
                     throw Condition(oor_string);
                 } else {
                     return outmin;
                 }
-            } else if ((b < 0) && (res < worka)) {
+            } else if (std::cmp_less(b, 0) && std::cmp_less(res, a)) {
                 core::log::debug("max");
                 if constexpr (MR == MathRule::STRICT) {
                     throw Condition(oor_string);
