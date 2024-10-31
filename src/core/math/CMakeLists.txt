@@ -41,3 +41,9 @@ raygame_test(MathGenericInlineDiv SOURCES arithmetic/safe_div.cpp DEPENDS BaseGe
 target_compile_definitions(MathGenericInlineDiv PUBLIC "RAYGAME_FORCE_GENERIC_IMPL")
 raygame_test(MathGenericInlineMul SOURCES arithmetic/safe_mult.cpp DEPENDS BaseGeneric)
 target_compile_definitions(MathGenericInlineMul PUBLIC "RAYGAME_FORCE_GENERIC_IMPL")
+
+add_executable(subtest)
+target_link_libraries(subtest PRIVATE Math)
+target_sources(subtest PUBLIC subtest.cpp)
+target_compile_definitions(subtest PUBLIC "RAYGAME_FORCE_GENERIC_IMPL")
+raygame_add_args(subtest)

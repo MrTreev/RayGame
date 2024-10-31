@@ -14,6 +14,14 @@ using std::uint32_t;
 using std::uint64_t;
 using std::uint8_t;
 
+#if defined(RAYGAME_CC_GCC)
+using int128_t  = unsigned __int128;
+using uint128_t = __uint128;
+#elif defined(RAYGAME_CC_CLANG)
+using int128_t  = __int128_t;
+using uint128_t = __uint128_t;
+#endif
+
 using std::intmax_t;
 using std::intptr_t;
 using std::uintmax_t;
@@ -36,7 +44,7 @@ struct Pair {
     A a;
     B b;
 
-    constexpr inline operator std::string() {
+    constexpr operator std::string() {
         return "Pair<" + core::debug::type_name<A>() + ", "
                + core::debug::type_name<B>() + ">(" + ": " + std::to_string(a)
                + ", " + ": " + std::to_string(b) + ")";
@@ -52,7 +60,7 @@ struct Triple {
     B b;
     C c;
 
-    constexpr inline operator std::string() {
+    constexpr operator std::string() {
         return "Triple<" + core::debug::type_name<A>() + ", "
                + core::debug::type_name<B>() + ", "
                + core::debug::type_name<C>() + ">(" + ": " + std::to_string(a)
@@ -70,7 +78,7 @@ struct Quad {
     Type br;
     Type tr;
 
-    constexpr inline operator std::string() {
+    constexpr operator std::string() {
         return "Quad<" + core::debug::type_name<Type>() + ">(tl: "
                + std::to_string(tl) + ", bl: " + std::to_string(bl) + ", br: "
                + std::to_string(br) + ", tr: " + std::to_string(tr) + ")";

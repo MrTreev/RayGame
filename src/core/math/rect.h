@@ -44,7 +44,7 @@ public:
         height = core::math::safe_mult<Dis_t, MR>(y, vec.y);
     }
 
-    constexpr inline operator std::string() {
+    constexpr operator std::string() {
         return "Rect(x: " + std::to_string(x) + ", y: " + std::to_string(y)
                + ", width: " + std::to_string(width)
                + ", height: " + std::to_string(height) + ")";

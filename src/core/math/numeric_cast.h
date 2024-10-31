@@ -14,7 +14,7 @@ namespace core::math {
  */
 template<typename Out_T, MathRule MR = core::math::MR_DEFAULT>
 requires(std::integral<Out_T>)
-inline constexpr Out_T numeric_cast(auto input) {
+constexpr Out_T numeric_cast(auto input) {
     static_assert(std::is_integral<decltype(input)>());
     constexpr Out_T outmax = std::numeric_limits<Out_T>::max();
     constexpr Out_T outmin = std::numeric_limits<Out_T>::lowest();

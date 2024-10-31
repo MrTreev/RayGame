@@ -19,7 +19,7 @@ concept checkable = requires(T t) { !t; };
  */
 template<typename Checkable_T>
 requires detail::checkable<Checkable_T>
-inline constexpr void pre_condition(
+constexpr void pre_condition(
     const Checkable_T&                   check,
     const std::string&                   message,
     const core::detail::source_location& loc =
@@ -37,7 +37,7 @@ inline constexpr void pre_condition(
  */
 template<typename Checkable_T>
 requires detail::checkable<Checkable_T>
-inline constexpr void check_condition(
+constexpr void check_condition(
     const Checkable_T&                   check,
     const std::string&                   message,
     const core::detail::source_location& loc =
@@ -55,7 +55,7 @@ inline constexpr void check_condition(
  */
 template<typename Checkable_T>
 requires detail::checkable<Checkable_T>
-inline constexpr void post_condition(
+constexpr void post_condition(
     const Checkable_T&                   check,
     const std::string&                   message,
     const core::detail::source_location& loc =
@@ -72,7 +72,7 @@ inline constexpr void post_condition(
  *  @see CheckCondition
  */
 template<typename T>
-inline constexpr void check_ptr(
+constexpr void check_ptr(
     const T&                             check,
     const std::string&                   message,
     const core::detail::source_location& loc =
@@ -87,25 +87,27 @@ inline constexpr void check_ptr(
 
 } // namespace core::condition
 
-#define RAYGAME_PRE_CONDITION(expr)  ::core::condition::pre_condition((expr), #expr)
-#define RAYGAME_POST_CONDITION(expr) ::core::condition::post_condition((expr), #expr)
-#define RAYGAME_CHECK_CONDITION(expr)                                               \
+#define RAYGAME_PRE_CONDITION(expr)                                            \
+    ::core::condition::pre_condition((expr), #expr)
+#define RAYGAME_POST_CONDITION(expr)                                           \
+    ::core::condition::post_condition((expr), #expr)
+#define RAYGAME_CHECK_CONDITION(expr)                                          \
     ::core::condition::check_condition((expr), #expr)
-#define RAYGAME_PRE_CONDITION_MSG(expr, ...)                                        \
+#define RAYGAME_PRE_CONDITION_MSG(expr, ...)                                   \
     ::core::condition::pre_condition((expr), std::format(__VA_ARGS__))
-#define RAYGAME_POST_CONDITION_MSG(expr, ...)                                       \
+#define RAYGAME_POST_CONDITION_MSG(expr, ...)                                  \
     ::core::condition::post_condition((expr), std::format(__VA_ARGS__))
-#define RAYGAME_CHECK_CONDITION_MSG(expr, ...)                                      \
+#define RAYGAME_CHECK_CONDITION_MSG(expr, ...)                                 \
     ::core::condition::check_condition((expr), std::format(__VA_ARGS__))
 
 #if defined(RAYGAME_BUILD_TYPE_RELEASE)
-#    define RAYGAME_ELSE_UNKNOWN(item_name)                                         \
+#    define RAYGAME_ELSE_UNKNOWN(item_name)                                    \
         else {                                                                 \
             ::core::log::debug("Unknown " item_name);                          \
         }                                                                      \
         static_assert(true)
 #elif defined(RAYGAME_BUILD_TYPE_DEBUG)
-#    define RAYGAME_ELSE_UNKNOWN(item_name)                                         \
+#    define RAYGAME_ELSE_UNKNOWN(item_name)                                    \
         else {                                                                 \
             throw ::core::exception::Condition("Unknown " item_name);          \
         }                                                                      \

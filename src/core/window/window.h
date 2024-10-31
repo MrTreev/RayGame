@@ -50,15 +50,15 @@ public:
     Window(Window&&)            = default;
     Window& operator=(Window&&) = default;
 
-    inline void set_style(this Derived& self, core::window::WindowStyle style) {
+    void set_style(this Derived& self, core::window::WindowStyle style) {
         self.set_style(style);
     }
 
-    inline bool next_frame(this Derived& self) {
+    bool next_frame(this Derived& self) {
         self.next_frame();
     }
 
-    inline bool should_close() {
+    bool should_close() {
         return m_should_close;
     }
 };

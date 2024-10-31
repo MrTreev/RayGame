@@ -17,7 +17,7 @@ namespace core::math {
  */
 template<typename Out_T, MathRule MR = core::math::MR_DEFAULT>
 requires(std::integral<Out_T>)
-inline constexpr Out_T safe_add(const auto a, const auto b) {
+constexpr Out_T safe_add(const auto a, const auto b) {
     static_assert(
         std::is_integral<Out_T>() && std::is_integral<decltype(a)>()
         && std::is_integral<decltype(b)>()

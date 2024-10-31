@@ -50,7 +50,7 @@ constexpr Level logging_level = Level::NOTE;
 #endif
 
 //! Logging level to string converter
-inline std::string to_string(Level level) {
+constexpr std::string to_string(Level level) {
     switch (level) {
     case Level::TRACE:
         return "TRACE";

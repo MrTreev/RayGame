@@ -105,7 +105,7 @@ public:
     bool next_frame();
     void set_style(core::window::WindowStyle style);
 
-    inline bool should_close() {
+    bool should_close() {
         return m_should_close;
     }
 };

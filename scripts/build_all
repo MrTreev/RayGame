@@ -26,17 +26,17 @@ run_build(){
             -S "${CMAKE_SRC_DIR}" \
             -G "${CMAKE_GENERATOR}" \
             -B "${build_dir}" \
-			> "${build_dir}-config.log" \
+			> "${build_dir}/log-configure.txt" \
 			|| return 1
 	fi
     cmake --build "${build_dir}" \
-		> "${build_dir}-compilation.log" \
+		> "${build_dir}/log-build.txt" \
 		|| return 2
 	ctest \
 		--test-dir "${build_dir}" \
-		--output-junit "${build_dir}-junit.xml" \
+		--output-junit "${build_dir}/junit.xml" \
 		--output-on-failure \
-		> "${build_dir}-test.log" \
+		> "${build_dir}/log-test.txt" 2>&1 \
 		|| return 3
     mkdir -p "${build_dir}/cppcheck"
     if [ "${RUN_CHECKS}" = "yes" ]; then
@@ -50,7 +50,7 @@ run_build(){
             --language=c++ \
             -I "${CMAKE_SRC_DIR}/src" \
             -I "${build_dir}/src/core/windowimpl/wayland" \
-            2> "${build_dir}-cppcheck.xml"
+            2> "${build_dir}/cppcheck.xml"
     fi
 }
 
@@ -78,16 +78,20 @@ fi
 
 run_build "clang++" "libstdc++" "Debug" 											|| BUILD_1=$?
 run_build "clang++" "libstdc++" "Debug" "-fsanitize=address -fsanitize=undefined" 	|| BUILD_2=$?
-run_build "clang++" "libstdc++" "Release" 											|| BUILD_3=$?
-run_build "g++"     "libstdc++" "Debug" 											|| BUILD_4=$?
-run_build "g++"     "libstdc++" "Release" 											|| BUILD_5=$?
+run_build "clang++" "libstdc++" "RelWithDebInfo" 									|| BUILD_3=$?
+run_build "clang++" "libstdc++" "Release" 											|| BUILD_4=$?
+run_build "g++"     "libstdc++" "Debug" 											|| BUILD_5=$?
+run_build "g++"     "libstdc++" "RelWithDebInfo" 									|| BUILD_6=$?
+run_build "g++"     "libstdc++" "Release" 											|| BUILD_7=$?
 
 printf "+-----------------------------------------------------+\n"
 printf "| Results                                             |\n"
 printf "+-----------------------------------------------------+\n"
 printf "| clang debug:    %-35s |\n" "$(retval_to_str "${BUILD_1:-0}")"
 printf "| clang sanitize: %-35s |\n" "$(retval_to_str "${BUILD_2:-0}")"
-printf "| clang release:  %-35s |\n" "$(retval_to_str "${BUILD_3:-0}")"
-printf "| gnu++ debug:    %-35s |\n" "$(retval_to_str "${BUILD_4:-0}")"
-printf "| gnu++ release:  %-35s |\n" "$(retval_to_str "${BUILD_5:-0}")"
+printf "| clang deb rel:  %-35s |\n" "$(retval_to_str "${BUILD_3:-0}")"
+printf "| clang release:  %-35s |\n" "$(retval_to_str "${BUILD_4:-0}")"
+printf "| gnu++ debug:    %-35s |\n" "$(retval_to_str "${BUILD_5:-0}")"
+printf "| gnu++ deb rel:  %-35s |\n" "$(retval_to_str "${BUILD_6:-0}")"
+printf "| gnu++ release:  %-35s |\n" "$(retval_to_str "${BUILD_7:-0}")"
 printf "+-----------------------------------------------------+\n"

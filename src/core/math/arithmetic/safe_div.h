@@ -14,7 +14,7 @@ namespace core::math {
  * @tparam MR Defines the out-of-range behaviour
  */
 template<typename Out_T, MathRule MR = core::math::MR_DEFAULT>
-inline constexpr Out_T safe_div(const auto a, const auto b) {
+constexpr Out_T safe_div(const auto a, const auto b) {
     static_assert(
         std::is_integral<Out_T>() && std::is_integral<decltype(a)>()
         && std::is_integral<decltype(b)>()
