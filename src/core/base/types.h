@@ -14,14 +14,6 @@ using std::uint32_t;
 using std::uint64_t;
 using std::uint8_t;
 
-#if defined(RAYGAME_CC_GCC)
-using int128_t  = unsigned __int128;
-using uint128_t = __uint128;
-#elif defined(RAYGAME_CC_CLANG)
-using int128_t  = __int128_t;
-using uint128_t = __uint128_t;
-#endif
-
 using std::intmax_t;
 using std::intptr_t;
 using std::uintmax_t;

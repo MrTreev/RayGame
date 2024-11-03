@@ -42,7 +42,7 @@ consteval auto larger_type(auto in) {
     } else if constexpr (std::is_same<decltype(in), uint32_t>()) {
         return uint64_t{};
     } else if constexpr (std::is_same<decltype(in), uint64_t>()) {
-        return uint128_t{};
+        return uintmax_t{};
     } else if constexpr (std::is_same<decltype(in), int8_t>()) {
         return int16_t{};
     } else if constexpr (std::is_same<decltype(in), int16_t>()) {
@@ -50,7 +50,7 @@ consteval auto larger_type(auto in) {
     } else if constexpr (std::is_same<decltype(in), int32_t>()) {
         return int64_t{};
     } else if constexpr (std::is_same<decltype(in), int64_t>()) {
-        return int128_t{};
+        return intmax_t{};
     } else {
         throw core::exception::Condition("Invalid type");
     }
@@ -86,60 +86,4 @@ consteval auto work_type(auto a, auto b) {
         }
     }
 }
-
-template<typename In_T, typename Out_T>
-consteval Out_T larger_type() {
-    if constexpr (std::is_same<In_T, uint8_t>()) {
-        return uint16_t{};
-    } else if constexpr (std::is_same<In_T, uint16_t>()) {
-        return uint32_t{};
-    } else if constexpr (std::is_same<In_T, uint32_t>()) {
-        return uint64_t{};
-    } else if constexpr (std::is_same<In_T, uint64_t>()) {
-        return uint128_t{};
-    } else if constexpr (std::is_same<In_T, int8_t>()) {
-        return int16_t{};
-    } else if constexpr (std::is_same<In_T, int16_t>()) {
-        return int32_t{};
-    } else if constexpr (std::is_same<In_T, int32_t>()) {
-        return int64_t{};
-    } else if constexpr (std::is_same<In_T, int64_t>()) {
-        return int128_t{};
-    } else {
-        throw core::exception::Condition("Invalid type");
-    }
-}
-
-template<typename a_t, typename b_t, typename ret_t>
-consteval ret_t work_type() {
-    if constexpr (std::is_same<a_t, b_t>()) {
-        return a_t{};
-    } else if constexpr (std::is_signed<a_t>() == std::is_signed<b_t>()) {
-        if constexpr (std::numeric_limits<a_t>::max()
-                      > std::numeric_limits<b_t>::max()) {
-            return a_t{};
-        } else {
-            return b_t{};
-        }
-    } else {
-        if constexpr (std::is_signed<a_t>()) {
-            if constexpr (sizeof(a_t) <= sizeof(b_t)) {
-                using res_t =
-                    std::make_signed<decltype(larger_type<b_t>())>::type;
-                return res_t{};
-            } else {
-                return a_t{};
-            }
-        } else {
-            if constexpr (sizeof(b_t) <= sizeof(a_t)) {
-                using res_t =
-                    std::make_signed<decltype(larger_type<b_t>())>::type;
-                return res_t{};
-            } else {
-                return b_t{};
-            }
-        }
-    }
-}
-
 } // namespace core::math

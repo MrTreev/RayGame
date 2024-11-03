@@ -2,7 +2,6 @@
 
 // clang-format off
 #if (__cplusplus < 202002L)
-// clang-format on
 static_assert(
     false,
     "This game's code uses features from the C++23 standard, please do not "
@@ -10,7 +9,33 @@ static_assert(
 );
 #endif
 
+#if __has_include(<experimental/source_location>)
+#    include <experimental/source_location>
+namespace core::detail {
+using std::experimental::source_location;
+}
+#elif __has_include(<source_location>)
+#    include <source_location>
+namespace core::detail {
+using std::source_location;
+}
+#else
+#    error "source_location unsupported, cannot continue"
+#endif
+// clang-format on
+
 namespace core::config {
+
+//! Force generic implementations of operations
+/*!
+ * Used for Testing, ignores compiler-specific implementations
+ */
+#if defined(RAYGAME_FORCE_GENERIC_IMPL)
+static constexpr bool FORCE_GENERIC_IMPL = true;
+#else
+static constexpr bool FORCE_GENERIC_IMPL = false;
+#endif
+
 //! Architecture Definitions
 enum class Architecture {
     X86_64,
@@ -87,80 +112,6 @@ static constexpr Compiler COMPILER = Compiler::MSC;
 static_assert(false, "Not tested on MSC yet");
 #else
 static_assert(false, "Unknown Compiler");
-#endif
-
-static constexpr bool COMPILER_IS_GCC_LIKE =
-    (COMPILER == Compiler::GCC || COMPILER == Compiler::CLANG);
-
-#if defined(RAYGAME_FORCE_GENERIC_IMPL)
-static constexpr bool FORCE_GENERIC_IMPL = true;
-#else
-static constexpr bool FORCE_GENERIC_IMPL = false;
-#endif
-
-#if defined(RAYGAME_CC_CLANG)
-#    define RAYGAME_PRAGMA_TO_STR(x)            _Pragma(#x)
-#    define RAYGAME_CLANG_SUPPRESS_WARNING_PUSH _Pragma("clang diagnostic push")
-#    define RAYGAME_CLANG_SUPPRESS_WARNING(warnstr)                            \
-        RAYGAME_PRAGMA_TO_STR(clang diagnostic ignored warnstr)
-#    define RAYGAME_CLANG_SUPPRESS_WARNING_POP _Pragma("clang diagnostic pop")
-#else
-#    define RAYGAME_CLANG_SUPPRESS_WARNING_PUSH
-#    define RAYGAME_CLANG_SUPPRESS_WARNING(warnstr)
-#    define RAYGAME_CLANG_SUPPRESS_WARNING_POP
-#endif
-
-#if defined(RAYGAME_CC_GCC)
-#    define RAYGAME_PRAGMA_TO_STR(x)          _Pragma(#x)
-#    define RAYGAME_GCC_SUPPRESS_WARNING_PUSH _Pragma("GCC diagnostic push")
-#    define RAYGAME_GCC_SUPPRESS_WARNING(warnstr)                              \
-        RAYGAME_PRAGMA_TO_STR(GCC diagnostic ignored warnstr)
-#    define RAYGAME_GCC_SUPPRESS_WARNING_POP _Pragma("GCC diagnostic pop")
-#else
-#    define RAYGAME_GCC_SUPPRESS_WARNING_PUSH
-#    define RAYGAME_GCC_SUPPRESS_WARNING(warnstr)
-#    define RAYGAME_GCC_SUPPRESS_WARNING_POP
-#endif
-
-#if defined(RAYGAME_CC_MSC)
-#    define RAYGAME_MSC_SUPPRESS_WARNING_PUSH     __pragma(warning(push))
-#    define RAYGAME_MSC_SUPPRESS_WARNING(warnstr) __pragma(warning(disable : w))
-#    define RAYGAME_MSC_SUPPRESS_WARNING_POP      __pragma(warning(pop))
-#else
-#    define RAYGAME_MSC_SUPPRESS_WARNING_PUSH
-#    define RAYGAME_MSC_SUPPRESS_WARNING(warnstr)
-#    define RAYGAME_MSC_SUPPRESS_WARNING_POP
-#endif
-
-#if defined(__SSE2__)
-#    define RAYGAME_HAS_SSE2
-#    if defined(RAYGAME_HAS_SSE2)
-#        if defined(__SSSE3__)
-#            define RAYGAME_HAS_SSSE3
-#        endif
-#        if defined(__AVX__)
-#            define RAYGAME_HAS_AVX
-#            if defined(RAYGAME_HAS_AVX)
-#                if defined(__AVX2__)
-#                    define RAYGAME_HAS_AVX2
-#                endif
-#            endif
-#        endif
-#    endif
-#elif defined(__ARM_NEON)
-#    define RAYGAME_HAS_NEON
-#endif
-
-#if defined(RAYGAME_HAS_SSE2) || defined(RAYGAME_HAS_NEON)
-#    define RAYGAME_SIMD_128BIT
-#    if defined(RAYGAME_HAS_SSSE2)
-#    endif
-#    if defined(RAYGAME_HAS_AVX)
-#        define RAYGAME_SIMD_256BIT_F
-#        if defined(RAYGAME_HAS_AVX2)
-#            define RAYGAME_SIMD_256BIT_X
-#        endif
-#    endif
 #endif
 
 //! Operating System Definitions
@@ -258,24 +209,75 @@ static constexpr BuildType BUILD_TYPE = BuildType::RELEASE;
 static constexpr BuildType BUILD_TYPE = BuildType::DEBUG;
 #endif
 
-} // namespace core::config
+//! SIMD Feature Definitions
 
-namespace core::detail {}
-
-#if __has_include(<experimental/source_location>)
-#    include <experimental/source_location>
-
-namespace core::detail {
-using std::experimental::source_location;
-}
-
-#elif __has_include(<source_location>)
-#    include <source_location>
-
-namespace core::detail {
-using std::source_location;
-}
-
-#else
-#    error "source_location unsupported, cannot continue"
+#if defined(__SSE2__)
+#    define RAYGAME_HAS_SSE2
+#    define RAYGAME_SIMD_128BIT
+#    if defined(RAYGAME_HAS_SSE2)
+#        if defined(__SSSE3__)
+#            define RAYGAME_HAS_SSSE3
+#        endif
+#        if defined(__AVX__)
+#            define RAYGAME_HAS_AVX
+#            if defined(RAYGAME_HAS_AVX)
+#                define RAYGAME_SIMD_256BIT_F
+#                if defined(__AVX2__)
+#                    define RAYGAME_HAS_AVX2
+#                    define RAYGAME_SIMD_256BIT_X
+#                endif
+#            endif
+#        endif
+#    endif
+#elif defined(__ARM_NEON)
+#    define RAYGAME_HAS_NEON
+#    define RAYGAME_SIMD_128BIT
 #endif
+
+//! Compiler has GCC-like compiler features
+static constexpr bool COMPILER_IS_GCC_LIKE =
+    (COMPILER == Compiler::GCC || COMPILER == Compiler::CLANG);
+
+#if defined(RAYGAME_CC_CLANG)
+#    define RAYGAME_PRAGMA_TO_STR(x)            _Pragma(#x)
+#    define RAYGAME_CLANG_SUPPRESS_WARNING_PUSH _Pragma("clang diagnostic push")
+#    define RAYGAME_CLANG_SUPPRESS_WARNING(warnstr)                            \
+        RAYGAME_PRAGMA_TO_STR(clang diagnostic ignored warnstr)
+#    define RAYGAME_CLANG_SUPPRESS_WARNING_POP _Pragma("clang diagnostic pop")
+#else
+#    define RAYGAME_CLANG_SUPPRESS_WARNING_PUSH
+#    define RAYGAME_CLANG_SUPPRESS_WARNING(warnstr)
+#    define RAYGAME_CLANG_SUPPRESS_WARNING_POP
+#endif
+
+#if defined(RAYGAME_CC_GCC)
+#    define RAYGAME_PRAGMA_TO_STR(x)          _Pragma(#x)
+#    define RAYGAME_GCC_SUPPRESS_WARNING_PUSH _Pragma("GCC diagnostic push")
+#    define RAYGAME_GCC_SUPPRESS_WARNING(warnstr)                              \
+        RAYGAME_PRAGMA_TO_STR(GCC diagnostic ignored warnstr)
+#    define RAYGAME_GCC_SUPPRESS_WARNING_POP _Pragma("GCC diagnostic pop")
+#else
+#    define RAYGAME_GCC_SUPPRESS_WARNING_PUSH
+#    define RAYGAME_GCC_SUPPRESS_WARNING(warnstr)
+#    define RAYGAME_GCC_SUPPRESS_WARNING_POP
+#endif
+
+#if defined(RAYGAME_CC_MSC)
+#    define RAYGAME_MSC_SUPPRESS_WARNING_PUSH     __pragma(warning(push))
+#    define RAYGAME_MSC_SUPPRESS_WARNING(warnstr) __pragma(warning(disable : w))
+#    define RAYGAME_MSC_SUPPRESS_WARNING_POP      __pragma(warning(pop))
+#else
+#    define RAYGAME_MSC_SUPPRESS_WARNING_PUSH
+#    define RAYGAME_MSC_SUPPRESS_WARNING(warnstr)
+#    define RAYGAME_MSC_SUPPRESS_WARNING_POP
+#endif
+
+#if defined(RAYGAME_BUILD_TYPE_DEBUG)
+#    include <cassert>
+#    define RAYGAME_UNREACHABLE                                                \
+        assert(false && "Reached block marked unreachable")
+#else
+#    define RAYGAME_UNREACHABLE std::unreachable()
+#endif
+
+} // namespace core::config
