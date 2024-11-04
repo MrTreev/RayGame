@@ -5,6 +5,7 @@
 #include <cassert>
 #include <limits>
 #include <type_traits>
+#include <utility>
 
 namespace core::math {
 namespace constants {
@@ -85,5 +86,12 @@ consteval auto work_type(auto a, auto b) {
             }
         }
     }
+}
+
+auto abs(auto a) -> decltype(a) {
+    if (std::cmp_less(a, 0)) {
+        return -a;
+    }
+    return a;
 }
 } // namespace core::math

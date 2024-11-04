@@ -18,6 +18,7 @@ TEST_SUITE("core::math::safe_sub") {
         const a_t a = 2;
         const b_t b = 1;
         CHECK_EQ(safe_sub<a_t, STRICT>(RGMIN(a_t) + a, a), RGMIN(a_t));
+        CHECK_EQ(safe_sub<a_t, STRICT>(RGMIN(a_t) + core::math::numeric_cast<a_t>(b), b), RGMIN(a_t));
         CHECK_EQ(safe_sub<a_t, STRICT>(a, b), 1);
         CHECK_EQ(safe_sub<a_t, CLAMP>(a, b), 1);
         CHECK_EQ(safe_sub<a_t, ALLOW>(a, b), 1);

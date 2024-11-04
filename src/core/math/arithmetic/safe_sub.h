@@ -2,10 +2,11 @@
 #include "core/base/config.h"
 #include "core/base/debug.h"
 #include "core/base/exception.h"
-#include "core/base/logger.h"
+#include "core/math/arithmetic/safe_add.h"
 #include "core/math/math.h"
 #include "core/math/numeric_cast.h"
 #include <concepts>
+#include <cstdlib>
 #include <limits>
 #include <type_traits>
 #include <utility>
@@ -37,7 +38,6 @@ Out_T __attribute__((noinline)) safe_sub(const auto a, const auto b) {
     constexpr Out_T  outmax  = std::numeric_limits<Out_T>::max();
     constexpr Out_T  outmin  = std::numeric_limits<Out_T>::lowest();
     constexpr work_t workmin = static_cast<work_t>(outmin);
-    constexpr work_t workmax = static_cast<work_t>(outmin);
 
     const work_t worka = static_cast<work_t>(a);
     const work_t workb = static_cast<work_t>(b);
@@ -76,39 +76,18 @@ Out_T __attribute__((noinline)) safe_sub(const auto a, const auto b) {
         if (std::cmp_equal(b, 0)) {
             return core::math::numeric_cast<Out_T, MR>(a);
         }
-        if (std::cmp_greater(a, 0)) {
-            core::log::debug("a > 0");
-            if (std::cmp_greater(b, 0)) {
-                core::log::debug("b > 0");
-                core::log::debug(
-                    std::format("workmin + worka: {}", workmin + worka)
-                );
-                core::log::debug(
-                    std::format("workmax - worka: {}", workmax - worka)
-                );
-                if (std::cmp_greater(b, workmin + worka)) {
-                    core::log::debug("b > workmin + worka");
-                    if constexpr (MR == MathRule::STRICT) {
-                        throw core::exception::Condition(RG_OOR_STRING);
-                    }
-                    if constexpr (MR == MathRule::CLAMP) {
-                        return outmin;
-                    }
-                }
-            } else {
-                if (std::cmp_greater(-b, workmax - worka)) {
-                    core::log::debug("-b > workmax - worka");
-                    if constexpr (MR == MathRule::STRICT) {
-                        throw core::exception::Condition(RG_OOR_STRING);
-                    }
-                    if constexpr (MR == MathRule::CLAMP) {
-                        return outmax;
-                    }
-                }
+        if (std::is_unsigned<work_t>()) {
+            if (a >= b) {
+                return numeric_cast<Out_T, MR>(worka - workb);
             }
-        } else {
+            if constexpr (MR == MathRule::STRICT) {
+                throw core::exception::Condition(RG_OOR_STRING);
+            }
+            if (MR == MathRule::CLAMP) {
+                return outmin;
+            }
         }
-        return core::math::numeric_cast<Out_T, MR>(worka - workb);
+        return safe_add<Out_T, MR>(worka, -workb);
     }
     RAYGAME_UNREACHABLE;
 }
