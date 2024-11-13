@@ -1,0 +1,4 @@
+register_toolchains(
+    "//rules/toolchains:host_cc_toolchain",
+    dev_dependency = True,
+)
