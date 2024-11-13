@@ -3,6 +3,7 @@
 #include "core/base/config.h"
 #include "core/base/debug.h"
 #include "core/base/exception.h"
+#include "core/math/math.h"
 #include "core/math/numeric_cast.h"
 #include <concepts>
 #include <limits>
@@ -25,8 +26,14 @@ constexpr Out_T safe_add(const auto a, const auto b) {
     using core::debug::type_name;
     using core::exception::Condition;
     using core::math::numeric_cast;
-    constexpr Out_T outmax = std::numeric_limits<Out_T>::max();
-    constexpr Out_T outmin = std::numeric_limits<Out_T>::lowest();
+    constexpr Out_T outmax   = std::numeric_limits<Out_T>::max();
+    constexpr Out_T outmin   = std::numeric_limits<Out_T>::lowest();
+    using work_t             = decltype(work_type(work_type(a, b), Out_T{0}));
+    constexpr work_t workmin = static_cast<work_t>(outmin);
+    constexpr work_t workmax = static_cast<work_t>(outmax);
+
+    const work_t worka = static_cast<work_t>(a);
+    const work_t workb = static_cast<work_t>(b);
 
     if constexpr (core::config::COMPILER_IS_GCC_LIKE
                   && !core::config::FORCE_GENERIC_IMPL) {
@@ -42,8 +49,8 @@ constexpr Out_T safe_add(const auto a, const auto b) {
                 type_name<Out_T>()
             ));
         } else if constexpr (MR == MathRule::CLAMP) {
-            if (std::cmp_greater(b, outmax - a)
-                || std::cmp_greater(a, outmax - b)) {
+            if (std::cmp_greater(b, workmax - worka)
+                || std::cmp_greater(a, workmax - workb)) {
                 return outmax;
             } else {
                 return outmin;
@@ -51,7 +58,7 @@ constexpr Out_T safe_add(const auto a, const auto b) {
         }
         RAYGAME_ELSE_UNKNOWN("");
     } else {
-        if (std::cmp_greater(a, 0) && std::cmp_greater(b, outmax - a)) {
+        if (std::cmp_greater(a, 0) && std::cmp_greater(b, workmax - worka)) {
             if constexpr (MR == MathRule::STRICT) {
                 throw Condition(std::format(
                     "Result of addition ({} + {}) is above the max for output "
@@ -63,7 +70,7 @@ constexpr Out_T safe_add(const auto a, const auto b) {
             } else if constexpr (MR == MathRule::CLAMP) {
                 return outmax;
             }
-        } else if (std::cmp_less(a, 0) && std::cmp_less(b, outmin - a)) {
+        } else if (std::cmp_less(a, 0) && std::cmp_less(b, workmin - worka)) {
             if constexpr (MR == MathRule::STRICT) {
                 throw Condition(std::format(
                     "Result of addition ({} + {}) is below the min for output "
@@ -76,7 +83,7 @@ constexpr Out_T safe_add(const auto a, const auto b) {
                 return outmin;
             }
         }
-        return numeric_cast<Out_T, MR>(a + b);
+        return numeric_cast<Out_T, MR>(worka + workb);
     }
 }
 
