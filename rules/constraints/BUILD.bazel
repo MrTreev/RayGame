@@ -47,4 +47,3 @@ selects.config_setting_group(
         "@platforms//cpu:aarch64",
     ],
 )
-

@@ -1,6 +1,7 @@
 .cache
 /build/
 /build-multi/
+/bazel-*
 
 # Prerequisites
 *.d

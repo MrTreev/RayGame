@@ -12,7 +12,6 @@ alias(
 
 COMMON_TOOLS = {
     "@rules_cc//cc/toolchains/actions:assembly_actions": ":clang",
-    "@rules_cc//cc/toolchains/actions:c_compile": ":clang",
     "@rules_cc//cc/toolchains/actions:cpp_compile_actions": ":clang++",
     "@rules_cc//cc/toolchains/actions:link_actions": ":lld",
     "@rules_cc//cc/toolchains/actions:objcopy_embed_data": ":llvm-objcopy",
@@ -137,6 +136,10 @@ cc_tool(
         ":exec_platform_multicall_support_files",
     ],
 )
+
+#################################
+#   Platform-specific aliases   #
+#################################
 
 alias(
     name = "exec_platform_builtin_headers",
