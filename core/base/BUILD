@@ -16,5 +16,15 @@ cc_library(
     	"logger.cpp",
     	"types.cpp",
 	],
+    defines = select({
+        "//rules/logging:trace":    ["RAYGAME_LOG_TRACE"],
+        "//rules/logging:debug":    ["RAYGAME_LOG_DEBUG"],
+        "//rules/logging:info":     ["RAYGAME_LOG_INFO"],
+        "//rules/logging:note":     ["RAYGAME_LOG_NOTE"],
+        "//rules/logging:progress": ["RAYGAME_LOG_PROGRESS"],
+        "//rules/logging:warning":  ["RAYGAME_LOG_WARNING"],
+        "//rules/logging:error":    ["RAYGAME_LOG_ERROR"],
+        "//rules/logging:fatal":    ["RAYGAME_LOG_FATAL"],
+    }),
 	visibility = [ "//visibility:public" ]
 )

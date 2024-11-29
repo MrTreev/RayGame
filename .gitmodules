@@ -1,9 +1,9 @@
 [submodule "etc/doctest"]
-	path = etc/doctest
+	path = subprojects/doctest
 	url = https://github.com/doctest/doctest.git
 [submodule "etc/googletest"]
-	path = etc/googletest
+	path = subprojects/googletest
 	url = https://github.com/google/googletest.git
 [submodule "etc/fuzztest"]
-	path = etc/fuzztest
+	path = subprojects/fuzztest
 	url = https://github.com/google/fuzztest.git
