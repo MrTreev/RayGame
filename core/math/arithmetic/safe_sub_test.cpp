@@ -7,6 +7,7 @@ TEST_SUITE("core::math::safe_sub") {
     using core::math::MathRule::CLAMP;
     using core::math::MathRule::STRICT;
     using test::lowest;
+    using test::max;
     TEST_CASE_TEMPLATE("in-range", T, FWINT_PAIRS) {
         using a_t    = T::A;
         using b_t    = T::B;
@@ -26,5 +27,6 @@ TEST_SUITE("core::math::safe_sub") {
         CHECK_THROWS(safe_sub<a_t, STRICT>(lowest<a_t>(), sub));
         CHECK_NOTHROW(safe_sub<a_t, ALLOW>(lowest<a_t>(), sub));
         CHECK_EQ(safe_sub<a_t, CLAMP>(lowest<a_t>(), sub), lowest<a_t>());
+        CHECK_EQ(safe_sub<a_t, CLAMP>(max<a_t>(), -1), max<a_t>());
     }
 }

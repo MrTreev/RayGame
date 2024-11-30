@@ -1,5 +1,4 @@
 #pragma once
-#include "core/base/config.h"
 #include <string>
 
 namespace core::math {
@@ -14,28 +13,22 @@ enum class MathRule {
     CLAMP,
 };
 
-constexpr std::string to_string(MathRule mr) {
+//! Default MathRule, STRICT for debug, ALLOW for production
+static constexpr MathRule MR_DEFAULT = MathRule::STRICT;
+
+} // namespace core::math
+
+namespace core {
+
+constexpr std::string to_string(core::math::MathRule mr) {
     switch (mr) {
     case core::math::MathRule::STRICT:
         return "STRICT";
-    case MathRule::ALLOW:
+    case core::math::MathRule::ALLOW:
         return "ALLOW";
-    case MathRule::CLAMP:
+    case core::math::MathRule::CLAMP:
         return "CLAMP";
     }
 }
 
-namespace {
-consteval MathRule default_mathrule() {
-    if constexpr (core::config::BUILD_TYPE == core::config::BuildType::DEBUG) {
-        return MathRule::STRICT;
-    } else {
-        return MathRule::ALLOW;
-    }
-}
-} // namespace
-
-//! Default MathRule, STRICT for debug, ALLOW for production
-static constexpr MathRule MR_DEFAULT = default_mathrule();
-
-} // namespace core::math
+} // namespace core

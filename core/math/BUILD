@@ -45,3 +45,24 @@ cc_test(
     deps = [":test"],
     size = "small",
 )
+
+cc_test(
+    name = "math_test",
+    srcs = ["math_test.cpp"],
+    deps = [":test"],
+    size = "small",
+)
+
+cc_test(
+    name = "mathrule",
+    srcs = ["mathrule_test.cpp"],
+    deps = [":test"],
+    size = "small",
+)
+
+cc_test(
+    name = "rect",
+    srcs = ["rect_test.cpp"],
+    deps = [":test"],
+    size = "small",
+)

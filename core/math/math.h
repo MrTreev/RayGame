@@ -9,20 +9,20 @@
 
 namespace core::math {
 namespace constants {
-constexpr float pi      = 3.14159265358979323846F;
-constexpr float deg2rad = (pi / 180.0F);
-constexpr float rad2deg = (180.0F / pi);
-constexpr float epsilon = 0.000001F;
+constexpr float PI      = 3.14159265358979323846F;
+constexpr float DEG2RAD = (PI / 180.0F);
+constexpr float RAD2DEG = (180.0F / PI);
+constexpr float EPSILON = 0.000001F;
 } // namespace constants
 
 //! Convert Degrees to Radians
 constexpr core::rad_t deg2rad(core::deg_t deg) {
-    return deg * constants::deg2rad;
+    return deg * constants::DEG2RAD;
 };
 
 //! Convert Radians to Degrees
 constexpr core::deg_t rad2deg(core::rad_t rad) {
-    return rad * constants::rad2deg;
+    return rad * constants::RAD2DEG;
 };
 
 //! Convert unsigned type to signed type
@@ -35,6 +35,7 @@ constexpr auto make_signed(auto number) {
     return numeric_cast<std::make_signed_t<decltype(number)>, MR>(number);
 }
 
+//! Get the next fixed-width integer type up in size
 consteval auto larger_type(auto in) {
     if constexpr (std::is_same<decltype(in), uint8_t>()) {
         return uint16_t{};
@@ -57,6 +58,7 @@ consteval auto larger_type(auto in) {
     }
 }
 
+//! Get a type that can fit both @a a and @a b
 consteval auto work_type(auto a, auto b) {
     using a_t = decltype(a);
     using b_t = decltype(b);
@@ -88,7 +90,8 @@ consteval auto work_type(auto a, auto b) {
     }
 }
 
-auto abs(auto a) -> decltype(a) {
+//! Absolute value function
+constexpr auto abs(auto a) -> decltype(a) {
     if (std::cmp_less(a, 0)) {
         return -a;
     }

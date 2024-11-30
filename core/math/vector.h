@@ -9,13 +9,20 @@ namespace core {
 template<typename T>
 struct Vec2 {
     using Type = T;
+
     Type x;
     Type y;
 
-    operator std::string();
+    constexpr Vec2() = default;
+
+    constexpr Vec2(Type x_, Type y_)
+        : x(x_)
+        , y(y_) {}
+
+    constexpr operator std::string();
 
     template<typename U, core::math::MathRule MR = core::math::MR_DEFAULT>
-    Vec2<T> operator+(U other) {
+    constexpr Vec2<T> operator+(U other) {
         return {
             core::math::safe_add<T>(x, other),
             core::math::safe_add<T>(y, other)
@@ -23,7 +30,7 @@ struct Vec2 {
     }
 
     template<typename U, core::math::MathRule MR = core::math::MR_DEFAULT>
-    Vec2<T> operator+(Vec2<U> other) {
+    constexpr Vec2<T> operator+(Vec2<U> other) {
         return {
             core::math::safe_add<T>(x, other.x),
             core::math::safe_add<T>(y, other.y)
@@ -38,10 +45,17 @@ struct Vec3 {
     Type y;
     Type z;
 
-    operator std::string();
+    constexpr Vec3() = default;
+
+    constexpr Vec3(Type x_, Type y_, Type z_)
+        : x(x_)
+        , y(y_)
+        , z(z_) {}
+
+    constexpr operator std::string();
 
     template<typename U, core::math::MathRule MR = core::math::MR_DEFAULT>
-    Vec3<T> operator+(U other) {
+    constexpr Vec3<T> operator+(U other) {
         return {
             core::math::safe_add<T>(x, other),
             core::math::safe_add<T>(y, other),
@@ -50,7 +64,7 @@ struct Vec3 {
     }
 
     template<typename U, core::math::MathRule MR = core::math::MR_DEFAULT>
-    Vec3<T> operator+(Vec3<U> other) {
+    constexpr Vec3<T> operator+(Vec3<U> other) {
         return {
             core::math::safe_add<T>(x, other.x),
             core::math::safe_add<T>(y, other.y),
@@ -67,10 +81,24 @@ struct Vec4 {
     Type z;
     Type w;
 
-    operator std::string();
+    constexpr Vec4() = default;
+
+    constexpr Vec4(Type x_, Type y_, Type z_, Type w_)
+        : x(x_)
+        , y(y_)
+        , z(z_)
+        , w(w_) {}
+
+    constexpr Vec4(Vec2<Type> vec_a, Vec2<Type> vec_b)
+        : x(vec_a.x)
+        , y(vec_a.y)
+        , z(vec_b.x)
+        , w(vec_b.y) {}
+
+    constexpr operator std::string();
 
     template<typename U, core::math::MathRule MR = core::math::MR_DEFAULT>
-    Vec4<T> operator+(U other) {
+    constexpr Vec4<T> operator+(U other) {
         return {
             core::math::safe_add<T>(x, other),
             core::math::safe_add<T>(y, other),
@@ -80,7 +108,7 @@ struct Vec4 {
     }
 
     template<typename U, core::math::MathRule MR = core::math::MR_DEFAULT>
-    Vec4<T> operator+(Vec4<U> other) {
+    constexpr Vec4<T> operator+(Vec4<U> other) {
         return {
             core::math::safe_add<T>(x, other.x),
             core::math::safe_add<T>(y, other.y),
