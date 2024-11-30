@@ -1,5 +1,6 @@
 #include "core/math/numeric_cast.h"
 #include "test/tests_begin.h"
+#include <cstdint>
 
 TEST_SUITE("core::math::numeric_cast") {
     using core::math::numeric_cast;
@@ -14,13 +15,17 @@ TEST_SUITE("core::math::numeric_cast") {
         CHECK_NOTHROW(numeric_cast<T, STRICT>(lowest<T>()));
     }
     TEST_CASE_TEMPLATE("Strict out-of-range", T, FWINTS) {
-        CHECK_THROWS(numeric_cast<T, STRICT>(max<T>() + 1));
-        CHECK_THROWS(numeric_cast<T, STRICT>(min<T>() - 1));
+        if constexpr (sizeof(T) < sizeof(intmax_t)) {
+            CHECK_THROWS(numeric_cast<T, STRICT>(max<T>() + 1));
+            CHECK_THROWS(numeric_cast<T, STRICT>(min<T>() - 1));
+        }
     }
     TEST_CASE_TEMPLATE("Clamp Out-of-range", T, FWINTS) {
-        CHECK_EQ(numeric_cast<T, CLAMP>(max<T>() + 1), max<T>());
-        if constexpr (std::is_signed_v<T>) {
-            CHECK_EQ(numeric_cast<T, CLAMP>(min<T>() - 1), min<T>());
+        if constexpr (sizeof(T) < sizeof(intmax_t)) {
+            CHECK_EQ(numeric_cast<T, CLAMP>(max<T>() + 1), max<T>());
+            if constexpr (std::is_signed_v<T>) {
+                CHECK_EQ(numeric_cast<T, CLAMP>(min<T>() - 1), min<T>());
+            }
         }
     }
     TEST_CASE_TEMPLATE("Different signedness", T, FWINTS) {

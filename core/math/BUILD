@@ -27,6 +27,35 @@ cc_library(
 )
 
 cc_library(
+	name = "math_full_random",
+	hdrs = [
+    	"//core/math/arithmetic:headers",
+    	"arithmetic.h",
+    	"math.h",
+    	"mathrule.h",
+    	"numeric_cast.h",
+    	"random.h",
+    	"rect.h",
+    	"vector.h",
+	],
+	srcs = [
+    	"//core/math/arithmetic:sources",
+    	"arithmetic.cpp",
+    	"math.cpp",
+    	"mathrule.cpp",
+    	"numeric_cast.cpp",
+    	"random.cpp",
+    	"rect.cpp",
+    	"vector.cpp",
+	],
+    defines = ["RAYGAME_USE_FULL_RANDOM"],
+	deps = [
+		"//core/base",
+	],
+	visibility = [ "//visibility:public" ]
+)
+
+cc_library(
     name = "test",
     deps = [":math", "//test"],
 	visibility = [ "//core/math:__subpackages__" ]
@@ -43,6 +72,14 @@ cc_test(
     name = "random",
     srcs = ["random_test.cpp"],
     deps = [":test"],
+    size = "small",
+)
+
+cc_test(
+    name = "random_full",
+    srcs = ["random_test.cpp"],
+    deps = [":math_full_random", "//test"],
+    defines = ["RAYGAME_USE_FULL_RANDOM"],
     size = "small",
 )
 

@@ -15,11 +15,14 @@ TEST_SUITE("core::Rect") {
             {0, 1},
             {2, 3}
         };
-        Rect<pos_t, dis_t> test_rec_5{Vec2<pos_t>(0, 0), Vec2<dis_t>(0, 0)};
+        Vec2<pos_t>        posvec{1, 2};
+        Vec2<dis_t>        disvec{3, 4};
+        Rect<pos_t, dis_t> test_rec_5{posvec, disvec};
+        Rect<pos_t, dis_t> test_rec_6{1, 2, 3, 4};
         CHECK_EQ(test_rec_0, test_rec_1);
         CHECK_EQ(test_rec_1, test_rec_2);
         CHECK_EQ(test_rec_3, test_rec_4);
-        CHECK_EQ(test_rec_0, test_rec_5);
+        CHECK_EQ(test_rec_5, test_rec_6);
     }
     TEST_CASE_TEMPLATE("Setters", T, FWINT_PAIRS) {
         using pos_t = T::A;

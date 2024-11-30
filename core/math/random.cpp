@@ -9,6 +9,8 @@ constexpr bool random_seed = true;
 #else
 constexpr bool random_seed = false;
 #endif
+
+[[maybe_unused]]
 uint64_t seed = 42;
 
 // Disable global constructor warnings for global random_device, as it is a singleton anyway
