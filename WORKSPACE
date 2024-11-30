@@ -5,5 +5,5 @@ workspace(
 new_local_repository(
     name = "usr",
     path = "/usr",
-    build_file = "//subprojects"
+    build_file = "//subprojects/host:host.BUILD"
 )

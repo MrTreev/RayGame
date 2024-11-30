@@ -1,6 +1,6 @@
 cc_import(
-    name = "libwayland",
-    shared_library = "lib/libwayland.so",
+    name = "libxkbcommon",
+    shared_library = "lib/libxkbcommon.so",
     visibility = ["//visibility:public"],
 )
 

@@ -1,11 +1,8 @@
 cc_library(
 	name = "math",
 	hdrs = [
+    	"//core/math/arithmetic:headers",
     	"arithmetic.h",
-    	"arithmetic/safe_add.h",
-    	"arithmetic/safe_div.h",
-    	"arithmetic/safe_mult.h",
-    	"arithmetic/safe_sub.h",
     	"math.h",
     	"mathrule.h",
     	"numeric_cast.h",
@@ -14,11 +11,8 @@ cc_library(
     	"vector.h",
 	],
 	srcs = [
+    	"//core/math/arithmetic:sources",
     	"arithmetic.cpp",
-    	"arithmetic/safe_add.cpp",
-    	"arithmetic/safe_div.cpp",
-    	"arithmetic/safe_mult.cpp",
-    	"arithmetic/safe_sub.cpp",
     	"math.cpp",
     	"mathrule.cpp",
     	"numeric_cast.cpp",
@@ -32,3 +26,8 @@ cc_library(
 	visibility = [ "//visibility:public" ]
 )
 
+cc_library(
+    name = "test",
+    deps = [":math", "//test"],
+	visibility = [ "//core/math:__subpackages__" ]
+)

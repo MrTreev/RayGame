@@ -1,6 +1,7 @@
 #pragma once
 #include <algorithm>
 #include <cstdint>
+#include <limits>
 #include <vector>
 
 namespace test {

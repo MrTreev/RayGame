@@ -9,7 +9,7 @@ bazel_dep(name = "googletest", version = "1.15.2")
 bazel_dep(name = "platforms", version = "0.0.10")
 bazel_dep(name = "rules_cc", version = "0.0.10")
 bazel_dep(name = "toolchains_llvm", version = "1.2.0")
-
+bazel_dep(name = "doctest", version = "2.4.11")
 bazel_dep(name = "hedron_compile_commands", dev_dependency = True)
 git_override(
     module_name = "hedron_compile_commands",
@@ -24,7 +24,6 @@ llvm.toolchain(
     stdlib = {"": "stdc++"},
     compile_flags = {"": [
         # Security
-        "-U_FORTIFY_SOURCE",
         "-fstack-protector",
         "-fno-omit-frame-pointer",
         # Diagnostics
@@ -51,4 +50,3 @@ llvm.toolchain(
 )
 use_repo(llvm, "llvm_toolchain")
 register_toolchains("@llvm_toolchain//:all")
-

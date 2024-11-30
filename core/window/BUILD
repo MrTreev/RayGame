@@ -1,5 +1,5 @@
 cc_library(
-	name = "drawing",
+	name = "window",
 	hdrs = [
 		"window.h",
 		"x11.h",
@@ -9,12 +9,14 @@ cc_library(
 		"window.cpp",
 		"x11.cpp",
 		"wayland.cpp",
+        "detail/wayland.h",
+		"detail/wayland.cpp",
 	],
 	deps = [
 		"//core/base",
 		"//core/math",
 		"//core/drawing",
-        "//core/window/detail",
+        "//subprojects/wayland-protocols",
 	],
 	visibility = [ "//visibility:public" ]
 )
