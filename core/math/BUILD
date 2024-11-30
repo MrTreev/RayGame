@@ -61,6 +61,13 @@ cc_test(
 )
 
 cc_test(
+    name = "vector",
+    srcs = ["vector_test.cpp"],
+    deps = [":test"],
+    size = "small",
+)
+
+cc_test(
     name = "rect",
     srcs = ["rect_test.cpp"],
     deps = [":test"],

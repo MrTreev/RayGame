@@ -19,10 +19,15 @@ struct Vec2 {
         : x(x_)
         , y(y_) {}
 
-    constexpr operator std::string();
+    constexpr operator std::string() const;
 
     template<typename U, core::math::MathRule MR = core::math::MR_DEFAULT>
-    constexpr Vec2<T> operator+(U other) {
+    constexpr bool operator==(const Vec2<U>& other) const {
+        return (std::cmp_equal(x, other.x) && std::cmp_equal(y, other.y));
+    }
+
+    template<core::math::MathRule MR = core::math::MR_DEFAULT>
+    constexpr Vec2<T> operator+(const auto& other) {
         return {
             core::math::safe_add<T>(x, other),
             core::math::safe_add<T>(y, other)
@@ -30,7 +35,7 @@ struct Vec2 {
     }
 
     template<typename U, core::math::MathRule MR = core::math::MR_DEFAULT>
-    constexpr Vec2<T> operator+(Vec2<U> other) {
+    constexpr Vec2<T> operator+(const Vec2<U>& other) {
         return {
             core::math::safe_add<T>(x, other.x),
             core::math::safe_add<T>(y, other.y)
@@ -52,7 +57,15 @@ struct Vec3 {
         , y(y_)
         , z(z_) {}
 
-    constexpr operator std::string();
+    constexpr operator std::string() const;
+
+    template<typename U, core::math::MathRule MR = core::math::MR_DEFAULT>
+    constexpr bool operator==(const Vec3<U>& other) const {
+        return (
+            std::cmp_equal(x, other.x) && std::cmp_equal(y, other.y)
+            && std::cmp_equal(z, other.z)
+        );
+    }
 
     template<typename U, core::math::MathRule MR = core::math::MR_DEFAULT>
     constexpr Vec3<T> operator+(U other) {
@@ -95,7 +108,15 @@ struct Vec4 {
         , z(vec_b.x)
         , w(vec_b.y) {}
 
-    constexpr operator std::string();
+    constexpr operator std::string() const;
+
+    template<typename U, core::math::MathRule MR = core::math::MR_DEFAULT>
+    constexpr bool operator==(const Vec4<U>& other) const {
+        return (
+            std::cmp_equal(x, other.x) && std::cmp_equal(y, other.y)
+            && std::cmp_equal(z, other.z) && std::cmp_equal(w, other.w)
+        );
+    }
 
     template<typename U, core::math::MathRule MR = core::math::MR_DEFAULT>
     constexpr Vec4<T> operator+(U other) {

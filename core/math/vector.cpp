@@ -1,18 +1,18 @@
 #include "core/math/vector.h" // IWYU pragma: keep
 
 template<typename T>
-constexpr core::Vec2<T>::operator std::string() {
+constexpr core::Vec2<T>::operator std::string() const {
     return "Vec2(x: " + std::to_string(x) + ", y: " + std::to_string(y) + ")";
 }
 
 template<typename T>
-constexpr core::Vec3<T>::operator std::string() {
+constexpr core::Vec3<T>::operator std::string() const {
     return "Vec3(x: " + std::to_string(x) + ", y: " + std::to_string(y)
            + ", z: " + std::to_string(z) + ")";
 }
 
 template<typename T>
-constexpr core::Vec4<T>::operator std::string() {
+constexpr core::Vec4<T>::operator std::string() const {
     return "Vec4(x: " + std::to_string(x) + ", y: " + std::to_string(y)
            + ", z: " + std::to_string(z) + ", w: " + std::to_string(w) + ")";
 }

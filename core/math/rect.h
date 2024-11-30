@@ -44,11 +44,11 @@ public:
         height = set_height;
     }
 
-    constexpr Vec2<Pos_t> pos() {
+    constexpr Vec2<Pos_t> pos() const {
         return {x, y};
     }
 
-    constexpr Vec2<Dis_t> size() {
+    constexpr Vec2<Dis_t> size() const {
         return {width, height};
     }
 
