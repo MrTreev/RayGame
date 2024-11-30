@@ -28,6 +28,7 @@ llvm.toolchain(
         "-fno-omit-frame-pointer",
         # Diagnostics
         "-fcolor-diagnostics",
+        "-Werror",
         "-Wall",
         "-Wthread-safety",
         "-Wself-assign",
