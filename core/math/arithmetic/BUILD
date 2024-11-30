@@ -24,22 +24,26 @@ cc_test(
     name = "safe_add",
     srcs = ["safe_add_test.cpp"],
     deps = ["//core/math:test"],
+    size = "small",
 )
 
 cc_test(
     name = "safe_sub",
     srcs = ["safe_sub_test.cpp"],
     deps = ["//core/math:test"],
+    size = "small",
 )
 
 cc_test(
     name = "safe_mult",
     srcs = ["safe_mult_test.cpp"],
     deps = ["//core/math:test"],
+    size = "small",
 )
 
 cc_test(
     name = "safe_div",
     srcs = ["safe_div_test.cpp"],
     deps = ["//core/math:test"],
+    size = "small",
 )
