@@ -5,6 +5,7 @@ common --nolegacy_external_runfiles
 
 # Coverage builds
 coverage --config=coverage
+build:coverage -c dbg
 build:coverage --action_env=BAZEL_USE_LLVM_NATIVE_COVERAGE=1
 build:coverage --action_env=GCOV=llvm-profdata
 build:coverage --action_env=BAZEL_LLVM_COV=llvm-cov

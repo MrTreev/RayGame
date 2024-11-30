@@ -31,3 +31,17 @@ cc_library(
     deps = [":math", "//test"],
 	visibility = [ "//core/math:__subpackages__" ]
 )
+
+cc_test(
+    name = "numeric_cast",
+    srcs = ["numeric_cast_test.cpp"],
+    deps = [":test"],
+    size = "small",
+)
+
+cc_test(
+    name = "random",
+    srcs = ["random_test.cpp"],
+    deps = [":test"],
+    size = "small",
+)
