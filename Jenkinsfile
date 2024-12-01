@@ -18,7 +18,9 @@ pipeline {
             }
         }
         stage('Documentation') {
+            steps {
                 sh('bazel build //:doxygen')
+            }
         }
     }
     post {
