@@ -45,7 +45,7 @@ TEST_SUITE("core::Rect") {
     TEST_CASE_TEMPLATE("Getters", T, FWINT_PAIRS) {
         using pos_t = T::A;
         using dis_t = T::B;
-        Rect<pos_t, dis_t> test_rec{1, 2, 3, 4};
+        const Rect<pos_t, dis_t> test_rec{1, 2, 3, 4};
         CHECK_EQ(test_rec.pos(), Vec2<pos_t>(1, 2));
         CHECK_EQ(test_rec.size(), Vec2<dis_t>(3, 4));
         const std::string test_str  = std::string(test_rec);
