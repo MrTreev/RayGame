@@ -60,6 +60,8 @@
     "https://bcr.bazel.build/modules/rules_cc/0.0.6/MODULE.bazel": "abf360251023dfe3efcef65ab9d56beefa8394d4176dd29529750e1c57eaa33f",
     "https://bcr.bazel.build/modules/rules_cc/0.0.8/MODULE.bazel": "964c85c82cfeb6f3855e6a07054fdb159aced38e99a5eecf7bce9d53990afa3e",
     "https://bcr.bazel.build/modules/rules_cc/0.0.9/MODULE.bazel": "836e76439f354b89afe6a911a7adf59a6b2518fafb174483ad78a2a2fde7b1c5",
+    "https://bcr.bazel.build/modules/rules_doxygen/2.0.0/MODULE.bazel": "6a03ed1238e0b59a9a0fb5517ee76af5c2f184d86ca6211c0a4f58209d87e822",
+    "https://bcr.bazel.build/modules/rules_doxygen/2.0.0/source.json": "d51f0aa27a27a94c032ae29171128c54bb17d07e121ee14bef9540d779d278c4",
     "https://bcr.bazel.build/modules/rules_foreign_cc/0.9.0/MODULE.bazel": "c9e8c682bf75b0e7c704166d79b599f93b72cfca5ad7477df596947891feeef6",
     "https://bcr.bazel.build/modules/rules_java/4.0.0/MODULE.bazel": "5a78a7ae82cd1a33cef56dc578c7d2a46ed0dca12643ee45edbb8417899e6f74",
     "https://bcr.bazel.build/modules/rules_java/7.6.1/MODULE.bazel": "2f14b7e8a1aa2f67ae92bc69d1ec0fa8d9f827c4e17ff5e5f02e91caa3b2d0fe",
@@ -192,6 +194,63 @@
           }
         },
         "recordedRepoMappingEntries": []
+      }
+    },
+    "@@rules_doxygen~//:extensions.bzl%doxygen_extension": {
+      "general": {
+        "bzlTransitiveDigest": "Jb4pRfRO631HXPSLw3DudBVW3VSgETeTY7bpkGrp4z4=",
+        "usagesDigest": "n4PdDM+4zSl6M9ikb8XmUV5IZqIpEkCIa4sntbKkKhA=",
+        "recordedFileInputs": {},
+        "recordedDirentsInputs": {},
+        "envVariables": {},
+        "generatedRepoSpecs": {
+          "doxygen": {
+            "bzlFile": "@@rules_doxygen~//:extensions.bzl",
+            "ruleClassName": "doxygen_repository",
+            "attributes": {
+              "versions": [
+                "1.12.0",
+                "1.12.0",
+                "1.12.0",
+                "1.12.0",
+                "1.12.0"
+              ],
+              "sha256s": [
+                "3c42c3f3fb206732b503862d9c9c11978920a8214f223a3950bbf2520be5f647",
+                "07f1c92cbbb32816689c725539c0951f92c6371d3d7f66dfa3192cbe88dd3138",
+                "6ace7dde967d41f4e293d034a67eb2c7edd61318491ee3131112173a77344001",
+                "6ace7dde967d41f4e293d034a67eb2c7edd61318491ee3131112173a77344001",
+                "3c42c3f3fb206732b503862d9c9c11978920a8214f223a3950bbf2520be5f647"
+              ],
+              "platforms": [
+                "linux",
+                "windows",
+                "mac",
+                "mac-arm",
+                "linux-arm"
+              ],
+              "executables": [
+                "",
+                "",
+                "",
+                "",
+                ""
+              ]
+            }
+          }
+        },
+        "recordedRepoMappingEntries": [
+          [
+            "rules_doxygen~",
+            "bazel_tools",
+            "bazel_tools"
+          ],
+          [
+            "rules_doxygen~",
+            "rules_doxygen",
+            "rules_doxygen~"
+          ]
+        ]
       }
     },
     "@@rules_jvm_external~//:extensions.bzl%maven": {

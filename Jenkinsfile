@@ -17,10 +17,14 @@ pipeline {
                 sh('genhtml "$(bazel info output_path)/_coverage/_coverage_report.dat" --output-directory "bazel-out/_coverage_report" --function-coverage --legend')
             }
         }
+        stage('Documentation') {
+                sh('bazel build //:doxygen')
+        }
     }
     post {
         always {
             archiveArtifacts artifacts: 'bazel-out/_coverage_report/**', fingerprint: true
+            archiveArtifacts artifacts: 'bazel-bin/html/**', fingerprint: true
         }
     }
 

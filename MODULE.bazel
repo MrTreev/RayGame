@@ -10,6 +10,7 @@ bazel_dep(name = "platforms", version = "0.0.10")
 bazel_dep(name = "rules_cc", version = "0.0.10")
 bazel_dep(name = "toolchains_llvm", version = "1.2.0")
 bazel_dep(name = "doctest", version = "2.4.11")
+bazel_dep(name = "rules_doxygen", version = "2.0.0", dev_dependency = True)
 bazel_dep(name = "hedron_compile_commands", dev_dependency = True)
 git_override(
     module_name = "hedron_compile_commands",
@@ -51,3 +52,13 @@ llvm.toolchain(
 )
 use_repo(llvm, "llvm_toolchain")
 register_toolchains("@llvm_toolchain//:all")
+
+doxygen_extension = use_extension("@rules_doxygen//:extensions.bzl", "doxygen_extension")
+
+doxygen_extension.configuration(
+    version = "1.12.0",
+    sha256 = "3c42c3f3fb206732b503862d9c9c11978920a8214f223a3950bbf2520be5f647",
+    platform = "linux",
+)
+
+use_repo(doxygen_extension, "doxygen")
