@@ -4,6 +4,7 @@ load("@doxygen//:doxygen.bzl", "doxygen")
 refresh_compile_commands(
     name = "compile_commands",
     targets = ["//..."],
+    visibility = ["//visibility:public"],
 )
 
 doxygen(
@@ -21,24 +22,24 @@ doxygen(
     hide_undoc_members = False,
     builtin_stl_support = True,
     configurations = [
-        "CREATE_SUBDIRS = YES",
         "GENERATE_HTML = YES",
         "GENERATE_LATEX = NO",
+        "QUIET = YES",
+        "WARNINGS = YES",
         "EXTRACT_ALL = YES",
-        "EXTRACT_LOCAL_CLASSES = NO",
-        "HIDE_SCOPE_NAMES = YES",
         "SHOW_GROUPED_MEMB_INC = YES",
         "SORT_BRIEF_DOCS = YES",
         "SORT_MEMBERS_CTORS_1ST = YES",
         "SORT_GROUP_NAMES = YES",
         "SORT_BY_SCOPE_NAME = YES",
-        "QUIET = YES",
-        "WARNINGS = YES",
-        "WARN_IF_UNDOCUMENTED = YES",
-        "WARN_NO_PARAMDOC = YES",
-        "WARN_IF_UNDOC_ENUM_VAL = YES",
-        "WARN_AS_ERROR = NO",
+        "SOURCE_BROWSER = YES",
+        "REFERENCES_RELATION = YES",
+        "REFERENCED_BY_RELATION = YES",
+        "REFERENCES_LINK_SOURCE = YES",
+        "SOURCE_TOOLTIPS = YES",
+        "HTML_COLORSTYLE = TOGGLE",
     ],
+    outs = ["html"],
     tags = ["manual"],
     visibility = ["//visibility:public"],
 )
