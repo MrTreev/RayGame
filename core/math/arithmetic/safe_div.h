@@ -12,6 +12,7 @@ namespace core::math {
 //! Divide two numeric types ensuring no undesired change in value
 /*!
  * @tparam MR Defines the out-of-range behaviour
+ * @pre @a b is not zero
  */
 template<typename Out_T, MathRule MR = core::math::MR_DEFAULT>
 constexpr Out_T safe_div(const auto a, const auto b) {

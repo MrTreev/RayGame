@@ -4,8 +4,8 @@
 #define RG_TEST_EPSILON_FLOAT  0.000001F
 #define RG_TEST_EPSILON_DOUBLE 0.000001D
 
-#define S_FWINTS uint8_t, uint16_t, uint32_t
-#define U_FWINTS int8_t, int16_t, int32_t
+#define S_FWINTS uint8_t, uint16_t, uint32_t, uint64_t
+#define U_FWINTS int8_t, int16_t, int32_t, int64_t
 #define FWINTS   U_FWINTS, S_FWINTS
 #define FWINT_PAIRS                                                            \
     ::test::TypePair<uint8_t, uint8_t>, ::test::TypePair<uint8_t, uint16_t>,   \
