@@ -122,13 +122,92 @@ void logger(
     level(Args&&... args) -> level<Args...>;
 
 MAKE_LOG_STRUCT(trace, TRACE);
-MAKE_LOG_STRUCT(debug, DEBUG);
 MAKE_LOG_STRUCT(info, INFO);
 MAKE_LOG_STRUCT(note, NOTE);
 MAKE_LOG_STRUCT(progress, PROGRESS);
 MAKE_LOG_STRUCT(warning, WARNING);
 MAKE_LOG_STRUCT(error, ERROR);
 MAKE_LOG_STRUCT(fatal, FATAL);
+
+template<typename... Args>
+struct debug {
+    debug(
+        const char                    msg[],
+        core::detail::source_location loc =
+            core::detail::source_location::current()
+    ) {
+        if constexpr (enable_source_loc) {
+            core::log::detail::logger(
+                core::log::Level::DEBUG,
+                loc,
+                std::string(msg)
+            );
+        } else {
+            std::ignore = loc;
+            core::log::detail::logger(
+                core::log::Level::DEBUG,
+                std::string(msg)
+            );
+        }
+    }
+
+    debug(
+        std::string                   msg,
+        core::detail::source_location loc =
+            core::detail::source_location::current()
+    ) {
+        if constexpr (enable_source_loc) {
+            core::log::detail::logger(core::log::Level::DEBUG, loc, msg);
+        } else {
+            std::ignore = loc;
+            core::log::detail::logger(core::log::Level::DEBUG, msg);
+        }
+    }
+
+    debug(
+        std::format_string<Args...> fstr,
+        Args... args,
+        core::detail::source_location loc =
+            core::detail::source_location::current()
+    ) {
+        if constexpr (enable_source_loc) {
+            core::log::detail::logger(
+                core::log::Level::DEBUG,
+                loc,
+                std::format(fstr, std::forward<Args...>(args)...)
+            );
+        } else {
+            std::ignore = loc;
+            core::log::detail::logger(
+                core::log::Level::DEBUG,
+                std::format(fstr, std::forward<Args...>(args)...)
+            );
+        }
+    }
+
+    debug(
+        Args... args,
+        core::detail::source_location loc =
+            core::detail::source_location::current()
+    ) {
+        if constexpr (enable_source_loc) {
+            core::log::detail::logger(
+                core::log::Level::DEBUG,
+                loc,
+                std::format(args...)
+            );
+        } else {
+            std::ignore = loc;
+            core::log::detail::logger(
+                core::log::Level::DEBUG,
+                std::format(args...)
+            );
+        }
+    }
+};
+
+template<typename... Args>
+debug(Args... args) -> debug<Args...>;
 
 #undef MAKE_LOG_STRUCT
 } // namespace core::log

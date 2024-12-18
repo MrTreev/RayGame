@@ -3,10 +3,10 @@
 
 namespace core::exception {
 
-class Condition: public std::logic_error {
+class Condition: public std::runtime_error {
 public:
     explicit Condition(const std::string& message);
-    explicit Condition(const std::logic_error&& error);
+    explicit Condition(const std::runtime_error&& error);
     virtual ~Condition() override;
 };
 

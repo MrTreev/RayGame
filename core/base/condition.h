@@ -1,10 +1,8 @@
 #pragma once
 #include "core/base/exception.h"
 #include "core/base/logger.h"
-#include <string>
-
-// Keep for macro
 #include <format> // IWYU pragma: keep
+#include <string>
 
 namespace core::condition {
 

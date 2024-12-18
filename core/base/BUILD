@@ -29,6 +29,26 @@ cc_library(
 	visibility = [ "//visibility:public" ]
 )
 
+cc_library(
+    name = "test",
+    deps = [":base", "//test"],
+	visibility = [ ":__subpackages__" ]
+)
+
+cc_test(
+    name = "debug",
+    srcs = ["debug_test.cpp"],
+    deps = [":test"],
+    size = "small",
+)
+
+cc_test(
+    name = "logger",
+    srcs = ["logger_test.cpp"],
+    deps = [":test"],
+    size = "small",
+)
+
 filegroup(
     name = "doxyfiles",
     srcs = glob([

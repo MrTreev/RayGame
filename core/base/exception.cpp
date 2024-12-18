@@ -1,10 +1,10 @@
 #include "core/base/exception.h" // IWYU pragma: keep
 
 core::exception::Condition::Condition(const std::string& message)
-    : ::std::logic_error(message) {}
+    : ::std::runtime_error(message) {}
 
-core::exception::Condition::Condition(const std::logic_error&& error)
-    : ::std::logic_error(error) {}
+core::exception::Condition::Condition(const std::runtime_error&& error)
+    : ::std::runtime_error(error) {}
 
 core::exception::PreCondition::PreCondition(const std::string& message)
     : Condition(message) {}

@@ -1,3 +1,8 @@
+# for system_library rule
+common --experimental_starlark_cc_import
+common --experimental_repo_remote_exec
+
+# Common
 common --enable_platform_specific_config
 common --incompatible_enable_cc_toolchain_resolution
 common --incompatible_disallow_empty_glob

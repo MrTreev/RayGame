@@ -1,6 +1,6 @@
-filegroup(
-    name = "headers",
-    srcs = [
+cc_library(
+	name = "math",
+	hdrs = [
     	"arithmetic/safe_add.h",
     	"arithmetic/safe_div.h",
     	"arithmetic/safe_mult.h",
@@ -13,11 +13,6 @@ filegroup(
     	"rect.h",
     	"vector.h",
     ],
-    visibility = ["//core/math:__subpackages__"],
-)
-
-filegroup(
-    name = "sources",
     srcs = [
     	"arithmetic/safe_add.cpp",
     	"arithmetic/safe_div.cpp",
@@ -31,24 +26,10 @@ filegroup(
     	"rect.cpp",
     	"vector.cpp",
     ],
-    visibility = ["//core/math:__subpackages__"],
-)
-
-cc_library(
-	name = "math",
-	hdrs = [":headers"],
-    srcs = [":sources"],
-	deps = [
-		"//core/base",
-	],
-	visibility = [ "//visibility:public" ]
-)
-
-cc_library(
-	name = "math_full_random",
-	hdrs = [":headers"],
-    srcs = [":sources"],
-    defines = ["RAYGAME_USE_FULL_RANDOM"],
+    defines = select({
+        "//rules/math:deterministic": [],
+        "//rules/math:non-deterministic": ["RAYGAME_USE_FULL_RANDOM"],
+    }),
 	deps = [
 		"//core/base",
 	],
@@ -58,7 +39,7 @@ cc_library(
 cc_library(
     name = "test",
     deps = [":math", "//test"],
-	visibility = [ "//core/math:__subpackages__" ]
+	visibility = [ ":__subpackages__" ]
 )
 
 cc_test(
@@ -72,14 +53,6 @@ cc_test(
     name = "random",
     srcs = ["random_test.cpp"],
     deps = [":test"],
-    size = "small",
-)
-
-cc_test(
-    name = "random_full",
-    srcs = ["random_test.cpp"],
-    deps = [":math_full_random", "//test"],
-    defines = ["RAYGAME_USE_FULL_RANDOM"],
     size = "small",
 )
 
