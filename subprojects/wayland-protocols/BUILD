@@ -1,3 +1,5 @@
+load("//rules/wayland:wayland_protocol.bzl", "rg_wayland_protocol")
+
 cc_library(
     name = "wayland-protocols",
     hdrs = [
@@ -11,46 +13,60 @@ cc_library(
     includes = ["."],
     conlyopts = ["-w"], # Disable warnings as this is generated external code
     deps = [
-        "//subprojects/host:libwayland-client",
-        "//subprojects/host:libxkbcommon",
+        ":libwayland-client",
+        ":libxkbcommon",
     ],
     visibility = ["//visibility:public"],
 )
 
-genrule(
-    name = "wayland-header",
-    srcs = [":wayland-xml"],
-    outs = ["wayland-client-protocol.h"],
-    cmd = "wayland-scanner client-header $< $@",
+rg_
+
+cc_library(
+    name = "libwayland-client",
+    deps = [":libwayland-client-import"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "libxkbcommon",
+    deps = [":libxkbcommon-import"],
+    visibility = ["//visibility:public"],
+)
+
+cc_import(
+    name = "libwayland-client-import",
+    hdrs = [":wayland-client-headers"],
+    interface_library = "libwayland-client.so",
+    system_provided = True,
+)
+
+cc_import(
+    name = "libxkbcommon-import",
+    hdrs = [":libxkbcommon-headers"],
+    interface_library = "libxkbcommon.so",
+    system_provided = True,
 )
 
 genrule(
-    name = "wayland-source",
-    srcs = [":wayland-xml"],
-    outs = ["wayland-protocol.c"],
-    cmd = "wayland-scanner public-code $< $@",
+    name = "libwayland-client-headers",
+    outs = [
+        "wayland-client.h",
+        "wayland-client-core.h",
+        "wayland-client-protocol.h",
+    ],
+    cmd = "cp /usr/include/wayland-client.h /usr/include/wayland-client-core.h /usr/include/wayland-client-core.h \"$(RULEDIR)\"",
 )
 
 genrule(
-    name = "xdg-shell-header",
-    srcs = [":xdg-shell-xml"],
-    outs = ["xdg-shell-client-protocol.h"],
-    cmd = "wayland-scanner client-header $< $@",
-)
-
-genrule(
-    name = "xdg-shell-source",
-    srcs = [":xdg-shell-xml"],
-    outs = ["xdg-shell-protocol.c"],
-    cmd = "wayland-scanner public-code $< $@",
-)
-
-filegroup(
-    name = "wayland-xml",
-    srcs = ["wayland.xml"],
-)
-
-filegroup(
-    name = "xdg-shell-xml",
-    srcs = ["xdg-shell.xml"],
+    name = "libxkbcommon-headers",
+    outs = [
+        "xkbcommon/xkbcommon.h",
+        "xkbcommon/xkbcommon-compat.h",
+        "xkbcommon/xkbcommon-compose.h",
+        "xkbcommon/xkbcommon-keysyms.h",
+        "xkbcommon/xkbcommon-names.h",
+        "xkbcommon/xkbcommon-x11.h",
+        "xkbcommon/xkbregistry.h",
+    ],
+    cmd = "mkdir -p \"$(RULEDIR)/xkbcommon\" && cp /usr/include/xkbcommon/* \"$(RULEDIR)/xkbcommon/\"",
 )
