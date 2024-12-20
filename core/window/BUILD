@@ -16,7 +16,7 @@ cc_library(
 		"//core/base",
 		"//core/math",
 		"//core/drawing",
-        "//subprojects/wayland-protocols",
+        "//third_party/wayland",
 	],
 	visibility = [ "//visibility:public" ]
 )

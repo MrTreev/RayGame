@@ -12,8 +12,6 @@ doxygen(
     srcs = [
         "//core:doxyfiles",
         "README.md",
-        # "//rules:doxyfiles",
-        # "//test:doxyfiles",
     ],
     use_mdfile_as_mainpage = "README.md",
     project_name = "RayGame",

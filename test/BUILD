@@ -3,7 +3,7 @@ cc_library(
     hdrs = ["tests_begin.h"],
     srcs = ["test.h"],
     deps = [
-        "//subprojects/doctest"
+        "//third_party/doctest"
     ],
     visibility = ["//visibility:public"],
 )
