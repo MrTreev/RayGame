@@ -16,9 +16,11 @@ cc_library(
 		"//core/base",
 		"//core/math",
 		"//core/drawing",
+	],
+    implementation_deps = [
         "//third_party/wayland",
         "//third_party/system/xkbcommon",
-	],
+    ],
 	visibility = [ "//visibility:public" ]
 )
 

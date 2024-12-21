@@ -7,7 +7,7 @@ cc_library(
 cc_import(
     name = "libxkbcommon-import",
     hdrs = [":libxkbcommon-headers"],
-    interface_library = "libxkbcommon.so",
+    interface_library = ":libxkbcommon-sofile",
     system_provided = True,
 )
 
@@ -28,4 +28,10 @@ genrule(
         outdir = "$(RULEDIR)/xkbcommon",
         infiles = " ".join(["/usr/include/{}".format(f) for f in LIBXKBCOMMONHDRS]),
     ),
+)
+
+genrule(
+    name = "libxkbcommon-sofile",
+    outs = ["libxkbcommon.so"],
+    cmd = "cp /usr/lib/libxkbcommon.so $(RULEDIR)",
 )

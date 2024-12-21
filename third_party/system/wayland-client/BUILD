@@ -7,20 +7,26 @@ cc_library(
 cc_import(
     name = "libwayland-client-import",
     hdrs = [":libwayland-client-headers"],
-    interface_library = "libwayland-client.so",
+    interface_library = ":libwayland-client-sofile",
     system_provided = True,
 )
 
 genrule(
     name = "libwayland-client-headers",
     outs = [
-        "libwayland/wayland-client.h",
-        "libwayland/wayland-client-core.h",
-        "libwayland/wayland-client-protocol.h",
+        "wayland-client.h",
+        "wayland-client-core.h",
+        "wayland-client-protocol.h",
     ],
-    cmd = "cp {} {} {} \"$(RULEDIR)/libwayland\"".format(
+    cmd = "cp {} {} {} \"$(RULEDIR)\"".format(
         "/usr/include/wayland-client.h",
         "/usr/include/wayland-client-core.h",
         "/usr/include/wayland-client-protocol.h",
     ),
+)
+
+genrule(
+    name = "libwayland-client-sofile",
+    outs = ["libwayland-client.so"],
+    cmd = "cp /usr/lib/libwayland-client.so $(RULEDIR)",
 )
