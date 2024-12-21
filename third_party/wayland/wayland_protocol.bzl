@@ -1,5 +1,3 @@
-load("@bazel_skylib//rules/directory:directory.bzl", "directory")
-
 PROC_HDR_FMT = """#pragma once
 {pragma}
 #include {include}
@@ -41,7 +39,7 @@ def _rg_wayland_protocol_impl(ctx):
         output = _file_mod,
         is_executable = False,
         content = PROC_HDR_FMT.format(
-            include = "<{}>".format(_file_hdr.dirname + _file_hdr.basename),
+            include = "<{}>".format(_file_hdr.basename),
             pragma = _pragma,
         ),
     )
@@ -62,9 +60,9 @@ def rg_wayland_protocol(**kwargs):
     name        = kwargs.pop("name")
     protocol    = kwargs.pop("protocol",    default = name)
     xml_file    = kwargs.pop("xml",         default = "%s.xml" % protocol)
-    header      = kwargs.pop("header",      default = "{proto}/{proto}-client-protocol-impl.h".format(proto=protocol))
-    modhdr      = kwargs.pop("modhdr",      default = "{proto}/{proto}-client-protocol.h".format(proto=protocol))
-    source      = kwargs.pop("source",      default = "{proto}/{proto}-protocol.c".format(proto=protocol))
+    header      = kwargs.pop("header",      default = "{proto}-client-protocol-impl.h".format(proto=protocol))
+    modhdr      = kwargs.pop("modhdr",      default = "{proto}-client-protocol.h".format(proto=protocol))
+    source      = kwargs.pop("source",      default = "{proto}-protocol.c".format(proto=protocol))
     deps        = kwargs.pop("deps",        default = [])
     dirname     = "%s_incdir" % protocol
     protocol_target = "_{}_wayland_protocol".format(name)
@@ -85,16 +83,11 @@ def rg_wayland_protocol(**kwargs):
         }),
     )
 
-    dirpath = directory(
-        name = dirname,
-        srcs = ["%s" % protocol_target],
-    )
-
     native.cc_library(
-        name            = name,
-        hdrs            = [modhdr],
-        srcs            = [source, header],
-        conlyopts       = ["-w"],
-        include_prefix  = protocol,
+        name        = name,
+        hdrs        = [modhdr],
+        srcs        = [source, header],
+        conlyopts   = ["-w"],
+        includes    = ["."],
         **kwargs
     )
