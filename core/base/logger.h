@@ -1,12 +1,12 @@
 #pragma once
-#include "core/base/config.h"
 #include "core/base/types.h"
 #include <format>
+#include <source_location>
 #include <string>
 #include <utility>
 
 namespace {
-#if defined(RAYGAME_ENABLE_SOURCE_LOC)
+#if !defined(RAYGAME_DISABLE_SOURCE_LOC)
 constexpr bool enable_source_loc = true;
 #else
 constexpr bool enable_source_loc = false;
@@ -75,9 +75,9 @@ constexpr std::string to_string(Level level) {
 namespace detail {
 void logger(const core::log::Level& level, const std::string& text);
 void logger(
-    const core::log::Level&              level,
-    const core::detail::source_location& loc,
-    const std::string&                   text
+    const core::log::Level&     level,
+    const std::source_location& loc,
+    const std::string&          text
 );
 } // namespace detail
 
@@ -85,9 +85,8 @@ void logger(
     template<typename... Args>                                                 \
     struct level {                                                             \
         level(                                                                 \
-            std::string                   msg,                                 \
-            core::detail::source_location loc =                                \
-                core::detail::source_location::current()                       \
+            std::string          msg,                                          \
+            std::source_location loc = std::source_location::current()         \
         ) {                                                                    \
             if constexpr (enable_source_loc) {                                 \
                 core::log::detail::logger(core::log::Level::lvl, loc, msg);    \
@@ -98,8 +97,7 @@ void logger(
         }                                                                      \
         level(                                                                 \
             Args... args,                                                      \
-            core::detail::source_location loc =                                \
-                core::detail::source_location::current()                       \
+            std::source_location loc = std::source_location::current()         \
         ) {                                                                    \
             if constexpr (enable_source_loc) {                                 \
                 core::log::detail::logger(                                     \
@@ -132,9 +130,8 @@ MAKE_LOG_STRUCT(fatal, FATAL);
 template<typename... Args>
 struct debug {
     debug(
-        const char                    msg[],
-        core::detail::source_location loc =
-            core::detail::source_location::current()
+        const char           msg[],
+        std::source_location loc = std::source_location::current()
     ) {
         if constexpr (enable_source_loc) {
             core::log::detail::logger(
@@ -152,9 +149,8 @@ struct debug {
     }
 
     debug(
-        std::string                   msg,
-        core::detail::source_location loc =
-            core::detail::source_location::current()
+        std::string          msg,
+        std::source_location loc = std::source_location::current()
     ) {
         if constexpr (enable_source_loc) {
             core::log::detail::logger(core::log::Level::DEBUG, loc, msg);
@@ -167,8 +163,7 @@ struct debug {
     debug(
         std::format_string<Args...> fstr,
         Args... args,
-        core::detail::source_location loc =
-            core::detail::source_location::current()
+        std::source_location loc = std::source_location::current()
     ) {
         if constexpr (enable_source_loc) {
             core::log::detail::logger(
@@ -187,8 +182,7 @@ struct debug {
 
     debug(
         Args... args,
-        core::detail::source_location loc =
-            core::detail::source_location::current()
+        std::source_location loc = std::source_location::current()
     ) {
         if constexpr (enable_source_loc) {
             core::log::detail::logger(

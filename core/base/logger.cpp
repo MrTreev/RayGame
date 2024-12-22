@@ -2,13 +2,13 @@
 #include <chrono>
 #include <iostream>
 #include <ostream>
+#include <source_location>
 #include <string_view>
 
 namespace {
 
 consteval size_t get_prefix_len(
-    const core::detail::source_location loc =
-        core::detail::source_location::current()
+    const std::source_location loc = std::source_location::current()
 ) {
     const std::string_view search_str = "/src/";
     const std::string_view locname    = loc.file_name();
@@ -22,8 +22,7 @@ constexpr std::string_view shorten_name(std::string_view full_loc) {
     return shortloc;
 }
 
-constexpr std::string location_string(const core::detail::source_location& loc
-) {
+constexpr std::string location_string(const std::source_location& loc) {
     return std::format(
         "{}:{}:{} ",
         shorten_name(loc.file_name()),
@@ -35,9 +34,9 @@ constexpr std::string location_string(const core::detail::source_location& loc
 } // namespace
 
 void core::log::detail::logger(
-    const core::log::Level&              level,
-    const core::detail::source_location& loc,
-    const std::string&                   text
+    const core::log::Level&     level,
+    const std::source_location& loc,
+    const std::string&          text
 ) {
     if (logging_level <= level) {
         std::println(

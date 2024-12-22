@@ -4,6 +4,8 @@
 #include <cstdint> // IWYU pragma: export
 #include <string>
 
+namespace core {
+
 using std::int16_t;
 using std::int32_t;
 using std::int64_t;
@@ -23,8 +25,6 @@ using std::byte;
 using std::nullptr_t;
 using std::ptrdiff_t;
 using std::size_t;
-
-namespace core {
 
 using rad_t = float;
 using deg_t = float;

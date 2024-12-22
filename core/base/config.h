@@ -9,20 +9,15 @@ static_assert(
 );
 #endif
 
-#if __has_include(<experimental/source_location>)
-#    include <experimental/source_location>
-namespace core::detail {
-using std::experimental::source_location;
-}
-#elif __has_include(<source_location>)
-#    include <source_location>
-namespace core::detail {
-using std::source_location;
-}
-#else
+#if !__has_include(<source_location>)
 #    error "source_location unsupported, cannot continue"
 #endif
 // clang-format on
+
+#if !defined(RAYGAME_ASSERT)
+#    include <cassert>
+#    define RAYGAME_ASSERT(...) assert(__VA_ARGS__)
+#endif
 
 namespace core::config {
 
@@ -275,7 +270,7 @@ static constexpr bool COMPILER_IS_GCC_LIKE =
 #if defined(RAYGAME_BUILD_TYPE_DEBUG)
 #    include <cassert>
 #    define RAYGAME_UNREACHABLE                                                \
-        assert(false && "Reached block marked unreachable")
+        RAYGAME_ASSERT(false && "Reached block marked unreachable")
 #else
 #    define RAYGAME_UNREACHABLE std::unreachable()
 #endif

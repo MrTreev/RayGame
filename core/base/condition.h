@@ -1,45 +1,39 @@
 #pragma once
+#include "core/base/concepts.h"
 #include "core/base/exception.h"
 #include "core/base/logger.h"
 #include <format> // IWYU pragma: keep
+#include <source_location>
 #include <string>
 
 namespace core::condition {
 
-namespace detail {
-template<typename T>
-concept checkable = requires(T t) { !t; };
-} // namespace detail
-
 //! Pre-Condition Checker
 /*!
  *  @see PreCondition
+ *  @throws core::exception::PreCondition If condition does not hold
  */
-template<typename Checkable_T>
-requires detail::checkable<Checkable_T>
 constexpr void pre_condition(
-    const Checkable_T&                   check,
-    const std::string&                   message,
-    const core::detail::source_location& loc =
-        core::detail::source_location::current()
+    const concepts::checkable auto& check,
+    const std::string&              message,
+    const std::source_location&     loc = std::source_location::current()
 ) {
+    using exception::PreCondition;
     if (!check) {
         core::log::fatal(message, loc);
-        throw core::exception::PreCondition(message);
+        throw PreCondition(message);
     }
 }
 
 //! Condition Checker
 /*!
  *  @see CheckCondition
+ *  @throws core::exception::CheckCondition If condition does not hold
  */
-template<typename Checkable_T>
-requires detail::checkable<Checkable_T>
 constexpr void check_condition(
-    const Checkable_T&                   check,
-    const std::string&                   message,
-    const core::detail::source_location& loc =
-        core::detail::source_location::current()
+    const concepts::checkable auto& check,
+    const std::string&              message,
+    const std::source_location&     loc = std::source_location::current()
 ) {
     if (!check) {
         core::log::fatal(message, loc);
@@ -50,14 +44,13 @@ constexpr void check_condition(
 //! Post-Condition Checker
 /*!
  *  @see PostCondition
+ *  @throws core::exception::PostCondition If condition does not hold
  */
-template<typename Checkable_T>
-requires detail::checkable<Checkable_T>
+template<core::concepts::checkable T>
 constexpr void post_condition(
-    const Checkable_T&                   check,
-    const std::string&                   message,
-    const core::detail::source_location& loc =
-        core::detail::source_location::current()
+    const T&                    check,
+    const std::string&          message,
+    const std::source_location& loc = std::source_location::current()
 ) {
     if (!check) {
         core::log::fatal(message, loc);
@@ -65,18 +58,16 @@ constexpr void post_condition(
     }
 }
 
-//! Null ptr checker
+//! Null-Pointer Checker
 /*!
  *  @see CheckCondition
+ *  @throws core::exception::CheckCondition If pointer is null
  */
-template<typename T>
 constexpr void check_ptr(
-    const T&                             check,
-    const std::string&                   message,
-    const core::detail::source_location& loc =
-        core::detail::source_location::current()
+    const concepts::pointer auto& check,
+    const std::string&            message,
+    const std::source_location&   loc = std::source_location::current()
 ) {
-    static_assert(std::is_pointer_v<T>);
     if (check == nullptr) {
         core::log::fatal(message, loc);
         throw core::exception::CheckCondition(message);

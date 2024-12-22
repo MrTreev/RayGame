@@ -1,5 +1,6 @@
 #include "core/math/random.h" // IWYU pragma: keep
 #include "core/base/condition.h"
+#include "core/base/config.h"
 #include <random>
 
 namespace {
@@ -14,11 +15,11 @@ constexpr bool random_seed = false;
 uint64_t seed = 42;
 
 // Disable global constructor warnings for global random_device, as it is a singleton anyway
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wglobal-constructors"
-#pragma clang diagnostic ignored "-Wexit-time-destructors"
+RAYGAME_CLANG_SUPPRESS_WARNING_PUSH
+RAYGAME_CLANG_SUPPRESS_WARNING("-Wglobal-constructors")
+RAYGAME_CLANG_SUPPRESS_WARNING("-Wexit-time-destructors")
 std::random_device dev;
-#pragma clang diagnostic pop
+RAYGAME_CLANG_SUPPRESS_WARNING_POP
 
 uint64_t rand_seed() {
     if constexpr (random_seed) {
