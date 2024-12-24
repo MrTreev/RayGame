@@ -1,4 +1,4 @@
-#include "core/math/vector.h" // IWYU pragma: keep
+#include "raygame/core/math/vector.h" // IWYU pragma: keep
 
 // Vec2 Specialisations
 template struct core::Vec2<uint8_t>;

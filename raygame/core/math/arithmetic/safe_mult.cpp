@@ -1,1 +1,1 @@
-#include "core/math/arithmetic/safe_mult.h" // IWYU pragma: keep
+#include "raygame/core/math/arithmetic/safe_mult.h" // IWYU pragma: keep

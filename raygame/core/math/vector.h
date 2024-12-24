@@ -1,7 +1,7 @@
 #pragma once
-#include "core/base/types.h"
-#include "core/math/arithmetic.h"
-#include "core/math/mathrule.h"
+#include "raygame/core/base/types.h"
+#include "raygame/core/math/arithmetic.h"
+#include "raygame/core/math/mathrule.h"
 #include <string>
 
 namespace core {

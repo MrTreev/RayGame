@@ -1,1 +1,1 @@
-#include "core/math/arithmetic.h" // IWYU pragma: keep
+#include "raygame/core/math/arithmetic.h" // IWYU pragma: keep

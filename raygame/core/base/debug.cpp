@@ -1,1 +1,1 @@
-#include "core/base/debug.h" // IWYU pragma: keep
+#include "raygame/core/base/debug.h" // IWYU pragma: keep

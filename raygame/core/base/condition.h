@@ -1,7 +1,7 @@
 #pragma once
-#include "core/base/concepts.h"
-#include "core/base/config.h"
-#include "core/base/exception.h"
+#include "raygame/core/base/concepts.h"
+#include "raygame/core/base/config.h"
+#include "raygame/core/base/exception.h"
 #include <format> // IWYU pragma: keep
 #include <source_location>
 #include <string>

@@ -1,5 +1,5 @@
 #pragma once
-#include "core/window/window.h"
+#include "raygame/core/window/window.h"
 
 RAYGAME_CLANG_SUPPRESS_WARNING_PUSH
 RAYGAME_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage")

@@ -1,5 +1,5 @@
 #pragma once
-#include "core/math/vector.h"
+#include "raygame/core/math/vector.h"
 #include <string>
 
 namespace core {

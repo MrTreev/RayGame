@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/math/arithmetic.h"
-#include "core/math/vector.h"
+#include "raygame/core/math/arithmetic.h"
+#include "raygame/core/math/vector.h"
 #include <string>
 
 namespace core {

@@ -1,6 +1,6 @@
 #pragma once
 #include "doctest/doctest.h" // IWYU pragma: export
-#include "core/test/test.h"       // IWYU pragma: export
+#include "raygame/core/test/test.h"       // IWYU pragma: export
 #define RG_TEST_EPSILON_FLOAT  0.000001F
 #define RG_TEST_EPSILON_DOUBLE 0.000001D
 

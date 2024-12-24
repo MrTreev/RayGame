@@ -1,5 +1,5 @@
-#include "core/base/logger.h" // IWYU pragma: keep
-#include "core/test/tests_begin.h"
+#include "raygame/core/base/logger.h" // IWYU pragma: keep
+#include "raygame/core/test/tests_begin.h"
 
 TEST_SUITE("core::log::logger") {
     TEST_CASE("trace") {

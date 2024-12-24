@@ -1,6 +1,6 @@
 #pragma once
-#include "core/base/types.h"
-#include "core/window/window.h"
+#include "raygame/core/base/types.h"
+#include "raygame/core/window/window.h"
 #include <wayland-client-protocol.h>
 #include <xdg-shell-client-protocol.h>
 #include <xkbcommon/xkbcommon.h>

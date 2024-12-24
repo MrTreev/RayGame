@@ -1,6 +1,6 @@
-#include "core/window/x11.h" // IWYU pragma: keep
-#include "core/base/condition.h"
-#include "core/math/numeric_cast.h"
+#include "raygame/core/window/x11.h" // IWYU pragma: keep
+#include "raygame/core/base/condition.h"
+#include "raygame/core/math/numeric_cast.h"
 
 core::window::X11Window::X11Window(
     core::Vec2<size_t>        size,

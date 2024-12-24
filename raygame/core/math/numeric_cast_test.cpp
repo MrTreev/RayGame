@@ -1,5 +1,5 @@
-#include "core/math/numeric_cast.h"
-#include "core/test/tests_begin.h"
+#include "raygame/core/math/numeric_cast.h"
+#include "raygame/core/test/tests_begin.h"
 #include <cstdint>
 
 TEST_SUITE("core::math::numeric_cast") {

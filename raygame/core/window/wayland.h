@@ -1,5 +1,5 @@
 #pragma once
-#include "core/window/window.h"
+#include "raygame/core/window/window.h"
 
 namespace core::window {
 namespace detail {

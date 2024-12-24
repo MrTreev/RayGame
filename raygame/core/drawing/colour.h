@@ -1,5 +1,5 @@
 #pragma once
-#include "core/drawing/pixel.h"
+#include "raygame/core/drawing/pixel.h"
 
 namespace core::colour {
 

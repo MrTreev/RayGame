@@ -1,11 +1,11 @@
-#include "core/window/detail/wayland.h" // IWYU pragma: keep
-#include "core/base/condition.h"
-#include "core/base/logger.h"
-#include "core/drawing/colour.h"
-#include "core/math/arithmetic.h"
-#include "core/math/numeric_cast.h"
-#include "core/math/random.h"
-#include "core/window/wayland.h"
+#include "raygame/core/window/detail/wayland.h" // IWYU pragma: keep
+#include "raygame/core/base/condition.h"
+#include "raygame/core/base/logger.h"
+#include "raygame/core/drawing/colour.h"
+#include "raygame/core/math/arithmetic.h"
+#include "raygame/core/math/numeric_cast.h"
+#include "raygame/core/math/random.h"
+#include "raygame/core/window/wayland.h"
 #include <cstring>
 #include <fcntl.h>
 #include <linux/input-event-codes.h>

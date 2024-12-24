@@ -1,4 +1,4 @@
-#include "core/math/rect.h" // IWYU pragma: keep
+#include "raygame/core/math/rect.h" // IWYU pragma: keep
 
 template class core::Rect<uint8_t>;
 template class core::Rect<uint16_t>;

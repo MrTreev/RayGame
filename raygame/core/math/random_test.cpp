@@ -1,5 +1,5 @@
-#include "core/math/random.h" // IWYU pragma: keep
-#include "core/test/tests_begin.h"
+#include "raygame/core/math/random.h" // IWYU pragma: keep
+#include "raygame/core/test/tests_begin.h"
 #include <array>
 
 TEST_SUITE("core::math::rand") {

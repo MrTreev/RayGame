@@ -1,4 +1,4 @@
-#include "core/base/exception.h" // IWYU pragma: keep
+#include "raygame/core/base/exception.h" // IWYU pragma: keep
 
 core::exception::Exception::Exception(const std::string& message)
     : ::std::runtime_error(message) {}

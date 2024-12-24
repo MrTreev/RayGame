@@ -1,5 +1,5 @@
-#include "core/window/wayland.h" //IWYU pragma: keep
-#include "core/window/detail/wayland.h"
+#include "raygame/core/window/wayland.h" //IWYU pragma: keep
+#include "raygame/core/window/detail/wayland.h"
 #include <wayland-client-core.h>
 #include <wayland-client-protocol.h>
 
