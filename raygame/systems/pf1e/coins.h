@@ -1,5 +1,4 @@
 #include "raygame/core/types.h"
-#include "raygame/core/math/arithmetic.h"
 
 namespace raygame::systems::pf1e {
 class Coins {
@@ -11,24 +10,24 @@ class Coins {
     static constexpr size_t CP = 1;
 
 public:
-    Coins() = default;
+    constexpr Coins() = default;
 
-    Coins(size_t amount)
+    constexpr Coins(size_t amount)
         : m_amount(amount) {}
 
-    size_t pp() {
+    constexpr size_t pp() {
         return m_amount / PP;
     }
 
-    size_t gp() {
+    constexpr size_t gp() {
         return m_amount / GP;
     }
 
-    size_t sp() {
+    constexpr size_t sp() {
         return m_amount / SP;
     }
 
-    size_t cp() {
+    constexpr size_t cp() {
         return m_amount / CP;
     }
 };

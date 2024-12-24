@@ -1,118 +1,135 @@
 #include "raygame/core/types.h"
 
 namespace raygame::systems::pf1e {
-struct Skills {
-    int32_t acrobatics;
-    int32_t appraise;
-    int32_t bluff;
-    int32_t climb;
+
+class Skill {
+    int32_t m_value{0};
+
+public:
+    constexpr Skill() = default;
+
+    constexpr Skill(int32_t val)
+        : m_value(val) {}
+
+    constexpr decltype(m_value) val() {
+        return m_value;
+    }
+};
+
+class Skills {
+    Skill m_acrobatics;
+    Skill m_appraise;
+    Skill m_bluff;
+    Skill m_climb;
 
     struct {
-        int32_t alchemy;
-        int32_t armor;
-        int32_t baskets;
-        int32_t blacksmithing;
-        int32_t books;
-        int32_t bows;
-        int32_t calligraphy;
-        int32_t carpentry;
-        int32_t cloth;
-        int32_t clothing;
-        int32_t gemcutting;
-        int32_t glass;
-        int32_t jewelry;
-        int32_t leather;
-        int32_t locks;
-        int32_t paintings;
-        int32_t pottery;
-        int32_t sculptures;
-        int32_t ships;
-        int32_t shoes;
-        int32_t stonemasonry;
-        int32_t traps;
-        int32_t weapons;
-        int32_t untrained;
+        Skill m_alchemy;
+        Skill m_armor;
+        Skill m_baskets;
+        Skill m_blacksmithing;
+        Skill m_books;
+        Skill m_bows;
+        Skill m_calligraphy;
+        Skill m_carpentry;
+        Skill m_cloth;
+        Skill m_clothing;
+        Skill m_gemcutting;
+        Skill m_glass;
+        Skill m_jewelry;
+        Skill m_leather;
+        Skill m_locks;
+        Skill m_paintings;
+        Skill m_pottery;
+        Skill m_sculptures;
+        Skill m_ships;
+        Skill m_shoes;
+        Skill m_stonemasonry;
+        Skill m_traps;
+        Skill m_weapons;
+        Skill m_untrained;
     } craft;
 
-    int32_t diplomacy;
-    int32_t disable_device;
-    int32_t disguise;
-    int32_t escape_artist;
-    int32_t fly;
-    int32_t handle_animal;
-    int32_t heal;
-    int32_t intimidate;
+    Skill m_diplomacy;
+    Skill m_disable_device;
+    Skill m_disguise;
+    Skill m_escape_artist;
+    Skill m_fly;
+    Skill m_handle_animal;
+    Skill m_heal;
+    Skill m_intimidate;
 
     struct {
-        int32_t arcana;
-        int32_t dungeoneering;
-        int32_t engineering;
-        int32_t geography;
-        int32_t history;
-        int32_t local;
-        int32_t nature;
-        int32_t nobility;
-        int32_t planes;
-        int32_t religion;
+        Skill m_arcana;
+        Skill m_dungeoneering;
+        Skill m_engineering;
+        Skill m_geography;
+        Skill m_history;
+        Skill m_local;
+        Skill m_nature;
+        Skill m_nobility;
+        Skill m_planes;
+        Skill m_religion;
     } knowledge;
 
-    int32_t linguistics;
-    int32_t perception;
+    Skill m_linguistics;
+    Skill m_perception;
 
     struct {
-        int32_t act;
-        int32_t comedy;
-        int32_t dance;
-        int32_t keyboard_instruments;
-        int32_t oratory;
-        int32_t percussion_instruments;
-        int32_t sing;
-        int32_t string_instruments;
-        int32_t wind_instruments;
-        int32_t untrained;
+        Skill m_act;
+        Skill m_comedy;
+        Skill m_dance;
+        Skill m_keyboard_instruments;
+        Skill m_oratory;
+        Skill m_percussion_instruments;
+        Skill m_sing;
+        Skill m_string_instruments;
+        Skill m_wind_instruments;
+        Skill m_untrained;
     } perform;
 
     struct {
-        int32_t architect;
-        int32_t baker;
-        int32_t barrister;
-        int32_t brewer;
-        int32_t butcher;
-        int32_t clerk;
-        int32_t cook;
-        int32_t courtesan;
-        int32_t driver;
-        int32_t engineer;
-        int32_t farmer;
-        int32_t fisherman;
-        int32_t gambler;
-        int32_t gardener;
-        int32_t herbalist;
-        int32_t innkeeper;
-        int32_t librarian;
-        int32_t merchant;
-        int32_t midwife;
-        int32_t miller;
-        int32_t miner;
-        int32_t porter;
-        int32_t sailor;
-        int32_t scribe;
-        int32_t shepherd;
-        int32_t soldier;
-        int32_t soothsayer;
-        int32_t stable_master;
-        int32_t tanner;
-        int32_t trapper;
-        int32_t woodcutter;
+        Skill m_architect;
+        Skill m_baker;
+        Skill m_barrister;
+        Skill m_brewer;
+        Skill m_butcher;
+        Skill m_clerk;
+        Skill m_cook;
+        Skill m_courtesan;
+        Skill m_driver;
+        Skill m_engineer;
+        Skill m_farmer;
+        Skill m_fisherman;
+        Skill m_gambler;
+        Skill m_gardener;
+        Skill m_herbalist;
+        Skill m_innkeeper;
+        Skill m_librarian;
+        Skill m_merchant;
+        Skill m_midwife;
+        Skill m_miller;
+        Skill m_miner;
+        Skill m_porter;
+        Skill m_sailor;
+        Skill m_scribe;
+        Skill m_shepherd;
+        Skill m_soldier;
+        Skill m_soothsayer;
+        Skill m_stable_master;
+        Skill m_tanner;
+        Skill m_trapper;
+        Skill m_woodcutter;
     } profession;
 
-    int32_t ride;
-    int32_t sense_motive;
-    int32_t sleight_of_hand;
-    int32_t spellcraft;
-    int32_t stealth;
-    int32_t survival;
-    int32_t swim;
-    int32_t use_magic_device;
+    Skill m_ride;
+    Skill m_sense_motive;
+    Skill m_sleight_of_hand;
+    Skill m_spellcraft;
+    Skill m_stealth;
+    Skill m_survival;
+    Skill m_swim;
+    Skill m_use_magic_device;
+
+public:
 };
 } // namespace raygame::systems::pf1e
