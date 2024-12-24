@@ -1,5 +1,5 @@
 #include "core/base/logger.h" // IWYU pragma: keep
-#include "test/tests_begin.h"
+#include "core/test/tests_begin.h"
 
 TEST_SUITE("core::log::logger") {
     TEST_CASE("trace") {

@@ -1,5 +1,5 @@
 #include "core/math/numeric_cast.h"
-#include "test/tests_begin.h"
+#include "core/test/tests_begin.h"
 #include <cstdint>
 
 TEST_SUITE("core::math::numeric_cast") {

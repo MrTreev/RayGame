@@ -1,5 +1,5 @@
 #include "core/math/arithmetic/safe_sub.h" // IWYU pragma: keep
-#include "test/tests_begin.h"
+#include "core/test/tests_begin.h"
 
 TEST_SUITE("core::math::safe_sub") {
     using core::math::safe_sub;

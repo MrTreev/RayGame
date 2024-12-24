@@ -1,7 +1,7 @@
 cc_binary(
     name = "init_only",
     deps = [
-        "//core/window",
+        "//raygame/core/window",
     ],
     srcs = ["main.cpp"],
 )

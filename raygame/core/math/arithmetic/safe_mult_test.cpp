@@ -1,5 +1,5 @@
 #include "core/math/arithmetic/safe_mult.h"
-#include "test/tests_begin.h"
+#include "core/test/tests_begin.h"
 
 TEST_SUITE("core::math::safe_mult") {
     using core::math::safe_mult;

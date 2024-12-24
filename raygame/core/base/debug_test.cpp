@@ -1,5 +1,5 @@
 #include "core/base/debug.h"
-#include "test/tests_begin.h"
+#include "core/test/tests_begin.h"
 
 class TestClass {};
 

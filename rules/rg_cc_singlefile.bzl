@@ -36,7 +36,7 @@ rg_cc_library = macro(
     inherit_attrs = native.cc_library,
     attrs = {
         "create_test":  attr.bool(default=False),
-        "testlibs":     attr.label_list(default=["//test"]),
+        "testlibs":     attr.label_list(default=["//raygame/core/test"]),
         "testonlydeps": attr.label_list(default=[]),
         "tsts":         attr.label_list(default=[]),
         "size":         attr.string(default="small", configurable=False),

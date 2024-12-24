@@ -1,5 +1,5 @@
 #include "core/math/mathrule.h"
-#include "test/tests_begin.h"
+#include "core/test/tests_begin.h"
 
 TEST_SUITE("core::math::MathRule") {
     using core::math::MathRule::ALLOW;

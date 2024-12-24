@@ -10,7 +10,7 @@ refresh_compile_commands(
 doxygen(
     name = "doxygen",
     srcs = [
-        "//core:doxyfiles",
+        "//raygame:doxyfiles",
         "README.md",
     ],
     use_mdfile_as_mainpage = "README.md",

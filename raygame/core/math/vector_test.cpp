@@ -1,5 +1,5 @@
 #include "core/math/vector.h"
-#include "test/tests_begin.h"
+#include "core/test/tests_begin.h"
 
 TEST_SUITE("core::Vec2") {
     using core::Vec2;

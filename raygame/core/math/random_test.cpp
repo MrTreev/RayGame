@@ -1,5 +1,5 @@
 #include "core/math/random.h" // IWYU pragma: keep
-#include "test/tests_begin.h"
+#include "core/test/tests_begin.h"
 #include <array>
 
 TEST_SUITE("core::math::rand") {

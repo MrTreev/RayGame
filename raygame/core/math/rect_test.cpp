@@ -1,5 +1,5 @@
 #include "core/math/rect.h"
-#include "test/tests_begin.h"
+#include "core/test/tests_begin.h"
 
 TEST_SUITE("core::Rect") {
     using core::Rect;

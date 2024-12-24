@@ -4,18 +4,18 @@ rg_cc_single(
     name = "arithmetic",
     create_test = False,
     deps = [
-        "//core/math/arithmetic:safe_add",
-        "//core/math/arithmetic:safe_div",
-        "//core/math/arithmetic:safe_mult",
-        "//core/math/arithmetic:safe_sub",
+        "//raygame/core/math/arithmetic:safe_add",
+        "//raygame/core/math/arithmetic:safe_div",
+        "//raygame/core/math/arithmetic:safe_mult",
+        "//raygame/core/math/arithmetic:safe_sub",
     ],
 )
 
 rg_cc_single(
     name = "math",
     deps = [
-        "//core/base:exception",
-        "//core/base:types",
+        "//raygame/core/base:exception",
+        "//raygame/core/base:types",
         ":mathrule",
     ],
 )
@@ -27,8 +27,8 @@ rg_cc_single(
 rg_cc_single(
     name = "numeric_cast",
     deps = [
-        "//core/base:debug",
-        "//core/base:exception",
+        "//raygame/core/base:debug",
+        "//raygame/core/base:exception",
         ":mathrule",
     ],
 )
@@ -40,11 +40,11 @@ rg_cc_single(
         "//rules/math:non-deterministic": ["RAYGAME_USE_FULL_RANDOM"],
     }),
     deps = [
-        "//core/base:types",
+        "//raygame/core/base:types",
     ],
     implementation_deps = [
-        "//core/base:condition",
-        "//core/base:config",
+        "//raygame/core/base:condition",
+        "//raygame/core/base:config",
     ],
 )
 
@@ -59,7 +59,7 @@ rg_cc_single(
 rg_cc_single(
     name = "vector",
     deps = [
-        "//core/base:types",
+        "//raygame/core/base:types",
         ":arithmetic",
         ":mathrule",
     ],
