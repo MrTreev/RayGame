@@ -4,32 +4,29 @@ module(
 	compatibility_level = 1,
 )
 
-bazel_dep(name = "bazel_skylib", version = "1.7.1")
-bazel_dep(name = "googletest", version = "1.15.2")
 bazel_dep(name = "platforms", version = "0.0.10")
 bazel_dep(name = "rules_cc", version = "0.1.0")
-bazel_dep(name = "toolchains_llvm", version = "1.2.0")
 bazel_dep(name = "doctest", version = "2.4.11")
-bazel_dep(name = "rules_doxygen", version = "2.0.0", dev_dependency = True)
+
 bazel_dep(name = "hedron_compile_commands", dev_dependency = True)
-
-
-
 git_override(
     module_name = "hedron_compile_commands",
     remote = "https://github.com/hedronvision/bazel-compile-commands-extractor.git",
     commit = "4f28899228fb3ad0126897876f147ca15026151e",
 )
 
-doxygen_extension = use_extension("@rules_doxygen//:extensions.bzl", "doxygen_extension")
-doxygen_extension.configuration(
-    version = "1.12.0",
-    sha256 = "3c42c3f3fb206732b503862d9c9c11978920a8214f223a3950bbf2520be5f647",
-    platform = "linux",
+bazel_dep(name = "rules_doxygen", version = "2.0.0", dev_dependency = True)
+doxygen_extension = use_extension(
+    "@rules_doxygen//:extensions.bzl",
+    "doxygen_extension",
 )
 use_repo(doxygen_extension, "doxygen")
 
-llvm = use_extension("@toolchains_llvm//toolchain/extensions:llvm.bzl", "llvm")
+bazel_dep(name = "toolchains_llvm", version = "1.2.0")
+llvm = use_extension(
+    "@toolchains_llvm//toolchain/extensions:llvm.bzl",
+    "llvm",
+)
 llvm.toolchain(
 	llvm_version = "19.1.0",
 	cxx_standard = {"": "c++23"},

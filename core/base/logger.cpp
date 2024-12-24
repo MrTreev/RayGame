@@ -6,6 +6,11 @@
 #include <string_view>
 
 namespace {
+#if !defined(RAYGAME_DISABLE_SOURCE_LOC)
+constexpr bool enable_source_loc = true;
+#else
+constexpr bool enable_source_loc = false;
+#endif
 
 consteval size_t get_prefix_len(
     const std::source_location loc = std::source_location::current()
@@ -22,50 +27,37 @@ constexpr std::string_view shorten_name(std::string_view full_loc) {
     return shortloc;
 }
 
-constexpr std::string location_string(const std::source_location& loc) {
-    return std::format(
-        "{}:{}:{} ",
-        shorten_name(loc.file_name()),
-        loc.line(),
-        loc.function_name()
-    );
+constexpr std::string
+location_string([[maybe_unused]] const std::source_location& loc) {
+    if (enable_source_loc) {
+        return std::format(
+            "{}:{}:{} ",
+            shorten_name(loc.file_name()),
+            loc.line(),
+            loc.function_name()
+        );
+    } else {
+        return {};
+    }
 }
 
 } // namespace
 
 void core::log::detail::logger(
     const core::log::Level&     level,
-    const std::source_location& loc,
-    const std::string&          text
+    const std::string&          text,
+    const std::source_location& loc
 ) {
     if (logging_level <= level) {
         std::println(
             std::cout,
-            "{:%T} [{}] {} - {}",
+            "{:%T} [{}] {}- {}",
             std::chrono::zoned_time{
                 std::chrono::current_zone(),
                 std::chrono::system_clock::now()
             },
             to_string(level),
             location_string(loc),
-            text
-        );
-    }
-}
-
-void core::log::detail::logger(
-    const core::log::Level& level,
-    const std::string&      text
-) {
-    if (logging_level <= level) {
-        std::println(
-            std::cout,
-            "{:%T} [{}] - {}",
-            std::chrono::zoned_time{
-                std::chrono::current_zone(),
-                std::chrono::system_clock::now()
-            },
-            to_string(level),
             text
         );
     }

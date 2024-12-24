@@ -1,17 +1,17 @@
-cc_library(
-	name = "drawing",
-	hdrs = [
-		"colour.h",
-		"pixel.h",
-	],
-	srcs = [
-		"colour.cpp",
-		"pixel.cpp",
-	],
-	deps = [
-		"//core/base",
-	],
-	visibility = [ "//visibility:public" ],
+load("//rules:rg_cc_singlefile.bzl", "rg_cc_single")
+
+rg_cc_single(
+    name = "colour",
+    deps = [
+        ":pixel"
+    ],
+)
+
+rg_cc_single(
+    name = "pixel",
+    deps = [
+        "//core/base:types"
+    ],
 )
 
 filegroup(

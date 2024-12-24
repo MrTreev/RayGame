@@ -13,8 +13,7 @@ pipeline {
         }
         stage('Coverage') {
             steps {
-                sh('bazel coverage -s --local_test_jobs=1 --nocache_test_results //...')
-                sh('genhtml "$(bazel info output_path)/_coverage/_coverage_report.dat" --output-directory "bazel-out/_coverage_report" --function-coverage --legend')
+                sh('./scripts/coverage_report.sh')
             }
         }
         stage('Documentation') {

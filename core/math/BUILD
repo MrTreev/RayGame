@@ -1,115 +1,68 @@
-cc_library(
-	name = "math",
-	hdrs = [
-    	"arithmetic/safe_add.h",
-    	"arithmetic/safe_div.h",
-    	"arithmetic/safe_mult.h",
-    	"arithmetic/safe_sub.h",
-    	"arithmetic.h",
-    	"math.h",
-    	"mathrule.h",
-    	"numeric_cast.h",
-    	"random.h",
-    	"rect.h",
-    	"vector.h",
+load("//rules:rg_cc_singlefile.bzl", "rg_cc_single")
+
+rg_cc_single(
+    name = "arithmetic",
+    create_test = False,
+    deps = [
+        "//core/math/arithmetic:safe_add",
+        "//core/math/arithmetic:safe_div",
+        "//core/math/arithmetic:safe_mult",
+        "//core/math/arithmetic:safe_sub",
     ],
-    srcs = [
-    	"arithmetic/safe_add.cpp",
-    	"arithmetic/safe_div.cpp",
-    	"arithmetic/safe_mult.cpp",
-    	"arithmetic/safe_sub.cpp",
-    	"arithmetic.cpp",
-    	"math.cpp",
-    	"mathrule.cpp",
-    	"numeric_cast.cpp",
-    	"random.cpp",
-    	"rect.cpp",
-    	"vector.cpp",
+)
+
+rg_cc_single(
+    name = "math",
+    deps = [
+        "//core/base:exception",
+        "//core/base:types",
+        ":mathrule",
     ],
+)
+
+rg_cc_single(
+    name = "mathrule",
+)
+
+rg_cc_single(
+    name = "numeric_cast",
+    deps = [
+        "//core/base:debug",
+        "//core/base:exception",
+        ":mathrule",
+    ],
+)
+
+rg_cc_single(
+    name = "random",
     defines = select({
         "//rules/math:deterministic": [],
         "//rules/math:non-deterministic": ["RAYGAME_USE_FULL_RANDOM"],
     }),
-	deps = [
-		"//core/base",
-	],
-	visibility = [ "//visibility:public" ]
+    deps = [
+        "//core/base:types",
+    ],
+    implementation_deps = [
+        "//core/base:condition",
+        "//core/base:config",
+    ],
 )
 
-cc_library(
-    name = "test",
-    deps = [":math", "//test"],
-	visibility = [ ":__subpackages__" ]
-)
-
-cc_test(
-    name = "numeric_cast",
-    srcs = ["numeric_cast_test.cpp"],
-    deps = [":test"],
-    size = "small",
-)
-
-cc_test(
-    name = "random",
-    srcs = ["random_test.cpp"],
-    deps = [":test"],
-    size = "small",
-)
-
-cc_test(
-    name = "math_test",
-    srcs = ["math_test.cpp"],
-    deps = [":test"],
-    size = "small",
-)
-
-cc_test(
-    name = "mathrule",
-    srcs = ["mathrule_test.cpp"],
-    deps = [":test"],
-    size = "small",
-)
-
-cc_test(
-    name = "vector",
-    srcs = ["vector_test.cpp"],
-    deps = [":test"],
-    size = "small",
-)
-
-cc_test(
+rg_cc_single(
     name = "rect",
-    srcs = ["rect_test.cpp"],
-    deps = [":test"],
-    size = "small",
+    deps = [
+        ":arithmetic",
+        ":vector",
+    ],
 )
 
-cc_test(
-    name = "safe_add",
-    srcs = ["arithmetic/safe_add_test.cpp"],
-    deps = [":test"],
-    size = "small",
-)
-
-cc_test(
-    name = "safe_sub",
-    srcs = ["arithmetic/safe_sub_test.cpp"],
-    deps = [":test"],
-    size = "small",
-)
-
-cc_test(
-    name = "safe_mult",
-    srcs = ["arithmetic/safe_mult_test.cpp"],
-    deps = [":test"],
-    size = "small",
-)
-
-cc_test(
-    name = "safe_div",
-    srcs = ["arithmetic/safe_div_test.cpp"],
-    deps = [":test"],
-    size = "small",
+rg_cc_single(
+    name = "vector",
+    deps = [
+        "//core/base:types",
+        ":arithmetic",
+        ":mathrule",
+    ],
 )
 
 filegroup(

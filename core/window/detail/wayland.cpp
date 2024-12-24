@@ -244,7 +244,7 @@ void core::window::detail::WaylandImpl::wl_keyboard_enter(
             static_cast<xkb_keycode_t>(key + 8)
         );
         xkb_keysym_get_name(sym, buf.data(), buf.size());
-        log::trace(std::format("sym: {} ({})", buf.data(), sym));
+        log::trace("sym: {} ({})", buf.data(), sym);
     }
 }
 
@@ -264,12 +264,12 @@ void core::window::detail::WaylandImpl::wl_keyboard_key(
         keycode
     );
     xkb_keysym_get_name(sym, buf.data(), sizeof(buf));
-    log::trace(std::format(
+    log::trace(
         "key {}: sym: {} ({}), ",
         (state == WL_KEYBOARD_KEY_STATE_PRESSED) ? "press" : "release",
         buf.data(),
         sym
-    ));
+    );
 }
 
 void core::window::detail::WaylandImpl::wl_keyboard_keymap(
@@ -471,27 +471,27 @@ void core::window::detail::WaylandImpl::wl_pointer_handle_frame(
     WaylandImpl*   this_impl = static_cast<WaylandImpl*>(data);
     pointer_event& event     = this_impl->m_pointer_event;
     if (event.event_mask & POINTER_EVENT_ENTER) {
-        core::log::trace(std::format(
+        core::log::trace(
             "Pointer Entry ({}, {})",
             wl_fixed_to_double(event.surface_x),
             wl_fixed_to_double(event.surface_y)
-        ));
+        );
     }
     if (event.event_mask & POINTER_EVENT_LEAVE) {
         core::log::trace("Pointer Leave");
     }
     if (event.event_mask & POINTER_EVENT_MOTION) {
-        core::log::trace(std::format(
+        core::log::trace(
             "Pointer Motion ({}, {})",
             wl_fixed_to_double(event.surface_x),
             wl_fixed_to_double(event.surface_y)
-        ));
+        );
     }
     if (event.event_mask & POINTER_EVENT_BUTTON) {
         if (event.state & WL_POINTER_BUTTON_STATE_PRESSED) {
-            core::log::trace(std::format("Button {} pressed", event.button));
+            core::log::trace("Button {} pressed", event.button);
         } else if (event.state & WL_POINTER_BUTTON_STATE_RELEASED) {
-            core::log::trace(std::format("Button {} released", event.button));
+            core::log::trace("Button {} released", event.button);
         }
         RAYGAME_ELSE_UNKNOWN("button state");
     }
@@ -565,17 +565,17 @@ void core::window::detail::WaylandImpl::wl_registry_handle_global(
     WaylandImpl*      this_impl = static_cast<WaylandImpl*>(data);
     const std::string interface_str{interface};
     if (interface_str == wl_shm_interface.name) {
-        core::log::trace(std::format("Handled Global: {}", interface));
+        core::log::trace("Handled Global: {}", interface);
         this_impl->m_wl_shm = static_cast<wl_shm*>(
             wl_registry_bind(registry, name, &wl_shm_interface, version)
         );
     } else if (interface_str == wl_compositor_interface.name) {
-        core::log::trace(std::format("Handled Global: {}", interface));
+        core::log::trace("Handled Global: {}", interface);
         this_impl->m_wl_compositor = static_cast<wl_compositor*>(
             wl_registry_bind(registry, name, &wl_compositor_interface, version)
         );
     } else if (interface_str == xdg_wm_base_interface.name) {
-        core::log::trace(std::format("Handled Global: {}", interface));
+        core::log::trace("Handled Global: {}", interface);
         this_impl->m_xdg_wm_base = static_cast<xdg_wm_base*>(
             wl_registry_bind(registry, name, &xdg_wm_base_interface, version)
         );
@@ -585,7 +585,7 @@ void core::window::detail::WaylandImpl::wl_registry_handle_global(
             this_impl
         );
     } else if (interface_str == wl_seat_interface.name) {
-        core::log::trace(std::format("Handled Global: {}", interface));
+        core::log::trace("Handled Global: {}", interface);
         this_impl->m_wl_seat = static_cast<wl_seat*>(
             wl_registry_bind(registry, name, &wl_seat_interface, version)
         );
@@ -595,7 +595,7 @@ void core::window::detail::WaylandImpl::wl_registry_handle_global(
             this_impl
         );
     } else {
-        core::log::trace(std::format("Unhandled Global: {}", interface));
+        core::log::trace("Unhandled Global: {}", interface);
     }
 }
 
@@ -607,7 +607,7 @@ void core::window::detail::WaylandImpl::wl_registry_handle_global_remove(
     [[maybe_unused]]
     WaylandImpl* this_impl = static_cast<WaylandImpl*>(data);
     wl_registry_destroy(registry);
-    core::log::trace(std::format("removed registry: {}", name));
+    core::log::trace("removed registry: {}", name);
 }
 
 void core::window::detail::WaylandImpl::wl_seat_handle_capabilities(
@@ -649,7 +649,7 @@ void core::window::detail::WaylandImpl::wl_seat_name(
 ) {
     [[maybe_unused]]
     WaylandImpl* this_impl = static_cast<WaylandImpl*>(data);
-    core::log::trace(std::format("{}", name));
+    core::log::trace("{}", name);
 }
 
 void core::window::detail::WaylandImpl::wl_surface_draw_frame(

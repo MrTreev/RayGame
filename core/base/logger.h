@@ -5,14 +5,6 @@
 #include <string>
 #include <utility>
 
-namespace {
-#if !defined(RAYGAME_DISABLE_SOURCE_LOC)
-constexpr bool enable_source_loc = true;
-#else
-constexpr bool enable_source_loc = false;
-#endif
-} // namespace
-
 namespace core::log {
 
 //! Logging level
@@ -73,135 +65,209 @@ constexpr std::string to_string(Level level) {
 }
 
 namespace detail {
-void logger(const core::log::Level& level, const std::string& text);
 void logger(
     const core::log::Level&     level,
-    const std::source_location& loc,
-    const std::string&          text
+    const std::string&          text,
+    const std::source_location& loc = std::source_location::current()
 );
 } // namespace detail
 
-#define MAKE_LOG_STRUCT(level, lvl)                                            \
-    template<typename... Args>                                                 \
-    struct level {                                                             \
-        level(                                                                 \
-            std::string          msg,                                          \
-            std::source_location loc = std::source_location::current()         \
-        ) {                                                                    \
-            if constexpr (enable_source_loc) {                                 \
-                core::log::detail::logger(core::log::Level::lvl, loc, msg);    \
-            } else {                                                           \
-                std::ignore = loc;                                             \
-                core::log::detail::logger(core::log::Level::lvl, msg);         \
-            }                                                                  \
-        }                                                                      \
-        level(                                                                 \
-            Args... args,                                                      \
-            std::source_location loc = std::source_location::current()         \
-        ) {                                                                    \
-            if constexpr (enable_source_loc) {                                 \
-                core::log::detail::logger(                                     \
-                    core::log::Level::lvl,                                     \
-                    loc,                                                       \
-                    std::format(args...)                                       \
-                );                                                             \
-            } else {                                                           \
-                std::ignore = loc;                                             \
-                core::log::detail::logger(                                     \
-                    core::log::Level::lvl,                                     \
-                    std::format(args...)                                       \
-                );                                                             \
-            }                                                                  \
-        }                                                                      \
-    };                                                                         \
-    template<typename... Args>                                                 \
-    level(const char msg[]) -> level<>;                                        \
-    template<typename... Args>                                                 \
-    level(Args&&... args) -> level<Args...>;
-
-MAKE_LOG_STRUCT(trace, TRACE);
-MAKE_LOG_STRUCT(info, INFO);
-MAKE_LOG_STRUCT(note, NOTE);
-MAKE_LOG_STRUCT(progress, PROGRESS);
-MAKE_LOG_STRUCT(warning, WARNING);
-MAKE_LOG_STRUCT(error, ERROR);
-MAKE_LOG_STRUCT(fatal, FATAL);
-
 template<typename... Args>
-struct debug {
-    debug(
-        const char           msg[],
-        std::source_location loc = std::source_location::current()
+struct trace {
+    constexpr trace(
+        const std::string&          message,
+        const std::source_location& loc = std::source_location::current()
     ) {
-        if constexpr (enable_source_loc) {
-            core::log::detail::logger(
-                core::log::Level::DEBUG,
-                loc,
-                std::string(msg)
-            );
-        } else {
-            std::ignore = loc;
-            core::log::detail::logger(
-                core::log::Level::DEBUG,
-                std::string(msg)
-            );
-        }
+        detail::logger(Level::FATAL, message, loc);
     }
 
-    debug(
-        std::string          msg,
-        std::source_location loc = std::source_location::current()
-    ) {
-        if constexpr (enable_source_loc) {
-            core::log::detail::logger(core::log::Level::DEBUG, loc, msg);
-        } else {
-            std::ignore = loc;
-            core::log::detail::logger(core::log::Level::DEBUG, msg);
-        }
-    }
-
-    debug(
-        std::format_string<Args...> fstr,
-        Args... args,
-        std::source_location loc = std::source_location::current()
-    ) {
-        if constexpr (enable_source_loc) {
-            core::log::detail::logger(
-                core::log::Level::DEBUG,
-                loc,
-                std::format(fstr, std::forward<Args...>(args)...)
-            );
-        } else {
-            std::ignore = loc;
-            core::log::detail::logger(
-                core::log::Level::DEBUG,
-                std::format(fstr, std::forward<Args...>(args)...)
-            );
-        }
-    }
-
-    debug(
-        Args... args,
-        std::source_location loc = std::source_location::current()
-    ) {
-        if constexpr (enable_source_loc) {
-            core::log::detail::logger(
-                core::log::Level::DEBUG,
-                loc,
-                std::format(args...)
-            );
-        } else {
-            std::ignore = loc;
-            core::log::detail::logger(
-                core::log::Level::DEBUG,
-                std::format(args...)
-            );
-        }
-    }
+    constexpr trace(
+        std::format_string<Args...> fmt,
+        Args&&... args,
+        const std::source_location& loc = std::source_location::current()
+    )
+        : trace(std::vformat(fmt.get(), std::make_format_args(args...)), loc) {}
 };
 
 template<typename... Args>
-debug(Args... args) -> debug<Args...>;
+trace(Args&&...) -> trace<Args...>;
+template<typename... Args>
+trace(const char[]) -> trace<std::string>;
+template<typename... Args>
+trace(const char[], Args&&...) -> trace<Args...>;
 
-#undef MAKE_LOG_STRUCT
+template<typename... Args>
+struct debug {
+    constexpr debug(
+        const std::string&          message,
+        const std::source_location& loc = std::source_location::current()
+    ) {
+        detail::logger(Level::FATAL, message, loc);
+    }
+
+    constexpr debug(
+        std::format_string<Args...> fmt,
+        Args&&... args,
+        const std::source_location& loc = std::source_location::current()
+    )
+        : debug(std::vformat(fmt.get(), std::make_format_args(args...)), loc) {}
+};
+
+template<typename... Args>
+debug(Args&&...) -> debug<Args...>;
+template<typename... Args>
+debug(const char[]) -> debug<std::string>;
+template<typename... Args>
+debug(const char[], Args&&...) -> debug<Args...>;
+
+template<typename... Args>
+struct info {
+    constexpr info(
+        const std::string&          message,
+        const std::source_location& loc = std::source_location::current()
+    ) {
+        detail::logger(Level::FATAL, message, loc);
+    }
+
+    constexpr info(
+        std::format_string<Args...> fmt,
+        Args&&... args,
+        const std::source_location& loc = std::source_location::current()
+    )
+        : info(std::vformat(fmt.get(), std::make_format_args(args...)), loc) {}
+};
+
+template<typename... Args>
+info(Args&&...) -> info<Args...>;
+template<typename... Args>
+info(const char[]) -> info<std::string>;
+template<typename... Args>
+info(const char[], Args&&...) -> info<Args...>;
+
+template<typename... Args>
+struct note {
+    constexpr note(
+        const std::string&          message,
+        const std::source_location& loc = std::source_location::current()
+    ) {
+        detail::logger(Level::FATAL, message, loc);
+    }
+
+    constexpr note(
+        std::format_string<Args...> fmt,
+        Args&&... args,
+        const std::source_location& loc = std::source_location::current()
+    )
+        : note(std::vformat(fmt.get(), std::make_format_args(args...)), loc) {}
+};
+
+template<typename... Args>
+note(Args&&...) -> note<Args...>;
+template<typename... Args>
+note(const char[]) -> note<std::string>;
+template<typename... Args>
+note(const char[], Args&&...) -> note<Args...>;
+
+template<typename... Args>
+struct progress {
+    constexpr progress(
+        const std::string&          message,
+        const std::source_location& loc = std::source_location::current()
+    ) {
+        detail::logger(Level::FATAL, message, loc);
+    }
+
+    constexpr progress(
+        std::format_string<Args...> fmt,
+        Args&&... args,
+        const std::source_location& loc = std::source_location::current()
+    )
+        : progress(
+              std::vformat(fmt.get(), std::make_format_args(args...)),
+              loc
+          ) {}
+};
+
+template<typename... Args>
+progress(Args&&...) -> progress<Args...>;
+template<typename... Args>
+progress(const char[]) -> progress<std::string>;
+template<typename... Args>
+progress(const char[], Args&&...) -> progress<Args...>;
+
+template<typename... Args>
+struct warning {
+    constexpr warning(
+        const std::string&          message,
+        const std::source_location& loc = std::source_location::current()
+    ) {
+        detail::logger(Level::FATAL, message, loc);
+    }
+
+    constexpr warning(
+        std::format_string<Args...> fmt,
+        Args&&... args,
+        const std::source_location& loc = std::source_location::current()
+    )
+        : warning(
+              std::vformat(fmt.get(), std::make_format_args(args...)),
+              loc
+          ) {}
+};
+
+template<typename... Args>
+warning(Args&&...) -> warning<Args...>;
+template<typename... Args>
+warning(const char[]) -> warning<std::string>;
+template<typename... Args>
+warning(const char[], Args&&...) -> warning<Args...>;
+
+template<typename... Args>
+struct error {
+    constexpr error(
+        const std::string&          message,
+        const std::source_location& loc = std::source_location::current()
+    ) {
+        detail::logger(Level::FATAL, message, loc);
+    }
+
+    constexpr error(
+        std::format_string<Args...> fmt,
+        Args&&... args,
+        const std::source_location& loc = std::source_location::current()
+    )
+        : error(std::vformat(fmt.get(), std::make_format_args(args...)), loc) {}
+};
+
+template<typename... Args>
+error(Args&&...) -> error<Args...>;
+template<typename... Args>
+error(const char[]) -> error<std::string>;
+template<typename... Args>
+error(const char[], Args&&...) -> error<Args...>;
+
+template<typename... Args>
+struct fatal {
+    constexpr fatal(
+        const std::string&          message,
+        const std::source_location& loc = std::source_location::current()
+    ) {
+        detail::logger(Level::FATAL, message, loc);
+    }
+
+    constexpr fatal(
+        std::format_string<Args...> fmt,
+        Args&&... args,
+        const std::source_location& loc = std::source_location::current()
+    )
+        : fatal(std::vformat(fmt.get(), std::make_format_args(args...)), loc) {}
+};
+
+template<typename... Args>
+fatal(Args&&...) -> fatal<Args...>;
+template<typename... Args>
+fatal(const char[]) -> fatal<std::string>;
+template<typename... Args>
+fatal(const char[], Args&&...) -> fatal<Args...>;
+
 } // namespace core::log

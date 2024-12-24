@@ -1,12 +1,16 @@
 #pragma once
 #include "core/base/concepts.h"
+#include "core/base/config.h"
 #include "core/base/exception.h"
-#include "core/base/logger.h"
 #include <format> // IWYU pragma: keep
 #include <source_location>
 #include <string>
+#include <type_traits>
 
 namespace core::condition {
+namespace detail {
+void conditionlog(const std::string& message, const std::source_location& loc);
+}
 
 //! Pre-Condition Checker
 /*!
@@ -14,13 +18,15 @@ namespace core::condition {
  *  @throws core::exception::PreCondition If condition does not hold
  */
 constexpr void pre_condition(
-    const concepts::checkable auto& check,
+    const concepts::Checkable auto& check,
     const std::string&              message,
     const std::source_location&     loc = std::source_location::current()
 ) {
     using exception::PreCondition;
     if (!check) {
-        core::log::fatal(message, loc);
+        if (!std::is_constant_evaluated()) {
+            detail::conditionlog(message, loc);
+        }
         throw PreCondition(message);
     }
 }
@@ -31,12 +37,14 @@ constexpr void pre_condition(
  *  @throws core::exception::CheckCondition If condition does not hold
  */
 constexpr void check_condition(
-    const concepts::checkable auto& check,
+    const concepts::Checkable auto& check,
     const std::string&              message,
     const std::source_location&     loc = std::source_location::current()
 ) {
     if (!check) {
-        core::log::fatal(message, loc);
+        if (!std::is_constant_evaluated()) {
+            detail::conditionlog(message, loc);
+        }
         throw core::exception::CheckCondition(message);
     }
 }
@@ -46,14 +54,16 @@ constexpr void check_condition(
  *  @see PostCondition
  *  @throws core::exception::PostCondition If condition does not hold
  */
-template<core::concepts::checkable T>
+template<core::concepts::Checkable T>
 constexpr void post_condition(
     const T&                    check,
     const std::string&          message,
     const std::source_location& loc = std::source_location::current()
 ) {
     if (!check) {
-        core::log::fatal(message, loc);
+        if (!std::is_constant_evaluated()) {
+            detail::conditionlog(message, loc);
+        }
         throw core::exception::PostCondition(message);
     }
 }
@@ -64,12 +74,14 @@ constexpr void post_condition(
  *  @throws core::exception::CheckCondition If pointer is null
  */
 constexpr void check_ptr(
-    const concepts::pointer auto& check,
+    const concepts::Pointer auto& check,
     const std::string&            message,
     const std::source_location&   loc = std::source_location::current()
 ) {
     if (check == nullptr) {
-        core::log::fatal(message, loc);
+        if (!std::is_constant_evaluated()) {
+            detail::conditionlog(message, loc);
+        }
         throw core::exception::CheckCondition(message);
     }
 }
@@ -92,7 +104,7 @@ constexpr void check_ptr(
 #if defined(RAYGAME_BUILD_TYPE_RELEASE)
 #    define RAYGAME_ELSE_UNKNOWN(item_name)                                    \
         else {                                                                 \
-            ::core::log::debug("Unknown " item_name);                          \
+            ::core::condition::detail::conditionlog("Unknown " item_name);     \
         }                                                                      \
         static_assert(true)
 #elif defined(RAYGAME_BUILD_TYPE_DEBUG)
