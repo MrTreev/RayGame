@@ -1,5 +1,5 @@
 #pragma once
-#include "raygame/core/base/types.h"
+#include "raygame/core/types.h"
 #include <format>
 #include <source_location>
 #include <string>

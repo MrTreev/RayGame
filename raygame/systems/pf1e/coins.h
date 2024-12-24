@@ -1,4 +1,4 @@
-#include "raygame/core/base/types.h"
+#include "raygame/core/types.h"
 #include "raygame/core/math/arithmetic.h"
 
 namespace raygame::systems::pf1e {

@@ -1,4 +1,4 @@
-#include "raygame/core/base/logger.h" // IWYU pragma: keep
+#include "raygame/core/logger.h" // IWYU pragma: keep
 #include "raygame/core/test/tests_begin.h"
 
 TEST_SUITE("core::log::logger") {

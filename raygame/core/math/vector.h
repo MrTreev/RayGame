@@ -1,5 +1,5 @@
 #pragma once
-#include "raygame/core/base/types.h"
+#include "raygame/core/types.h"
 #include "raygame/core/math/arithmetic.h"
 #include "raygame/core/math/mathrule.h"
 #include <string>

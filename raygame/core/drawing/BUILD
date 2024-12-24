@@ -10,7 +10,7 @@ rg_cc_single(
 rg_cc_single(
     name = "pixel",
     deps = [
-        "//raygame/core/base:types"
+        "//raygame/core:types"
     ],
 )
 

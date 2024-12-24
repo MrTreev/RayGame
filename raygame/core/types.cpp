@@ -1,4 +1,4 @@
-#include "raygame/core/base/types.h" // IWYU pragma: keep
+#include "raygame/core/types.h" // IWYU pragma: keep
 
 namespace core {
 template struct Quad<uint8_t>;

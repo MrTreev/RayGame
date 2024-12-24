@@ -18,9 +18,9 @@ rg_cc_library(
 		"//raygame/core/math:vector",
 	],
     implementation_deps = [
-		"//raygame/core/base:condition",
-		"//raygame/core/base:logger",
-		"//raygame/core/base:types",
+		"//raygame/core:condition",
+		"//raygame/core:logger",
+		"//raygame/core:types",
 		"//raygame/core/drawing:colour",
 		"//raygame/core/math:arithmetic",
 		"//raygame/core/math:numeric_cast",

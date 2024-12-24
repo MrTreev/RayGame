@@ -1,5 +1,5 @@
-#include "raygame/core/base/condition.h" // IWYU pragma: keep
-#include "raygame/core/base/exception.h"
+#include "raygame/core/condition.h" // IWYU pragma: keep
+#include "raygame/core/exception.h"
 #include "raygame/core/test/tests_begin.h"
 
 TEST_SUITE("core::condition") {

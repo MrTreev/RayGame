@@ -1,4 +1,4 @@
-#include "raygame/core/base/types.h"
+#include "raygame/core/types.h"
 #include "raygame/systems/core/name.h"
 #include "raygame/systems/core/sex.h"
 #include "raygame/systems/pf1e/skills.h"

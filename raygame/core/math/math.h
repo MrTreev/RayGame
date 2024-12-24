@@ -1,6 +1,6 @@
 #pragma once
-#include "raygame/core/base/exception.h"
-#include "raygame/core/base/types.h"
+#include "raygame/core/exception.h"
+#include "raygame/core/types.h"
 #include "raygame/core/math/mathrule.h"
 #include <cassert>
 #include <limits>

@@ -14,8 +14,8 @@ rg_cc_single(
 rg_cc_single(
     name = "math",
     deps = [
-        "//raygame/core/base:exception",
-        "//raygame/core/base:types",
+        "//raygame/core:exception",
+        "//raygame/core:types",
         ":mathrule",
     ],
 )
@@ -27,8 +27,8 @@ rg_cc_single(
 rg_cc_single(
     name = "numeric_cast",
     deps = [
-        "//raygame/core/base:debug",
-        "//raygame/core/base:exception",
+        "//raygame/core:debug",
+        "//raygame/core:exception",
         ":mathrule",
     ],
 )
@@ -40,11 +40,11 @@ rg_cc_single(
         "//rules/math:non-deterministic": ["RAYGAME_USE_FULL_RANDOM"],
     }),
     deps = [
-        "//raygame/core/base:types",
+        "//raygame/core:types",
     ],
     implementation_deps = [
-        "//raygame/core/base:condition",
-        "//raygame/core/base:config",
+        "//raygame/core:condition",
+        "//raygame/core:config",
     ],
 )
 
@@ -59,7 +59,7 @@ rg_cc_single(
 rg_cc_single(
     name = "vector",
     deps = [
-        "//raygame/core/base:types",
+        "//raygame/core:types",
         ":arithmetic",
         ":mathrule",
     ],

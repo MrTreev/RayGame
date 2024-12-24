@@ -1,6 +1,6 @@
 #include "raygame/core/window/detail/wayland.h" // IWYU pragma: keep
-#include "raygame/core/base/condition.h"
-#include "raygame/core/base/logger.h"
+#include "raygame/core/condition.h"
+#include "raygame/core/logger.h"
 #include "raygame/core/drawing/colour.h"
 #include "raygame/core/math/arithmetic.h"
 #include "raygame/core/math/numeric_cast.h"

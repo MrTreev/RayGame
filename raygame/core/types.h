@@ -1,5 +1,5 @@
 #pragma once
-#include "raygame/core/base/debug.h"
+#include "raygame/core/debug.h"
 #include <cstddef> // IWYU pragma: export
 #include <cstdint> // IWYU pragma: export
 #include <string>

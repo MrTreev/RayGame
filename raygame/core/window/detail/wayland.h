@@ -1,5 +1,5 @@
 #pragma once
-#include "raygame/core/base/types.h"
+#include "raygame/core/types.h"
 #include "raygame/core/window/window.h"
 #include <wayland-client-protocol.h>
 #include <xdg-shell-client-protocol.h>

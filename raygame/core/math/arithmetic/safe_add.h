@@ -1,8 +1,8 @@
 #pragma once
-#include "raygame/core/base/condition.h"
-#include "raygame/core/base/config.h"
-#include "raygame/core/base/debug.h"
-#include "raygame/core/base/exception.h"
+#include "raygame/core/condition.h"
+#include "raygame/core/config.h"
+#include "raygame/core/debug.h"
+#include "raygame/core/exception.h"
 #include "raygame/core/math/math.h"
 #include "raygame/core/math/numeric_cast.h"
 #include <concepts>

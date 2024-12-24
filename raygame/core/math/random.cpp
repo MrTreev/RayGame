@@ -1,6 +1,6 @@
 #include "raygame/core/math/random.h" // IWYU pragma: keep
-#include "raygame/core/base/condition.h"
-#include "raygame/core/base/config.h"
+#include "raygame/core/condition.h"
+#include "raygame/core/config.h"
 #include <random>
 
 namespace {

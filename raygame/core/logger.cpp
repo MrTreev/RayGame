@@ -1,4 +1,4 @@
-#include "raygame/core/base/logger.h" // IWYU pragma: keep
+#include "raygame/core/logger.h" // IWYU pragma: keep
 #include <chrono>
 #include <iostream>
 #include <ostream>
