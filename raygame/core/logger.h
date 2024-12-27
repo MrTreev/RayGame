@@ -78,7 +78,7 @@ struct trace {
         const std::string&          message,
         const std::source_location& loc = std::source_location::current()
     ) {
-        detail::logger(Level::FATAL, message, loc);
+        detail::logger(Level::TRACE, message, loc);
     }
 
     constexpr trace(
@@ -102,7 +102,7 @@ struct debug {
         const std::string&          message,
         const std::source_location& loc = std::source_location::current()
     ) {
-        detail::logger(Level::FATAL, message, loc);
+        detail::logger(Level::DEBUG, message, loc);
     }
 
     constexpr debug(
@@ -126,7 +126,7 @@ struct info {
         const std::string&          message,
         const std::source_location& loc = std::source_location::current()
     ) {
-        detail::logger(Level::FATAL, message, loc);
+        detail::logger(Level::INFO, message, loc);
     }
 
     constexpr info(
@@ -150,7 +150,7 @@ struct note {
         const std::string&          message,
         const std::source_location& loc = std::source_location::current()
     ) {
-        detail::logger(Level::FATAL, message, loc);
+        detail::logger(Level::NOTE, message, loc);
     }
 
     constexpr note(
@@ -174,7 +174,7 @@ struct progress {
         const std::string&          message,
         const std::source_location& loc = std::source_location::current()
     ) {
-        detail::logger(Level::FATAL, message, loc);
+        detail::logger(Level::PROGRESS, message, loc);
     }
 
     constexpr progress(
@@ -201,7 +201,7 @@ struct warning {
         const std::string&          message,
         const std::source_location& loc = std::source_location::current()
     ) {
-        detail::logger(Level::FATAL, message, loc);
+        detail::logger(Level::WARNING, message, loc);
     }
 
     constexpr warning(
@@ -228,7 +228,7 @@ struct error {
         const std::string&          message,
         const std::source_location& loc = std::source_location::current()
     ) {
-        detail::logger(Level::FATAL, message, loc);
+        detail::logger(Level::ERROR, message, loc);
     }
 
     constexpr error(

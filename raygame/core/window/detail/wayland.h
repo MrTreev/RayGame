@@ -5,10 +5,6 @@
 #include <xdg-shell-client-protocol.h>
 #include <xkbcommon/xkbcommon.h>
 
-namespace core::window {
-class WaylandWindow;
-}
-
 namespace core::window::detail {
 
 struct axis_t {
@@ -86,13 +82,14 @@ class WaylandImpl {
     static void xdg_wm_base_handle_ping(void* data, xdg_wm_base* xdg_wm_base, uint32_t serial);
     // clang-format on
 
-    static const wl_callback_listener m_wl_surface_frame_listener;
-    static const wl_keyboard_listener m_wl_keyboard_listener;
-    static const wl_pointer_listener  m_wl_pointer_listener;
-    static const wl_registry_listener m_wl_registry_listener;
-    static const wl_seat_listener     m_wl_seat_listener;
-    static const xdg_surface_listener m_xdg_surface_listener;
-    static const xdg_wm_base_listener m_xdg_wm_base_listener;
+    static const wl_callback_listener  m_wl_surface_frame_listener;
+    static const wl_keyboard_listener  m_wl_keyboard_listener;
+    static const wl_pointer_listener   m_wl_pointer_listener;
+    static const wl_registry_listener  m_wl_registry_listener;
+    static const wl_seat_listener      m_wl_seat_listener;
+    static const xdg_surface_listener  m_xdg_surface_listener;
+    static const xdg_toplevel_listener m_xdg_toplevel_listener;
+    static const xdg_wm_base_listener  m_xdg_wm_base_listener;
 
     bool         m_should_close = false;
     Vec2<size_t> m_size;
