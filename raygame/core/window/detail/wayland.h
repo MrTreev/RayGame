@@ -79,6 +79,10 @@ class WaylandImpl {
     static void wl_seat_name(void* data, wl_seat* wl_seat, const char* name);
     static void wl_surface_draw_frame(void* data, wl_callback* wl_callback, uint32_t time);
     static void xdg_surface_handle_configure(void* data, xdg_surface* xdg_surface, uint32_t serial);
+    static void xdg_toplevel_handle_close(void *data, struct xdg_toplevel *xdg_toplevel);
+    static void xdg_toplevel_handle_configure(void* data, struct xdg_toplevel* xdg_toplevel, int32_t width, int32_t height, struct wl_array* states);
+    static void xdg_toplevel_handle_configure_bounds(void* data, struct xdg_toplevel* xdg_toplevel, int32_t width, int32_t height);
+    static void xdg_toplevel_handle_wm_capabilities(void* data, struct xdg_toplevel* xdg_toplevel, struct wl_array* capabilities);
     static void xdg_wm_base_handle_ping(void* data, xdg_wm_base* xdg_wm_base, uint32_t serial);
     // clang-format on
 

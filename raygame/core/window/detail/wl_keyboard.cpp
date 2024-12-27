@@ -52,7 +52,7 @@ void core::window::detail::WaylandImpl::wl_keyboard_key(
         keycode
     );
     xkb_keysym_get_name(sym, buf.data(), sizeof(buf));
-    log::trace(
+    log::debug(
         "key {}: sym: {} ({}), ",
         (state == WL_KEYBOARD_KEY_STATE_PRESSED) ? "press" : "release",
         buf.data(),

@@ -1,5 +1,10 @@
 #include "raygame/core/window/detail/wayland.h"
 
+const xdg_surface_listener
+    core::window::detail::WaylandImpl::m_xdg_surface_listener = {
+        .configure = xdg_surface_handle_configure,
+};
+
 void core::window::detail::WaylandImpl::xdg_surface_handle_configure(
     [[maybe_unused]] void*        data,
     [[maybe_unused]] xdg_surface* xdg_surface,

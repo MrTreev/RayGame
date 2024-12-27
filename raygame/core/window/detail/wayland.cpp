@@ -135,6 +135,7 @@ core::window::detail::WaylandImpl::WaylandImpl(
     check_ptr(m_xdg_surface, "xdg_surface setup failed");
     m_xdg_toplevel = xdg_surface_get_toplevel(m_xdg_surface);
     check_ptr(m_xdg_toplevel, "xdg_toplevel setup failed");
+    xdg_toplevel_add_listener(m_xdg_toplevel, &m_xdg_toplevel_listener, this);
     xdg_surface_add_listener(m_xdg_surface, &m_xdg_surface_listener, this);
     wl_surface_commit(m_wl_surface);
     core::log::trace("Surface Committed");
@@ -209,31 +210,3 @@ void core::window::detail::WaylandImpl::set_style(
         break;
     }
 }
-
-void core::window::detail::WaylandImpl::xdg_wm_base_handle_ping(
-    [[maybe_unused]] void*        data,
-    [[maybe_unused]] xdg_wm_base* xdg_wm_base,
-    [[maybe_unused]] uint32_t     serial
-) {
-    [[maybe_unused]]
-    WaylandImpl* this_impl = static_cast<WaylandImpl*>(data);
-    xdg_wm_base_pong(xdg_wm_base, serial);
-}
-
-const xdg_surface_listener
-    core::window::detail::WaylandImpl::m_xdg_surface_listener = {
-        .configure = xdg_surface_handle_configure,
-};
-
-const xdg_toplevel_listener
-    core::window::detail::WaylandImpl::m_xdg_toplevel_listener = {
-        .configure        = nullptr,
-        .close            = nullptr,
-        .configure_bounds = nullptr,
-        .wm_capabilities  = nullptr,
-};
-
-const xdg_wm_base_listener
-    core::window::detail::WaylandImpl::m_xdg_wm_base_listener = {
-        .ping = xdg_wm_base_handle_ping,
-};
