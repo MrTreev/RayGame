@@ -1,19 +1,23 @@
 #include "raygame/core/logger.h"
-#include "raygame/core/window/detail/wayland.h"
+#include "raygame/core/window/wayland.h"
+#include <wayland-client-protocol.h>
 
-const wl_seat_listener core::window::detail::WaylandImpl::m_wl_seat_listener = {
-    .capabilities = wl_seat_handle_capabilities,
-    .name         = wl_seat_name,
+// NOLINTNEXTLINE(*-reference-to-constructed-temporary)
+const wl_seat_listener& core::window::detail::WaylandImpl::m_wl_seat_listener =
+    {
+        .capabilities = wl_seat_handle_capabilities,
+        .name         = wl_seat_name,
 };
 
 void core::window::detail::WaylandImpl::wl_seat_handle_capabilities(
-    [[maybe_unused]] void*    data,
-    [[maybe_unused]] wl_seat* seat,
-    [[maybe_unused]] uint32_t capabilities
+    void*    data,
+    wl_seat* seat,
+    uint32_t capabilities
 ) {
-    WaylandImpl* this_impl = static_cast<WaylandImpl*>(data);
-    bool have_pointer      = (capabilities != 0U) && WL_SEAT_CAPABILITY_POINTER;
-    bool have_keyboard     = capabilities & WL_SEAT_CAPABILITY_KEYBOARD;
+    auto* this_impl = static_cast<WaylandImpl*>(data);
+    bool  have_pointer =
+        (capabilities != 0U) && (WL_SEAT_CAPABILITY_POINTER != 0U);
+    bool have_keyboard = (capabilities & WL_SEAT_CAPABILITY_KEYBOARD) != 0U;
     if (have_pointer && this_impl->m_wl_pointer == nullptr) {
         this_impl->m_wl_pointer = wl_seat_get_pointer(seat);
         wl_pointer_add_listener(
@@ -39,11 +43,11 @@ void core::window::detail::WaylandImpl::wl_seat_handle_capabilities(
 }
 
 void core::window::detail::WaylandImpl::wl_seat_name(
-    [[maybe_unused]] void*       data,
-    [[maybe_unused]] wl_seat*    wl_seat,
-    [[maybe_unused]] const char* name
+    void*                     data,
+    [[maybe_unused]] wl_seat* wl_seat,
+    const char*               name
 ) {
     [[maybe_unused]]
-    WaylandImpl* this_impl = static_cast<WaylandImpl*>(data);
+    auto* this_impl = static_cast<WaylandImpl*>(data);
     core::log::trace("{}", name);
 }

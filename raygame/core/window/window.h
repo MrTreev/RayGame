@@ -1,66 +1,86 @@
 #pragma once
+#include "raygame/core/config.h"
 #include "raygame/core/math/vector.h"
+#include <memory>
 #include <string>
+#include <utility>
 
-namespace core {
-namespace window {
-
+namespace core::window {
 //! Window display styles
-enum class WindowStyle {
+enum class WindowStyle : uint8_t {
     Windowed,           //!< Windowed mode (resizable)
     WindowedFullscreen, //!< Windowed mode with no decorations (resizable)
     Fullscreen,         //!< Fullscreen mode
 };
-
-static constexpr size_t                    DEFAULT_WINDOW_WIDTH  = 640;
-static constexpr size_t                    DEFAULT_WINDOW_HEIGHT = 480;
-static constexpr std::string               DEFAULT_WINDOW_TITLE  = "RayGame";
-static constexpr core::window::WindowStyle DEFAULT_WINDOW_STYLE =
-    core::window::WindowStyle::Windowed;
-static constexpr Vec2<size_t> DEFAULT_WINDOW_SIZE = {
+static constexpr WindowStyle  DEFAULT_WINDOW_STYLE = WindowStyle::Windowed;
+static constexpr Vec2<size_t> DEFAULT_WINDOW_SIZE  = {
     DEFAULT_WINDOW_WIDTH,
     DEFAULT_WINDOW_HEIGHT
 };
 
-} // namespace window
-
-template<typename Derived>
 class Window {
+private:
+    bool         m_should_close = false;
+    Vec2<size_t> m_size{DEFAULT_WINDOW_SIZE};
+    std::string  m_title{DEFAULT_WINDOW_TITLE};
+    [[maybe_unused]]
+    WindowStyle m_style{DEFAULT_WINDOW_STYLE};
+
 protected:
-    bool                      m_should_close = false;
-    core::Vec2<size_t>        m_size;
-    std::string               m_title;
-    core::window::WindowStyle m_style;
-
-    Window(
-        core::Vec2<size_t>        size  = core::window::DEFAULT_WINDOW_SIZE,
-        std::string               title = core::window::DEFAULT_WINDOW_TITLE,
-        core::window::WindowStyle style = core::window::DEFAULT_WINDOW_STYLE
-    )
-        : m_size(std::move(size))
-        , m_title(std::move(title))
-        , m_style(std::move(style)) {}
-
-    ~Window() = default;
-
-public:
-    Window(Window&)           = delete;
-    Window operator=(Window&) = delete;
-
     Window(Window&&)            = default;
     Window& operator=(Window&&) = default;
 
-    void set_style(this Derived& self, core::window::WindowStyle style) {
+    Window() = default;
+
+    explicit Window(
+        Vec2<size_t> size  = DEFAULT_WINDOW_SIZE,
+        std::string  title = DEFAULT_WINDOW_TITLE,
+        WindowStyle  style = DEFAULT_WINDOW_STYLE
+    )
+        : m_size(size)
+        , m_title(std::move(title))
+        , m_style(style) {}
+
+    void set_size(Vec2<size_t> size) { m_size = size; }
+
+    Vec2<size_t> win_size() { return m_size; }
+
+    void set_close() { m_should_close = true; }
+
+    void set_title(std::string title) { m_title = std::move(title); }
+
+    const std::string& title() { return m_title; }
+
+    const WindowStyle& style() { return m_style; }
+
+public:
+    virtual ~Window();
+    Window(const Window&)           = delete;
+    Window operator=(const Window&) = delete;
+
+    void set_style(this auto&& self, WindowStyle style) {
+        self.m_style = style;
         self.set_style(style);
     }
 
-    bool next_frame(this Derived& self) {
-        self.next_frame();
+    virtual void render_frame();
+
+    bool next_frame() {
+        if (!should_close()) {
+            render_frame();
+        }
+        return !should_close();
     }
 
-    bool should_close() {
+    [[nodiscard]]
+    bool should_close() const {
         return m_should_close;
     }
 };
 
-} // namespace core
+std::unique_ptr<Window> dispatch(
+    Vec2<size_t> size  = DEFAULT_WINDOW_SIZE,
+    std::string  title = DEFAULT_WINDOW_TITLE,
+    WindowStyle  style = DEFAULT_WINDOW_STYLE
+);
+} // namespace core::window

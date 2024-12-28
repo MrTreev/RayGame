@@ -6,8 +6,35 @@ Style:
 Diagnostics:
   ClangTidy:
     FastCheckFilter: None
+    Add:
+      - bugprone-*
+      - cert-*
+      - clang-diagnostic-*
+      - clang-analyzer-*
+      - concurrency-*
+      - cppcoreguidelines-*
+      - hicpp-*
+      - llvm-*
+      - misc-*
+      - modernize-*
+      - mpi-*
+      - performance-*
+      - portability-*
+      - readability-*
+    Remove:
+      - modernize-use-trailing-return-type
+      - readability-convert-member-functions-to-static
   UnusedIncludes: Strict
   Includes:
     MissingIncludes: Strict
 Hover:
   ShowAKA: True
+---
+If:
+  PathMatch: .*_test\.cpp
+Diagnostics:
+  ClangTidy:
+    Remove:
+      - misc-use-anonymous-namespace
+      - cppcoreguidelines-avoid-do-while
+      - readability-function-cognitive-complexity

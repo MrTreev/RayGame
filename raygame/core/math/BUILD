@@ -22,6 +22,9 @@ rg_cc_single(
 
 rg_cc_single(
     name = "mathrule",
+    deps = [
+        "//raygame/core:types",
+    ],
 )
 
 rg_cc_single(

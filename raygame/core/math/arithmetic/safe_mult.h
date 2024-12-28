@@ -15,13 +15,10 @@ namespace core::math {
 /*!
  * @tparam MR Defines the out-of-range behaviour
  */
-template<typename Out_T, MathRule MR = core::math::MR_DEFAULT>
-requires(std::integral<Out_T>)
-constexpr Out_T safe_mult(const auto a, const auto b) {
-    static_assert(
-        std::is_integral<Out_T>() && std::is_integral<decltype(a)>()
-        && std::is_integral<decltype(b)>()
-    );
+template<std::integral Out_T, MathRule MR = core::math::MR_DEFAULT>
+constexpr Out_T
+// NOLINTNEXTLINE(*-cognitive-complexity)
+safe_mult(const std::integral auto aval, const std::integral auto bval) {
     using core::debug::type_name;
     using core::exception::Condition;
     using core::math::numeric_cast;
@@ -29,57 +26,62 @@ constexpr Out_T safe_mult(const auto a, const auto b) {
     constexpr Out_T outmin [[maybe_unused]]
     = std::numeric_limits<Out_T>::lowest();
 
-    if (a == 0 || b == 0) {
+    if (aval == 0 || bval == 0) {
         return 0;
     }
 
     if constexpr (core::config::COMPILER_IS_GCC_LIKE
                   && !core::config::FORCE_GENERIC_IMPL) {
         Out_T res = 0;
-        if ((!__builtin_mul_overflow(a, b, &res)) || (MR == MathRule::ALLOW)) {
+        if ((!__builtin_mul_overflow(aval, bval, &res))
+            || (MR == MathRule::ALLOW)) {
             return res;
-        } else if constexpr (MR == MathRule::STRICT) {
+        }
+        if constexpr (MR == MathRule::STRICT) {
             throw Condition(std::format(
                 "Result of multiplication ({} * {}) is outside the range of "
                 "output type '{}'",
-                a,
-                b,
+                aval,
+                bval,
                 type_name<Out_T>()
             ));
         } else if constexpr (MR == MathRule::CLAMP) {
             return outmax;
+        } else {
+            condition::unknown("");
         }
-        RAYGAME_ELSE_UNKNOWN("");
     } else {
-        if (std::cmp_greater(b, outmax / a)
-            || (std::cmp_less_equal(a, -1) && std::cmp_less_equal(b, outmin))
-            || (std::cmp_less_equal(b, -1) && std::cmp_less_equal(a, outmin))) {
+        if (std::cmp_greater(bval, outmax / aval)
+            || (std::cmp_less_equal(aval, -1)
+                && std::cmp_less_equal(bval, outmin))
+            || (std::cmp_less_equal(bval, -1)
+                && std::cmp_less_equal(aval, outmin))) {
             if constexpr (MR == MathRule::STRICT) {
                 throw Condition(std::format(
                     "Result of multiplication ({} * {}) is above the max for "
                     "output type '{}'",
-                    a,
-                    b,
+                    aval,
+                    bval,
                     type_name<Out_T>()
                 ));
             } else if constexpr (MR == MathRule::CLAMP) {
                 return outmax;
             }
         } else if (std::is_unsigned<Out_T>()
-                   && (std::cmp_less(a, 0) || std::cmp_less(b, 0))) {
+                   && (std::cmp_less(aval, 0) || std::cmp_less(bval, 0))) {
             if constexpr (MR == MathRule::STRICT) {
                 throw Condition(std::format(
                     "Result of multiplication ({} * {}) is below the min for "
                     "output type '{}'",
-                    a,
-                    b,
+                    aval,
+                    bval,
                     type_name<Out_T>()
                 ));
             } else if constexpr (MR == MathRule::CLAMP) {
                 return outmin;
             }
         }
-        return numeric_cast<Out_T, MR>(a * b);
+        return numeric_cast<Out_T, MR>(aval * bval);
     }
 }
 

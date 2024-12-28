@@ -2,15 +2,15 @@
 #include "raygame/core/concepts.h"
 #include "raygame/core/config.h"
 #include "raygame/core/exception.h"
-#include <format> // IWYU pragma: keep
 #include <source_location>
 #include <string>
 #include <type_traits>
+#include <utility>
 
 namespace core::condition {
 namespace detail {
 void conditionlog(const std::string& message, const std::source_location& loc);
-}
+} // namespace detail
 
 //! Pre-Condition Checker
 /*!
@@ -86,31 +86,61 @@ constexpr void check_ptr(
     }
 }
 
+RAYGAME_CLANG_SUPPRESS_WARNING_PUSH
+RAYGAME_CLANG_SUPPRESS_WARNING("-Winvalid-constexpr")
+RAYGAME_CLANG_SUPPRESS_WARNING("-Wmissing-noreturn")
+
+//! Function to mark an unknown case
+/*!
+ *  @throws core::exception::Condition If pointer is null
+ */
+constexpr void unknown(
+    const std::string&          name,
+    const std::source_location& loc = std::source_location::current()
+) {
+    if constexpr (core::config::BUILD_TYPE
+                  == core::config::BuildType::RELEASE) {
+        ::core::condition::detail::conditionlog("Unknown " + name, loc);
+    } else {
+        throw core::exception::Condition("Unknown " + name);
+    }
+}
+
+//! Function to mark an unreachable code block
+/*!
+ *  @throws core::exception::Condition If pointer is null
+ */
+constexpr void
+unreachable(const std::source_location& loc = std::source_location::current()) {
+    if constexpr (core::config::BUILD_TYPE
+                  == core::config::BuildType::RELEASE) {
+        ::core::condition::detail::conditionlog(
+            "Reached block marked unreachable",
+            loc
+        );
+        throw exception::Unreachable("Reached block marked unreachable");
+    } else {
+        std::unreachable();
+    }
+}
+
+//! Function to mark an unimplemented code block
+/*!
+ *  @throws core::exception::Condition If pointer is null
+ */
+constexpr void unimplemented(
+    const std::source_location& loc = std::source_location::current()
+) {
+    if constexpr (core::config::BUILD_TYPE
+                  == core::config::BuildType::RELEASE) {
+        ::core::condition::detail::conditionlog(
+            "Reached block marked unimplemented",
+            loc
+        );
+    } else {
+        throw exception::Unimplemented("Unimplemented");
+    }
+}
+
+RAYGAME_CLANG_SUPPRESS_WARNING_POP
 } // namespace core::condition
-
-#define RAYGAME_PRE_CONDITION(expr)                                            \
-    ::core::condition::pre_condition((expr), #expr)
-#define RAYGAME_POST_CONDITION(expr)                                           \
-    ::core::condition::post_condition((expr), #expr)
-#define RAYGAME_CHECK_CONDITION(expr)                                          \
-    ::core::condition::check_condition((expr), #expr)
-#define RAYGAME_PRE_CONDITION_MSG(expr, ...)                                   \
-    ::core::condition::pre_condition((expr), std::format(__VA_ARGS__))
-#define RAYGAME_POST_CONDITION_MSG(expr, ...)                                  \
-    ::core::condition::post_condition((expr), std::format(__VA_ARGS__))
-#define RAYGAME_CHECK_CONDITION_MSG(expr, ...)                                 \
-    ::core::condition::check_condition((expr), std::format(__VA_ARGS__))
-
-#if defined(RAYGAME_BUILD_TYPE_RELEASE)
-#    define RAYGAME_ELSE_UNKNOWN(item_name)                                    \
-        else {                                                                 \
-            ::core::condition::detail::conditionlog("Unknown " item_name);     \
-        }                                                                      \
-        static_assert(true)
-#elif defined(RAYGAME_BUILD_TYPE_DEBUG)
-#    define RAYGAME_ELSE_UNKNOWN(item_name)                                    \
-        else {                                                                 \
-            throw ::core::exception::Condition("Unknown " item_name);          \
-        }                                                                      \
-        static_assert(true)
-#endif

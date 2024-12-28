@@ -11,7 +11,6 @@ rg_cc_library(
 		"window.cpp",
 		"x11.cpp",
 		"wayland.cpp",
-        "detail/wayland.h",
 		"detail/wayland.cpp",
 		"detail/wl_keyboard.cpp",
 		"detail/wl_pointer.cpp",

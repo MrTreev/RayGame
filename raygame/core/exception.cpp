@@ -1,25 +1,27 @@
 #include "raygame/core/exception.h" // IWYU pragma: keep
 
-core::exception::Exception::Exception(const std::string& message)
-    : ::std::runtime_error(message) {}
+namespace core::exception {
+// Honestly, just easier this way, macro is pretty obvious what it does
+// NOLINTBEGIN(*-macro-usage)
+#define RAYGAME_EXCEPTION_DEF(name) RAYGAME_EXCEPTION_DEF_BASE(name, Exception)
+#define RAYGAME_EXCEPTION_DEF_BASE(name, base)                                 \
+    name::name(const std::string& message)                                     \
+        : base(message) {}                                                     \
+    name::name(const base&& error)                                             \
+        : base(error) {}                                                       \
+    name::~name() = default
 
-core::exception::Exception::Exception(const std::runtime_error&& error)
-    : ::std::runtime_error(error) {}
+// NOLINTEND(*-macro-usage)
 
-core::exception::Condition::Condition(const std::string& message)
-    : core::exception::Exception(message) {}
+RAYGAME_EXCEPTION_DEF_BASE(Exception, std::runtime_error);
 
-core::exception::PreCondition::PreCondition(const std::string& message)
-    : Condition(message) {}
+RAYGAME_EXCEPTION_DEF(Unimplemented);
+RAYGAME_EXCEPTION_DEF(UnknownCase);
+RAYGAME_EXCEPTION_DEF(Unreachable);
 
-core::exception::CheckCondition::CheckCondition(const std::string& message)
-    : Condition(message) {}
+RAYGAME_EXCEPTION_DEF(Condition);
+RAYGAME_EXCEPTION_DEF_BASE(PreCondition, Condition);
+RAYGAME_EXCEPTION_DEF_BASE(CheckCondition, Condition);
+RAYGAME_EXCEPTION_DEF_BASE(PostCondition, Condition);
 
-core::exception::PostCondition::PostCondition(const std::string& message)
-    : Condition(message) {}
-
-core::exception::Exception::~Exception()           = default;
-core::exception::Condition::~Condition()           = default;
-core::exception::PreCondition::~PreCondition()     = default;
-core::exception::CheckCondition::~CheckCondition() = default;
-core::exception::PostCondition::~PostCondition()   = default;
+} // namespace core::exception

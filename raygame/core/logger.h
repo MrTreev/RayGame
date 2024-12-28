@@ -44,22 +44,14 @@ constexpr Level logging_level = Level::NOTE;
 //! Logging level to string converter
 constexpr std::string to_string(Level level) {
     switch (level) {
-    case Level::TRACE:
-        return "TRACE";
-    case Level::DEBUG:
-        return "DEBUG";
-    case Level::INFO:
-        return "INFO ";
-    case Level::NOTE:
-        return "NOTE ";
-    case Level::PROGRESS:
-        return "PROG ";
-    case Level::WARNING:
-        return "WARN ";
-    case Level::ERROR:
-        return "ERROR";
-    case Level::FATAL:
-        return "FATAL";
+    case Level::TRACE:    return "TRACE";
+    case Level::DEBUG:    return "DEBUG";
+    case Level::INFO:     return "INFO ";
+    case Level::NOTE:     return "NOTE ";
+    case Level::PROGRESS: return "PROG ";
+    case Level::WARNING:  return "WARN ";
+    case Level::ERROR:    return "ERROR";
+    case Level::FATAL:    return "FATAL";
     }
     std::unreachable();
 }
@@ -72,16 +64,17 @@ void logger(
 );
 } // namespace detail
 
+// NOLINTBEGIN(*-avoid-c-arrays)
 template<typename... Args>
 struct trace {
-    constexpr trace(
+    constexpr explicit trace(
         const std::string&          message,
         const std::source_location& loc = std::source_location::current()
     ) {
         detail::logger(Level::TRACE, message, loc);
     }
 
-    constexpr trace(
+    constexpr explicit trace(
         std::format_string<Args...> fmt,
         Args&&... args,
         const std::source_location& loc = std::source_location::current()
@@ -98,14 +91,14 @@ trace(const char[], Args&&...) -> trace<Args...>;
 
 template<typename... Args>
 struct debug {
-    constexpr debug(
+    constexpr explicit debug(
         const std::string&          message,
         const std::source_location& loc = std::source_location::current()
     ) {
         detail::logger(Level::DEBUG, message, loc);
     }
 
-    constexpr debug(
+    constexpr explicit debug(
         std::format_string<Args...> fmt,
         Args&&... args,
         const std::source_location& loc = std::source_location::current()
@@ -122,14 +115,14 @@ debug(const char[], Args&&...) -> debug<Args...>;
 
 template<typename... Args>
 struct info {
-    constexpr info(
+    constexpr explicit info(
         const std::string&          message,
         const std::source_location& loc = std::source_location::current()
     ) {
         detail::logger(Level::INFO, message, loc);
     }
 
-    constexpr info(
+    constexpr explicit info(
         std::format_string<Args...> fmt,
         Args&&... args,
         const std::source_location& loc = std::source_location::current()
@@ -146,14 +139,14 @@ info(const char[], Args&&...) -> info<Args...>;
 
 template<typename... Args>
 struct note {
-    constexpr note(
+    constexpr explicit note(
         const std::string&          message,
         const std::source_location& loc = std::source_location::current()
     ) {
         detail::logger(Level::NOTE, message, loc);
     }
 
-    constexpr note(
+    constexpr explicit note(
         std::format_string<Args...> fmt,
         Args&&... args,
         const std::source_location& loc = std::source_location::current()
@@ -170,14 +163,14 @@ note(const char[], Args&&...) -> note<Args...>;
 
 template<typename... Args>
 struct progress {
-    constexpr progress(
+    constexpr explicit progress(
         const std::string&          message,
         const std::source_location& loc = std::source_location::current()
     ) {
         detail::logger(Level::PROGRESS, message, loc);
     }
 
-    constexpr progress(
+    constexpr explicit progress(
         std::format_string<Args...> fmt,
         Args&&... args,
         const std::source_location& loc = std::source_location::current()
@@ -197,14 +190,14 @@ progress(const char[], Args&&...) -> progress<Args...>;
 
 template<typename... Args>
 struct warning {
-    constexpr warning(
+    constexpr explicit warning(
         const std::string&          message,
         const std::source_location& loc = std::source_location::current()
     ) {
         detail::logger(Level::WARNING, message, loc);
     }
 
-    constexpr warning(
+    constexpr explicit warning(
         std::format_string<Args...> fmt,
         Args&&... args,
         const std::source_location& loc = std::source_location::current()
@@ -224,14 +217,14 @@ warning(const char[], Args&&...) -> warning<Args...>;
 
 template<typename... Args>
 struct error {
-    constexpr error(
+    constexpr explicit error(
         const std::string&          message,
         const std::source_location& loc = std::source_location::current()
     ) {
         detail::logger(Level::ERROR, message, loc);
     }
 
-    constexpr error(
+    constexpr explicit error(
         std::format_string<Args...> fmt,
         Args&&... args,
         const std::source_location& loc = std::source_location::current()
@@ -248,14 +241,14 @@ error(const char[], Args&&...) -> error<Args...>;
 
 template<typename... Args>
 struct fatal {
-    constexpr fatal(
+    constexpr explicit fatal(
         const std::string&          message,
         const std::source_location& loc = std::source_location::current()
     ) {
         detail::logger(Level::FATAL, message, loc);
     }
 
-    constexpr fatal(
+    constexpr explicit fatal(
         std::format_string<Args...> fmt,
         Args&&... args,
         const std::source_location& loc = std::source_location::current()
@@ -270,4 +263,5 @@ fatal(const char[]) -> fatal<std::string>;
 template<typename... Args>
 fatal(const char[], Args&&...) -> fatal<Args...>;
 
+// NOLINTEND(*-avoid-c-arrays)
 } // namespace core::log

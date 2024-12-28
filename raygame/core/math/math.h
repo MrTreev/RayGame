@@ -1,15 +1,16 @@
 #pragma once
 #include "raygame/core/exception.h"
-#include "raygame/core/types.h"
 #include "raygame/core/math/mathrule.h"
+#include "raygame/core/types.h"
 #include <cassert>
 #include <limits>
+#include <numbers>
 #include <type_traits>
 #include <utility>
 
 namespace core::math {
 namespace constants {
-constexpr float PI      = 3.14159265358979323846F;
+constexpr float PI = std::numbers::pi_v<float>; // NOLINT(*-identifier-length)
 constexpr float DEG2RAD = (PI / 180.0F);
 constexpr float RAD2DEG = (180.0F / PI);
 constexpr float EPSILON = 0.000001F;
@@ -30,28 +31,28 @@ constexpr core::deg_t rad2deg(core::rad_t rad) {
  * @tparam MR Defines the out-of-range behaviour
  */
 template<MathRule MR = core::math::MR_DEFAULT>
-constexpr auto make_signed(auto number) {
+constexpr auto make_signed(std::integral auto number) {
     static_assert(std::is_unsigned<decltype(number)>());
     return numeric_cast<std::make_signed_t<decltype(number)>, MR>(number);
 }
 
 //! Get the next fixed-width integer type up in size
-consteval auto larger_type(auto in) {
-    if constexpr (std::is_same<decltype(in), uint8_t>()) {
+consteval auto larger_type(std::integral auto inval) {
+    if constexpr (std::is_same<decltype(inval), uint8_t>()) {
         return uint16_t{};
-    } else if constexpr (std::is_same<decltype(in), uint16_t>()) {
+    } else if constexpr (std::is_same<decltype(inval), uint16_t>()) {
         return uint32_t{};
-    } else if constexpr (std::is_same<decltype(in), uint32_t>()) {
+    } else if constexpr (std::is_same<decltype(inval), uint32_t>()) {
         return uint64_t{};
-    } else if constexpr (std::is_same<decltype(in), uint64_t>()) {
+    } else if constexpr (std::is_same<decltype(inval), uint64_t>()) {
         return uintmax_t{};
-    } else if constexpr (std::is_same<decltype(in), int8_t>()) {
+    } else if constexpr (std::is_same<decltype(inval), int8_t>()) {
         return int16_t{};
-    } else if constexpr (std::is_same<decltype(in), int16_t>()) {
+    } else if constexpr (std::is_same<decltype(inval), int16_t>()) {
         return int32_t{};
-    } else if constexpr (std::is_same<decltype(in), int32_t>()) {
+    } else if constexpr (std::is_same<decltype(inval), int32_t>()) {
         return int64_t{};
-    } else if constexpr (std::is_same<decltype(in), int64_t>()) {
+    } else if constexpr (std::is_same<decltype(inval), int64_t>()) {
         return intmax_t{};
     } else {
         throw core::exception::Condition("Invalid type");
@@ -59,9 +60,9 @@ consteval auto larger_type(auto in) {
 }
 
 //! Get a type that can fit both @a a and @a b
-consteval auto work_type(auto a, auto b) {
-    using a_t = decltype(a);
-    using b_t = decltype(b);
+consteval auto work_type(std::integral auto aval, std::integral auto bval) {
+    using a_t = decltype(aval);
+    using b_t = decltype(bval);
     if constexpr (std::is_same<a_t, b_t>()) {
         return a_t{};
     } else if constexpr (std::is_signed<a_t>() == std::is_signed<b_t>()) {
@@ -74,14 +75,14 @@ consteval auto work_type(auto a, auto b) {
     } else {
         if constexpr (std::is_signed<a_t>()) {
             if constexpr (sizeof(a_t) <= sizeof(b_t)) {
-                using ret_t = std::make_signed<decltype(larger_type(b))>::type;
+                using ret_t = std::make_signed_t<decltype(larger_type(bval))>;
                 return ret_t{};
             } else {
                 return a_t{};
             }
         } else {
             if constexpr (sizeof(b_t) <= sizeof(a_t)) {
-                using ret_t = std::make_signed<decltype(larger_type(a))>::type;
+                using ret_t = std::make_signed_t<decltype(larger_type(aval))>;
                 return ret_t{};
             } else {
                 return b_t{};
@@ -91,10 +92,10 @@ consteval auto work_type(auto a, auto b) {
 }
 
 //! Absolute value function
-constexpr auto abs(auto a) -> decltype(a) {
-    if (std::cmp_less(a, 0)) {
-        return -a;
+constexpr auto abs(std::integral auto aval) -> decltype(aval) {
+    if constexpr (std::cmp_less(aval, 0)) {
+        return -aval;
     }
-    return a;
+    return aval;
 }
 } // namespace core::math

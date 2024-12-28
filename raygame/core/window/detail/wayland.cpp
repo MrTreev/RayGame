@@ -1,11 +1,10 @@
-#include "raygame/core/window/detail/wayland.h" // IWYU pragma: keep
+#include "raygame/core/window/wayland.h"
 #include "raygame/core/condition.h"
 #include "raygame/core/drawing/colour.h"
 #include "raygame/core/logger.h"
 #include "raygame/core/math/arithmetic.h"
 #include "raygame/core/math/numeric_cast.h"
 #include "raygame/core/math/random.h"
-#include "raygame/core/window/wayland.h"
 #include <cstring>
 #include <fcntl.h>
 #include <linux/input-event-codes.h>
@@ -73,13 +72,13 @@ wl_shm_format get_colour_format() {
     constexpr auto colourval =
         rgba(0b00000000, 0b11111111, 0b00111100, 0b11000011);
     switch (bit_cast<uint32_t>(colourval)) {
-    case (0b11000011'00000000'11111111'00111100):
+    case (0b11000011'00000000'11111111'00111100): // NOLINT(*-magic-numbers)
         return WL_SHM_FORMAT_ARGB8888;
-    case (0b11000011'00111100'11111111'00000000):
+    case (0b11000011'00111100'11111111'00000000): // NOLINT(*-magic-numbers)
         return WL_SHM_FORMAT_ABGR8888;
-    case (0b00111100'11111111'00000000'11000011):
+    case (0b00111100'11111111'00000000'11000011): // NOLINT(*-magic-numbers)
         return WL_SHM_FORMAT_BGRA8888;
-    case (0b00000000'11111111'00111100'11000011):
+    case (0b00000000'11111111'00111100'11000011): // NOLINT(*-magic-numbers)
         return WL_SHM_FORMAT_RGBA8888;
     default:
         throw std::invalid_argument(std::format(
@@ -89,7 +88,7 @@ wl_shm_format get_colour_format() {
             "RGBA set: {:0>32b}{:0>32b}{:0>32b}{:0>32b}\n"
             "BYTE NO:  00000000111111112222222233333333\n",
             bit_cast<uint32_t>(colourval),
-            (0b00000000'11111111'00111100'11000011),
+            (0b00000000'11111111'00111100'11000011), // NOLINT(*-magic-numbers)
             colourval.m_alpha,
             colourval.m_blue,
             colourval.m_green,
@@ -102,23 +101,21 @@ constexpr size_t COLOUR_CHANNELS = 4;
 
 } // namespace
 
-core::window::detail::keyboard_state::keyboard_state() {
-    m_xkb_context = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
-}
+core::window::detail::WaylandImpl::keyboard_state::keyboard_state()
+    : m_xkb_context(xkb_context_new(XKB_CONTEXT_NO_FLAGS)) {}
 
-core::window::detail::keyboard_state::~keyboard_state() {
+core::window::detail::WaylandImpl::keyboard_state::~keyboard_state() {
     xkb_context_unref(m_xkb_context);
     m_xkb_context = nullptr;
 }
 
-core::window::detail::WaylandImpl::WaylandImpl(
-    Vec2<size_t> size,
-    std::string  title,
-    WindowStyle  style
-)
-    : m_size(size) {
+core::window::detail::WaylandImpl::WaylandImpl(WaylandWindow* base)
+    : m_base(base)
+    , m_size(base->win_size()) {
+    // NOLINTNEXTLINE(*-prefer-member-initializer)
     m_wl_display = wl_display_connect(nullptr);
     check_ptr(m_wl_display, "Display setup failed");
+    // NOLINTNEXTLINE(*-prefer-member-initializer)
     m_wl_registry = wl_display_get_registry(m_wl_display);
     check_ptr(m_wl_registry, "Registry setup failed");
     wl_registry_add_listener(m_wl_registry, &m_wl_registry_listener, this);
@@ -129,10 +126,12 @@ core::window::detail::WaylandImpl::WaylandImpl(
     check_ptr(m_wl_shm, "shm global setup failed");
     check_ptr(m_wl_compositor, "compositor global setup failed");
     check_ptr(m_xdg_wm_base, "xdg_wm_base global setup failed");
+    // NOLINTNEXTLINE(*-prefer-member-initializer)
     m_wl_surface = wl_compositor_create_surface(m_wl_compositor);
     check_ptr(m_wl_surface, "wl_surface setup failed");
     m_xdg_surface = xdg_wm_base_get_xdg_surface(m_xdg_wm_base, m_wl_surface);
     check_ptr(m_xdg_surface, "xdg_surface setup failed");
+    // NOLINTNEXTLINE(*-prefer-member-initializer)
     m_xdg_toplevel = xdg_surface_get_toplevel(m_xdg_surface);
     check_ptr(m_xdg_toplevel, "xdg_toplevel setup failed");
     xdg_toplevel_add_listener(m_xdg_toplevel, &m_xdg_toplevel_listener, this);
@@ -142,15 +141,18 @@ core::window::detail::WaylandImpl::WaylandImpl(
     while ((wl_display_dispatch(m_wl_display) != -1) && (!m_configured)) {
         core::log::error("Wayland display not configured");
     }
-    core::log::debug("Display Dispatched");
-    xdg_toplevel_set_title(m_xdg_toplevel, title.c_str());
+    core::log::trace("Display Dispatched");
+    xdg_toplevel_set_title(m_xdg_toplevel, base->title().c_str());
     new_buffer(m_size);
-    set_style(style);
+    set_style(base->style());
     wl_surface_attach(m_wl_surface, m_wl_buffer, 0, 0);
+    core::log::trace("Surface Attached");
     wl_surface_commit(m_wl_surface);
+    core::log::trace("Surface Committed");
     m_wl_callback = wl_surface_frame(m_wl_surface);
     check_ptr(m_wl_callback, "Failed to create callback");
     wl_callback_add_listener(m_wl_callback, &m_wl_surface_frame_listener, this);
+    core::log::trace("Return from Constructor");
 }
 
 core::window::detail::WaylandImpl::~WaylandImpl() {
@@ -161,11 +163,11 @@ core::window::detail::WaylandImpl::~WaylandImpl() {
 }
 
 void core::window::detail::WaylandImpl::new_buffer(core::Vec2<size_t> size) {
-    const size_t buflen  = safe_mult<size_t>(size.x, size.y);
-    const size_t bufsize = safe_mult<size_t>(buflen, COLOUR_CHANNELS);
-    const int    shm_fd  = allocate_shm_file(bufsize);
+    const auto buflen  = safe_mult<size_t>(size.x, size.y);
+    const auto bufsize = safe_mult<size_t>(buflen, COLOUR_CHANNELS);
+    const int  shm_fd  = allocate_shm_file(bufsize);
     check_condition(shm_fd >= 0, "creation of shm buffer file failed");
-    auto shm_data =
+    auto* shm_data =
         mmap(nullptr, bufsize, PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0);
     if (shm_data == MAP_FAILED) {
         close(shm_fd);
@@ -186,11 +188,8 @@ void core::window::detail::WaylandImpl::new_buffer(core::Vec2<size_t> size) {
     check_ptr(m_wl_buffer, "Failed to create buffer");
 }
 
-bool core::window::detail::WaylandImpl::next_frame() {
-    if (!should_close()) {
-        wl_display_dispatch(m_wl_display);
-    }
-    return !should_close();
+void core::window::detail::WaylandImpl::render_frame() {
+    wl_display_dispatch(m_wl_display);
 }
 
 void core::window::detail::WaylandImpl::set_style(

@@ -1,6 +1,6 @@
-#include "raygame/core/window/wayland.h"
+#include "raygame/core/window/window.h"
 
 int main() {
-    auto mywindow = core::window::WaylandWindow();
-    while (mywindow.next_frame()) {}
+    auto mywindow = core::window::dispatch();
+    while (mywindow->next_frame()) {}
 }

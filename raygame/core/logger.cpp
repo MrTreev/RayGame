@@ -36,9 +36,8 @@ location_string([[maybe_unused]] const std::source_location& loc) {
             loc.line(),
             loc.function_name()
         );
-    } else {
-        return {};
     }
+    return {};
 }
 
 } // namespace

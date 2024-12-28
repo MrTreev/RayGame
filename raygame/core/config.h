@@ -1,43 +1,203 @@
 #pragma once
+#include <cstdint>
+#include <string>
+
+//=============================================================================
+// Feature Checking
+//=============================================================================
 
 // clang-format off
 #if (__cplusplus < 202002L)
-static_assert(
-    false,
-    "This game's code uses features from the C++23 standard, please do not "
-    "attempt to compile without support for C++23 features"
-);
+// clang-format on
+static_assert(false, "This game's code uses features from the C++23 standard");
+#endif
+
+//=============================================================================
+// User-Configurable Macros
+//=============================================================================
+#if defined(RAYGAME_DOXYGEN_INVOKED)
+/*!
+ *  @defgroup macros_config Configuration Macros
+ *  User-defined configuration macros
+ *  @{
+ */
+
+//! Force generic implementations of operations
+/*!
+ *  Used for Testing, ignores compiler-specific optimisations in some functions
+ */
+#    define RAYGAME_FORCE_GENERIC_IMPL
+
+/*!
+ *  @defgroup macros_config_window_backend Window Backend
+ *  Enable or disable support for window backends
+ *  @{
+ */
+#    define RAYGAME_ENABLE_WAYLAND
+#    define RAYGAME_DISABLE_WAYLAND
+#    define RAYGAME_ENABLE_X11
+#    define RAYGAME_DISABLE_X11
+#    define RAYGAME_ENABLE_DWM
+#    define RAYGAME_DISABLE_DWM
+#    define RAYGAME_ENABLE_COCOA
+#    define RAYGAME_DISABLE_COCOA
+//! @}
+
+/*!
+ *  @defgroup macros_config_window_defaults Window Creation Defaults
+ *  Defaults for window creation
+ *  @{
+ */
+//! Default Window Width
+#    define RAYGAME_DEFAULT_WINDOW_WIDTH  640
+//! Default Window Height
+#    define RAYGAME_DEFAULT_WINDOW_HEIGHT 480
+//! Default Window Title
+#    define RAYGAME_DEFAULT_WINDOW_TITLE  "RayGame"
+//! @}
+
+/*!
+ *  @defgroup macros_random Random Number Generator
+ *  Configuration macros for the random number generator
+ *  @{
+ */
+
+//! Use non-deterministic randomness
+/*!
+ *  Non-deterministic mode uses the C++ `std::random_device` as the seed for RNG.
+ *  Deterministic mode uses a fixed value as the seed, incrementing each time it
+ *  is accessed.
+ */
+#    define RAYGAME_USE_FULL_RANDOM
+
+//! Initial seed for randomness when in deterministic mode (uint64_t)
+#    define RAYGAME_RANDOM_INITIAL_SEED
+
+//! @}
+//! @}
+#else
+#    if !defined(RAYGAME_DEFAULT_WINDOW_WIDTH)
+#        define RAYGAME_DEFAULT_WINDOW_WIDTH 640 // NOLINT(*-macro-usage)
+#    endif
+#    if !defined(RAYGAME_DEFAULT_WINDOW_HEIGHT)
+#        define RAYGAME_DEFAULT_WINDOW_HEIGHT 480 // NOLINT(*-macro-usage)
+#    endif
+#    if !defined(RAYGAME_DEFAULT_WINDOW_TITLE)
+#        define RAYGAME_DEFAULT_WINDOW_TITLE "RayGame" // NOLINT(*-macro-usage)
+#    endif
+#endif
+
+namespace core::config {
+#if defined(RAYGAME_FORCE_GENERIC_IMPL)
+//! Force generic implementations
+static constexpr bool FORCE_GENERIC_IMPL = true;
+#else
+//! Force generic implementations
+static constexpr bool FORCE_GENERIC_IMPL = false;
+#endif
+} // namespace core::config
+
+namespace core::window {
+//! Default Window Width
+static constexpr std::size_t DEFAULT_WINDOW_WIDTH =
+    RAYGAME_DEFAULT_WINDOW_WIDTH;
+//! Default Window Height
+static constexpr std::size_t DEFAULT_WINDOW_HEIGHT =
+    RAYGAME_DEFAULT_WINDOW_HEIGHT;
+//! Default Window Title
+static constexpr std::string DEFAULT_WINDOW_TITLE =
+    RAYGAME_DEFAULT_WINDOW_TITLE;
+} // namespace core::window
+
+//=============================================================================
+// Machine-Specific Macros
+//=============================================================================
+#if defined(RAYGAME_DOXYGEN_INVOKED)
+/*!
+ *  @defgroup macros_machine Machine-Specific macros
+ *  Macros used to specify machine-specific traits/features
+ *  @{
+ */
+
+//! @defgroup macros_machine_build_type Build Type
+//! @{
+#    define RAYGAME_BUILD_TYPE_RELEASE
+#    define RAYGAME_BUILD_TYPE_DEBUG
+//! @}
+
+//! @defgroup macros_machine_architecture Architecture
+//! @{
+#    define RAYGAME_ARCH_X86_64
+#    define RAYGAME_ARCH_X86_32
+#    define RAYGAME_ARCH_RISCV
+#    define RAYGAME_ARCH_ARM64
+#    define RAYGAME_ARCH_ARM
+//! @}
+
+//! @defgroup macros_machine_endian Endianness
+//! @{
+#    define RAYGAME_LITTLE_ENDIAN
+#    define RAYGAME_BIG_ENDIAN
+//! @}
+
+//! @defgroup macros_machine_compiler Compiler
+//! @{
+#    define RAYGAME_CC_CLANG
+#    define RAYGAME_CC_GCC
+#    define RAYGAME_CC_MINGW
+#    define RAYGAME_CC_MSC
+//! @}
+
+//! @defgroup macros_machine_os Operating System
+//! @{
+#    define RAYGAME_OS_ANDROID
+#    define RAYGAME_OS_BSD
+#    define RAYGAME_OS_CYGWIN
+#    define RAYGAME_OS_HURD
+#    define RAYGAME_OS_QNX
+#    define RAYGAME_OS_INTEGRITY
+#    define RAYGAME_OS_MAC
+#    define RAYGAME_OS_WIN64
+#    define RAYGAME_OS_WIN32
+//! @}
+
+//! @defgroup macros_machine_simd SIMD instructions
+//! @{
+#    define RAYGAME_HAS_SSE2
+#    define RAYGAME_SIMD_128BIT
+#    define RAYGAME_HAS_SSSE3
+#    define RAYGAME_HAS_AVX
+#    define RAYGAME_SIMD_256BIT_F
+#    define RAYGAME_HAS_AVX2
+#    define RAYGAME_SIMD_256BIT_X
+#    define RAYGAME_HAS_NEON
+//! @}
+
+//! @}
 #endif
 
 #if !__has_include(<source_location>)
 #    error "source_location unsupported, cannot continue"
 #endif
-// clang-format on
 
 #if !defined(RAYGAME_ASSERT)
 #    include <cassert>
+// NOLINTNEXTLINE(*-macro-usage)
 #    define RAYGAME_ASSERT(...) assert(__VA_ARGS__)
 #endif
 
+//=============================================================================
+// Architecture Config
+//=============================================================================
+
 namespace core::config {
-
-//! Force generic implementations of operations
-/*!
- * Used for Testing, ignores compiler-specific implementations
- */
-#if defined(RAYGAME_FORCE_GENERIC_IMPL)
-static constexpr bool FORCE_GENERIC_IMPL = true;
-#else
-static constexpr bool FORCE_GENERIC_IMPL = false;
-#endif
-
 //! Architecture Definitions
-enum class Architecture {
-    X86_64,
-    X86_32,
-    ARM,
-    ARM64,
-    RISCV,
+enum class Architecture : std::uint8_t {
+    X86_64, //!< X86, 64-Bit
+    X86_32, //!< X86, 32-Bit
+    ARM,    //!< ARM, 32-Bit
+    ARM64,  //!< ARM, 64-Bit
+    RISCV,  //!< RISCV
 };
 
 #if defined(__amd64__) || defined(_M_X64_M_AMD64) || defined(__x86_64__)       \
@@ -62,13 +222,17 @@ static_assert(false, "Not tested on ARM yet");
 #else
 static_assert(false, "Unknown Architecture");
 #endif
+} // namespace core::config
 
-//! Compiler Definitions
-enum class Endian {
-    LITTLE,
-    BIG,
-    LITTLE_BYTE,
-    BIG_BYTE,
+//=============================================================================
+// Endian Config
+//=============================================================================
+
+namespace core::config {
+//! Endian Definitions
+enum class Endian : std::uint8_t {
+    LITTLE, //!< Little-Endian
+    BIG,    //!< Big-Endian
 };
 
 #if defined(__BYTE_ORDER__)
@@ -80,18 +244,25 @@ static constexpr Endian ENDIANNESS = Endian::LITTLE;
 static constexpr Endian ENDIANNESS = Endian::BIG;
 #    endif
 #endif
+} // namespace core::config
 
+//=============================================================================
+// Compiler Config
+//=============================================================================
+
+namespace core::config {
 //! Compiler Definitions
-enum class Compiler {
-    CLANG,
-    GCC,
-    MSC,
-    MINGW,
+enum class Compiler : std::uint8_t {
+    CLANG, //!< Clang-based compiler
+    GCC,   //!< GCC-based compiler
+    MSC,   //!< MSVC-based compiler
+    MINGW, //!< MINGW-based compiler
 };
 
 #if defined(__clang__)
 #    define RAYGAME_CC_CLANG
 static constexpr Compiler COMPILER = Compiler::CLANG;
+//NOLINTNEXTLINE(*-magic-numbers)
 static_assert(__clang_major__ >= 17, "Only tested on clang 17 and higher");
 #elif defined(__GNUC__)
 #    define RAYGAME_CC_GCC
@@ -109,19 +280,29 @@ static_assert(false, "Not tested on MSC yet");
 static_assert(false, "Unknown Compiler");
 #endif
 
+//! Compiler has GCC-like compiler features
+static constexpr bool COMPILER_IS_GCC_LIKE =
+    (COMPILER == Compiler::GCC || COMPILER == Compiler::CLANG);
+} // namespace core::config
+
+//=============================================================================
+// OS Config
+//=============================================================================
+
+namespace core::config {
 //! Operating System Definitions
 #if (__STDC_HOSTED__ == 1)
-enum class OperatingSystem {
-    ANDROID,
-    BSD,
-    CYGWIN,
-    HURD,
-    LINUX,
-    INTEGRITY,
-    MAC,
-    QNX,
-    WIN64,
-    WIN32,
+enum class OperatingSystem : std::uint8_t {
+    ANDROID,   //!< Android OS
+    BSD,       //!< BSD
+    CYGWIN,    //!< Cygwin Unix-like environment for Windows
+    HURD,      //!< GNU Hurd
+    LINUX,     //!< Linux
+    INTEGRITY, //!< Greenhills Integrity
+    MAC,       //!< Mac OS
+    QNX,       //!< QNX RTOS
+    WIN64,     //!< Windows 64-Bit
+    WIN32,     //!< Windows 32-Bit
 };
 
 #    if defined(__ANDROID__)
@@ -134,7 +315,7 @@ static_assert(false, "Not tested on Android yet");
 static constexpr OperatingSystem OPERATING_SYSTEM = OperatingSystem::BSD;
 static_assert(false, "Not tested on BSD yet");
 #    elif defined(__CYGWIN__)
-#        define RAYGAME_OS_Cygwin
+#        define RAYGAME_OS_CYGWIN
 static constexpr OperatingSystem OPERATING_SYSTEM = OperatingSystem::CYGWIN;
 static_assert(false, "Not tested on Cygwin yet");
 #    elif defined(__GNU__) || defined(__gnu_hurd__)
@@ -182,16 +363,71 @@ static_assert(false, "Unknown Architecture");
 #else
 static_assert(false, "Cannot run without an OS");
 #endif
+} // namespace core::config
 
-//! Window System Definitions
-enum class WindowBackend {
-    WAYLAND,
-    X11,
-    DWM,
-    COCOA,
+//=============================================================================
+// Window Backend Config
+//=============================================================================
+
+namespace core::config {
+//! Window Backends
+struct WindowBackend {
+    //! Support for Wayland
+    static consteval bool wayland_enabled() {
+#if defined(RAYGAME_ENABLE_WAYLAND)
+        return true;
+#elif defined(RAYGAME_DISABLE_WAYLAND)
+        return false;
+#else
+        return (OPERATING_SYSTEM == OperatingSystem::LINUX)
+               || (OPERATING_SYSTEM == OperatingSystem::BSD);
+#endif
+    }
+
+    //! Support for Xorg X11
+    static consteval bool x11_enabled() {
+#if defined(RAYGAME_ENABLE_X11)
+        return true;
+#elif defined(RAYGAME_DISABLE_X11)
+        return false;
+#else
+        return (OPERATING_SYSTEM == OperatingSystem::LINUX)
+               || (OPERATING_SYSTEM == OperatingSystem::BSD);
+#endif
+    }
+
+    //! Support for Windows DWM
+    static consteval bool dwm_enabled() {
+#if defined(RAYGAME_ENABLE_DWM)
+        return true;
+#elif defined(RAYGAME_DISABLE_DWM)
+        return false;
+#else
+        return (OPERATING_SYSTEM == OperatingSystem::WIN32)
+               || (OPERATING_SYSTEM == OperatingSystem::WIN64);
+#endif
+    }
+
+    //! Support for MacOS Cocoa
+    static consteval bool cocoa_enabled() {
+#if defined(RAYGAME_ENABLE_COCOA)
+        return true;
+#elif defined(RAYGAME_DISABLE_COCOA)
+        return false;
+#else
+        return OPERATING_SYSTEM == OperatingSystem::MAC;
+#endif
+    }
 };
 
-enum class BuildType {
+} // namespace core::config
+
+//=============================================================================
+// Build Type Config
+//=============================================================================
+
+namespace core::config {
+enum class BuildType : std::uint8_t {
     DEBUG,
     RELEASE,
 };
@@ -203,9 +439,14 @@ static constexpr BuildType BUILD_TYPE = BuildType::RELEASE;
 #    define RAYGAME_BUILD_TYPE_DEBUG
 static constexpr BuildType BUILD_TYPE = BuildType::DEBUG;
 #endif
+} // namespace core::config
 
+//=============================================================================
+// SIMD Config
+//=============================================================================
+
+namespace core::config {
 //! SIMD Feature Definitions
-
 #if defined(__SSE2__)
 #    define RAYGAME_HAS_SSE2
 #    define RAYGAME_SIMD_128BIT
@@ -229,11 +470,90 @@ static constexpr BuildType BUILD_TYPE = BuildType::DEBUG;
 #    define RAYGAME_SIMD_128BIT
 #endif
 
-//! Compiler has GCC-like compiler features
-static constexpr bool COMPILER_IS_GCC_LIKE =
-    (COMPILER == Compiler::GCC || COMPILER == Compiler::CLANG);
+struct Simd {
+    //! SIMD supports SSE2
+    static consteval bool sse2() {
+#if defined(RAYGAME_HAS_SSE2)
+        return true;
+#else
+        return false;
+#endif
+    }
 
-#if defined(RAYGAME_CC_CLANG)
+    //! SIMD supports SSSE3
+    static consteval bool ssse3() {
+#if defined(RAYGAME_HAS_SSSE3)
+        return true;
+#else
+        return false;
+#endif
+    }
+
+    //! SIMD supports AVX
+    static consteval bool avx() {
+#if defined(RAYGAME_HAS_AVX)
+        return true;
+#else
+        return false;
+#endif
+    }
+
+    //! SIMD supports AVX2
+    static consteval bool avx2() {
+#if defined(RAYGAME_HAS_AVX2)
+        return true;
+#else
+        return false;
+#endif
+    }
+
+    //! SIMD supports 256-bit float operations
+    static consteval bool float256() {
+#if defined(RAYGAME_HAS_SIMD_256BIT_F)
+        return true;
+#else
+        return false;
+#endif
+    }
+
+    //! SIMD supports 256-bit integer operations
+    static consteval bool x256() {
+#if defined(RAYGAME_HAS_SIMD_256BIT_X)
+        return true;
+#else
+        return false;
+#endif
+    }
+
+    //! SIMD supports ARM NEON
+    static consteval bool neon() {
+#if defined(RAYGAME_HAS_NEON)
+        return true;
+#else
+        return false;
+#endif
+    }
+
+    //! SIMD supports 128-bit integer operations
+    static consteval bool simd128() {
+#if defined(RAYGAME_HAS_SIMD_128BIT)
+        return true;
+#else
+        return false;
+#endif
+    }
+};
+
+//=============================================================================
+// Compiler-Dependant Pragma Macros
+//=============================================================================
+// NOLINTBEGIN(*-macro-usage)
+
+//! @defgroup macros_machine_pragma Pragma macros
+//! push, string, pop pragmas for suppressing compiler warnings
+//! @{
+
+#if defined(RAYGAME_CC_CLANG) && !defined(RAYGAME_DOXYGEN_INVOKED)
 #    define RAYGAME_PRAGMA_TO_STR(x)            _Pragma(#x)
 #    define RAYGAME_CLANG_SUPPRESS_WARNING_PUSH _Pragma("clang diagnostic push")
 #    define RAYGAME_CLANG_SUPPRESS_WARNING(warnstr)                            \
@@ -245,7 +565,7 @@ static constexpr bool COMPILER_IS_GCC_LIKE =
 #    define RAYGAME_CLANG_SUPPRESS_WARNING_POP
 #endif
 
-#if defined(RAYGAME_CC_GCC)
+#if defined(RAYGAME_CC_GCC) && !defined(RAYGAME_DOXYGEN_INVOKED)
 #    define RAYGAME_PRAGMA_TO_STR(x)          _Pragma(#x)
 #    define RAYGAME_GCC_SUPPRESS_WARNING_PUSH _Pragma("GCC diagnostic push")
 #    define RAYGAME_GCC_SUPPRESS_WARNING(warnstr)                              \
@@ -257,7 +577,7 @@ static constexpr bool COMPILER_IS_GCC_LIKE =
 #    define RAYGAME_GCC_SUPPRESS_WARNING_POP
 #endif
 
-#if defined(RAYGAME_CC_MSC)
+#if defined(RAYGAME_CC_MSC) && !defined(RAYGAME_DOXYGEN_INVOKED)
 #    define RAYGAME_MSC_SUPPRESS_WARNING_PUSH     __pragma(warning(push))
 #    define RAYGAME_MSC_SUPPRESS_WARNING(warnstr) __pragma(warning(disable : w))
 #    define RAYGAME_MSC_SUPPRESS_WARNING_POP      __pragma(warning(pop))
@@ -267,12 +587,8 @@ static constexpr bool COMPILER_IS_GCC_LIKE =
 #    define RAYGAME_MSC_SUPPRESS_WARNING_POP
 #endif
 
-#if defined(RAYGAME_BUILD_TYPE_DEBUG)
-#    include <cassert>
-#    define RAYGAME_UNREACHABLE                                                \
-        RAYGAME_ASSERT(false && "Reached block marked unreachable")
-#else
-#    define RAYGAME_UNREACHABLE std::unreachable()
-#endif
+//! @}
+
+// NOLINTEND(*-macro-usage)
 
 } // namespace core::config

@@ -18,7 +18,7 @@ static constexpr core::Pixel rgb(uint8_t red, uint8_t green, uint8_t blue) {
         .m_red   = red,
         .m_green = green,
         .m_blue  = blue,
-        .m_alpha = 0xFF,
+        .m_alpha = 0xFF, // NOLINT(*-magic-numbers)
     };
 }
 

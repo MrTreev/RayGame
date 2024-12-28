@@ -3,6 +3,6 @@
 
 namespace core::condition::detail {
 void conditionlog(const std::string& message, const std::source_location& loc) {
-    core::log::fatal(message, loc);
+    core::log::error(message, loc);
 }
 } // namespace core::condition::detail

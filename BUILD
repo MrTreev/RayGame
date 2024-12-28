@@ -36,6 +36,7 @@ doxygen(
         "REFERENCES_LINK_SOURCE = YES",
         "SOURCE_TOOLTIPS = YES",
         "HTML_COLORSTYLE = TOGGLE",
+        "PREDEFINED = RAYGAME_DOXYGEN_INVOKED=1",
     ],
     outs = ["html"],
     tags = ["manual"],

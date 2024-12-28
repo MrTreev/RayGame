@@ -29,61 +29,82 @@ using std::size_t;
 using rad_t = float;
 using deg_t = float;
 
-template<typename first, typename second>
+template<typename first, typename second = first>
 struct Pair {
     using A = first;
     using B = second;
+    //NOLINTBEGIN(*-non-private-member-*)
     A a;
     B b;
 
-    constexpr operator std::string() {
-        return "Pair<" + core::debug::type_name<A>() + ", "
-               + core::debug::type_name<B>() + ">(" + ": " + std::to_string(a)
-               + ", " + ": " + std::to_string(b) + ")";
+    //NOLINTEND(*-non-private-member-*)
+
+    constexpr explicit operator std::string() {
+        // clang-format off
+        return "Pair<"
+               + core::debug::type_name<A>() + ", "
+               + core::debug::type_name<B>() + ">("
+               + "a: " + std::to_string(a) + ", "
+               + "b: " + std::to_string(b) + ")";
+        // clang-format on
     }
 };
 
-template<typename first, typename second, typename third>
+template<typename first, typename second = first, typename third = second>
 struct Triple {
     using A = first;
     using B = second;
     using C = third;
+    //NOLINTBEGIN(*-non-private-member-*)
     A a;
     B b;
     C c;
 
-    constexpr operator std::string() {
-        return "Triple<" + core::debug::type_name<A>() + ", "
+    //NOLINTEND(*-non-private-member-*)
+
+    constexpr explicit operator std::string() {
+        // clang-format off
+        return "Triple<"
+               + core::debug::type_name<A>() + ", "
                + core::debug::type_name<B>() + ", "
-               + core::debug::type_name<C>() + ">(" + ": " + std::to_string(a)
-               + ", " + ": " + std::to_string(b) + ", " + ": "
-               + std::to_string(c) + ")";
+               + core::debug::type_name<C>() + ">("
+               + "a: " + std::to_string(a) + ", "
+               + "b: " + std::to_string(b) + ", "
+               + "c: " + std::to_string(c) + ")";
+        // clang-format on
     }
 };
 
-template<typename T>
+template<
+    typename first,
+    typename second = first,
+    typename third  = second,
+    typename fourth = third>
 struct Quad {
-    static_assert(std::is_integral<T>() || std::is_floating_point<T>());
-    using Type = T;
-    Type tl;
-    Type bl;
-    Type br;
-    Type tr;
+    using A = first;
+    using B = second;
+    using C = third;
+    using D = fourth;
+    //NOLINTBEGIN(*-non-private-member-*)
+    A a;
+    B b;
+    C c;
+    D d;
 
-    constexpr operator std::string() {
-        return "Quad<" + core::debug::type_name<Type>() + ">(tl: "
-               + std::to_string(tl) + ", bl: " + std::to_string(bl) + ", br: "
-               + std::to_string(br) + ", tr: " + std::to_string(tr) + ")";
+    //NOLINTEND(*-non-private-member-*)
+
+    constexpr explicit operator std::string() {
+        // clang-format off
+        return "Quad<"
+               + core::debug::type_name<A>() + ", "
+               + core::debug::type_name<B>() + ", "
+               + core::debug::type_name<C>() + ">("
+               + "a: " + std::to_string(a) + ", "
+               + "b: " + std::to_string(b) + ", "
+               + "c: " + std::to_string(c) + ","
+               + "d: " + std::to_string(d) + ")";
+        // clang-format on
     }
 };
-
-extern template struct Quad<uint8_t>;
-extern template struct Quad<uint16_t>;
-extern template struct Quad<uint32_t>;
-extern template struct Quad<uint64_t>;
-extern template struct Quad<int8_t>;
-extern template struct Quad<int16_t>;
-extern template struct Quad<int32_t>;
-extern template struct Quad<int64_t>;
 
 } // namespace core

@@ -1,6 +1,7 @@
 #pragma once
 #include "raygame/core/config.h"
 #include <cstdlib>
+#include <cstring>
 #include <string>
 #include <typeinfo>
 
@@ -17,26 +18,32 @@ constexpr std::string type_name() {
         char* demangled_name =
             abi::__cxa_demangle(typeid(item).name(), nullptr, nullptr, nullptr);
         std::string ret_name{demangled_name};
-        free(demangled_name);
+        free(demangled_name); //NOLINT(*-no-malloc,*-owning-memory)
         if (ret_name == "unsigned char") {
             return "uint8_t";
-        } else if (ret_name == "signed char") {
-            return "int8_t";
-        } else if (ret_name == "unsigned short") {
-            return "uint16_t";
-        } else if (ret_name == "short") {
-            return "int16_t";
-        } else if (ret_name == "unsigned int") {
-            return "uint32_t";
-        } else if (ret_name == "int") {
-            return "int32_t";
-        } else if (ret_name == "unsigned long") {
-            return "uint64_t";
-        } else if (ret_name == "long") {
-            return "int64_t";
-        } else {
-            return ret_name;
         }
+        if (ret_name == "signed char") {
+            return "int8_t";
+        }
+        if (ret_name == "unsigned short") {
+            return "uint16_t";
+        }
+        if (ret_name == "short") {
+            return "int16_t";
+        }
+        if (ret_name == "unsigned int") {
+            return "uint32_t";
+        }
+        if (ret_name == "int") {
+            return "int32_t";
+        }
+        if (ret_name == "unsigned long") {
+            return "uint64_t";
+        }
+        if (ret_name == "long") {
+            return "int64_t";
+        }
+        return ret_name;
     } else {
         return {typeid(item).name()};
     }

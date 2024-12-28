@@ -1,9 +1,12 @@
 #include "raygame/core/logger.h"
-#include "raygame/core/window/detail/wayland.h"
+#include "raygame/core/window/wayland.h"
 #include <sys/mman.h>
 #include <unistd.h>
+#include <wayland-client-protocol.h>
+#include <xkbcommon/xkbcommon.h>
 
-const wl_keyboard_listener
+const wl_keyboard_listener&
+    // NOLINTNEXTLINE(*-reference-to-constructed-temporary)
     core::window::detail::WaylandImpl::m_wl_keyboard_listener = {
         .keymap      = wl_keyboard_keymap,
         .enter       = wl_keyboard_enter,
@@ -13,23 +16,31 @@ const wl_keyboard_listener
         .repeat_info = wl_keyboard_repeat_info,
 };
 
+namespace {
+constexpr size_t BUF_SIZE{128};
+constexpr int    ADD_VAL{8};
+} // namespace
+
+// NOLINTBEGIN(*-easily-swappable-parameters)
+
 void core::window::detail::WaylandImpl::wl_keyboard_enter(
-    [[maybe_unused]] void*        data,
+    void*                         data,
     [[maybe_unused]] wl_keyboard* wl_keyboard,
     [[maybe_unused]] uint32_t     serial,
     [[maybe_unused]] wl_surface*  surface,
-    [[maybe_unused]] wl_array*    keys
+    wl_array*                     keys
 ) {
-    WaylandImpl* this_impl = static_cast<WaylandImpl*>(data);
+    auto* this_impl = static_cast<WaylandImpl*>(data);
     for (size_t i = 0; i > keys->size; ++i) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunsafe-buffer-usage"
+        RAYGAME_CLANG_SUPPRESS_WARNING_PUSH
+        RAYGAME_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage")
+        // NOLINTNEXTLINE(*-pointer-arithmetic)
         char key = static_cast<char*>(keys->data)[i];
-#pragma clang diagnostic pop
-        std::array<char, 128> buf;
-        xkb_keysym_t          sym = xkb_state_key_get_one_sym(
+        RAYGAME_CLANG_SUPPRESS_WARNING_POP
+        std::array<char, BUF_SIZE> buf{};
+        xkb_keysym_t               sym = xkb_state_key_get_one_sym(
             this_impl->m_keyboard_state.m_xkb_state,
-            static_cast<xkb_keycode_t>(key + 8)
+            static_cast<xkb_keycode_t>(key + ADD_VAL)
         );
         xkb_keysym_get_name(sym, buf.data(), buf.size());
         log::trace("sym: {} ({})", buf.data(), sym);
@@ -37,17 +48,17 @@ void core::window::detail::WaylandImpl::wl_keyboard_enter(
 }
 
 void core::window::detail::WaylandImpl::wl_keyboard_key(
-    [[maybe_unused]] void*        data,
+    void*                         data,
     [[maybe_unused]] wl_keyboard* wl_keyboard,
     [[maybe_unused]] uint32_t     serial,
     [[maybe_unused]] uint32_t     time,
-    [[maybe_unused]] uint32_t     key,
-    [[maybe_unused]] uint32_t     state
+    uint32_t                      key,
+    uint32_t                      state
 ) {
-    WaylandImpl*          this_impl = static_cast<WaylandImpl*>(data);
-    std::array<char, 128> buf;
-    uint32_t              keycode = key + 8;
-    xkb_keysym_t          sym     = xkb_state_key_get_one_sym(
+    auto*                      this_impl = static_cast<WaylandImpl*>(data);
+    std::array<char, BUF_SIZE> buf{};
+    uint32_t                   keycode = key + ADD_VAL;
+    xkb_keysym_t               sym     = xkb_state_key_get_one_sym(
         this_impl->m_keyboard_state.m_xkb_state,
         keycode
     );
@@ -61,18 +72,18 @@ void core::window::detail::WaylandImpl::wl_keyboard_key(
 }
 
 void core::window::detail::WaylandImpl::wl_keyboard_keymap(
-    [[maybe_unused]] void*        data,
+    void*                         data,
     [[maybe_unused]] wl_keyboard* wl_keyboard,
-    [[maybe_unused]] uint32_t     format,
-    [[maybe_unused]] int32_t      fd,
-    [[maybe_unused]] uint32_t     size
+    uint32_t                      format,
+    int32_t                       fd, // NOLINT(*-identifier-length)
+    uint32_t                      size
 ) {
     core::condition::pre_condition(
         format == WL_KEYBOARD_KEYMAP_FORMAT_XKB_V1,
         "Invalid WL_KEYBOARD_KEYMAP_FORMAT"
     );
-    WaylandImpl* this_impl = static_cast<WaylandImpl*>(data);
-    char*        map_shm =
+    auto* this_impl = static_cast<WaylandImpl*>(data);
+    char* map_shm =
         static_cast<char*>(mmap(nullptr, size, PROT_READ, MAP_SHARED, fd, 0));
     core::condition::check_condition(
         map_shm != MAP_FAILED,
@@ -105,15 +116,15 @@ void core::window::detail::WaylandImpl::wl_keyboard_leave(
 }
 
 void core::window::detail::WaylandImpl::wl_keyboard_modifiers(
-    [[maybe_unused]] void*        data,
+    void*                         data,
     [[maybe_unused]] wl_keyboard* wl_keyboard,
     [[maybe_unused]] uint32_t     serial,
-    [[maybe_unused]] uint32_t     mods_depressed,
-    [[maybe_unused]] uint32_t     mods_latched,
-    [[maybe_unused]] uint32_t     mods_locked,
-    [[maybe_unused]] uint32_t     group
+    uint32_t                      mods_depressed,
+    uint32_t                      mods_latched,
+    uint32_t                      mods_locked,
+    uint32_t                      group
 ) {
-    WaylandImpl* this_impl = static_cast<WaylandImpl*>(data);
+    auto* this_impl = static_cast<WaylandImpl*>(data);
     xkb_state_update_mask(
         this_impl->m_keyboard_state.m_xkb_state,
         mods_depressed,
@@ -131,3 +142,5 @@ void core::window::detail::WaylandImpl::wl_keyboard_repeat_info(
     [[maybe_unused]] int32_t      rate,
     [[maybe_unused]] int32_t      delay
 ) {}
+
+// NOLINTEND(*-easily-swappable-parameters)

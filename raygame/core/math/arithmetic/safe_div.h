@@ -14,42 +14,34 @@ namespace core::math {
  * @tparam MR Defines the out-of-range behaviour
  * @pre @a b is not zero
  */
-template<typename Out_T, MathRule MR = core::math::MR_DEFAULT>
-constexpr Out_T safe_div(const auto a, const auto b) {
-    static_assert(
-        std::is_integral<Out_T>() && std::is_integral<decltype(a)>()
-        && std::is_integral<decltype(b)>()
-    );
-    using core::debug::type_name;
-    using core::exception::Condition;
-    using core::math::numeric_cast;
-    constexpr Out_T outmax = std::numeric_limits<Out_T>::max();
-    constexpr Out_T outmin = std::numeric_limits<Out_T>::lowest();
-
-    if (std::cmp_equal(b, 0)) {
-        throw Condition("Cannot divide by zero");
+template<std::integral Out_T, MathRule MR = core::math::MR_DEFAULT>
+constexpr Out_T
+safe_div(const std::integral auto aval, const std::integral auto bval) {
+    if (std::cmp_equal(bval, 0)) {
+        throw core::exception::Condition("Cannot divide by zero");
     }
-    if (std::cmp_equal(b, -1) && std::cmp_equal(a, outmin)) {
+    if (std::cmp_equal(bval, -1)
+        && std::cmp_equal(aval, std::numeric_limits<Out_T>::lowest())) {
         if constexpr (MR == MathRule::STRICT) {
-            throw Condition(std::format(
+            throw core::exception::Condition(std::format(
                 "Result of division ({} / {}) would overflow for output type "
                 "'{}'",
-                a,
-                b,
-                type_name<Out_T>()
+                aval,
+                bval,
+                core::debug::type_name<Out_T>()
             ));
         } else if constexpr (MR == MathRule::CLAMP) {
-            return outmax;
+            return std::numeric_limits<Out_T>::max();
         }
     }
-    if constexpr (std::is_signed<decltype(a)>()
-                  == std::is_signed<decltype(b)>()) {
-        return numeric_cast<Out_T, MR>(a / b);
+    if constexpr (std::is_signed<decltype(aval)>()
+                  == std::is_signed<decltype(bval)>()) {
+        return core::math::numeric_cast<Out_T, MR>(aval / bval);
     } else {
-        using work_t       = decltype(work_type(work_type(a, b), Out_T{}));
-        const work_t worka = static_cast<work_t>(a);
-        const work_t workb = static_cast<work_t>(b);
-        return numeric_cast<Out_T, MR>(worka / workb);
+        using work_t = decltype(work_type(work_type(aval, bval), Out_T{}));
+        return core::math::numeric_cast<Out_T, MR>(
+            static_cast<work_t>(aval) / static_cast<work_t>(bval)
+        );
     }
 }
 

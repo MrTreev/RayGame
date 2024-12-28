@@ -5,85 +5,88 @@
 #include "raygame/core/exception.h"
 #include "raygame/core/math/math.h"
 #include "raygame/core/math/numeric_cast.h"
-#include <concepts>
 #include <limits>
-#include <type_traits>
 #include <utility>
 
 namespace core::math {
-
 //! Add two numeric types ensuring no undesired change in value
 /*!
  * @tparam MR Defines the out-of-range behaviour
  */
-template<typename Out_T, MathRule MR = core::math::MR_DEFAULT>
-requires(std::integral<Out_T>)
-constexpr Out_T safe_add(const auto a, const auto b) {
-    static_assert(
-        std::is_integral<Out_T>() && std::is_integral<decltype(a)>()
-        && std::is_integral<decltype(b)>()
-    );
-    using core::debug::type_name;
-    using core::exception::Condition;
-    using core::math::numeric_cast;
-    constexpr Out_T outmax   = std::numeric_limits<Out_T>::max();
-    constexpr Out_T outmin   = std::numeric_limits<Out_T>::lowest();
-    using work_t             = decltype(work_type(work_type(a, b), Out_T{0}));
-    constexpr work_t workmin = static_cast<work_t>(outmin);
-    constexpr work_t workmax = static_cast<work_t>(outmax);
-
-    const work_t worka = static_cast<work_t>(a);
-    const work_t workb = static_cast<work_t>(b);
-
+template<std::integral Out_T, MathRule MR = core::math::MR_DEFAULT>
+constexpr Out_T
+// NOLINTNEXTLINE(*-cognitive-complexity)
+safe_add(const std::integral auto aval, const std::integral auto bval) {
+    using work_t = decltype(work_type(work_type(aval, bval), Out_T{0}));
     if constexpr (core::config::COMPILER_IS_GCC_LIKE
                   && !core::config::FORCE_GENERIC_IMPL) {
         Out_T res = 0;
-        if ((!__builtin_add_overflow(a, b, &res)) || (MR == MathRule::ALLOW)) {
+        if ((!__builtin_add_overflow(aval, bval, &res))
+            || (MR == MathRule::ALLOW)) {
             return res;
-        } else if constexpr (MR == MathRule::STRICT) {
-            throw Condition(std::format(
+        }
+        if constexpr (MR == MathRule::STRICT) {
+            throw core::exception::Condition(std::format(
                 "Result of addition ({} + {}) is outside the range of "
                 "output type '{}'",
-                a,
-                b,
-                type_name<Out_T>()
+                aval,
+                bval,
+                core::debug::type_name<Out_T>()
             ));
         } else if constexpr (MR == MathRule::CLAMP) {
-            if (std::cmp_greater(b, workmax - worka)
-                || std::cmp_greater(a, workmax - workb)) {
-                return outmax;
-            } else {
-                return outmin;
+            constexpr auto workmax =
+                static_cast<work_t>(std::numeric_limits<Out_T>::max());
+            if (std::cmp_greater(bval, workmax - static_cast<work_t>(aval))
+                || std::cmp_greater(
+                    aval,
+                    workmax - static_cast<work_t>(bval)
+                )) {
+                return std::numeric_limits<Out_T>::max();
             }
+            return std::numeric_limits<Out_T>::lowest();
+
+        } else {
+            core::condition::unknown("");
         }
-        RAYGAME_ELSE_UNKNOWN("");
     } else {
-        if (std::cmp_greater(a, 0) && std::cmp_greater(b, workmax - worka)) {
+        const auto worka = static_cast<work_t>(aval);
+        const auto workb = static_cast<work_t>(bval);
+
+        if (std::cmp_greater(aval, 0)
+            && std::cmp_greater(
+                bval,
+                static_cast<work_t>(std::numeric_limits<Out_T>::max()) - worka
+            )) {
             if constexpr (MR == MathRule::STRICT) {
-                throw Condition(std::format(
+                throw core::exception::Condition(std::format(
                     "Result of addition ({} + {}) is above the max for output "
                     "type '{}'",
-                    a,
-                    b,
-                    type_name<Out_T>()
+                    aval,
+                    bval,
+                    core::debug::type_name<Out_T>()
                 ));
             } else if constexpr (MR == MathRule::CLAMP) {
-                return outmax;
+                return std::numeric_limits<Out_T>::max();
             }
-        } else if (std::cmp_less(a, 0) && std::cmp_less(b, workmin - worka)) {
+        } else if (std::cmp_less(aval, 0)
+                   && std::cmp_less(
+                       bval,
+                       static_cast<work_t>(std::numeric_limits<Out_T>::lowest())
+                           - worka
+                   )) {
             if constexpr (MR == MathRule::STRICT) {
-                throw Condition(std::format(
+                throw core::exception::Condition(std::format(
                     "Result of addition ({} + {}) is below the min for output "
                     "type '{}'",
-                    a,
-                    b,
-                    type_name<Out_T>()
+                    aval,
+                    bval,
+                    core::debug::type_name<Out_T>()
                 ));
             } else if constexpr (MR == MathRule::CLAMP) {
-                return outmin;
+                return std::numeric_limits<Out_T>::lowest();
             }
         }
-        return numeric_cast<Out_T, MR>(worka + workb);
+        return core::math::numeric_cast<Out_T, MR>(worka + workb);
     }
 }
 

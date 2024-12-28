@@ -14,11 +14,11 @@ TEST_SUITE("core::math::rand") {
             val = rand(min_rand, max_rand);
         }
         CHECK_FALSE(all_same(test_arr));
-        CHECK_UNARY(std::all_of(test_arr.begin(), test_arr.end(), [](auto x) {
-            return x >= min_rand;
+        CHECK_UNARY(std::all_of(test_arr.begin(), test_arr.end(), [](auto val) {
+            return val >= min_rand;
         }));
-        CHECK_UNARY(std::all_of(test_arr.begin(), test_arr.end(), [](auto x) {
-            return x <= max_rand;
+        CHECK_UNARY(std::all_of(test_arr.begin(), test_arr.end(), [](auto val) {
+            return val <= max_rand;
         }));
     }
 }

@@ -1,7 +1,7 @@
 #pragma once
-#include "raygame/core/types.h"
 #include "raygame/core/math/arithmetic.h"
 #include "raygame/core/math/mathrule.h"
+#include "raygame/core/types.h"
 #include <string>
 
 namespace core {
@@ -10,16 +10,18 @@ template<typename T>
 struct Vec2 {
     using Type = T;
 
+    // NOLINTBEGIN(*-non-private-member-*)
     Type x;
     Type y;
+    // NOLINTEND(*-non-private-member-*)
 
     constexpr Vec2() = default;
 
-    constexpr Vec2(Type x_, Type y_)
-        : x(x_)
-        , y(y_) {}
+    constexpr Vec2(Type xval, Type yval)
+        : x(xval)
+        , y(yval) {}
 
-    constexpr operator std::string() const {
+    constexpr explicit operator std::string() const {
         return "Vec2(x: " + std::to_string(x) + ", y: " + std::to_string(y)
                + ")";
     }

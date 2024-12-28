@@ -1,10 +1,11 @@
 #pragma once
+#include "raygame/core/types.h"
 #include <string>
 
 namespace core::math {
 
 //! Rule for dealing with out-of-range errors
-enum class MathRule {
+enum class MathRule : uint8_t {
     //! Throw an exception
     STRICT,
     //! Do nothing, return whatever would be normally returned
@@ -20,14 +21,11 @@ static constexpr MathRule MR_DEFAULT = MathRule::STRICT;
 
 namespace core {
 
-constexpr std::string to_string(core::math::MathRule mr) {
-    switch (mr) {
-    case core::math::MathRule::STRICT:
-        return "STRICT";
-    case core::math::MathRule::ALLOW:
-        return "ALLOW";
-    case core::math::MathRule::CLAMP:
-        return "CLAMP";
+constexpr std::string to_string(core::math::MathRule rule) {
+    switch (rule) {
+    case core::math::MathRule::STRICT: return "STRICT";
+    case core::math::MathRule::ALLOW:  return "ALLOW";
+    case core::math::MathRule::CLAMP:  return "CLAMP";
     }
 }
 
