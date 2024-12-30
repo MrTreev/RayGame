@@ -13,116 +13,132 @@ public:
     using Dis_t = DistanceType;
 
 private:
-    Pos_t x{};
-    Pos_t y{};
-    Dis_t width{};
-    Dis_t height{};
+    Dis_t m_width{};
+    Dis_t m_height{};
+    Pos_t m_x{};
+    Pos_t m_y{};
 
 public:
     constexpr Rect() = default;
 
+    constexpr explicit Rect(Vec2<Dis_t> dist_vec)
+        : m_width(dist_vec.x)
+        , m_height(dist_vec.y)
+        , m_x(0)
+        , m_y(0) {}
+
     constexpr Rect(Vec2<Pos_t> pos_vec, Vec2<Dis_t> dist_vec)
-        : x(pos_vec.x)
-        , y(pos_vec.y)
-        , width(dist_vec.x)
-        , height(dist_vec.y) {}
+        : m_width(dist_vec.x)
+        , m_height(dist_vec.y)
+        , m_x(pos_vec.x)
+        , m_y(pos_vec.y) {}
 
     constexpr void zero() {
-        x      = 0;
-        y      = 0;
-        width  = 0;
-        height = 0;
+        m_x      = 0;
+        m_y      = 0;
+        m_width  = 0;
+        m_height = 0;
     }
 
     [[nodiscard]]
     constexpr Vec2<Pos_t> pos() const {
-        return {x, y};
+        return {m_x, m_y};
     }
 
     [[nodiscard]]
     constexpr Vec2<Dis_t> size() const {
-        return {width, height};
+        return {m_width, m_height};
+    }
+
+    [[nodiscard]]
+    constexpr Dis_t width() const {
+        return m_width;
+    }
+
+    [[nodiscard]]
+    constexpr Dis_t height() const {
+        return m_height;
     }
 
     constexpr explicit operator std::string() const {
-        return "Rect(x: " + std::to_string(x) + ", y: " + std::to_string(y)
-               + ", width: " + std::to_string(width)
-               + ", height: " + std::to_string(height) + ")";
+        return "Rect(x: " + std::to_string(m_x) + ", y: " + std::to_string(m_y)
+               + ", width: " + std::to_string(m_width)
+               + ", height: " + std::to_string(m_height) + ")";
     }
 
     template<typename P, typename D>
     constexpr bool operator==(const Rect<P, D>& other) const {
         return (
-            std::cmp_equal(x, other.x) && std::cmp_equal(y, other.y)
-            && std::cmp_equal(width, other.width)
-            && std::cmp_equal(height, other.height)
+            std::cmp_equal(m_x, other.m_x) && std::cmp_equal(m_y, other.m_y)
+            && std::cmp_equal(m_width, other.m_width)
+            && std::cmp_equal(m_height, other.m_height)
         );
     }
 
     template<math::MathRule MR = math::MR_DEFAULT>
     constexpr void pos(auto setx, auto sety) {
-        x = core::math::numeric_cast<Pos_t, MR>(setx);
-        y = core::math::numeric_cast<Pos_t, MR>(sety);
+        m_x = core::math::numeric_cast<Pos_t, MR>(setx);
+        m_y = core::math::numeric_cast<Pos_t, MR>(sety);
     }
 
     template<typename P, math::MathRule MR = math::MR_DEFAULT>
     constexpr void pos(Vec2<P> vec) {
-        x = core::math::numeric_cast<Pos_t, MR>(vec.x);
-        y = core::math::numeric_cast<Pos_t, MR>(vec.y);
+        m_x = core::math::numeric_cast<Pos_t, MR>(vec.x);
+        m_y = core::math::numeric_cast<Pos_t, MR>(vec.y);
     }
 
     template<math::MathRule MR = math::MR_DEFAULT>
     constexpr void size(auto set_width, auto set_height) {
-        width  = core::math::numeric_cast<Dis_t, MR>(set_width);
-        height = core::math::numeric_cast<Dis_t, MR>(set_height);
+        m_width  = core::math::numeric_cast<Dis_t, MR>(set_width);
+        m_height = core::math::numeric_cast<Dis_t, MR>(set_height);
     }
 
     template<typename P, math::MathRule MR = math::MR_DEFAULT>
     constexpr void size(Vec2<P> vec) {
-        width  = core::math::numeric_cast<Dis_t, MR>(vec.x);
-        height = core::math::numeric_cast<Dis_t, MR>(vec.y);
+        m_width  = core::math::numeric_cast<Dis_t, MR>(vec.x);
+        m_height = core::math::numeric_cast<Dis_t, MR>(vec.y);
     }
 
     template<typename P, math::MathRule MR = math::MR_DEFAULT>
     constexpr void translate(Vec2<P> vec) {
-        x = core::math::safe_add<Pos_t, MR>(x, vec.x);
-        y = core::math::safe_add<Pos_t, MR>(y, vec.y);
+        m_x = core::math::safe_add<Pos_t, MR>(m_x, vec.x);
+        m_y = core::math::safe_add<Pos_t, MR>(m_y, vec.y);
     }
 
     template<math::MathRule MR = math::MR_DEFAULT>
     constexpr void translate(auto translate_x, auto translate_y) {
-        x = core::math::safe_add<Pos_t, MR>(x, translate_x);
-        y = core::math::safe_add<Pos_t, MR>(y, translate_y);
+        m_x = core::math::safe_add<Pos_t, MR>(m_x, translate_x);
+        m_y = core::math::safe_add<Pos_t, MR>(m_y, translate_y);
     }
 
     template<typename D, math::MathRule MR = math::MR_DEFAULT>
     constexpr void scale_add(Vec2<D> vec) {
-        width  = core::math::safe_add<Dis_t, MR>(width, vec.x);
-        height = core::math::safe_add<Dis_t, MR>(height, vec.y);
+        m_width  = core::math::safe_add<Dis_t, MR>(m_width, vec.x);
+        m_height = core::math::safe_add<Dis_t, MR>(m_height, vec.y);
     }
 
     template<math::MathRule MR = math::MR_DEFAULT>
     constexpr void scale_add(auto width_add, auto height_add) {
-        width  = core::math::safe_add<Dis_t, MR>(width, width_add);
-        height = core::math::safe_add<Dis_t, MR>(height, height_add);
+        m_width  = core::math::safe_add<Dis_t, MR>(m_width, width_add);
+        m_height = core::math::safe_add<Dis_t, MR>(m_height, height_add);
     }
 
     template<typename D, math::MathRule MR = math::MR_DEFAULT>
     constexpr void scale_mult(Vec2<D> vec) {
-        width  = core::math::safe_mult<Dis_t, MR>(width, vec.x);
-        height = core::math::safe_mult<Dis_t, MR>(height, vec.y);
+        m_width  = core::math::safe_mult<Dis_t, MR>(m_width, vec.x);
+        m_height = core::math::safe_mult<Dis_t, MR>(m_height, vec.y);
     }
 
     template<math::MathRule MR = math::MR_DEFAULT>
     constexpr void scale_mult(auto width_mult, auto height_mult) {
-        width  = core::math::safe_mult<Dis_t, MR>(width, width_mult);
-        height = core::math::safe_mult<Dis_t, MR>(height, height_mult);
+        m_width  = core::math::safe_mult<Dis_t, MR>(m_width, width_mult);
+        m_height = core::math::safe_mult<Dis_t, MR>(m_height, height_mult);
     }
 
     template<math::MathRule MR = math::MR_DEFAULT>
     constexpr void scale_mult(auto mult) {
-        width  = core::math::safe_mult<Dis_t, MR>(width, mult);
-        height = core::math::safe_mult<Dis_t, MR>(height, mult);
+        m_width  = core::math::safe_mult<Dis_t, MR>(m_width, mult);
+        m_height = core::math::safe_mult<Dis_t, MR>(m_height, mult);
     }
 };
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "raygame/core/config.h"
+#include "raygame/core/drawing/image.h"
 #include "raygame/core/math/vector.h"
 #include <memory>
 #include <string>
@@ -23,8 +24,7 @@ private:
     bool         m_should_close = false;
     Vec2<size_t> m_size{DEFAULT_WINDOW_SIZE};
     std::string  m_title{DEFAULT_WINDOW_TITLE};
-    [[maybe_unused]]
-    WindowStyle m_style{DEFAULT_WINDOW_STYLE};
+    WindowStyle  m_style{DEFAULT_WINDOW_STYLE};
 
 protected:
     Window(Window&&)            = default;
@@ -53,6 +53,8 @@ protected:
 
     const WindowStyle& style() { return m_style; }
 
+    virtual void render_frame();
+
 public:
     virtual ~Window();
     Window(const Window&)           = delete;
@@ -63,7 +65,7 @@ public:
         self.set_style(style);
     }
 
-    virtual void render_frame();
+    virtual void draw(const drawing::Image& image);
 
     bool next_frame() {
         if (!should_close()) {

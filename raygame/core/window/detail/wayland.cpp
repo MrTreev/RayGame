@@ -5,6 +5,7 @@
 #include "raygame/core/math/arithmetic.h"
 #include "raygame/core/math/numeric_cast.h"
 #include "raygame/core/math/random.h"
+#include <algorithm>
 #include <cstring>
 #include <fcntl.h>
 #include <linux/input-event-codes.h>
@@ -29,7 +30,7 @@ constexpr std::string_view alnum =
 
 std::string random_string(
     const size_t&      length,
-    const std::string& valid_chars = alnum.data()
+    const std::string& valid_chars = {alnum.data(), alnum.length()}
 ) {
     std::string  ret;
     const size_t charlen = valid_chars.size() - 1;
@@ -52,7 +53,6 @@ int create_shm_file() {
             return shm_fd;
         }
     }
-
     post_condition(false, "Failed to create SHM File Descriptor");
     return -1;
 }
@@ -69,17 +69,20 @@ int allocate_shm_file(size_t size) {
 wl_shm_format get_colour_format() {
     using core::colour::rgba;
     using std::bit_cast;
-    constexpr auto colourval =
-        rgba(0b00000000, 0b11111111, 0b00111100, 0b11000011);
+    constexpr auto RVAL      = 0b00000000;
+    constexpr auto GVAL      = 0b11111111;
+    constexpr auto BVAL      = 0b00111100;
+    constexpr auto AVAL      = 0b11000011;
+    constexpr auto RGBA      = 0b00000000'11111111'00111100'11000011;
+    constexpr auto BGRA      = 0b00111100'11111111'00000000'11000011;
+    constexpr auto ABGR      = 0b11000011'00111100'11111111'00000000;
+    constexpr auto ARGB      = 0b11000011'00000000'11111111'00111100;
+    constexpr auto colourval = rgba(RVAL, GVAL, BVAL, AVAL);
     switch (bit_cast<uint32_t>(colourval)) {
-    case (0b11000011'00000000'11111111'00111100): // NOLINT(*-magic-numbers)
-        return WL_SHM_FORMAT_ARGB8888;
-    case (0b11000011'00111100'11111111'00000000): // NOLINT(*-magic-numbers)
-        return WL_SHM_FORMAT_ABGR8888;
-    case (0b00111100'11111111'00000000'11000011): // NOLINT(*-magic-numbers)
-        return WL_SHM_FORMAT_BGRA8888;
-    case (0b00000000'11111111'00111100'11000011): // NOLINT(*-magic-numbers)
-        return WL_SHM_FORMAT_RGBA8888;
+    case (ARGB): return WL_SHM_FORMAT_ARGB8888;
+    case (ABGR): return WL_SHM_FORMAT_ABGR8888;
+    case (BGRA): return WL_SHM_FORMAT_BGRA8888;
+    case (RGBA): return WL_SHM_FORMAT_RGBA8888;
     default:
         throw std::invalid_argument(std::format(
             "Could not determine colour format:\n"
@@ -88,7 +91,7 @@ wl_shm_format get_colour_format() {
             "RGBA set: {:0>32b}{:0>32b}{:0>32b}{:0>32b}\n"
             "BYTE NO:  00000000111111112222222233333333\n",
             bit_cast<uint32_t>(colourval),
-            (0b00000000'11111111'00111100'11000011), // NOLINT(*-magic-numbers)
+            RGBA,
             colourval.m_alpha,
             colourval.m_blue,
             colourval.m_green,
@@ -111,6 +114,7 @@ core::window::detail::WaylandImpl::keyboard_state::~keyboard_state() {
 
 core::window::detail::WaylandImpl::WaylandImpl(WaylandWindow* base)
     : m_base(base)
+    , m_wl_shm_format(get_colour_format())
     , m_size(base->win_size()) {
     // NOLINTNEXTLINE(*-prefer-member-initializer)
     m_wl_display = wl_display_connect(nullptr);
@@ -165,26 +169,31 @@ core::window::detail::WaylandImpl::~WaylandImpl() {
 void core::window::detail::WaylandImpl::new_buffer(core::Vec2<size_t> size) {
     const auto buflen  = safe_mult<size_t>(size.x, size.y);
     const auto bufsize = safe_mult<size_t>(buflen, COLOUR_CHANNELS);
-    const int  shm_fd  = allocate_shm_file(bufsize);
-    check_condition(shm_fd >= 0, "creation of shm buffer file failed");
-    auto* shm_data =
-        mmap(nullptr, bufsize, PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0);
-    if (shm_data == MAP_FAILED) {
-        close(shm_fd);
+    if (m_wl_shm_pool != nullptr) {
+        wl_shm_pool_destroy(m_wl_shm_pool);
+    }
+    if (m_shm_fd >= 0) {
+        close(m_shm_fd);
+    }
+    m_shm_fd = allocate_shm_file(bufsize);
+    check_condition(m_shm_fd >= 0, "creation of shm buffer file failed");
+    m_pixel_buffer = static_cast<uint8_t*>(
+        mmap(nullptr, bufsize, PROT_READ | PROT_WRITE, MAP_SHARED, m_shm_fd, 0)
+    );
+    if (m_pixel_buffer == MAP_FAILED) {
+        close(m_shm_fd);
         check_condition(false, "Could not setup shm data");
     }
-    wl_shm_pool* pool =
-        wl_shm_create_pool(m_wl_shm, shm_fd, numeric_cast<int32_t>(bufsize));
+    m_wl_shm_pool =
+        wl_shm_create_pool(m_wl_shm, m_shm_fd, numeric_cast<int32_t>(bufsize));
     m_wl_buffer = wl_shm_pool_create_buffer(
-        pool,
+        m_wl_shm_pool,
         0,
         numeric_cast<int32_t>(size.x),
         numeric_cast<int32_t>(size.y),
         safe_mult<int32_t>(size.x, COLOUR_CHANNELS),
-        get_colour_format()
+        m_wl_shm_format
     );
-    wl_shm_pool_destroy(pool);
-    close(shm_fd);
     check_ptr(m_wl_buffer, "Failed to create buffer");
 }
 
@@ -199,13 +208,13 @@ void core::window::detail::WaylandImpl::set_style(
     case WindowStyle::Windowed:
         xdg_toplevel_unset_fullscreen(m_xdg_toplevel);
         xdg_toplevel_unset_maximized(m_xdg_toplevel);
-        break;
+        return;
     case WindowStyle::WindowedFullscreen:
         xdg_toplevel_unset_fullscreen(m_xdg_toplevel);
         xdg_toplevel_set_maximized(m_xdg_toplevel);
-        break;
+        return;
     case WindowStyle::Fullscreen:
         xdg_toplevel_set_fullscreen(m_xdg_toplevel, nullptr);
-        break;
+        return;
     }
 }

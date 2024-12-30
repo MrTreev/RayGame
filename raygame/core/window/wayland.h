@@ -16,6 +16,7 @@ struct wl_registry_listener;
 struct wl_seat;
 struct wl_seat_listener;
 struct wl_shm;
+struct wl_shm_pool;
 struct wl_surface;
 struct xdg_surface;
 struct xdg_surface_listener;
@@ -31,7 +32,6 @@ namespace core::window {
 class WaylandWindow;
 
 namespace detail {
-
 class WaylandImpl {
     using wl_fixed_t = int32_t;
 
@@ -75,6 +75,10 @@ class WaylandImpl {
     pointer_event  m_pointer_event{};
     keyboard_state m_keyboard_state;
 
+    int      m_shm_fd = -1;
+    uint32_t m_wl_shm_format;
+    uint8_t* m_pixel_buffer = nullptr;
+
     wl_buffer*     m_wl_buffer     = nullptr;
     wl_callback*   m_wl_callback   = nullptr;
     wl_compositor* m_wl_compositor = nullptr;
@@ -84,6 +88,7 @@ class WaylandImpl {
     wl_registry*   m_wl_registry   = nullptr;
     wl_seat*       m_wl_seat       = nullptr;
     wl_shm*        m_wl_shm        = nullptr;
+    wl_shm_pool*   m_wl_shm_pool   = nullptr;
     wl_surface*    m_wl_surface    = nullptr;
     xdg_surface*   m_xdg_surface   = nullptr;
     xdg_toplevel*  m_xdg_toplevel  = nullptr;
@@ -141,6 +146,21 @@ public:
     void new_buffer(core::Vec2<size_t> size);
     void render_frame();
     void set_style(WindowStyle style);
+
+    uint8_t* data() { return m_pixel_buffer; }
+
+    [[nodiscard]]
+    const size_t& buf_width() const {
+        return m_size.x;
+    }
+
+    [[nodiscard]]
+    const size_t& buf_height() const {
+        return m_size.y;
+    }
+
+    // NOLINTNEXTLINE(*-pointer-arithmetic)
+    uint8_t* data_row(size_t col) { return &m_pixel_buffer[col * m_size.x]; }
 };
 
 } // namespace detail
@@ -160,6 +180,8 @@ public:
 
     void set_style(WindowStyle style);
     void render_frame() final;
+    void draw(const drawing::Image& image) final;
+    void draw_line(std::span<const Pixel> line, Vec2<size_t> pos);
 
 private:
     friend class detail::WaylandImpl;

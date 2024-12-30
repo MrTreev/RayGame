@@ -4,7 +4,15 @@
 #include "raygame/core/window/x11.h"
 
 core::window::Window::~Window() = default;
-void core::window::Window::render_frame(){ log::error("base"); }
+
+void core::window::Window::render_frame() {
+    log::error("base");
+}
+
+void core::window::Window::draw([[maybe_unused]] const drawing::Image& image) {
+    log::error("base");
+}
+
 std::unique_ptr<core::window::Window> core::window::dispatch(
     Vec2<size_t> size,
     std::string  title,

@@ -7,6 +7,8 @@ module(
 bazel_dep(name = "platforms", version = "0.0.10")
 bazel_dep(name = "rules_cc", version = "0.1.0")
 bazel_dep(name = "doctest", version = "2.4.11")
+bazel_dep(name = "aspect_bazel_lib", version = "2.10.0")
+
 
 bazel_dep(name = "hedron_compile_commands", dev_dependency = True)
 git_override(
@@ -30,7 +32,7 @@ llvm = use_extension(
 llvm.toolchain(
 	llvm_version = "19.1.0",
 	cxx_standard = {"": "c++23"},
-    stdlib = {"": "stdc++"},
+    stdlib = {"": "builtin-libc++"},
     compile_flags = {"": [
         # Security
         "-fstack-protector",
@@ -56,6 +58,8 @@ llvm.toolchain(
         "-Wno-c++20-extensions",
         "-Wno-unused-macros",
         "-Wno-unsafe-buffer-usage",
+        "-Wno-c23-extensions",
+        "-g",
     ]},
 )
 use_repo(llvm, "llvm_toolchain")

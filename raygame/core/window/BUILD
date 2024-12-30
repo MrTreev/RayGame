@@ -23,6 +23,7 @@ rg_cc_library(
 	],
 	deps = [
 		"//raygame/core/math:vector",
+		"//raygame/core/drawing:image",
 	],
     implementation_deps = [
 		"//raygame/core:condition",

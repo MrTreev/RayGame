@@ -1,0 +1,13 @@
+#include "games/image/defs.h"
+#include "raygame/core/drawing/image.h"
+#include "raygame/core/window/window.h"
+constexpr core::Vec2<size_t> IMG_SIZE = {400, 400};
+
+int main() {
+    auto mywindow = core::window::dispatch(IMG_SIZE);
+
+    const core::drawing::Image image{resources::icon_argb8888, IMG_SIZE};
+    while (mywindow->next_frame()) {
+        mywindow->draw(image);
+    }
+}
