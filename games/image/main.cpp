@@ -4,10 +4,9 @@
 constexpr core::Vec2<size_t> IMG_SIZE = {400, 400};
 
 int main() {
-    auto mywindow = core::window::dispatch(IMG_SIZE);
-
+    core::window::Window       mywindow{IMG_SIZE};
     const core::drawing::Image image{resources::icon_argb8888, IMG_SIZE};
-    while (mywindow->next_frame()) {
-        mywindow->draw(image);
+    while (mywindow.next_frame()) {
+        mywindow.draw(image);
     }
 }

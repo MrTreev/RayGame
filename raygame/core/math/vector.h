@@ -22,8 +22,7 @@ struct Vec2 {
         , y(yval) {}
 
     constexpr explicit operator std::string() const {
-        return "Vec2(x: " + std::to_string(x) + ", y: " + std::to_string(y)
-               + ")";
+        return std::format("Vec2(x: {}, y: {})", x, y);
     }
 
     template<typename U, core::math::MathRule MR = core::math::MR_DEFAULT>

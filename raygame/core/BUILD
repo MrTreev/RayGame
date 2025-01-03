@@ -18,6 +18,26 @@ rg_cc_single(
 
 rg_cc_single(
     name = "config",
+    defines = [
+        ] + select({
+            "//rules/gui:dwm":      ["RAYGAME_GUI_BACKEND_DWM"],
+            "//rules/gui:cocoa":    ["RAYGAME_GUI_BACKEND_COCOA"],
+            "//rules/gui:wayland":  ["RAYGAME_GUI_BACKEND_WAYLAND"],
+            "//rules/gui:x11":      ["RAYGAME_GUI_BACKEND_X11"],
+            "//conditions:default": [],
+        }) + select({
+            "//rules/log/level:trace":    ["RAYGAME_LOG_TRACE"],
+            "//rules/log/level:debug":    ["RAYGAME_LOG_DEBUG"],
+            "//rules/log/level:info":     ["RAYGAME_LOG_INFO"],
+            "//rules/log/level:note":     ["RAYGAME_LOG_NOTE"],
+            "//rules/log/level:progress": ["RAYGAME_LOG_PROGRESS"],
+            "//rules/log/level:warning":  ["RAYGAME_LOG_WARNING"],
+            "//rules/log/level:error":    ["RAYGAME_LOG_ERROR"],
+            "//rules/log/level:fatal":    ["RAYGAME_LOG_FATAL"],
+        }) + select({
+            "//rules/log/source_location:enabled":  ["RAYGAME_ENABLE_SOURCE_LOC"],
+            "//rules/log/source_location:disabled": ["RAYGAME_DISABLE_SOURCE_LOC"],
+        }),
 )
 
 rg_cc_single(
@@ -37,16 +57,6 @@ rg_cc_single(
         ":config",
         ":types",
     ],
-    defines = select({
-        "//rules/logging:trace":    ["RAYGAME_LOG_TRACE"],
-        "//rules/logging:debug":    ["RAYGAME_LOG_DEBUG"],
-        "//rules/logging:info":     ["RAYGAME_LOG_INFO"],
-        "//rules/logging:note":     ["RAYGAME_LOG_NOTE"],
-        "//rules/logging:progress": ["RAYGAME_LOG_PROGRESS"],
-        "//rules/logging:warning":  ["RAYGAME_LOG_WARNING"],
-        "//rules/logging:error":    ["RAYGAME_LOG_ERROR"],
-        "//rules/logging:fatal":    ["RAYGAME_LOG_FATAL"],
-    }),
 )
 
 rg_cc_single(

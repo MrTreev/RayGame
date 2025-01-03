@@ -2,6 +2,7 @@
 #include "raygame/core/debug.h"
 #include <cstddef> // IWYU pragma: export
 #include <cstdint> // IWYU pragma: export
+#include <format>
 #include <string>
 
 namespace core {
@@ -40,13 +41,13 @@ struct Pair {
     //NOLINTEND(*-non-private-member-*)
 
     constexpr explicit operator std::string() {
-        // clang-format off
-        return "Pair<"
-               + core::debug::type_name<A>() + ", "
-               + core::debug::type_name<B>() + ">("
-               + "a: " + std::to_string(a) + ", "
-               + "b: " + std::to_string(b) + ")";
-        // clang-format on
+        return std::format(
+            "Pair<{}, {}>(a: {}, b: {})",
+            core::debug::type_name<A>(),
+            core::debug::type_name<B>(),
+            a,
+            b
+        );
     }
 };
 
@@ -63,15 +64,15 @@ struct Triple {
     //NOLINTEND(*-non-private-member-*)
 
     constexpr explicit operator std::string() {
-        // clang-format off
-        return "Triple<"
-               + core::debug::type_name<A>() + ", "
-               + core::debug::type_name<B>() + ", "
-               + core::debug::type_name<C>() + ">("
-               + "a: " + std::to_string(a) + ", "
-               + "b: " + std::to_string(b) + ", "
-               + "c: " + std::to_string(c) + ")";
-        // clang-format on
+        return std::format(
+            "Triple<{}, {}, {}>(a: {}, b: {}, c: {})",
+            core::debug::type_name<A>(),
+            core::debug::type_name<B>(),
+            core::debug::type_name<C>(),
+            a,
+            b,
+            c
+        );
     }
 };
 
@@ -92,18 +93,18 @@ struct Quad {
     D d;
 
     //NOLINTEND(*-non-private-member-*)
-
     constexpr explicit operator std::string() {
-        // clang-format off
-        return "Quad<"
-               + core::debug::type_name<A>() + ", "
-               + core::debug::type_name<B>() + ", "
-               + core::debug::type_name<C>() + ">("
-               + "a: " + std::to_string(a) + ", "
-               + "b: " + std::to_string(b) + ", "
-               + "c: " + std::to_string(c) + ","
-               + "d: " + std::to_string(d) + ")";
-        // clang-format on
+        return std::format(
+            "Quad<{}, {}, {}, {}>(a: {}, b: {}, c: {}, d: {})",
+            core::debug::type_name<A>(),
+            core::debug::type_name<B>(),
+            core::debug::type_name<C>(),
+            core::debug::type_name<D>(),
+            a,
+            b,
+            c,
+            d
+        );
     }
 };
 

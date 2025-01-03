@@ -30,17 +30,13 @@ static_assert(false, "This game's code uses features from the C++23 standard");
 
 /*!
  *  @defgroup macros_config_window_backend Window Backend
- *  Enable or disable support for window backends
+ *  Set the window backend
  *  @{
  */
-#    define RAYGAME_ENABLE_WAYLAND
-#    define RAYGAME_DISABLE_WAYLAND
-#    define RAYGAME_ENABLE_X11
-#    define RAYGAME_DISABLE_X11
-#    define RAYGAME_ENABLE_DWM
-#    define RAYGAME_DISABLE_DWM
-#    define RAYGAME_ENABLE_COCOA
-#    define RAYGAME_DISABLE_COCOA
+#    define RAYGAME_GUI_BACKEND_WAYLAND
+#    define RAYGAME_GUI_BACKEND_X11
+#    define RAYGAME_GUI_BACKEND_DWM
+#    define RAYGAME_GUI_BACKEND_COCOA
 //! @}
 
 /*!
@@ -152,13 +148,11 @@ static constexpr std::string DEFAULT_WINDOW_TITLE =
 //! @{
 #    define RAYGAME_OS_ANDROID
 #    define RAYGAME_OS_BSD
-#    define RAYGAME_OS_CYGWIN
 #    define RAYGAME_OS_HURD
-#    define RAYGAME_OS_QNX
-#    define RAYGAME_OS_INTEGRITY
 #    define RAYGAME_OS_MAC
-#    define RAYGAME_OS_WIN64
+#    define RAYGAME_OS_QNX
 #    define RAYGAME_OS_WIN32
+#    define RAYGAME_OS_WIN64
 //! @}
 
 //! @defgroup macros_machine_simd SIMD instructions
@@ -293,16 +287,14 @@ namespace core::config {
 //! Operating System Definitions
 #if (__STDC_HOSTED__ == 1)
 enum class OperatingSystem : std::uint8_t {
-    ANDROID,   //!< Android OS
-    BSD,       //!< BSD
-    CYGWIN,    //!< Cygwin Unix-like environment for Windows
-    HURD,      //!< GNU Hurd
-    LINUX,     //!< Linux
-    INTEGRITY, //!< Greenhills Integrity
-    MAC,       //!< Mac OS
-    QNX,       //!< QNX RTOS
-    WIN64,     //!< Windows 64-Bit
-    WIN32,     //!< Windows 32-Bit
+    ANDROID, //!< Android OS
+    BSD,     //!< BSD
+    HURD,    //!< GNU Hurd
+    LINUX,   //!< Linux
+    MAC,     //!< Mac OS
+    QNX,     //!< QNX RTOS
+    WIN64,   //!< Windows 64-Bit
+    WIN32,   //!< Windows 32-Bit
 };
 
 #    if defined(__ANDROID__)
@@ -314,10 +306,6 @@ static_assert(false, "Not tested on Android yet");
 #        define RAYGAME_OS_BSD
 static constexpr OperatingSystem OPERATING_SYSTEM = OperatingSystem::BSD;
 static_assert(false, "Not tested on BSD yet");
-#    elif defined(__CYGWIN__)
-#        define RAYGAME_OS_CYGWIN
-static constexpr OperatingSystem OPERATING_SYSTEM = OperatingSystem::CYGWIN;
-static_assert(false, "Not tested on Cygwin yet");
 #    elif defined(__GNU__) || defined(__gnu_hurd__)
 #        define RAYGAME_OS_HURD
 #        warning "Imagine using hurd, who are you? Richard Stallman?"
@@ -332,12 +320,6 @@ static constexpr OperatingSystem OPERATING_SYSTEM = OperatingSystem::LINUX;
 #        warning "What possessed you to try running games on QNX?"
 static constexpr OperatingSystem OPERATING_SYSTEM = OperatingSystem::QNX;
 static_assert(false, "Not tested on QNX");
-#    elif defined(__INTEGRITY)
-#        define RAYGAME_OS_INTEGRITY
-#        warning "Why? Just why?"
-#        warning "What possessed you to try running games on GHS Integrity OS?"
-static constexpr OperatingSystem OPERATING_SYSTEM = OperatingSystem::INTEGRITY;
-static_assert(false, "Not tested on Integrity");
 #    elif defined(macintosh) || defined(Macintosh)                             \
         || (defined(__APPLE__) && defined(__MACH__))
 #        define RAYGAME_OS_MAC
@@ -371,54 +353,25 @@ static_assert(false, "Cannot run without an OS");
 
 namespace core::config {
 //! Window Backends
-struct WindowBackend {
-    //! Support for Wayland
-    static consteval bool wayland_enabled() {
-#if defined(RAYGAME_ENABLE_WAYLAND)
-        return true;
-#elif defined(RAYGAME_DISABLE_WAYLAND)
-        return false;
-#else
-        return (OPERATING_SYSTEM == OperatingSystem::LINUX)
-               || (OPERATING_SYSTEM == OperatingSystem::BSD);
-#endif
-    }
-
-    //! Support for Xorg X11
-    static consteval bool x11_enabled() {
-#if defined(RAYGAME_ENABLE_X11)
-        return true;
-#elif defined(RAYGAME_DISABLE_X11)
-        return false;
-#else
-        return (OPERATING_SYSTEM == OperatingSystem::LINUX)
-               || (OPERATING_SYSTEM == OperatingSystem::BSD);
-#endif
-    }
-
-    //! Support for Windows DWM
-    static consteval bool dwm_enabled() {
-#if defined(RAYGAME_ENABLE_DWM)
-        return true;
-#elif defined(RAYGAME_DISABLE_DWM)
-        return false;
-#else
-        return (OPERATING_SYSTEM == OperatingSystem::WIN32)
-               || (OPERATING_SYSTEM == OperatingSystem::WIN64);
-#endif
-    }
-
-    //! Support for MacOS Cocoa
-    static consteval bool cocoa_enabled() {
-#if defined(RAYGAME_ENABLE_COCOA)
-        return true;
-#elif defined(RAYGAME_DISABLE_COCOA)
-        return false;
-#else
-        return OPERATING_SYSTEM == OperatingSystem::MAC;
-#endif
-    }
+enum class GuiBackend : std::uint8_t {
+    COCOA,
+    DWM,
+    WAYLAND,
+    X11,
 };
+
+#if defined(RAYGAME_GUI_BACKEND_COCOA)
+static constexpr GuiBackend GUI_BACKEND = GuiBackend::COCOA;
+#elif defined(RAYGAME_GUI_BACKEND_DWM)
+static constexpr GuiBackend GUI_BACKEND = GuiBackend::DWM;
+#elif defined(RAYGAME_GUI_BACKEND_WAYLAND)
+static constexpr GuiBackend GUI_BACKEND = GuiBackend::WAYLAND;
+#elif defined(RAYGAME_GUI_BACKEND_X11)
+static constexpr GuiBackend GUI_BACKEND = GuiBackend::X11;
+#else
+#    error "No GUI backend set"
+static_assert(false, "No GUI backend set");
+#endif
 
 } // namespace core::config
 

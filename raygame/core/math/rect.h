@@ -61,9 +61,13 @@ public:
     }
 
     constexpr explicit operator std::string() const {
-        return "Rect(x: " + std::to_string(m_x) + ", y: " + std::to_string(m_y)
-               + ", width: " + std::to_string(m_width)
-               + ", height: " + std::to_string(m_height) + ")";
+        return std::format(
+            "Rect(x: {}, y: {}, width: {}, height: {})",
+            m_x,
+            m_y,
+            m_width,
+            m_height
+        );
     }
 
     template<typename P, typename D>

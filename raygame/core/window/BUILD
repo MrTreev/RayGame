@@ -1,43 +1,43 @@
 load("//rules:rg_cc_singlefile.bzl", "rg_cc_library")
+COCOA_DEPS = []
+
+DWM_DEPS = []
+
+WAYLAND_DEPS = [
+    "//raygame/core:logger",
+    "//raygame/core/drawing:colour",
+    "//raygame/core/math:random",
+    "//third_party/wayland",
+    "//third_party/system/xkbcommon"
+]
+
+X11_DEPS = [
+    "//third_party/system/x11",
+]
 
 rg_cc_library(
     name = "window",
-	hdrs = [
-		"window.h",
-		"x11.h",
-		"wayland.h",
-	],
-	srcs = [
-		"window.cpp",
-		"x11.cpp",
-		"wayland.cpp",
-		"detail/wayland.cpp",
-		"detail/wl_keyboard.cpp",
-		"detail/wl_pointer.cpp",
-		"detail/wl_registry.cpp",
-		"detail/wl_seat.cpp",
-		"detail/wl_surface.cpp",
-		"detail/xdg_surface.cpp",
-		"detail/xdg_toplevel.cpp",
-		"detail/xdg_wm_base.cpp",
-	],
-	deps = [
-		"//raygame/core/math:vector",
-		"//raygame/core/drawing:image",
-	],
-    implementation_deps = [
-		"//raygame/core:condition",
-		"//raygame/core:logger",
-		"//raygame/core:types",
-		"//raygame/core/drawing:colour",
-		"//raygame/core/math:arithmetic",
-		"//raygame/core/math:numeric_cast",
-		"//raygame/core/math:random",
-        "//third_party/wayland",
-        "//third_party/system/xkbcommon",
-        "//third_party/system/x11",
+    hdrs = ["window.h"],
+    srcs = ["window.cpp"] + select({
+        "//rules/gui:cocoa":    ["cocoa.cpp"],
+        "//rules/gui:dwm":      ["dwm.cpp"],
+        "//rules/gui:wayland":  ["wayland.cpp"],
+        "//rules/gui:x11":      ["x11.cpp"],
+        "//conditions:default": [],
+    }),
+    deps = [
+        "//raygame/core:config",
+        "//raygame/core/math:vector",
+        "//raygame/core/drawing:image",
     ],
-	visibility = [ "//visibility:public" ]
+    implementation_deps = [] + select({
+        "//rules/gui:cocoa":    COCOA_DEPS,
+        "//rules/gui:dwm":      DWM_DEPS,
+        "//rules/gui:wayland":  WAYLAND_DEPS,
+        "//rules/gui:x11":      X11_DEPS,
+        "//conditions:default": [],
+    }),
+    visibility = [ "//visibility:public" ],
 )
 
 filegroup(

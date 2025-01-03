@@ -1,3 +1,9 @@
+# Build defaults
+common --compilation_mode dbg
+common --verbose_failures
+
+build --flag_alias=gui=//rules/gui:linux_backend
+
 # for system_library rule
 common --experimental_starlark_cc_import
 common --experimental_repo_remote_exec
@@ -10,7 +16,7 @@ common --nolegacy_external_runfiles
 
 # Coverage builds
 coverage --config=coverage
-build:coverage -c dbg
+build:coverage --compilation_mode dbg
 build:coverage --action_env=BAZEL_USE_LLVM_NATIVE_COVERAGE=1
 build:coverage --action_env=GCOV=llvm-profdata
 build:coverage --action_env=BAZEL_LLVM_COV=llvm-cov
