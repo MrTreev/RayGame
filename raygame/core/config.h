@@ -287,14 +287,15 @@ namespace core::config {
 //! Operating System Definitions
 #if (__STDC_HOSTED__ == 1)
 enum class OperatingSystem : std::uint8_t {
-    ANDROID, //!< Android OS
-    BSD,     //!< BSD
-    HURD,    //!< GNU Hurd
-    LINUX,   //!< Linux
-    MAC,     //!< Mac OS
-    QNX,     //!< QNX RTOS
-    WIN64,   //!< Windows 64-Bit
-    WIN32,   //!< Windows 32-Bit
+    ANDROID,  //!< Android OS
+    BSD,      //!< BSD
+    HURD,     //!< GNU Hurd
+    LINUX,    //!< Linux
+    MAC,      //!< Mac OS
+    QNX,      //!< QNX RTOS
+    TEMPLEOS, //!< TempleOS
+    WIN32,    //!< Windows 32-Bit
+    WIN64,    //!< Windows 64-Bit
 };
 
 #    if defined(__ANDROID__)
@@ -356,23 +357,10 @@ namespace core::config {
 enum class GuiBackend : std::uint8_t {
     COCOA,
     DWM,
+    TEMPLE,
     WAYLAND,
     X11,
 };
-
-#if defined(RAYGAME_GUI_BACKEND_COCOA)
-static constexpr GuiBackend GUI_BACKEND = GuiBackend::COCOA;
-#elif defined(RAYGAME_GUI_BACKEND_DWM)
-static constexpr GuiBackend GUI_BACKEND = GuiBackend::DWM;
-#elif defined(RAYGAME_GUI_BACKEND_WAYLAND)
-static constexpr GuiBackend GUI_BACKEND = GuiBackend::WAYLAND;
-#elif defined(RAYGAME_GUI_BACKEND_X11)
-static constexpr GuiBackend GUI_BACKEND = GuiBackend::X11;
-#else
-#    error "No GUI backend set"
-static_assert(false, "No GUI backend set");
-#endif
-
 } // namespace core::config
 
 //=============================================================================

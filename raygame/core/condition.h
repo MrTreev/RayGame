@@ -92,32 +92,28 @@ RAYGAME_CLANG_SUPPRESS_WARNING("-Wmissing-noreturn")
 
 //! Function to mark an unknown case
 /*!
- *  @throws core::exception::Condition If pointer is null
+ *  @throws core::exception::Condition If hit
  */
 constexpr void unknown(
     const std::string&          name,
     const std::source_location& loc = std::source_location::current()
 ) {
-    if constexpr (core::config::BUILD_TYPE
-                  == core::config::BuildType::RELEASE) {
-        ::core::condition::detail::conditionlog("Unknown " + name, loc);
+    if constexpr (config::BUILD_TYPE == config::BuildType::RELEASE) {
+        detail::conditionlog("Unknown " + name, loc);
     } else {
-        throw core::exception::Condition("Unknown " + name);
+        throw exception::Condition("Unknown " + name);
     }
 }
 
 //! Function to mark an unreachable code block
 /*!
- *  @throws core::exception::Condition If pointer is null
+ *  @throws core::exception::Condition If hit
  */
+[[noreturn]]
 constexpr void
 unreachable(const std::source_location& loc = std::source_location::current()) {
-    if constexpr (core::config::BUILD_TYPE
-                  == core::config::BuildType::RELEASE) {
-        ::core::condition::detail::conditionlog(
-            "Reached block marked unreachable",
-            loc
-        );
+    if constexpr (config::BUILD_TYPE == config::BuildType::RELEASE) {
+        detail::conditionlog("Reached block marked unreachable", loc);
         throw exception::Unreachable("Reached block marked unreachable");
     } else {
         std::unreachable();
@@ -126,17 +122,14 @@ unreachable(const std::source_location& loc = std::source_location::current()) {
 
 //! Function to mark an unimplemented code block
 /*!
- *  @throws core::exception::Condition If pointer is null
+ *  @throws core::exception::Condition If hit
  */
+[[noreturn]]
 constexpr void unimplemented(
     const std::source_location& loc = std::source_location::current()
 ) {
-    if constexpr (core::config::BUILD_TYPE
-                  == core::config::BuildType::RELEASE) {
-        ::core::condition::detail::conditionlog(
-            "Reached block marked unimplemented",
-            loc
-        );
+    if constexpr (config::BUILD_TYPE == config::BuildType::RELEASE) {
+        detail::conditionlog("Reached block marked unimplemented", loc);
     } else {
         throw exception::Unimplemented("Unimplemented");
     }

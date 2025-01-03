@@ -18,13 +18,19 @@ X11_DEPS = [
 rg_cc_library(
     name = "window",
     hdrs = ["window.h"],
-    srcs = ["window.cpp"] + select({
-        "//rules/gui:cocoa":    ["cocoa.cpp"],
-        "//rules/gui:dwm":      ["dwm.cpp"],
-        "//rules/gui:wayland":  ["wayland.cpp"],
-        "//rules/gui:x11":      ["x11.cpp"],
-        "//conditions:default": [],
-    }),
+    srcs = [
+        "detail/cocoa.cpp",
+        "detail/cocoa.h",
+        "detail/dwm.cpp",
+        "detail/dwm.h",
+        "detail/temple.cpp",
+        "detail/temple.h",
+        "detail/wayland.cpp",
+        "detail/wayland.h",
+        "detail/x11.cpp",
+        "detail/x11.h",
+        "window.cpp",
+    ],
     deps = [
         "//raygame/core:config",
         "//raygame/core/math:vector",
