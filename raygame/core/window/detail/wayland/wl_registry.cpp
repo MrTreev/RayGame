@@ -3,8 +3,7 @@
 #include <wayland-client-protocol.h>
 #include <xdg-shell-client-protocol.h>
 
-const wl_registry_listener&
-    // NOLINTNEXTLINE(*-reference-to-constructed-temporary)
+const wl_registry_listener
     core::window::detail::WaylandWindowImpl::m_wl_registry_listener = {
         .global        = wl_registry_handle_global,
         .global_remove = wl_registry_handle_global_remove,

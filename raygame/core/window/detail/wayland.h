@@ -37,10 +37,12 @@ private:
     void new_buffer();
     void set_style(WindowStyle style);
 
-    uint8_t* data() { return m_pixel_buffer; }
+    Pixel* data() { return m_pixel_buffer; }
 
     // NOLINTNEXTLINE(*-pointer-arithmetic)
-    uint8_t* data_row(size_t col) { return &m_pixel_buffer[col * width()]; }
+    Pixel* data_row(size_t col) { return &m_pixel_buffer[col * width()]; }
+
+    void draw_line(std::span<const Pixel> line, Vec2<size_t> pos);
 
     using wl_fixed_t = int32_t;
 
@@ -91,7 +93,7 @@ private:
 
     int      m_shm_fd = -1;
     uint32_t m_wl_shm_format;
-    uint8_t* m_pixel_buffer = nullptr;
+    Pixel* m_pixel_buffer = nullptr;
 
     wl_buffer*     m_wl_buffer     = nullptr;
     wl_callback*   m_wl_callback   = nullptr;
@@ -111,7 +113,7 @@ private:
     // clang-format off
     static void wl_keyboard_enter(void *data, wl_keyboard *wl_keyboard, uint32_t serial, wl_surface *surface, wl_array *keys);
     static void wl_keyboard_key(void *data, wl_keyboard *wl_keyboard, uint32_t serial, uint32_t time, uint32_t key, uint32_t state);
-    static void wl_keyboard_keymap(void *data, wl_keyboard *wl_keyboard, uint32_t format, int32_t fd, uint32_t size); // NOLINT(*-identifier-length)
+    static void wl_keyboard_keymap(void *data, wl_keyboard *wl_keyboard, uint32_t format, int32_t shm_fd, uint32_t size);
     static void wl_keyboard_leave(void *data, wl_keyboard *wl_keyboard, uint32_t serial, wl_surface *surface);
     static void wl_keyboard_modifiers(void *data, wl_keyboard *wl_keyboard, uint32_t serial, uint32_t mods_depressed, uint32_t mods_latched, uint32_t mods_locked, uint32_t group);
     static void wl_keyboard_repeat_info(void *data, wl_keyboard *wl_keyboard, int32_t rate, int32_t delay);
@@ -139,13 +141,13 @@ private:
     static void xdg_wm_base_handle_ping(void* data, xdg_wm_base* xdg_wm_base, uint32_t serial);
     // clang-format on
 
-    static const wl_callback_listener&  m_wl_surface_frame_listener;
-    static const wl_keyboard_listener&  m_wl_keyboard_listener;
-    static const wl_pointer_listener&   m_wl_pointer_listener;
-    static const wl_registry_listener&  m_wl_registry_listener;
-    static const wl_seat_listener&      m_wl_seat_listener;
-    static const xdg_surface_listener&  m_xdg_surface_listener;
-    static const xdg_toplevel_listener& m_xdg_toplevel_listener;
-    static const xdg_wm_base_listener&  m_xdg_wm_base_listener;
+    static const wl_callback_listener  m_wl_surface_frame_listener;
+    static const wl_keyboard_listener  m_wl_keyboard_listener;
+    static const wl_pointer_listener   m_wl_pointer_listener;
+    static const wl_registry_listener  m_wl_registry_listener;
+    static const wl_seat_listener      m_wl_seat_listener;
+    static const xdg_surface_listener  m_xdg_surface_listener;
+    static const xdg_toplevel_listener m_xdg_toplevel_listener;
+    static const xdg_wm_base_listener  m_xdg_wm_base_listener;
 };
 } // namespace core::window::detail

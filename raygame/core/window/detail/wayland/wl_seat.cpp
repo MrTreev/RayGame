@@ -2,8 +2,7 @@
 #include "raygame/core/window/detail/wayland.h"
 #include <wayland-client-protocol.h>
 
-// NOLINTNEXTLINE(*-reference-to-constructed-temporary)
-const wl_seat_listener&
+const wl_seat_listener
     core::window::detail::WaylandWindowImpl::m_wl_seat_listener = {
         .capabilities = wl_seat_handle_capabilities,
         .name         = wl_seat_name,

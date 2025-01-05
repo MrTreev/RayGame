@@ -3,8 +3,7 @@
 #include "raygame/core/window/detail/wayland.h"
 #include <wayland-client-protocol.h>
 
-const wl_pointer_listener&
-    // NOLINTNEXTLINE(*-reference-to-constructed-temporary)
+const wl_pointer_listener
     core::window::detail::WaylandWindowImpl::m_wl_pointer_listener = {
         .enter                   = wl_pointer_handle_enter,
         .leave                   = wl_pointer_handle_leave,

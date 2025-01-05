@@ -1,5 +1,4 @@
-#include "raygame/core/window/window.h" // IWYU pragma: keep
-#include "raygame/core/condition.h"
+#include "raygame/core/window/window.h" // IWYU pragma: keep #include "raygame/core/condition.h"
 #include "raygame/core/config.h"
 #include "raygame/core/logger.h"
 #include "raygame/core/window/detail/cocoa.h"

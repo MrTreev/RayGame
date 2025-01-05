@@ -1,8 +1,7 @@
 #include "raygame/core/window/detail/wayland.h"
 #include <xdg-shell-client-protocol.h>
 
-const xdg_wm_base_listener&
-    // NOLINTNEXTLINE(*-reference-to-constructed-temporary)
+const xdg_wm_base_listener
     core::window::detail::WaylandWindowImpl::m_xdg_wm_base_listener = {
         .ping = xdg_wm_base_handle_ping,
 };

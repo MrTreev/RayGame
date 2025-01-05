@@ -171,10 +171,28 @@ core::window::detail::WaylandWindowImpl::~WaylandWindowImpl() {
     }
 }
 
+void core::window::detail::WaylandWindowImpl::draw_line(
+    std::span<const Pixel> line,
+    Vec2<size_t>           pos
+) {
+    const std::span line_view{data_row(pos.y), width()};
+    log::debug("line.size(): {}", line.size());
+    log::debug("line_view.size(): {}", line_view.size());
+    const auto size_min = std::min(line.size(), line_view.size());
+    for (size_t idx{0}; idx < size_min - 1; ++idx) {
+        log::debug("idx: {}", idx);
+        const auto& pixel = line[idx];
+        log::debug("pixel: {}", pixel.tostring());
+        line_view[idx] = pixel;
+    }
+}
+
 void core::window::detail::WaylandWindowImpl::draw(const drawing::Image& image
 ) {
     if constexpr (config::EnabledBackends::wayland()) {
-        std::ignore = image;
+        for (size_t col{0}; col < image.height(); ++col) {
+            draw_line(image.row(col), {0, col});
+        }
     } else {
         core::condition::unreachable();
     }
@@ -233,18 +251,14 @@ bool core::window::detail::WaylandWindowImpl::should_close() const {
 
 void core::window::detail::WaylandWindowImpl::new_buffer() {
     if constexpr (config::EnabledBackends::wayland()) {
-        const auto size    = get_size();
-        const auto buflen  = safe_mult<size_t>(size.x, size.y);
+        const auto buflen  = safe_mult<size_t>(width(), height());
         const auto bufsize = safe_mult<size_t>(buflen, COLOUR_CHANNELS);
-        if (m_wl_shm_pool != nullptr) {
-            wl_shm_pool_destroy(m_wl_shm_pool);
-        }
         if (m_shm_fd >= 0) {
             close(m_shm_fd);
         }
         m_shm_fd = allocate_shm_file(bufsize);
         check_condition(m_shm_fd >= 0, "creation of shm buffer file failed");
-        m_pixel_buffer = static_cast<uint8_t*>(mmap(
+        m_pixel_buffer = static_cast<Pixel*>(mmap(
             nullptr,
             bufsize,
             PROT_READ | PROT_WRITE,
@@ -264,11 +278,14 @@ void core::window::detail::WaylandWindowImpl::new_buffer() {
         m_wl_buffer = wl_shm_pool_create_buffer(
             m_wl_shm_pool,
             0,
-            numeric_cast<int32_t>(size.x),
-            numeric_cast<int32_t>(size.y),
-            safe_mult<int32_t>(size.x, COLOUR_CHANNELS),
+            numeric_cast<int32_t>(width()),
+            numeric_cast<int32_t>(height()),
+            safe_mult<int32_t>(width(), COLOUR_CHANNELS),
             m_wl_shm_format
         );
+        if (m_wl_shm_pool != nullptr) {
+            wl_shm_pool_destroy(m_wl_shm_pool);
+        }
         check_ptr(m_wl_buffer, "Failed to create buffer");
     } else {
         core::condition::unreachable();

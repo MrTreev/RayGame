@@ -2,8 +2,7 @@
 #include <wayland-client-protocol.h>
 #include <xdg-shell-client-protocol.h>
 
-const xdg_surface_listener&
-    // NOLINTNEXTLINE(*-reference-to-constructed-temporary)
+const xdg_surface_listener
     core::window::detail::WaylandWindowImpl::m_xdg_surface_listener = {
         .configure = xdg_surface_handle_configure,
 };

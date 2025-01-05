@@ -5,8 +5,7 @@
 #include <wayland-client-protocol.h>
 #include <xkbcommon/xkbcommon.h>
 
-const wl_keyboard_listener&
-    // NOLINTNEXTLINE(*-reference-to-constructed-temporary)
+const wl_keyboard_listener
     core::window::detail::WaylandWindowImpl::m_wl_keyboard_listener = {
         .keymap      = wl_keyboard_keymap,
         .enter       = wl_keyboard_enter,
@@ -32,11 +31,8 @@ void core::window::detail::WaylandWindowImpl::wl_keyboard_enter(
 ) {
     auto* this_impl = static_cast<WaylandWindowImpl*>(data);
     for (size_t i = 0; i > keys->size; ++i) {
-        RAYGAME_CLANG_SUPPRESS_WARNING_PUSH
-        RAYGAME_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage")
         // NOLINTNEXTLINE(*-pointer-arithmetic)
-        const char key = static_cast<char*>(keys->data)[i];
-        RAYGAME_CLANG_SUPPRESS_WARNING_POP
+        const char                 key = static_cast<char*>(keys->data)[i];
         std::array<char, BUF_SIZE> buf{};
         xkb_keysym_t               sym = xkb_state_key_get_one_sym(
             this_impl->m_keyboard_state.m_xkb_state,
@@ -75,7 +71,7 @@ void core::window::detail::WaylandWindowImpl::wl_keyboard_keymap(
     void*                         data,
     [[maybe_unused]] wl_keyboard* wl_keyboard,
     uint32_t                      format,
-    int32_t                       fd, // NOLINT(*-identifier-length)
+    int32_t                       shm_fd,
     uint32_t                      size
 ) {
     core::condition::pre_condition(
@@ -84,7 +80,8 @@ void core::window::detail::WaylandWindowImpl::wl_keyboard_keymap(
     );
     auto* this_impl = static_cast<WaylandWindowImpl*>(data);
     char* map_shm =
-        static_cast<char*>(mmap(nullptr, size, PROT_READ, MAP_SHARED, fd, 0));
+        static_cast<char*>(mmap(nullptr, size, PROT_READ, MAP_SHARED, shm_fd, 0)
+        );
     core::condition::check_condition(
         map_shm != MAP_FAILED,
         "Failed keyboard shm map"
@@ -97,7 +94,7 @@ void core::window::detail::WaylandWindowImpl::wl_keyboard_keymap(
     );
     core::condition::check_ptr(xkb_keymap, "Failed to create new xkb_keymap");
     munmap(map_shm, size);
-    close(fd);
+    close(shm_fd);
     xkb_state* xkb_state = xkb_state_new(xkb_keymap);
     core::condition::check_ptr(xkb_state, "Failed to create new xkb_state");
     xkb_keymap_unref(this_impl->m_keyboard_state.m_xkb_keymap);

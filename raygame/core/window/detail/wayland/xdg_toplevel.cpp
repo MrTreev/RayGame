@@ -1,8 +1,7 @@
 #include "raygame/core/window/detail/wayland.h"
 #include <xdg-shell-client-protocol.h>
 
-const xdg_toplevel_listener&
-    // NOLINTNEXTLINE(*-reference-to-constructed-temporary)
+const xdg_toplevel_listener
     core::window::detail::WaylandWindowImpl::m_xdg_toplevel_listener = {
         .configure        = xdg_toplevel_handle_configure,
         .close            = xdg_toplevel_handle_close,

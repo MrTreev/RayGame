@@ -1,8 +1,7 @@
 #include "raygame/core/window/detail/wayland.h"
 #include <wayland-client-protocol.h>
 
-const wl_callback_listener&
-    // NOLINTNEXTLINE(*-reference-to-constructed-temporary)
+const wl_callback_listener
     core::window::detail::WaylandWindowImpl::m_wl_surface_frame_listener{
         .done = wl_surface_handle_done,
     };
