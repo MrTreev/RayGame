@@ -1,23 +1,26 @@
 #pragma once
 #include "raygame/core/types.h"
-struct wl_keyboard;
-struct wl_array;
-struct wl_surface;
-struct wl_keyboard_listener;
-struct xkb_context;
-struct xkb_keymap;
-struct xkb_state;
+#include <wayland-client.h>
+#include <xkbcommon/xkbcommon.h>
 
-namespace core::window::detail::wayland {
+namespace core::window::detail {
 class WaylandKeyboard {
-    static void wl_keyboard_enter(
+    static constexpr size_t BUF_SIZE      = 128;
+    static constexpr int    ADD_VAL       = 8;
+    wl_keyboard*            m_wl_keyboard = nullptr;
+    xkb_state*              m_xkb_state   = nullptr;
+    xkb_keymap*             m_xkb_keymap  = nullptr;
+    xkb_context*            m_xkb_context = nullptr;
+
+    static void enter(
         void*        data,
         wl_keyboard* wl_keyboard,
         uint32_t     serial,
         wl_surface*  surface,
         wl_array*    keys
     );
-    static void wl_keyboard_key(
+
+    static void key( //
         void*        data,
         wl_keyboard* wl_keyboard,
         uint32_t     serial,
@@ -25,20 +28,23 @@ class WaylandKeyboard {
         uint32_t     key,
         uint32_t     state
     );
-    static void wl_keyboard_keymap(
+
+    static void keymap(
         void*        data,
         wl_keyboard* wl_keyboard,
         uint32_t     format,
-        int32_t      fd, // NOLINT(*-identifier-length)
+        int32_t      shm_fd,
         uint32_t     size
     );
-    static void wl_keyboard_leave(
+
+    static void leave(
         void*        data,
         wl_keyboard* wl_keyboard,
         uint32_t     serial,
         wl_surface*  surface
     );
-    static void wl_keyboard_modifiers(
+
+    static void modifiers(
         void*        data,
         wl_keyboard* wl_keyboard,
         uint32_t     serial,
@@ -47,17 +53,15 @@ class WaylandKeyboard {
         uint32_t     mods_locked,
         uint32_t     group
     );
-    static void wl_keyboard_repeat_info(
+
+    static void repeat_info(
         void*        data,
         wl_keyboard* wl_keyboard,
         int32_t      rate,
         int32_t      delay
     );
 
-private:
-    wl_keyboard* m_wl_keyboard = nullptr;
-    xkb_state*   m_xkb_state   = nullptr;
-    xkb_keymap*  m_xkb_keymap  = nullptr;
-    xkb_context* m_xkb_context = nullptr;
+public:
+    static const wl_keyboard_listener m_listener;
 };
-} // namespace core::window::detail::wayland
+} // namespace core::window::detail
