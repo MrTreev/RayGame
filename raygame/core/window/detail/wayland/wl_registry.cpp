@@ -1,14 +1,16 @@
-#include "raygame/core/window/detail/wayland/registry.h"
 #include "raygame/core/logger.h"
 #include "raygame/core/window/detail/wayland.h"
+#include <wayland-client-protocol.h>
+#include <xdg-shell-client-protocol.h>
 
-namespace core::window::detail {
-const wl_registry_listener WaylandRegistry::listener{
-    .global        = global,
-    .global_remove = global_remove,
+const wl_registry_listener&
+    // NOLINTNEXTLINE(*-reference-to-constructed-temporary)
+    core::window::detail::WaylandWindowImpl::m_wl_registry_listener = {
+        .global        = wl_registry_handle_global,
+        .global_remove = wl_registry_handle_global_remove,
 };
 
-void WaylandRegistry::global(
+void core::window::detail::WaylandWindowImpl::wl_registry_handle_global(
     void*        data,
     wl_registry* registry,
     uint32_t     name,
@@ -19,9 +21,9 @@ void WaylandRegistry::global(
     const std::string interface_str{interface};
     if (interface_str == wl_shm_interface.name) {
         core::log::trace("Handled Global: {}", interface);
-        this_impl->m_surface.bind_shm(static_cast<wl_shm*>(
+        this_impl->m_wl_shm = static_cast<wl_shm*>(
             wl_registry_bind(registry, name, &wl_shm_interface, version)
-        ));
+        );
     } else if (interface_str == wl_compositor_interface.name) {
         core::log::trace("Handled Global: {}", interface);
         this_impl->m_wl_compositor = static_cast<wl_compositor*>(
@@ -29,9 +31,9 @@ void WaylandRegistry::global(
         );
     } else if (interface_str == xdg_wm_base_interface.name) {
         core::log::trace("Handled Global: {}", interface);
-        this_impl->m_base.bind(static_cast<xdg_wm_base*>(
+        this_impl->m_xdg_wm_base = static_cast<xdg_wm_base*>(
             wl_registry_bind(registry, name, &xdg_wm_base_interface, version)
-        ));
+        );
         xdg_wm_base_add_listener(
             this_impl->m_xdg_wm_base,
             &m_xdg_wm_base_listener,
@@ -52,4 +54,13 @@ void WaylandRegistry::global(
     }
 }
 
-} // namespace core::window::detail
+void core::window::detail::WaylandWindowImpl::wl_registry_handle_global_remove(
+    void*        data,
+    wl_registry* registry,
+    uint32_t     name
+) {
+    [[maybe_unused]]
+    auto* this_impl = static_cast<WaylandWindowImpl*>(data);
+    wl_registry_destroy(registry);
+    core::log::trace("removed registry: {}", name);
+}

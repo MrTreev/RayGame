@@ -20,12 +20,6 @@ rg_cc_single(
     name = "config",
     defines = [
         ] + select({
-            "//rules/gui:dwm":      ["RAYGAME_GUI_BACKEND_DWM"],
-            "//rules/gui:cocoa":    ["RAYGAME_GUI_BACKEND_COCOA"],
-            "//rules/gui:wayland":  ["RAYGAME_GUI_BACKEND_WAYLAND"],
-            "//rules/gui:x11":      ["RAYGAME_GUI_BACKEND_X11"],
-            "//conditions:default": [],
-        }) + select({
             "//rules/log/level:trace":    ["RAYGAME_LOG_TRACE"],
             "//rules/log/level:debug":    ["RAYGAME_LOG_DEBUG"],
             "//rules/log/level:info":     ["RAYGAME_LOG_INFO"],

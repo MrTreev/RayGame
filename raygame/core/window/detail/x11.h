@@ -1,5 +1,11 @@
 #pragma once
 #include "raygame/core/window/window.h"
+#if defined(RAYGAME_GUI_BACKEND_X11)
+RAYGAME_CLANG_SUPPRESS_WARNING_PUSH
+RAYGAME_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage")
+#    include <X11/Xlib.h>
+RAYGAME_CLANG_SUPPRESS_WARNING_POP
+#endif
 
 namespace core::window::detail {
 class X11WindowImpl final: public WindowImpl {
@@ -26,5 +32,13 @@ public:
 
     [[nodiscard]]
     bool should_close() const final;
+
+private:
+#if defined(RAYGAME_GUI_BACKEND_X11)
+    ::Display* m_display = nullptr;
+    int        m_screen  = 0;
+    ::XEvent   m_event{};
+    ::Window   m_window{};
+#endif
 };
 } // namespace core::window::detail

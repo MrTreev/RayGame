@@ -1,8 +1,6 @@
 load("//rules:rg_cc_singlefile.bzl", "rg_cc_library")
 COCOA_DEPS = []
-
 DWM_DEPS = []
-
 WAYLAND_DEPS = [
     "//raygame/core:logger",
     "//raygame/core/drawing:colour",
@@ -10,7 +8,6 @@ WAYLAND_DEPS = [
     "//third_party/wayland",
     "//third_party/system/xkbcommon"
 ]
-
 X11_DEPS = [
     "//third_party/system/x11",
 ]
@@ -19,17 +16,25 @@ rg_cc_library(
     name = "window",
     hdrs = ["window.h"],
     srcs = [
-        "detail/cocoa.cpp",
-        "detail/cocoa.h",
-        "detail/dwm.cpp",
-        "detail/dwm.h",
-        "detail/temple.cpp",
-        "detail/temple.h",
-        "detail/wayland.cpp",
-        "detail/wayland.h",
-        "detail/x11.cpp",
-        "detail/x11.h",
         "window.cpp",
+        "detail/cocoa.h",
+        "detail/dwm.h",
+        "detail/temple.h",
+        "detail/wayland.h",
+        "detail/x11.h",
+        "detail/cocoa.cpp",
+        "detail/dwm.cpp",
+        "detail/temple.cpp",
+        "detail/wayland.cpp",
+        "detail/wayland/wl_keyboard.cpp",
+        "detail/wayland/wl_pointer.cpp",
+        "detail/wayland/wl_registry.cpp",
+        "detail/wayland/wl_seat.cpp",
+        "detail/wayland/wl_surface.cpp",
+        "detail/wayland/xdg_surface.cpp",
+        "detail/wayland/xdg_toplevel.cpp",
+        "detail/wayland/xdg_wm_base.cpp",
+        "detail/x11.cpp",
     ],
     deps = [
         "//raygame/core:config",

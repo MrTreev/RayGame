@@ -1,39 +1,69 @@
 #include "raygame/core/window/detail/x11.h"
 #include "raygame/core/condition.h"
-#if defined(RAYGAME_GUI_BACKEND_X11)
-RAYGAME_CLANG_SUPPRESS_WARNING_PUSH
-RAYGAME_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage")
-#    include <X11/Xlib.h>
-RAYGAME_CLANG_SUPPRESS_WARNING_POP
-#endif
+#include <utility>
 
 core::window::detail::X11WindowImpl::X11WindowImpl(
     Vec2<size_t> size,
     std::string  title,
     WindowStyle  style
 )
-    : WindowImpl(size, std::move(title), style) {}
+    : WindowImpl(size, std::move(title), style) {
+    if constexpr (config::EnabledBackends::x11()) {
+        std::ignore = m_display;
+        std::ignore = m_screen;
+        std::ignore = m_event;
+        std::ignore = m_window;
+    } else {
+        core::condition::unreachable();
+    }
+}
 
-core::window::detail::X11WindowImpl::~X11WindowImpl() = default;
+core::window::detail::X11WindowImpl::~X11WindowImpl() {
+    if constexpr (config::EnabledBackends::x11()) {
+        //XCloseDisplay(m_display);
+    } else {
+        std::unreachable();
+    }
+}
 
 void core::window::detail::X11WindowImpl::draw(const drawing::Image& image) {
-    std::ignore = image;
-    condition::unimplemented();
+    if constexpr (config::EnabledBackends::x11()) {
+        std::ignore = image;
+        condition::unimplemented();
+    } else {
+        core::condition::unreachable();
+    }
 }
 
 void core::window::detail::X11WindowImpl::restyle(WindowStyle style) {
-    std::ignore = style;
-    condition::unimplemented();
+    if constexpr (config::EnabledBackends::x11()) {
+        std::ignore = style;
+        condition::unimplemented();
+    } else {
+        core::condition::unreachable();
+    }
 }
 
 void core::window::detail::X11WindowImpl::render_frame() {
-    condition::unimplemented();
+    if constexpr (config::EnabledBackends::x11()) {
+        condition::unimplemented();
+    } else {
+        core::condition::unreachable();
+    }
 }
 
 bool core::window::detail::X11WindowImpl::next_frame() {
-    condition::unimplemented();
+    if constexpr (config::EnabledBackends::x11()) {
+        condition::unimplemented();
+    } else {
+        core::condition::unreachable();
+    }
 }
 
 bool core::window::detail::X11WindowImpl::should_close() const {
-    condition::unimplemented();
+    if constexpr (config::EnabledBackends::x11()) {
+        condition::unimplemented();
+    } else {
+        core::condition::unreachable();
+    }
 }
