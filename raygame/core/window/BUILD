@@ -5,6 +5,7 @@ WAYLAND_DEPS = [
     "//raygame/core:logger",
     "//raygame/core/drawing:colour",
     "//raygame/core/math:random",
+    "//raygame/core/math:ring_average",
     "//third_party/wayland",
     "//third_party/system/xkbcommon"
 ]

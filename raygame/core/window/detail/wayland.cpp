@@ -235,12 +235,13 @@ bool core::window::detail::WaylandWindowImpl::next_frame() {
             render_frame();
         }
         m_frame_end = clock_t::now();
-        using units = std::chrono::milliseconds;
+        using units = std::chrono::microseconds;
         const auto frame_time =
             std::chrono::duration_cast<units>(m_frame_end - m_frame_beg)
                 .count();
-        log::trace("Frame rendered in: {}ms", frame_time);
-        std::print("Frame Time (ms): {}\r", frame_time);
+        log::trace("Frame rendered in: {}us", frame_time);
+        m_counter.add(static_cast<size_t>(frame_time));
+        std::print("Frame Time (us): {}\r", m_counter.average());
         return !should_close();
     } else {
         core::condition::unreachable();

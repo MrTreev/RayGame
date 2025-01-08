@@ -101,7 +101,7 @@ constexpr void unknown(
     if constexpr (config::BUILD_TYPE == config::BuildType::RELEASE) {
         detail::conditionlog("Unknown " + name, loc);
     } else {
-        throw exception::Condition("Unknown " + name);
+        throw exception::UnknownCase("Unknown " + name);
     }
 }
 

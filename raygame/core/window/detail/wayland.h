@@ -1,6 +1,9 @@
 #pragma once
+#include "raygame/core/config.h"
+#include "raygame/core/math/ring_average.h"
 #include "raygame/core/window/window.h"
 #include <chrono>
+#include <cstddef>
 #include <wayland-client-protocol.h>
 #include <xdg-shell-client-protocol.h>
 #include <xkbcommon/xkbcommon.h>
@@ -37,6 +40,8 @@ private:
     using timepoint_t = std::chrono::time_point<clock_t>;
     timepoint_t m_frame_beg;
     timepoint_t m_frame_end;
+
+    math::RingAverage<size_t, config::TARGET_FPS> m_counter;
 
     bool m_should_close{false};
 

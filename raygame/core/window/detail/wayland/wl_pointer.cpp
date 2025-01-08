@@ -175,8 +175,8 @@ void core::window::detail::WaylandWindowImpl::wl_pointer_handle_frame(
     void*                        data,
     [[maybe_unused]] wl_pointer* wl_pointer
 ) {
-    auto*          this_impl = static_cast<WaylandWindowImpl*>(data);
-    pointer_event& event     = this_impl->m_pointer_event;
+    const auto*          this_impl = static_cast<WaylandWindowImpl*>(data);
+    const pointer_event& event     = this_impl->m_pointer_event;
     if ((event.event_mask & POINTER_EVENT_ENTER) != 0U) {
         core::log::trace(
             "Pointer Entry ({}, {})",
@@ -195,11 +195,20 @@ void core::window::detail::WaylandWindowImpl::wl_pointer_handle_frame(
         );
     }
     if ((event.event_mask & POINTER_EVENT_BUTTON) != 0U) {
-        if ((event.state & WL_POINTER_BUTTON_STATE_PRESSED) != 0U) {
-            core::log::trace("Button {} pressed", event.button);
-        } else if ((event.state & WL_POINTER_BUTTON_STATE_RELEASED) != 0U) {
+        if (event.state == WL_POINTER_BUTTON_STATE_PRESSED) {
+            core::log::trace(
+                "Button {} pressed at {}",
+                event.button,
+                std::string(core::Vec2<double>(
+                    wl_fixed_to_double(event.surface_x),
+                    wl_fixed_to_double(event.surface_y)
+                ))
+            );
+        } else if (event.state == WL_POINTER_BUTTON_STATE_RELEASED) {
             core::log::trace("Button {} released", event.button);
         } else {
+            core::log::error("Button {}", event.button);
+            core::log::error("State  {}", event.state);
             core::condition::unknown("button state");
         }
     }
@@ -225,7 +234,6 @@ void core::window::detail::WaylandWindowImpl::wl_pointer_handle_frame(
             core::log::trace(handle_axis(event.axis_vertical));
         }
     }
-    event = {};
 }
 
 void core::window::detail::WaylandWindowImpl::wl_pointer_handle_leave(
