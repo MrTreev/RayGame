@@ -7,9 +7,9 @@ const wl_callback_listener
     };
 
 void core::window::detail::WaylandWindowImpl::wl_surface_handle_done(
-    void*        data,
-    wl_callback* wl_callback,
-    uint32_t     time
+    void*                     data,
+    wl_callback*              wl_callback,
+    [[maybe_unused]] uint32_t time
 ) {
     auto* this_impl = static_cast<WaylandWindowImpl*>(data);
     wl_callback_destroy(wl_callback);
@@ -30,5 +30,4 @@ void core::window::detail::WaylandWindowImpl::wl_surface_handle_done(
         math::numeric_cast<int32_t>(size.y)
     );
     wl_surface_commit(this_impl->m_wl_surface);
-    this_impl->m_last_frame = time;
 }

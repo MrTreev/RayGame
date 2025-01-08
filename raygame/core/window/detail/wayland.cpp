@@ -1,4 +1,5 @@
 #include "raygame/core/window/detail/wayland.h"
+#include <chrono>
 #if defined(RAYGAME_GUI_BACKEND_WAYLAND)
 #    include "raygame/core/condition.h"
 #    include "raygame/core/drawing/colour.h"
@@ -6,6 +7,7 @@
 #    include "raygame/core/math/random.h"
 #    include <algorithm>
 #    include <fcntl.h>
+#    include <print>
 #    include <sys/mman.h>
 #    include <unistd.h>
 #    include <utility>
@@ -176,14 +178,10 @@ void core::window::detail::WaylandWindowImpl::draw_line(
     Vec2<size_t>           pos
 ) {
     const std::span line_view{data_row(pos.y), width()};
-    log::debug("line.size(): {}", line.size());
-    log::debug("line_view.size(): {}", line_view.size());
-    const auto size_min = std::min(line.size(), line_view.size());
+    const auto      size_min = std::min(line.size(), line_view.size());
     for (size_t idx{0}; idx < size_min - 1; ++idx) {
-        log::debug("idx: {}", idx);
         const auto& pixel = line[idx];
-        log::debug("pixel: {}", pixel.tostring());
-        line_view[idx] = pixel;
+        line_view[idx]    = pixel;
     }
 }
 
@@ -232,9 +230,17 @@ void core::window::detail::WaylandWindowImpl::render_frame() {
 
 bool core::window::detail::WaylandWindowImpl::next_frame() {
     if constexpr (config::EnabledBackends::wayland()) {
+        m_frame_beg = clock_t::now();
         if (!should_close()) {
             render_frame();
         }
+        m_frame_end = clock_t::now();
+        using units = std::chrono::milliseconds;
+        const auto frame_time =
+            std::chrono::duration_cast<units>(m_frame_end - m_frame_beg)
+                .count();
+        log::trace("Frame rendered in: {}ms", frame_time);
+        std::print("Frame Time (ms): {}\r", frame_time);
         return !should_close();
     } else {
         core::condition::unreachable();

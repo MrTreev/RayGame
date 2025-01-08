@@ -6,13 +6,12 @@
 #include <format>
 #include <mdspan>
 #include <span>
-#include <vector>
 
 namespace core::drawing {
 //! Non-owning Image type
 class Image {
-    Rect<size_t>     m_rect;
-    std::span<Pixel> m_buffer;
+    Rect<size_t>           m_rect;
+    std::span<const Pixel> m_buffer;
 
     [[nodiscard]]
     constexpr size_t idx(size_t row, size_t col) const {
@@ -31,16 +30,15 @@ public:
     template<size_t img_size>
     constexpr explicit Image(
         [[maybe_unused]]
-        const std::array<uint8_t, img_size>& in_buf,
-        Vec2<size_t>                         size
+        const std::array<const uint8_t, img_size>& in_buf,
+        Vec2<size_t>                               size
     )
-        : m_rect(size) {}
-
-    constexpr explicit Image(
-        [[maybe_unused]] const std::vector<uint8_t>& in_buf,
-        Vec2<size_t>                                 size
-    )
-        : m_rect(size) {}
+        : m_rect(size)
+        , m_buffer(
+              reinterpret_cast<const std::array<const Pixel, img_size / 4>&>(
+                  in_buf
+              )
+          ) {}
 
     [[nodiscard]]
     constexpr std::span<const Pixel> row(size_t col) const {
@@ -64,10 +62,6 @@ public:
 
     [[nodiscard]]
     const Pixel& get_item(size_t row, size_t col) const {
-        return m_buffer[idx(row, col)];
-    }
-
-    constexpr Pixel& get_mut(size_t row, size_t col) {
         return m_buffer[idx(row, col)];
     }
 };

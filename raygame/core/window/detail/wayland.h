@@ -1,5 +1,6 @@
 #pragma once
 #include "raygame/core/window/window.h"
+#include <chrono>
 #include <wayland-client-protocol.h>
 #include <xdg-shell-client-protocol.h>
 #include <xkbcommon/xkbcommon.h>
@@ -32,6 +33,11 @@ public:
     bool should_close() const final;
 
 private:
+    using clock_t     = std::chrono::high_resolution_clock;
+    using timepoint_t = std::chrono::time_point<clock_t>;
+    timepoint_t m_frame_beg;
+    timepoint_t m_frame_end;
+
     bool m_should_close{false};
 
     void new_buffer();
@@ -87,13 +93,12 @@ private:
     };
 
     bool           m_configured = false;
-    uint32_t       m_last_frame = 0;
     pointer_event  m_pointer_event{};
     keyboard_state m_keyboard_state;
 
     int      m_shm_fd = -1;
     uint32_t m_wl_shm_format;
-    Pixel* m_pixel_buffer = nullptr;
+    Pixel*   m_pixel_buffer = nullptr;
 
     wl_buffer*     m_wl_buffer     = nullptr;
     wl_callback*   m_wl_callback   = nullptr;

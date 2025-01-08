@@ -72,6 +72,14 @@ static_assert(false, "This game's code uses features from the C++23 standard");
 #    endif
 #endif
 
+#if !defined(RAYGAME_TARGET_FPS)
+#    define RAYGAME_TARGET_FPS 60 // NOLINT(*-macro-usage)
+
+namespace core::config {
+constexpr size_t TARGET_FPS = RAYGAME_TARGET_FPS;
+} // namespace core::config
+#endif
+
 namespace core::config {
 #if defined(RAYGAME_FORCE_GENERIC_IMPL)
 //! Force generic implementations

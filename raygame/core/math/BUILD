@@ -68,6 +68,15 @@ rg_cc_single(
     ],
 )
 
+rg_cc_single(
+    name = "ring_average",
+    deps = [
+        "//raygame/core:types",
+        "//raygame/core:config",
+        "//raygame/core:concepts",
+    ],
+)
+
 filegroup(
     name = "doxyfiles",
     srcs = glob([
