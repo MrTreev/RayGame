@@ -16,54 +16,34 @@ public:
         std::string  title = DEFAULT_WINDOW_TITLE,
         WindowStyle  style = DEFAULT_WINDOW_STYLE
     );
+    ~WaylandWindowImpl() final;
     WaylandWindowImpl(const WaylandWindowImpl&)           = delete;
     WaylandWindowImpl operator=(const WaylandWindowImpl&) = delete;
     WaylandWindowImpl(WaylandWindowImpl&&)                = default;
     WaylandWindowImpl& operator=(WaylandWindowImpl&&)     = default;
-    ~WaylandWindowImpl() final;
 
     void draw(const drawing::Image& image) final;
-
     void restyle(WindowStyle style) final;
     void restyle();
-
     void render_frame() final;
 
     [[nodiscard]]
     bool next_frame() final;
-
     [[nodiscard]]
     bool should_close() const final;
 
 private:
+    using wl_fixed_t  = int32_t;
     using clock_t     = std::chrono::high_resolution_clock;
     using timepoint_t = std::chrono::time_point<clock_t>;
-    timepoint_t m_frame_beg;
-    timepoint_t m_frame_end;
 
-    math::RingAverage<size_t, config::TARGET_FPS> m_counter;
-
-    bool m_should_close{false};
-
-    void new_buffer();
-    void set_style(WindowStyle style);
-
-    Pixel* data() { return m_pixel_buffer; }
-
-    // NOLINTNEXTLINE(*-pointer-arithmetic)
-    Pixel* data_row(size_t col) { return &m_pixel_buffer[col * width()]; }
-
-    void draw_line(std::span<const Pixel> line, Vec2<size_t> pos);
-
-    using wl_fixed_t = int32_t;
-
-    struct axis_t {
+    struct Axis {
         bool       valid;
         wl_fixed_t value;
         int32_t    discrete;
     };
 
-    struct pointer_event {
+    struct PointerEvent {
         uint32_t   event_mask;
         wl_fixed_t surface_x;
         wl_fixed_t surface_y;
@@ -71,39 +51,38 @@ private:
         uint32_t   state;
         uint32_t   time;
         uint32_t   serial;
-        axis_t     axis_vertical;
-        axis_t     axis_horizontal;
+        Axis       axis_vertical;
+        Axis       axis_horizontal;
         uint32_t   axis_source;
     };
 
-    struct keyboard_state {
-        keyboard_state()
-            : m_xkb_context(xkb_context_new(XKB_CONTEXT_NO_FLAGS)) {}
-
-        keyboard_state(const keyboard_state&)            = default;
-        keyboard_state(keyboard_state&&)                 = default;
-        keyboard_state& operator=(const keyboard_state&) = default;
-        keyboard_state& operator=(keyboard_state&&)      = default;
-
-        ~keyboard_state() {
-            xkb_context_unref(m_xkb_context);
-            m_xkb_context = nullptr;
-        }
-
-        //NOLINTBEGIN(*-non-private-member-*)
+    struct KeyboardState {
         xkb_state*   m_xkb_state   = nullptr;
         xkb_keymap*  m_xkb_keymap  = nullptr;
         xkb_context* m_xkb_context = nullptr;
-        //NOLINTEND(*-non-private-member-*)
     };
 
-    bool           m_configured = false;
-    pointer_event  m_pointer_event{};
-    keyboard_state m_keyboard_state;
+    math::RingAverage<size_t, config::TARGET_FPS> m_counter;
 
-    int      m_shm_fd = -1;
-    uint32_t m_wl_shm_format;
-    Pixel*   m_pixel_buffer = nullptr;
+    timepoint_t      m_frame_beg;
+    timepoint_t      m_frame_end;
+    int              m_shm_fd = -1;
+    uint32_t         m_wl_shm_format;
+    std::span<Pixel> m_pixbuf;
+
+    void new_buffer();
+    void set_style(WindowStyle style);
+    void draw_line(std::span<const Pixel> line, Vec2<size_t> pos);
+
+    [[nodiscard]]
+    std::span<const Pixel> span() const;
+    std::span<Pixel>       span();
+    std::span<Pixel>       data_row(size_t col);
+
+    bool          m_should_close = false;
+    bool          m_configured   = false;
+    PointerEvent  m_pointer_event{};
+    KeyboardState m_keyboard_state;
 
     wl_buffer*     m_wl_buffer     = nullptr;
     wl_callback*   m_wl_callback   = nullptr;

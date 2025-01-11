@@ -176,7 +176,7 @@ void core::window::detail::WaylandWindowImpl::wl_pointer_handle_frame(
     [[maybe_unused]] wl_pointer* wl_pointer
 ) {
     const auto*          this_impl = static_cast<WaylandWindowImpl*>(data);
-    const pointer_event& event     = this_impl->m_pointer_event;
+    const PointerEvent& event     = this_impl->m_pointer_event;
     if ((event.event_mask & POINTER_EVENT_ENTER) != 0U) {
         core::log::trace(
             "Pointer Entry ({}, {})",
@@ -213,7 +213,7 @@ void core::window::detail::WaylandWindowImpl::wl_pointer_handle_frame(
         }
     }
     if ((event.event_mask & ALL_AXIS_EVENTS) != 0U) {
-        const auto handle_axis = [event](const axis_t& axis) {
+        const auto handle_axis = [event](const Axis& axis) {
             std::string ret_str = "Axis event:";
             if ((event.event_mask & POINTER_EVENT_AXIS) != 0U) {
                 ret_str +=

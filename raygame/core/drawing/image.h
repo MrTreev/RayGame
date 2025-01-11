@@ -30,14 +30,29 @@ public:
     template<size_t img_size>
     constexpr explicit Image(
         [[maybe_unused]]
+        const std::array<const Pixel, img_size>& in_buf,
+        Vec2<size_t>                             size
+    )
+        : m_rect(size)
+        , m_buffer(in_buf) {
+        condition::pre_condition(
+            img_size == math::safe_mult<size_t>(size.x, size.y),
+            "Size mismatch between m_buffer and size"
+        );
+    }
+
+    template<size_t img_size>
+    constexpr explicit Image(
+        [[maybe_unused]]
         const std::array<const uint8_t, img_size>& in_buf,
         Vec2<size_t>                               size
     )
-        : m_rect(size)
-        , m_buffer(
+        : Image(
+              // NOLINTNEXTLINE(*-reinterpret-cast)
               reinterpret_cast<const std::array<const Pixel, img_size / 4>&>(
                   in_buf
-              )
+              ),
+              size
           ) {}
 
     [[nodiscard]]

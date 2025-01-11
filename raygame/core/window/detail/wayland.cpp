@@ -156,6 +156,7 @@ core::window::detail::WaylandWindowImpl::WaylandWindowImpl(
             &m_wl_surface_frame_listener,
             this
         );
+        m_keyboard_state.m_xkb_context = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
         core::log::trace("Return from Constructor");
     } else {
         core::condition::unreachable();
@@ -168,6 +169,8 @@ core::window::detail::WaylandWindowImpl::~WaylandWindowImpl() {
         wl_surface_destroy(m_wl_surface);
         xdg_surface_destroy(m_xdg_surface);
         xdg_toplevel_destroy(m_xdg_toplevel);
+        xkb_context_unref(m_keyboard_state.m_xkb_context);
+        m_keyboard_state.m_xkb_context = nullptr;
     } else {
         std::unreachable();
     }
@@ -177,11 +180,11 @@ void core::window::detail::WaylandWindowImpl::draw_line(
     std::span<const Pixel> line,
     Vec2<size_t>           pos
 ) {
-    const std::span line_view{data_row(pos.y), width()};
-    const auto      size_min = std::min(line.size(), line_view.size());
+    const auto line_view = data_row(pos.y);
+    const auto size_min  = std::min(line.size(), line_view.size());
     for (size_t idx{0}; idx < size_min - 1; ++idx) {
-        const auto& pixel = line[idx];
-        line_view[idx]    = pixel;
+        const Pixel& pixel = line[idx];
+        line_view[idx]     = pixel;
     }
 }
 
@@ -265,7 +268,7 @@ void core::window::detail::WaylandWindowImpl::new_buffer() {
         }
         m_shm_fd = allocate_shm_file(bufsize);
         check_condition(m_shm_fd >= 0, "creation of shm buffer file failed");
-        m_pixel_buffer = static_cast<Pixel*>(mmap(
+        auto* pixbuf = static_cast<Pixel*>(mmap(
             nullptr,
             bufsize,
             PROT_READ | PROT_WRITE,
@@ -273,10 +276,11 @@ void core::window::detail::WaylandWindowImpl::new_buffer() {
             m_shm_fd,
             0
         ));
-        if (m_pixel_buffer == MAP_FAILED) {
+        if (pixbuf == MAP_FAILED) {
             close(m_shm_fd);
             check_condition(false, "Could not setup shm data");
         }
+        m_pixbuf      = {pixbuf, buflen};
         m_wl_shm_pool = wl_shm_create_pool(
             m_wl_shm,
             m_shm_fd,
@@ -297,4 +301,19 @@ void core::window::detail::WaylandWindowImpl::new_buffer() {
     } else {
         core::condition::unreachable();
     }
+}
+
+std::span<core::Pixel>
+core::window::detail::WaylandWindowImpl::data_row(size_t col) {
+    pre_condition(col <= height(), "Height out of range");
+    return {&m_pixbuf[col * width()], width()};
+}
+
+std::span<core::Pixel> core::window::detail::WaylandWindowImpl::span() {
+    return m_pixbuf;
+}
+
+std::span<const core::Pixel>
+core::window::detail::WaylandWindowImpl::span() const {
+    return m_pixbuf;
 }
