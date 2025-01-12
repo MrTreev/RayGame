@@ -137,18 +137,18 @@ core::window::detail::WaylandWindowImpl::WaylandWindowImpl(
         );
         xdg_surface_add_listener(m_xdg_surface, &m_xdg_surface_listener, this);
         wl_surface_commit(m_wl_surface);
-        core::log::trace("Surface Committed");
+        log::trace("Surface Committed");
         while ((wl_display_dispatch(m_wl_display) != -1) && (!m_configured)) {
-            core::log::error("Wayland display not configured");
+            log::error("Wayland display not configured");
         }
-        core::log::trace("Display Dispatched");
+        log::trace("Display Dispatched");
         xdg_toplevel_set_title(m_xdg_toplevel, get_title().c_str());
         new_buffer();
         restyle();
         wl_surface_attach(m_wl_surface, m_wl_buffer, 0, 0);
-        core::log::trace("Surface Attached");
+        log::trace("Surface Attached");
         wl_surface_commit(m_wl_surface);
-        core::log::trace("Surface Committed");
+        log::trace("Surface Committed");
         m_wl_callback = wl_surface_frame(m_wl_surface);
         check_ptr(m_wl_callback, "Failed to create callback");
         wl_callback_add_listener(
@@ -156,10 +156,9 @@ core::window::detail::WaylandWindowImpl::WaylandWindowImpl(
             &m_wl_surface_frame_listener,
             this
         );
-        m_keyboard_state.m_xkb_context = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
-        core::log::trace("Return from Constructor");
+        log::trace("Return from Constructor");
     } else {
-        core::condition::unreachable();
+        condition::unreachable();
     }
 }
 
@@ -169,8 +168,6 @@ core::window::detail::WaylandWindowImpl::~WaylandWindowImpl() {
         wl_surface_destroy(m_wl_surface);
         xdg_surface_destroy(m_xdg_surface);
         xdg_toplevel_destroy(m_xdg_toplevel);
-        xkb_context_unref(m_keyboard_state.m_xkb_context);
-        m_keyboard_state.m_xkb_context = nullptr;
     } else {
         std::unreachable();
     }
@@ -195,7 +192,7 @@ void core::window::detail::WaylandWindowImpl::draw(const drawing::Image& image
             draw_line(image.row(col), {0, col});
         }
     } else {
-        core::condition::unreachable();
+        condition::unreachable();
     }
 }
 
@@ -219,7 +216,7 @@ void core::window::detail::WaylandWindowImpl::restyle(WindowStyle style) {
             return;
         }
     } else {
-        core::condition::unreachable();
+        condition::unreachable();
     }
 }
 
@@ -227,7 +224,7 @@ void core::window::detail::WaylandWindowImpl::render_frame() {
     if constexpr (config::EnabledBackends::wayland()) {
         wl_display_dispatch(m_wl_display);
     } else {
-        core::condition::unreachable();
+        condition::unreachable();
     }
 }
 
@@ -247,7 +244,7 @@ bool core::window::detail::WaylandWindowImpl::next_frame() {
         std::print("Frame Time (us): {}\r", m_counter.average());
         return !should_close();
     } else {
-        core::condition::unreachable();
+        condition::unreachable();
     }
 }
 
@@ -255,7 +252,7 @@ bool core::window::detail::WaylandWindowImpl::should_close() const {
     if constexpr (config::EnabledBackends::wayland()) {
         return m_should_close;
     } else {
-        core::condition::unreachable();
+        condition::unreachable();
     }
 }
 
@@ -299,7 +296,7 @@ void core::window::detail::WaylandWindowImpl::new_buffer() {
         }
         check_ptr(m_wl_buffer, "Failed to create buffer");
     } else {
-        core::condition::unreachable();
+        condition::unreachable();
     }
 }
 
@@ -316,4 +313,48 @@ std::span<core::Pixel> core::window::detail::WaylandWindowImpl::span() {
 std::span<const core::Pixel>
 core::window::detail::WaylandWindowImpl::span() const {
     return m_pixbuf;
+}
+
+void core::window::detail::KeyboardState::new_from_string(const char* str) {
+    m_xkb_keymap.reset(xkb_keymap_new_from_string(
+        m_xkb_context.get(),
+        str,
+        XKB_KEYMAP_FORMAT_TEXT_V1,
+        XKB_KEYMAP_COMPILE_NO_FLAGS
+    ));
+    check_condition(m_xkb_keymap, "Failed to create new xkb_keymap");
+    m_xkb_state.reset(xkb_state_new(m_xkb_keymap.get()));
+    check_condition(m_xkb_state, "Failed to create new xkb_state");
+}
+
+void core::window::detail::KeyboardState::update_mask(
+    uint32_t mods_depressed,
+    uint32_t mods_latched,
+    uint32_t mods_locked,
+    uint32_t group
+) {
+    xkb_state_update_mask(
+        m_xkb_state.get(),
+        mods_depressed,
+        mods_latched,
+        mods_locked,
+        0,
+        0,
+        group
+    );
+}
+
+void core::window::detail::KeyboardState::event(
+    const uint32_t& key, // NOLINT(*-swappable-parameters)
+    const uint32_t& state
+) {
+    const uint32_t     keycode = key + ADD_VAL;
+    const xkb_keysym_t sym     = xkb_keysym_to_upper(
+        xkb_state_key_get_one_sym(m_xkb_state.get(), keycode)
+    );
+    log::debug(
+        "key {}: {}, ",
+        (state == WL_KEYBOARD_KEY_STATE_PRESSED) ? "down" : "up",
+        sym
+    );
 }

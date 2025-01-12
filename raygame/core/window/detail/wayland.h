@@ -9,6 +9,85 @@
 #include <xkbcommon/xkbcommon.h>
 
 namespace core::window::detail {
+
+struct Axis {
+    bool       valid;
+    wl_fixed_t value;
+    int32_t    discrete;
+};
+
+struct PointerEvent {
+    uint32_t   event_mask;
+    wl_fixed_t surface_x;
+    wl_fixed_t surface_y;
+    uint32_t   button;
+    uint32_t   state;
+    uint32_t   time;
+    uint32_t   serial;
+    Axis       axis_vertical;
+    Axis       axis_horizontal;
+    uint32_t   axis_source;
+};
+
+class KeyboardState {
+    static constexpr size_t BUF_SIZE{64};
+    static constexpr int    ADD_VAL{8};
+
+    int m_rate{-1};
+    int m_delay{-1};
+
+    struct StateDelete {
+        void operator()(xkb_state* state) { xkb_state_unref(state); }
+    };
+
+    struct KeymapDelete {
+        void operator()(xkb_keymap* keymap) { xkb_keymap_unref(keymap); }
+    };
+
+    struct ContextDelete {
+        void operator()(xkb_context* context) { xkb_context_unref(context); }
+    };
+
+    std::unique_ptr<xkb_state, StateDelete>     m_xkb_state;
+    std::unique_ptr<xkb_keymap, KeymapDelete>   m_xkb_keymap;
+    std::unique_ptr<xkb_context, ContextDelete> m_xkb_context;
+
+public:
+    KeyboardState()
+        : m_xkb_context(xkb_context_new(XKB_CONTEXT_NO_FLAGS)) {}
+
+    void new_from_string(const char* str);
+
+    void update_mask(
+        uint32_t mods_depressed,
+        uint32_t mods_latched,
+        uint32_t mods_locked,
+        uint32_t group
+    );
+
+    void event(const uint32_t& key, const uint32_t& state);
+
+    [[nodiscard]]
+    const decltype(m_delay)& rate() const {
+        return m_rate;
+    }
+
+    [[nodiscard]]
+    const decltype(m_delay)& delay() const {
+        return m_delay;
+    }
+
+    void set_rate(int rate) {
+        condition::pre_condition(rate > 0, "Invalid keyboard repeat-rate");
+        m_rate = rate;
+    }
+
+    void set_delay(int delay) {
+        condition::pre_condition(delay > 0, "Invalid keyboard repeat-delay");
+        m_delay = delay;
+    }
+};
+
 class WaylandWindowImpl final: public WindowImpl {
 public:
     explicit WaylandWindowImpl(
@@ -36,31 +115,6 @@ private:
     using wl_fixed_t  = int32_t;
     using clock_t     = std::chrono::high_resolution_clock;
     using timepoint_t = std::chrono::time_point<clock_t>;
-
-    struct Axis {
-        bool       valid;
-        wl_fixed_t value;
-        int32_t    discrete;
-    };
-
-    struct PointerEvent {
-        uint32_t   event_mask;
-        wl_fixed_t surface_x;
-        wl_fixed_t surface_y;
-        uint32_t   button;
-        uint32_t   state;
-        uint32_t   time;
-        uint32_t   serial;
-        Axis       axis_vertical;
-        Axis       axis_horizontal;
-        uint32_t   axis_source;
-    };
-
-    struct KeyboardState {
-        xkb_state*   m_xkb_state   = nullptr;
-        xkb_keymap*  m_xkb_keymap  = nullptr;
-        xkb_context* m_xkb_context = nullptr;
-    };
 
     math::RingAverage<size_t, config::TARGET_FPS> m_counter;
 
@@ -99,6 +153,15 @@ private:
     xdg_toplevel*  m_xdg_toplevel  = nullptr;
     xdg_wm_base*   m_xdg_wm_base   = nullptr;
 
+    static const wl_callback_listener  m_wl_surface_frame_listener;
+    static const wl_keyboard_listener  m_wl_keyboard_listener;
+    static const wl_pointer_listener   m_wl_pointer_listener;
+    static const wl_registry_listener  m_wl_registry_listener;
+    static const wl_seat_listener      m_wl_seat_listener;
+    static const xdg_surface_listener  m_xdg_surface_listener;
+    static const xdg_toplevel_listener m_xdg_toplevel_listener;
+    static const xdg_wm_base_listener  m_xdg_wm_base_listener;
+
     // clang-format off
     static void wl_keyboard_enter(void *data, wl_keyboard *wl_keyboard, uint32_t serial, wl_surface *surface, wl_array *keys);
     static void wl_keyboard_key(void *data, wl_keyboard *wl_keyboard, uint32_t serial, uint32_t time, uint32_t key, uint32_t state);
@@ -129,14 +192,5 @@ private:
     static void xdg_toplevel_handle_wm_capabilities(void* data, xdg_toplevel* xdg_toplevel, wl_array* capabilities);
     static void xdg_wm_base_handle_ping(void* data, xdg_wm_base* xdg_wm_base, uint32_t serial);
     // clang-format on
-
-    static const wl_callback_listener  m_wl_surface_frame_listener;
-    static const wl_keyboard_listener  m_wl_keyboard_listener;
-    static const wl_pointer_listener   m_wl_pointer_listener;
-    static const wl_registry_listener  m_wl_registry_listener;
-    static const wl_seat_listener      m_wl_seat_listener;
-    static const xdg_surface_listener  m_xdg_surface_listener;
-    static const xdg_toplevel_listener m_xdg_toplevel_listener;
-    static const xdg_wm_base_listener  m_xdg_wm_base_listener;
 };
 } // namespace core::window::detail
