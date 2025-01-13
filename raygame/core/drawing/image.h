@@ -61,6 +61,21 @@ public:
     }
 
     [[nodiscard]]
+    constexpr Vec2<size_t> pos() const {
+        return m_rect.pos();
+    }
+
+    [[nodiscard]]
+    constexpr size_t x() const {
+        return m_rect.x();
+    }
+
+    [[nodiscard]]
+    constexpr size_t y() const {
+        return m_rect.y();
+    }
+
+    [[nodiscard]]
     constexpr size_t height() const {
         return m_rect.height();
     }

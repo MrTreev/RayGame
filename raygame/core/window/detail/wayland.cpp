@@ -177,19 +177,25 @@ void core::window::detail::WaylandWindowImpl::draw_line(
     std::span<const Pixel> line,
     Vec2<size_t>           pos
 ) {
-    const auto line_view = data_row(pos.y);
-    const auto size_min  = std::min(line.size(), line_view.size());
-    for (size_t idx{0}; idx < size_min - 1; ++idx) {
-        const Pixel& pixel = line[idx];
-        line_view[idx]     = pixel;
+    if constexpr (config::EnabledBackends::wayland()) {
+        const auto line_view = data_row(pos.y);
+        const auto size_min  = std::min(line.size(), line_view.size());
+        for (size_t idx{0}; idx < size_min - 1; ++idx) {
+            const Pixel& pixel = line[idx];
+            line_view[idx]     = pixel;
+        }
+    } else {
+        condition::unreachable();
     }
 }
 
 void core::window::detail::WaylandWindowImpl::draw(const drawing::Image& image
 ) {
     if constexpr (config::EnabledBackends::wayland()) {
-        for (size_t col{0}; col < image.height(); ++col) {
-            draw_line(image.row(col), {0, col});
+        const auto height_max = std::min(image.y() + image.height(), height());
+        const auto height_min = std::max(image.y(), 0UL);
+        for (size_t col{height_min}; col < height_max; ++col) {
+            draw_line(image.row(col), {image.x(), col});
         }
     } else {
         condition::unreachable();

@@ -46,6 +46,16 @@ public:
     }
 
     [[nodiscard]]
+    constexpr Pos_t x() const {
+        return m_x;
+    }
+
+    [[nodiscard]]
+    constexpr Pos_t y() const {
+        return m_y;
+    }
+
+    [[nodiscard]]
     constexpr Vec2<Dis_t> size() const {
         return {m_width, m_height};
     }
