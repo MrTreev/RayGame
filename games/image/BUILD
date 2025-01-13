@@ -3,6 +3,7 @@ cc_library(
     hdrs = ["defs.h"],
     srcs = [
         "icon.cpp",
+        "cottage.h",
     ],
     deps = [
         "//raygame/core:types",

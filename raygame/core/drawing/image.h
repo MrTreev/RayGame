@@ -55,6 +55,34 @@ public:
               size
           ) {}
 
+    template<size_t img_size>
+    constexpr explicit Image(
+        [[maybe_unused]]
+        const std::array<uint8_t, img_size>& in_buf,
+        Vec2<size_t>                         size
+    )
+        : Image(
+              // NOLINTNEXTLINE(*-reinterpret-cast)
+              reinterpret_cast<const std::array<const Pixel, img_size / 4>&>(
+                  in_buf
+              ),
+              size
+          ) {}
+
+    template<size_t img_size>
+    constexpr explicit Image(
+        [[maybe_unused]]
+        const std::array<uint8_t, img_size + 1>& in_buf,
+        Vec2<size_t>                             size
+    )
+        : Image(
+              // NOLINTNEXTLINE(*-reinterpret-cast)
+              reinterpret_cast<const std::array<const Pixel, img_size / 4>&>(
+                  in_buf
+              ),
+              size
+          ) {}
+
     [[nodiscard]]
     constexpr std::span<const Pixel> row(size_t col) const {
         return {&m_buffer[idx(0, col)], &m_buffer[idx(width() - 1, col)]};

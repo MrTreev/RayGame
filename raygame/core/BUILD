@@ -54,6 +54,13 @@ rg_cc_single(
 )
 
 rg_cc_single(
+    name = "matrix",
+    deps = [
+        ":types",
+    ],
+)
+
+rg_cc_single(
     name = "types",
     deps = [
         ":debug",

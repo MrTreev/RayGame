@@ -178,11 +178,12 @@ void core::window::detail::WaylandWindowImpl::draw_line(
     Vec2<size_t>           pos
 ) {
     if constexpr (config::EnabledBackends::wayland()) {
-        const auto line_view = data_row(pos.y);
-        const auto size_min  = std::min(line.size(), line_view.size());
-        for (size_t idx{0}; idx < size_min - 1; ++idx) {
+        const auto pixbuf_view = data_row(pos.y);
+        const auto width_max   = std::min(line.size(), pixbuf_view.size());
+        const auto width_min   = pos.x;
+        for (size_t idx{width_min}; idx < width_max - 1; ++idx) {
             const Pixel& pixel = line[idx];
-            line_view[idx]     = pixel;
+            pixbuf_view[idx]   = pixel;
         }
     } else {
         condition::unreachable();
@@ -193,8 +194,8 @@ void core::window::detail::WaylandWindowImpl::draw(const drawing::Image& image
 ) {
     if constexpr (config::EnabledBackends::wayland()) {
         const auto height_max = std::min(image.y() + image.height(), height());
-        const auto height_min = std::max(image.y(), 0UL);
-        for (size_t col{height_min}; col < height_max; ++col) {
+        const auto height_min = image.y() - 1;
+        for (size_t col{height_min}; col < height_max - 1; ++col) {
             draw_line(image.row(col), {image.x(), col});
         }
     } else {

@@ -2,5 +2,6 @@
 #include <array>
 
 namespace resources {
-extern const std::array<const uint8_t, 640'000> icon_argb8888;
+[[maybe_unused]]
+extern const std::array<uint8_t, (92UL * 96UL * 4UL) + 1> icon_argb8888;
 } // namespace resources
