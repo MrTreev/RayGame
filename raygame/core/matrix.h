@@ -1,13 +1,10 @@
 #include "raygame/core/types.h"
-#include <initializer_list>
 #include <mdspan>
+#include <span>
 
 namespace core {
 
-template<typename T>
-class MatrixBase {};
-
-template<typename T, size_t Width, size_t Height>
+template<typename T, auto Width, auto Height>
 class Matrix {
     std::array<T, (Width * Height) + 1>                 m_buffer;
     std::mdspan<T, std::extents<size_t, Width, Height>> m_mdspan;
@@ -23,19 +20,55 @@ public:
         return Width;
     }
 
-    Matrix(std::initializer_list<T> args)
-        : m_buffer(args)
+    explicit Matrix(auto... args)
+        : m_buffer({std::forward<decltype(args)>(args)...})
         , m_mdspan(m_buffer.data(), Width, Height) {
         static_assert(Width > 0);
         static_assert(Height > 0);
     }
 
-    const auto& operator[](const size_t& width, const size_t& height) {
-        return m_mdspan[width, height];
+    const auto& operator[](const size_t& xpos, const size_t& ypos) const {
+        return m_mdspan[ypos, xpos];
+    }
+
+    auto& operator[](const size_t& xpos, const size_t& ypos) {
+        return m_mdspan[ypos, xpos];
     }
 };
 
-template<typename T, size_t Width, size_t Height>
-class ViewMatrix {};
+template<typename T>
+class ViewMatrix {
+    std::mdspan<
+        T,
+        std::extents<size_t, std::dynamic_extent, std::dynamic_extent>>
+        m_mdspan;
+
+public:
+    explicit ViewMatrix(const auto& container, size_t width_, size_t height_)
+        : m_mdspan(container, width_, height_) {}
+
+    const T& operator[](const size_t& xpos, const size_t& ypos) const {
+        return m_mdspan[ypos, xpos];
+    }
+
+    T& operator[](const size_t& xpos, const size_t& ypos) {
+        return m_mdspan[ypos, xpos];
+    }
+
+    [[nodiscard]]
+    constexpr size_t height() const {
+        return m_mdspan.extent(0);
+    }
+
+    [[nodiscard]]
+    constexpr size_t width() const {
+        return m_mdspan.extent(1);
+    }
+
+    [[nodiscard]]
+    constexpr size_t size() const {
+        return (width() * height());
+    }
+};
 
 } // namespace core

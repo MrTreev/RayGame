@@ -6,7 +6,11 @@ constexpr core::Vec2<size_t> WIN_SIZE = {400, 400};
 
 // NOLINTNEXTLINE(*-exception-escape)
 int main() {
-    core::window::Window       mywindow{WIN_SIZE};
+    core::window::Window mywindow{WIN_SIZE};
+    const auto&          img =
+        reinterpret_cast<std::array<core::Pixel, IMG_SIZE.x * IMG_SIZE.y>>(
+            resources::icon_argb8888
+        );
     const core::drawing::Image image{resources::icon_argb8888, IMG_SIZE};
     while (mywindow.next_frame()) {
         mywindow.draw(image);

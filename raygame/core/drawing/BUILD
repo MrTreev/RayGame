@@ -12,6 +12,7 @@ rg_cc_single(
     deps = [
         ":pixel",
         "//raygame/core:condition",
+        "//raygame/core:matrix",
         "//raygame/core/math:vector",
         "//raygame/core/math:rect",
     ],
