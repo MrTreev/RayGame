@@ -1,10 +1,20 @@
 #include "games/image/cottage.h"
 #include "games/image/defs.h"
+#include "raygame/core/drawing/pixel.h"
 
 namespace resources {
-const std::array<uint8_t, (92UL * 96UL * 4UL) + 1> icon_argb8888 =
-    std::to_array(cottage_image.pixel_data);
+namespace {
+template<typename T, unsigned long N>
+consteval std::array<T, N - 1> arr2img(std::array<T, N> in_arr) {
+    std::array<T, N - 1> out{};
+    for (size_t i{0}; i < N - 1; i++) {
+        // NOLINTNEXTLINE(*-constant-array-index)
+        out[i] = in_arr[i];
+    }
+    return out;
+}
+} // namespace
 
-const detail::img_t<uint8_t, 35'329> img_argb8888 =
-    std::ranges::views::take(icon_argb8888, icon_argb8888.size() - 1);
+const constinit std::array<core::Pixel, 92UL * 96UL> icon_argb8888 =
+    std::bit_cast<std::array<core::Pixel, 92UL * 96UL>>(arr2img(cottage_image));
 } // namespace resources

@@ -16,6 +16,9 @@ rg_cc_single(
         "//raygame/core/math:vector",
         "//raygame/core/math:rect",
     ],
+    testonlydeps = [
+        ":colour",
+    ],
 )
 
 rg_cc_single(

@@ -60,35 +60,17 @@ static_assert(false, "This game's code uses features from the C++23 standard");
 
 //! @}
 //! @}
-#else
-#    if !defined(RAYGAME_DEFAULT_WINDOW_WIDTH)
-#        define RAYGAME_DEFAULT_WINDOW_WIDTH 640 // NOLINT(*-macro-usage)
-#    endif
-#    if !defined(RAYGAME_DEFAULT_WINDOW_HEIGHT)
-#        define RAYGAME_DEFAULT_WINDOW_HEIGHT 480 // NOLINT(*-macro-usage)
-#    endif
-#    if !defined(RAYGAME_DEFAULT_WINDOW_TITLE)
-#        define RAYGAME_DEFAULT_WINDOW_TITLE "RayGame" // NOLINT(*-macro-usage)
-#    endif
 #endif
 
-#if !defined(RAYGAME_TARGET_FPS)
-#    define RAYGAME_TARGET_FPS 60 // NOLINT(*-macro-usage)
-
-namespace core::config {
-constexpr size_t TARGET_FPS = RAYGAME_TARGET_FPS;
-} // namespace core::config
+#if !defined(RAYGAME_DEFAULT_WINDOW_WIDTH)
+#    define RAYGAME_DEFAULT_WINDOW_WIDTH 640 // NOLINT(*-macro-usage)
 #endif
-
-namespace core::config {
-#if defined(RAYGAME_FORCE_GENERIC_IMPL)
-//! Force generic implementations
-static constexpr bool FORCE_GENERIC_IMPL = true;
-#else
-//! Force generic implementations
-static constexpr bool FORCE_GENERIC_IMPL = false;
+#if !defined(RAYGAME_DEFAULT_WINDOW_HEIGHT)
+#    define RAYGAME_DEFAULT_WINDOW_HEIGHT 480 // NOLINT(*-macro-usage)
 #endif
-} // namespace core::config
+#if !defined(RAYGAME_DEFAULT_WINDOW_TITLE)
+#    define RAYGAME_DEFAULT_WINDOW_TITLE "RayGame" // NOLINT(*-macro-usage)
+#endif
 
 namespace core::window {
 //! Default Window Width
@@ -101,6 +83,24 @@ static constexpr std::size_t DEFAULT_WINDOW_HEIGHT =
 static constexpr std::string DEFAULT_WINDOW_TITLE =
     RAYGAME_DEFAULT_WINDOW_TITLE;
 } // namespace core::window
+
+#if !defined(RAYGAME_TARGET_FPS)
+#    define RAYGAME_TARGET_FPS 60 // NOLINT(*-macro-usage)
+#endif
+
+namespace core::config {
+constexpr size_t TARGET_FPS = RAYGAME_TARGET_FPS;
+} // namespace core::config
+
+namespace core::config {
+#if defined(RAYGAME_FORCE_GENERIC_IMPL)
+//! Force generic implementations
+static constexpr bool FORCE_GENERIC_IMPL = true;
+#else
+//! Force generic implementations
+static constexpr bool FORCE_GENERIC_IMPL = false;
+#endif
+} // namespace core::config
 
 //=============================================================================
 // Machine-Specific Macros

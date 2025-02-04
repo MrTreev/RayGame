@@ -9,27 +9,31 @@
 namespace core::drawing {
 //! Non-owning Image type
 class Image {
-    Rect<size_t> m_rect;
-
-    ViewMatrix<Pixel> m_matrix;
+    Rect<size_t>                                 m_rect;
+    std::mdspan<Pixel, std::dextents<size_t, 2>> m_mdspan;
 
 public:
-    template<size_t img_size>
+    template<size_t N>
     constexpr explicit Image(
-        const std::array<const Pixel, img_size>& in_buf,
-        Vec2<size_t>                             size
+        const std::array<Pixel, N>& in_buf,
+        Vec2<size_t>                size
     )
         : m_rect(size)
-        , m_matrix(in_buf.data(), size.x, size.y) {
+        , m_mdspan(in_buf.data(), size.x, size.y) {
+        const auto mulsize = math::safe_mult<size_t>(size.x, size.y);
         condition::pre_condition(
-            img_size == math::safe_mult<size_t>(size.x, size.y),
-            "Size mismatch between m_buffer and size"
+            N == mulsize,
+            std ::format(
+                "Size mismatch between m_buffer ({}) and size ({})",
+                N,
+                mulsize
+            )
         );
     }
 
     [[nodiscard]]
     constexpr std::span<const Pixel> row(size_t col) const {
-        return {&m_matrix[0, col], &m_matrix[width() - 1, col]};
+        return {&m_mdspan[0, col], &m_mdspan[width() - 1, col]};
     }
 
     [[nodiscard]]
@@ -59,12 +63,12 @@ public:
 
     [[nodiscard]]
     constexpr size_t size() const {
-        return m_matrix.size();
+        return m_mdspan.size();
     }
 
     [[nodiscard]]
-    const Pixel& get_item(size_t row, size_t col) const {
-        return m_matrix[row, col];
+    constexpr const Pixel& get_item(size_t row, size_t col) const {
+        return m_mdspan[row, col];
     }
 };
 } // namespace core::drawing

@@ -1,6 +1,24 @@
+#include "raygame/core/drawing/colour.h"
 #include "raygame/core/drawing/image.h"
+#include "raygame/core/drawing/pixel.h"
 #include "raygame/core/test/tests_begin.h"
 
 TEST_SUITE("core::drawing::image") {
-    TEST_CASE("") {}
+    TEST_CASE("Construct Image") {
+        const std::array<core::Pixel, 9> arr9_test{
+            core::colour::rgb(0, 0, 0),
+            core::colour::rgb(0, 0, 0),
+            core::colour::rgb(0, 0, 0),
+            core::colour::rgb(0, 0, 0),
+            core::colour::rgb(0, 0, 0),
+            core::colour::rgb(0, 0, 0),
+            core::colour::rgb(0, 0, 0),
+            core::colour::rgb(0, 0, 0),
+            core::colour::rgb(0, 0, 0)
+        };
+        const core::drawing::Image img9_test{
+            arr9_test,
+            {3, 3}
+        };
+    }
 }

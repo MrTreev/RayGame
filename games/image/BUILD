@@ -6,7 +6,7 @@ cc_library(
         "cottage.h",
     ],
     deps = [
-        "//raygame/core:types",
+        "//raygame/core/drawing:image",
     ],
 )
 
