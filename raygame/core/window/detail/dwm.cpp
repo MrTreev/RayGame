@@ -9,7 +9,8 @@ core::window::detail::DwmWindowImpl::DwmWindowImpl(
 
 core::window::detail::DwmWindowImpl::~DwmWindowImpl() = default;
 
-void core::window::detail::DwmWindowImpl::draw(const drawing::Image& image) {
+void core::window::detail::DwmWindowImpl::draw(const drawing::ImageView& image
+) {
     std::ignore = image;
     condition::unimplemented();
 }

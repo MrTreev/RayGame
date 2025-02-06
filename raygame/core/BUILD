@@ -18,6 +18,7 @@ rg_cc_single(
 
 rg_cc_single(
     name = "config",
+    private_srcs = glob(["config/*.h"]),
     defines = [
         ] + select({
             "//rules/log/level:trace":    ["RAYGAME_LOG_TRACE"],

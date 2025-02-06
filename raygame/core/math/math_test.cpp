@@ -5,6 +5,7 @@ TEST_SUITE("core::math::deg2rad") {
     using core::math::deg2rad;
     using core::math::constants::PI;
     TEST_CASE("deg2rad") {
+        // NOLINTBEGIN(*-magic-numbers)
         RG_TEST_FLOAT(deg2rad(0.F), 0.F);
         RG_TEST_FLOAT(deg2rad(30.F), PI / 6.F);
         RG_TEST_FLOAT(deg2rad(45.F), PI / 4.F);
@@ -15,6 +16,7 @@ TEST_SUITE("core::math::deg2rad") {
         RG_TEST_FLOAT(deg2rad(210.F), (7 * PI) / 6);
         RG_TEST_FLOAT(deg2rad(270.F), (3 * PI) / 2);
         RG_TEST_FLOAT(deg2rad(360.F), 2 * PI);
+        // NOLINTEND(*-magic-numbers)
     }
 }
 
@@ -22,6 +24,7 @@ TEST_SUITE("core::math::deg2rad") {
     using core::math::rad2deg;
     using core::math::constants::PI;
     TEST_CASE("rad2deg") {
+        // NOLINTBEGIN(*-magic-numbers)
         RG_TEST_FLOAT(rad2deg(0.F), 0.F);
         RG_TEST_FLOAT(rad2deg(PI / 6.F), 30.F);
         RG_TEST_FLOAT(rad2deg(PI / 4.F), 45.F);
@@ -32,5 +35,6 @@ TEST_SUITE("core::math::deg2rad") {
         RG_TEST_FLOAT(rad2deg((7 * PI) / 6), 210.F);
         RG_TEST_FLOAT(rad2deg((3 * PI) / 2), 270.F);
         RG_TEST_FLOAT(rad2deg(2 * PI), 360.F);
+        // NOLINTEND(*-magic-numbers)
     }
 }

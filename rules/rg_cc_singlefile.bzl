@@ -10,15 +10,15 @@ def _rg_cc_library_impl(
     testlibs,
     testonlydeps,
     create_test,
+    private_srcs,
     visibility,
     **kwargs
 ):
-    my_deps = deps or []
     cc_library(
         name = name,
         deps = deps,
         hdrs = hdrs,
-        srcs = srcs,
+        srcs = srcs + private_srcs,
         visibility = visibility,
         **kwargs
     )
@@ -36,10 +36,11 @@ rg_cc_library = macro(
     inherit_attrs = native.cc_library,
     attrs = {
         "create_test":  attr.bool(default=False),
+        "private_srcs": attr.label_list(default=[]),
+        "size":         attr.string(default="small", configurable=False),
         "testlibs":     attr.label_list(default=["//raygame/core/test"]),
         "testonlydeps": attr.label_list(default=[]),
         "tsts":         attr.label_list(default=[]),
-        "size":         attr.string(default="small", configurable=False),
     },
     implementation = _rg_cc_library_impl,
 )

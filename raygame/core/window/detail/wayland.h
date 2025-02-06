@@ -101,7 +101,7 @@ public:
     WaylandWindowImpl(WaylandWindowImpl&&)                = default;
     WaylandWindowImpl& operator=(WaylandWindowImpl&&)     = default;
 
-    void draw(const drawing::Image& image) final;
+    void draw(const drawing::ImageView& image) final;
     void restyle(WindowStyle style) final;
     void restyle();
     void render_frame() final;

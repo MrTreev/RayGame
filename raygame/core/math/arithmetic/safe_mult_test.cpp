@@ -8,9 +8,11 @@ TEST_SUITE("core::math::safe_mult") {
     using core::math::MathRule::STRICT;
     using test::max;
     TEST_CASE_TEMPLATE("in-range", T, FWINTS) {
+        // NOLINTBEGIN(*-identifier-length)
         const T a    = 2;
         const T b    = 2;
         const T c    = 4;
+        // NOLINTEND(*-identifier-length)
         const T one  = 1;
         const T zero = 0;
 

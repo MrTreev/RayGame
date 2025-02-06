@@ -15,7 +15,7 @@ public:
     TempleWindowImpl& operator=(TempleWindowImpl&&)     = default;
     ~TempleWindowImpl() final;
 
-    void draw(const drawing::Image& image) final;
+    void draw(const drawing::ImageView& image) final;
 
     void restyle(WindowStyle style) final;
 

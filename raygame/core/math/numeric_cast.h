@@ -21,14 +21,14 @@ constexpr Out_T numeric_cast(auto input) {
     if constexpr (MR == MathRule::STRICT) {
         if (std::in_range<Out_T>(input)) {
             return static_cast<Out_T>(input);
-        } else {
-            throw core::exception::Condition(std::format(
-                "Input of type '{}' is outside the range for output type '{}'",
-                core::debug::type_name(input),
-                input
-            ));
         }
-    } else if constexpr (MR == MathRule::CLAMP) {
+        throw core::exception::Condition(std::format(
+            "Input of type '{}' is outside the range for output type '{}'",
+            core::debug::type_name(input),
+            input
+        ));
+    }
+    if constexpr (MR == MathRule::CLAMP) {
         if (std::cmp_less(input, outmin)) {
             return outmin;
         }

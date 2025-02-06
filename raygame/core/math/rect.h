@@ -46,12 +46,12 @@ public:
     }
 
     [[nodiscard]]
-    constexpr Pos_t x() const {
+    constexpr Pos_t pos_x() const {
         return m_x;
     }
 
     [[nodiscard]]
-    constexpr Pos_t y() const {
+    constexpr Pos_t pos_y() const {
         return m_y;
     }
 

@@ -16,9 +16,9 @@ TEST_SUITE("core::drawing::image") {
             core::colour::rgb(0, 0, 0),
             core::colour::rgb(0, 0, 0)
         };
-        const core::drawing::Image img9_test{
+        const core::drawing::ImageView img9_test{
             arr9_test,
-            {3, 3}
+            {3UL, 3UL}
         };
     }
 }

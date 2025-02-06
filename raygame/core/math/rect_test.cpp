@@ -7,16 +7,16 @@ TEST_SUITE("core::Rect") {
     TEST_CASE_TEMPLATE("Constructors", T, FWINT_PAIRS) {
         using pos_t = T::A;
         using dis_t = T::B;
-        Rect<pos_t, dis_t> test_rec_0{
+        const Rect<pos_t, dis_t> test_rec_0{
             {0, 0},
             {0, 0}
         };
-        Rect<pos_t, dis_t> test_rec_1{};
-        Rect<pos_t, dis_t> test_rec_2{{}, {}};
-        Vec2<pos_t>        posvec{1, 2};
-        Vec2<dis_t>        disvec{3, 4};
-        Rect<pos_t, dis_t> test_rec_3{posvec, disvec};
-        Rect<pos_t, dis_t> test_rec_4{
+        const Rect<pos_t, dis_t> test_rec_1{};
+        const Rect<pos_t, dis_t> test_rec_2{{}, {}};
+        const Vec2<pos_t>        posvec{1, 2};
+        const Vec2<dis_t>        disvec{3, 4};
+        const Rect<pos_t, dis_t> test_rec_3{posvec, disvec};
+        const Rect<pos_t, dis_t> test_rec_4{
             {1, 2},
             {3, 4}
         };

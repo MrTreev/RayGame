@@ -21,7 +21,7 @@ public:
     X11WindowImpl& operator=(X11WindowImpl&&)     = default;
     ~X11WindowImpl() final;
 
-    void draw(const drawing::Image& image) final;
+    void draw(const drawing::ImageView& image) final;
 
     void restyle(WindowStyle style) final;
 

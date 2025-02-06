@@ -10,7 +10,9 @@ core::window::detail::TempleWindowImpl::TempleWindowImpl(
 
 core::window::detail::TempleWindowImpl::~TempleWindowImpl() = default;
 
-void core::window::detail::TempleWindowImpl::draw(const drawing::Image& image) {
+void core::window::detail::TempleWindowImpl::draw(
+    const drawing::ImageView& image
+) {
     std::ignore = image;
     core::condition::unimplemented();
 }

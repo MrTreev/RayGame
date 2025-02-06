@@ -86,14 +86,12 @@ constexpr void check_ptr(
     }
 }
 
-RAYGAME_CLANG_SUPPRESS_WARNING_PUSH
-RAYGAME_CLANG_SUPPRESS_WARNING("-Winvalid-constexpr")
-RAYGAME_CLANG_SUPPRESS_WARNING("-Wmissing-noreturn")
-
 //! Function to mark an unknown case
 /*!
  *  @throws core::exception::Condition If hit
  */
+RAYGAME_DEBUG_ONLY([[noreturn]])
+
 constexpr void unknown(
     const std::string&          name,
     const std::source_location& loc = std::source_location::current()
@@ -135,5 +133,4 @@ constexpr void unimplemented(
     }
 }
 
-RAYGAME_CLANG_SUPPRESS_WARNING_POP
 } // namespace core::condition

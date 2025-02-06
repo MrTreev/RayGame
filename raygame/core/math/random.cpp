@@ -6,17 +6,9 @@
 
 namespace {
 
-#if defined(RAYGAME_USE_FULL_RANDOM)
-constexpr bool random_seed = true;
-#else
-constexpr bool random_seed = false;
-#endif
-
-#if !defined(RAYGAME_RANDOM_INITIAL_SEED)
-constexpr auto STARTING_SEED = 42;
-#else
+constexpr bool FULL_RANDOM   = RAYGAME_USE_FULL_RANDOM;
 constexpr auto STARTING_SEED = RAYGAME_RANDOM_INITIAL_SEED;
-#endif
+
 [[maybe_unused]]
 uint64_t seed = STARTING_SEED; //NOLINT(*-non-const-global-variables)
 
@@ -30,7 +22,7 @@ std::random_device dev; // NOLINT(cert-err58-cpp,*-non-const-global-variables)
 RAYGAME_CLANG_SUPPRESS_WARNING_POP
 
 uint64_t rand_seed() {
-    if constexpr (random_seed) {
+    if constexpr (FULL_RANDOM) {
         return dev();
     } else {
         ++seed;

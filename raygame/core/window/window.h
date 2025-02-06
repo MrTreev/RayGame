@@ -5,6 +5,16 @@
 #include <utility>
 
 namespace core::window {
+//! Default Window Width
+static constexpr std::size_t DEFAULT_WINDOW_WIDTH =
+    RAYGAME_DEFAULT_WINDOW_WIDTH;
+//! Default Window Height
+static constexpr std::size_t DEFAULT_WINDOW_HEIGHT =
+    RAYGAME_DEFAULT_WINDOW_HEIGHT;
+//! Default Window Title
+static constexpr std::string DEFAULT_WINDOW_TITLE =
+    RAYGAME_DEFAULT_WINDOW_TITLE;
+
 //! Window display styles
 enum class WindowStyle : uint8_t {
     Windowed,           //!< Windowed mode (resizable)
@@ -64,7 +74,7 @@ public:
     WindowImpl& operator=(WindowImpl&&)     = default;
     virtual ~WindowImpl();
 
-    virtual void draw(const drawing::Image& image);
+    virtual void draw(const drawing::ImageView& image);
 
     virtual void restyle(WindowStyle style);
 
@@ -105,7 +115,7 @@ public:
     Window& operator=(Window&&)     = default;
     ~Window()                       = default;
 
-    void draw(const drawing::Image& image) { m_impl->draw(image); }
+    void draw(const drawing::ImageView& image) { m_impl->draw(image); }
 
     void restyle(WindowStyle style) { m_impl->restyle(style); }
 

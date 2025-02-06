@@ -8,8 +8,6 @@
 #include "raygame/core/window/detail/x11.h"
 
 namespace {
-using core::config::GuiBackend;
-using core::config::OperatingSystem;
 
 core::config::GuiBackend wayland_or_x11() {
     const std::string session_type{
@@ -30,6 +28,8 @@ core::config::GuiBackend wayland_or_x11() {
 
 core::config::GuiBackend get_backend() {
     using core::condition::unimplemented;
+    using core::config::GuiBackend;
+    using core::config::OperatingSystem;
     switch (core::config::OPERATING_SYSTEM) {
     case OperatingSystem::ANDROID:  unimplemented();
     case OperatingSystem::BSD:      [[fallthrough]];
@@ -49,34 +49,43 @@ core::window::Window::Window(
     std::string  title,
     WindowStyle  style
 ) {
-    using Coc = detail::CocoaWindowImpl;
-    using Dwm = detail::DwmWindowImpl;
-    using Way = detail::WaylandWindowImpl;
-    using X11 = detail::X11WindowImpl;
-    using Tpl = detail::TempleWindowImpl;
-    switch (get_backend()) {
-    case config::GuiBackend::COCOA:
-        m_impl = std::make_unique<Coc>(size, std::move(title), style);
-        break;
-    case config::GuiBackend::DWM:
-        m_impl = std::make_unique<Dwm>(size, std::move(title), style);
-        break;
-    case config::GuiBackend::WAYLAND:
-        m_impl = std::make_unique<Way>(size, std::move(title), style);
-        break;
-    case config::GuiBackend::X11:
-        m_impl = std::make_unique<X11>(size, std::move(title), style);
-        break;
-    case config::GuiBackend::TEMPLE:
-        m_impl = std::make_unique<Tpl>(size, std::move(title), style);
-        break;
+    const auto backend = get_backend();
+    if constexpr (config::EnabledBackends::cocoa()) {
+        using Cocoa = detail::CocoaWindowImpl;
+        if (backend == config::GuiBackend::COCOA) {
+            m_impl = std::make_unique<Cocoa>(size, std::move(title), style);
+        }
+    }
+    if constexpr (config::EnabledBackends::dwm()) {
+        using Dwm = detail::DwmWindowImpl;
+        if (backend == config::GuiBackend::DWM) {
+            m_impl = std::make_unique<Dwm>(size, std::move(title), style);
+        }
+    }
+    if constexpr (config::EnabledBackends::wayland()) {
+        using Wayland = detail::WaylandWindowImpl;
+        if (backend == config::GuiBackend::WAYLAND) {
+            m_impl = std::make_unique<Wayland>(size, std::move(title), style);
+        }
+    }
+    if constexpr (config::EnabledBackends::x11()) {
+        using X11 = detail::X11WindowImpl;
+        if (backend == config::GuiBackend::X11) {
+            m_impl = std::make_unique<X11>(size, std::move(title), style);
+        }
+    }
+    if constexpr (config::EnabledBackends::temple()) {
+        using Temple = detail::TempleWindowImpl;
+        if (backend == config::GuiBackend::TEMPLE) {
+            m_impl = std::make_unique<Temple>(size, std::move(title), style);
+        }
     }
 }
 
 core::window::detail::WindowImpl::~WindowImpl() = default;
 
 void core::window::detail::WindowImpl::draw(
-    [[maybe_unused]] const drawing::Image& image
+    [[maybe_unused]] const drawing::ImageView& image
 ) {
     condition::unreachable();
 }

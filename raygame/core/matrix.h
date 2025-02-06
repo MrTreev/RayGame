@@ -1,12 +1,11 @@
 #include "raygame/core/types.h"
 #include <mdspan>
-#include <span>
 
 namespace core {
 
 template<typename T, auto Width, auto Height>
 class Matrix {
-    std::array<T, (Width * Height) + 1>                 m_buffer;
+    std::array<T, (Width * Height)>                     m_buffer;
     std::mdspan<T, std::extents<size_t, Width, Height>> m_mdspan;
 
 public:
@@ -38,10 +37,7 @@ public:
 
 template<typename T>
 class ViewMatrix {
-    std::mdspan<
-        T,
-        std::extents<size_t, std::dynamic_extent, std::dynamic_extent>>
-        m_mdspan;
+    std::mdspan<T, std::dextents<size_t, 2>> m_mdspan;
 
 public:
     explicit ViewMatrix(const auto&& container, size_t width_, size_t height_)

@@ -1,20 +1,19 @@
 #include "raygame/core/window/detail/wayland.h"
+#include "raygame/core/condition.h"
+#include "raygame/core/drawing/colour.h"
+#include "raygame/core/logger.h"
+#include "raygame/core/math/random.h"
+#include <algorithm>
 #include <chrono>
-#if defined(RAYGAME_GUI_BACKEND_WAYLAND)
-#    include "raygame/core/condition.h"
-#    include "raygame/core/drawing/colour.h"
-#    include "raygame/core/logger.h"
-#    include "raygame/core/math/random.h"
-#    include <algorithm>
-#    include <fcntl.h>
-#    include <print>
-#    include <sys/mman.h>
-#    include <unistd.h>
-#    include <utility>
-#    include <wayland-client-core.h>
-#    include <wayland-client-protocol.h>
-#    include <xdg-shell-client-protocol.h>
-#    include <xkbcommon/xkbcommon.h>
+#include <fcntl.h>
+#include <print>
+#include <sys/mman.h>
+#include <unistd.h>
+#include <utility>
+#include <wayland-client-core.h>
+#include <wayland-client-protocol.h>
+#include <xdg-shell-client-protocol.h>
+#include <xkbcommon/xkbcommon.h>
 
 namespace {
 using core::condition::check_condition;
@@ -101,7 +100,6 @@ wl_shm_format get_colour_format() {
     }
 }
 } // namespace
-#endif
 
 core::window::detail::WaylandWindowImpl::WaylandWindowImpl(
     Vec2<size_t> size,
@@ -190,13 +188,15 @@ void core::window::detail::WaylandWindowImpl::draw_line(
     }
 }
 
-void core::window::detail::WaylandWindowImpl::draw(const drawing::Image& image
+void core::window::detail::WaylandWindowImpl::draw(
+    const drawing::ImageView& image
 ) {
     if constexpr (config::EnabledBackends::wayland()) {
-        const auto height_max = std::min(image.y() + image.height(), height());
-        const auto height_min = image.y() - 1;
+        const auto height_max =
+            std::min(image.pos_y() + image.height(), height());
+        const auto height_min = image.pos_y() - 1;
         for (size_t col{height_min}; col < height_max - 1; ++col) {
-            draw_line(image.row(col), {image.x(), col});
+            draw_line(image.row(col), {image.pos_x(), col});
         }
     } else {
         condition::unreachable();
@@ -229,6 +229,7 @@ void core::window::detail::WaylandWindowImpl::restyle(WindowStyle style) {
 
 void core::window::detail::WaylandWindowImpl::render_frame() {
     if constexpr (config::EnabledBackends::wayland()) {
+        wl_surface_commit(m_wl_surface);
         wl_display_dispatch(m_wl_display);
     } else {
         condition::unreachable();
