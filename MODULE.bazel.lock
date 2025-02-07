@@ -198,6 +198,22 @@
         "recordedRepoMappingEntries": []
       }
     },
+    "@@platforms//host:extension.bzl%host_platform": {
+      "general": {
+        "bzlTransitiveDigest": "xelQcPZH8+tmuOHVjL9vDxMnnQNMlwj0SlvgoqBkm4U=",
+        "usagesDigest": "7FzoH2U41pQeTJvHP0GWb/u6iNZo/axh4+kWGgicFjw=",
+        "recordedFileInputs": {},
+        "recordedDirentsInputs": {},
+        "envVariables": {},
+        "generatedRepoSpecs": {
+          "host_platform": {
+            "repoRuleId": "@@platforms//host:extension.bzl%host_platform_repo",
+            "attributes": {}
+          }
+        },
+        "recordedRepoMappingEntries": []
+      }
+    },
     "@@pybind11_bazel+//:python_configure.bzl%extension": {
       "general": {
         "bzlTransitiveDigest": "d4N/SZrl3ONcmzE98rcV0Fsro0iUbjNQFTIiLiGuH+k=",
@@ -2953,7 +2969,7 @@
     },
     "@@toolchains_llvm+//toolchain/extensions:llvm.bzl%llvm": {
       "general": {
-        "bzlTransitiveDigest": "2eLMaPh4QKrn3wPljYBu5jSkkp9DfCf4yGKTR9lBN3c=",
+        "bzlTransitiveDigest": "2UD8x0LHy2fgOvBmCL8R0HPa9/omkySg1/dsFBzYcH8=",
         "usagesDigest": "KnHZLwznlFJ2kPZW62FpOMHtRkmwMRGpaGzzhXzclbM=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
@@ -2967,7 +2983,6 @@
               "distribution": "auto",
               "exec_arch": "",
               "exec_os": "",
-              "libclang_rt": {},
               "llvm_mirror": "",
               "llvm_version": "19.1.0",
               "llvm_versions": {},
@@ -3009,7 +3024,6 @@
                   "-Wno-c23-extensions"
                 ]
               },
-              "conly_flags": {},
               "coverage_compile_flags": {},
               "coverage_link_flags": {},
               "cxx_builtin_include_directories": {},

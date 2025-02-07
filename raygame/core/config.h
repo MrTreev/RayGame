@@ -153,35 +153,6 @@ constexpr OperatingSystem OPERATING_SYSTEM =
 } // namespace core::config
 
 //=============================================================================
-// Window Backend Config
-//=============================================================================
-#include "raygame/core/config/window_backend.h" // IWYU pragma: export
-
-namespace core::config {
-//! Window Backends
-enum class GuiBackend : std::uint8_t {
-    COCOA,
-    DWM,
-    TEMPLE,
-    WAYLAND,
-    X11,
-};
-
-class EnabledBackends {
-public:
-    static constexpr bool cocoa() { return detail::backend_cocoa(); }
-
-    static constexpr bool dwm() { return detail::backend_dwm(); }
-
-    static constexpr bool temple() { return detail::backend_temple(); }
-
-    static constexpr bool wayland() { return detail::backend_wayland(); }
-
-    static constexpr bool x11() { return detail::backend_x11(); }
-};
-} // namespace core::config
-
-//=============================================================================
 // Build Type Config
 //=============================================================================
 #include "raygame/core/config/build_type.h" // IWYU pragma: export

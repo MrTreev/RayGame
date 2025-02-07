@@ -1,4 +1,5 @@
 #pragma once
+#include "raygame/core/window/detail/backends.h"
 #include "raygame/core/window/window.h"
 #if defined(RAYGAME_GUI_BACKEND_X11)
 RAYGAME_CLANG_SUPPRESS_WARNING_PUSH

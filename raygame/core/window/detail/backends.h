@@ -1,5 +1,5 @@
 #pragma once
-#include "raygame/core/config/operating_system.h"
+#include "raygame/core/config.h"
 #if defined(RAYGAME_OS_LINUX) || defined(RAYGAME_OS_BSD)                       \
     || defined(RAYGAME_OS_HURD)
 #    if !defined(RAYGAME_GUI_BACKEND_WAYLAND)
@@ -22,44 +22,56 @@
 #    endif
 #endif
 
-namespace core::config::detail {
-consteval bool backend_cocoa() {
+namespace core::config {
+//! Window Backends
+enum class GuiBackend : uint8_t {
+    COCOA,
+    DWM,
+    TEMPLE,
+    WAYLAND,
+    X11,
+};
+
+class EnabledBackends {
+public:
+    static constexpr bool cocoa() {
 #if defined(RAYGAME_GUI_BACKEND_COCOA)
-    return true;
+        return true;
 #else
-    return false;
+        return false;
 #endif
-}
+    }
 
-consteval bool backend_dwm() {
+    static constexpr bool dwm() {
 #if defined(RAYGAME_GUI_BACKEND_DWM)
-    return true;
+        return true;
 #else
-    return false;
+        return false;
 #endif
-}
+    }
 
-consteval bool backend_temple() {
+    static constexpr bool temple() {
 #if defined(RAYGAME_GUI_BACKEND_TEMPLE)
-    return true;
+        return true;
 #else
-    return false;
+        return false;
 #endif
-}
+    }
 
-consteval bool backend_wayland() {
+    static constexpr bool wayland() {
 #if defined(RAYGAME_GUI_BACKEND_WAYLAND)
-    return true;
+        return true;
 #else
-    return false;
+        return false;
 #endif
-}
+    }
 
-consteval bool backend_x11() {
+    static constexpr bool x11() {
 #if defined(RAYGAME_GUI_BACKEND_X11)
-    return true;
+        return true;
 #else
-    return false;
+        return false;
 #endif
-}
-} // namespace core::config::detail
+    }
+};
+} // namespace core::config
