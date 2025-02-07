@@ -1,19 +1,21 @@
 #include "raygame/core/window/detail/wayland.h"
-#include "raygame/core/condition.h"
-#include "raygame/core/drawing/colour.h"
-#include "raygame/core/logger.h"
-#include "raygame/core/math/random.h"
-#include <algorithm>
-#include <chrono>
-#include <fcntl.h>
-#include <print>
-#include <sys/mman.h>
-#include <unistd.h>
-#include <utility>
-#include <wayland-client-core.h>
-#include <wayland-client-protocol.h>
-#include <xdg-shell-client-protocol.h>
-#include <xkbcommon/xkbcommon.h>
+#include "raygame/core/window/detail/backends.h"
+#if defined(RAYGAME_GUI_BACKEND_WAYLAND)
+#    include "raygame/core/condition.h"
+#    include "raygame/core/drawing/colour.h"
+#    include "raygame/core/logger.h"
+#    include "raygame/core/math/random.h"
+#    include <algorithm>
+#    include <chrono>
+#    include <fcntl.h>
+#    include <print>
+#    include <sys/mman.h>
+#    include <unistd.h>
+#    include <utility>
+#    include <wayland-client-core.h>
+#    include <wayland-client-protocol.h>
+#    include <xdg-shell-client-protocol.h>
+#    include <xkbcommon/xkbcommon.h>
 
 namespace {
 using core::condition::check_condition;
@@ -180,8 +182,7 @@ void core::window::detail::WaylandWindowImpl::draw_line(
         const auto width_max   = std::min(line.size(), pixbuf_view.size());
         const auto width_min   = pos.x;
         for (size_t idx{width_min}; idx < width_max - 1; ++idx) {
-            const Pixel& pixel = line[idx];
-            pixbuf_view[idx]   = pixel;
+            pixbuf_view[idx] = line[idx];
         }
     } else {
         condition::unreachable();
@@ -366,3 +367,4 @@ void core::window::detail::KeyboardState::event(
         sym
     );
 }
+#endif

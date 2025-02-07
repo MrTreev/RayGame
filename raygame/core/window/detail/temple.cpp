@@ -1,5 +1,7 @@
 #include "raygame/core/window/detail/temple.h"
-#include "raygame/core/condition.h"
+
+#if defined(RAYGAME_GUI_BACKEND_TEMPLE)
+#    include "raygame/core/condition.h"
 
 core::window::detail::TempleWindowImpl::TempleWindowImpl(
     Vec2<size_t> size,
@@ -33,3 +35,4 @@ bool core::window::detail::TempleWindowImpl::next_frame() {
 bool core::window::detail::TempleWindowImpl::should_close() const {
     core::condition::unimplemented();
 }
+#endif

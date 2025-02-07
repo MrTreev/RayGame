@@ -1,4 +1,5 @@
 #pragma once
+#include "raygame/core/window/detail/backends.h" // IWYU pragma: keep
 #include "raygame/core/window/window.h"
 
 namespace core::window::detail {
@@ -26,5 +27,9 @@ public:
 
     [[nodiscard]]
     bool should_close() const final;
+
+private:
+#if defined(RAYGAME_GUI_BACKEND_COCOA)
+#endif
 };
 } // namespace core::window::detail

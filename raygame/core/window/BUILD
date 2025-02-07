@@ -18,6 +18,8 @@ rg_cc_library(
     hdrs = ["window.h"],
     srcs = [
         "window.cpp",
+        "detail/backends.h",
+        "detail/backends.cpp",
         "detail/cocoa.h",
         "detail/dwm.h",
         "detail/temple.h",

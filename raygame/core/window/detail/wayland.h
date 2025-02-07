@@ -1,15 +1,19 @@
 #pragma once
-#include "raygame/core/config.h"
-#include "raygame/core/math/ring_average.h"
+#include "raygame/core/window/detail/backends.h" // IWYU pragma: keep
 #include "raygame/core/window/window.h"
-#include <chrono>
-#include <cstddef>
-#include <wayland-client-protocol.h>
-#include <xdg-shell-client-protocol.h>
-#include <xkbcommon/xkbcommon.h>
+
+#if defined(RAYGAME_GUI_BACKEND_WAYLAND)
+#    include "raygame/core/math/ring_average.h"
+#    include <chrono>
+#    include <cstddef>
+#    include <wayland-client-protocol.h>
+#    include <xdg-shell-client-protocol.h>
+#    include <xkbcommon/xkbcommon.h>
+#endif
 
 namespace core::window::detail {
 
+#if defined(RAYGAME_GUI_BACKEND_WAYLAND)
 struct Axis {
     bool       valid;
     wl_fixed_t value;
@@ -87,8 +91,11 @@ public:
         m_delay = delay;
     }
 };
+#endif
 
 class WaylandWindowImpl final: public WindowImpl {
+#if defined(RAYGAME_GUI_BACKEND_WAYLAND)
+
 public:
     explicit WaylandWindowImpl(
         Vec2<size_t> size  = DEFAULT_WINDOW_SIZE,
@@ -192,5 +199,6 @@ private:
     static void xdg_toplevel_handle_wm_capabilities(void* data, xdg_toplevel* xdg_toplevel, wl_array* capabilities);
     static void xdg_wm_base_handle_ping(void* data, xdg_wm_base* xdg_wm_base, uint32_t serial);
     // clang-format on
+#endif
 };
 } // namespace core::window::detail

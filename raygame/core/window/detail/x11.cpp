@@ -1,6 +1,7 @@
 #include "raygame/core/window/detail/x11.h"
-#include "raygame/core/condition.h"
-#include <utility>
+#if defined(RAYGAME_GUI_BACKEND_X11)
+#    include "raygame/core/condition.h"
+#    include <utility>
 
 namespace core::window::detail {
 using core::condition::unimplemented;
@@ -72,3 +73,4 @@ bool X11WindowImpl::should_close() const {
     }
 }
 } // namespace core::window::detail
+#endif

@@ -1,4 +1,5 @@
-#include "raygame/core/window/window.h" // IWYU pragma: keep #include "raygame/core/condition.h"
+#include "raygame/core/window/window.h" // IWYU pragma: keep
+#include "raygame/core/condition.h"
 #include "raygame/core/config.h"
 #include "raygame/core/logger.h"
 #include "raygame/core/window/detail/cocoa.h"
@@ -26,7 +27,7 @@ core::config::GuiBackend wayland_or_x11() {
     return core::config::GuiBackend::X11;
 }
 
-core::config::GuiBackend get_backend() {
+constexpr core::config::GuiBackend get_backend() {
     using core::condition::unimplemented;
     using core::config::GuiBackend;
     using core::config::OperatingSystem;
