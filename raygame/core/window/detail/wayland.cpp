@@ -165,6 +165,8 @@ core::window::detail::WaylandWindowImpl::WaylandWindowImpl(
 core::window::detail::WaylandWindowImpl::~WaylandWindowImpl() {
     if constexpr (config::EnabledBackends::wayland()) {
         wl_buffer_destroy(m_wl_buffer);
+        m_buffer_width  = 0;
+        m_buffer_height = 0;
         wl_surface_destroy(m_wl_surface);
         xdg_surface_destroy(m_xdg_surface);
         xdg_toplevel_destroy(m_xdg_toplevel);
@@ -173,32 +175,29 @@ core::window::detail::WaylandWindowImpl::~WaylandWindowImpl() {
     }
 }
 
-void core::window::detail::WaylandWindowImpl::draw_line(
-    std::span<const Pixel> line,
-    Vec2<size_t>           pos
-) {
-    if constexpr (config::EnabledBackends::wayland()) {
-        const auto pixbuf_view = data_row(pos.y);
-        const auto width_max   = std::min(line.size(), pixbuf_view.size());
-        const auto width_min   = pos.x;
-        for (size_t idx{width_min}; idx < width_max - 1; ++idx) {
-            pixbuf_view[idx] = line[idx];
-        }
-    } else {
-        condition::unreachable();
-    }
-}
-
 void core::window::detail::WaylandWindowImpl::draw(
     const drawing::ImageView& image
 ) {
     if constexpr (config::EnabledBackends::wayland()) {
-        const auto height_max =
-            std::min(image.pos_y() + image.height(), height());
-        const auto height_min = image.pos_y() - 1;
-        for (size_t col{height_min}; col < height_max - 1; ++col) {
-            draw_line(image.row(col), {image.pos_x(), col});
+        const auto min_row{image.pos_x()};
+        const auto min_col{image.pos_y()};
+        const auto max_row{
+            std::min(m_buffer_width, image.pos_x() + image.width())
+        };
+        const auto max_col{
+            std::min(m_buffer_height, image.pos_y() + image.height())
+        };
+        size_t max_used_row = 0;
+        size_t max_used_col = 0;
+        for (size_t row{min_row}; row < max_row; ++row) {
+            max_used_row = row;
+            for (size_t col{min_col}; col < max_col; ++col) {
+                max_used_col = col;
+                m_pixbuf[row, col] =
+                    image[row - image.pos_x(), col - image.pos_y()];
+            }
         }
+        log::debug("Max: {}, {}", max_used_row, max_used_col);
     } else {
         condition::unreachable();
     }
@@ -230,7 +229,6 @@ void core::window::detail::WaylandWindowImpl::restyle(WindowStyle style) {
 
 void core::window::detail::WaylandWindowImpl::render_frame() {
     if constexpr (config::EnabledBackends::wayland()) {
-        wl_surface_commit(m_wl_surface);
         wl_display_dispatch(m_wl_display);
     } else {
         condition::unreachable();
@@ -239,18 +237,22 @@ void core::window::detail::WaylandWindowImpl::render_frame() {
 
 bool core::window::detail::WaylandWindowImpl::next_frame() {
     if constexpr (config::EnabledBackends::wayland()) {
-        m_frame_beg = clock_t::now();
+        if constexpr (core::config::time_frames) {
+            m_frame_beg = clock_t::now();
+        }
         if (!should_close()) {
             render_frame();
         }
-        m_frame_end = clock_t::now();
-        using units = std::chrono::microseconds;
-        const auto frame_time =
-            std::chrono::duration_cast<units>(m_frame_end - m_frame_beg)
-                .count();
-        log::trace("Frame rendered in: {}us", frame_time);
-        m_counter.add(static_cast<size_t>(frame_time));
-        std::print("Frame Time (us): {}\r", m_counter.average());
+        if constexpr (core::config::time_frames) {
+            m_frame_end = clock_t::now();
+            using units = std::chrono::microseconds;
+            const auto frame_time =
+                std::chrono::duration_cast<units>(m_frame_end - m_frame_beg)
+                    .count();
+            log::trace("Frame rendered in: {}us", frame_time);
+            m_counter.add(static_cast<size_t>(frame_time));
+            std::print("Frame Time (us): {}\r", m_counter.average());
+        }
         return !should_close();
     } else {
         condition::unreachable();
@@ -267,8 +269,10 @@ bool core::window::detail::WaylandWindowImpl::should_close() const {
 
 void core::window::detail::WaylandWindowImpl::new_buffer() {
     if constexpr (config::EnabledBackends::wayland()) {
-        const auto buflen  = safe_mult<size_t>(width(), height());
-        const auto bufsize = safe_mult<size_t>(buflen, COLOUR_CHANNELS);
+        const auto buflen    = safe_mult<size_t>(width(), height());
+        const auto bufwidth  = width();
+        const auto bufheight = height();
+        const auto bufsize   = safe_mult<size_t>(buflen, COLOUR_CHANNELS);
         if (m_shm_fd >= 0) {
             close(m_shm_fd);
         }
@@ -286,7 +290,7 @@ void core::window::detail::WaylandWindowImpl::new_buffer() {
             close(m_shm_fd);
             check_condition(false, "Could not setup shm data");
         }
-        m_pixbuf      = {pixbuf, buflen};
+        m_pixbuf      = {pixbuf, std::extents(bufwidth, bufheight)};
         m_wl_shm_pool = wl_shm_create_pool(
             m_wl_shm,
             m_shm_fd,
@@ -295,11 +299,13 @@ void core::window::detail::WaylandWindowImpl::new_buffer() {
         m_wl_buffer = wl_shm_pool_create_buffer(
             m_wl_shm_pool,
             0,
-            numeric_cast<int32_t>(width()),
-            numeric_cast<int32_t>(height()),
-            safe_mult<int32_t>(width(), COLOUR_CHANNELS),
+            numeric_cast<int32_t>(bufwidth),
+            numeric_cast<int32_t>(bufheight),
+            safe_mult<int32_t>(bufwidth, COLOUR_CHANNELS),
             m_wl_shm_format
         );
+        m_buffer_width  = bufwidth;
+        m_buffer_height = bufheight;
         if (m_wl_shm_pool != nullptr) {
             wl_shm_pool_destroy(m_wl_shm_pool);
         }
@@ -307,21 +313,6 @@ void core::window::detail::WaylandWindowImpl::new_buffer() {
     } else {
         condition::unreachable();
     }
-}
-
-std::span<core::Pixel>
-core::window::detail::WaylandWindowImpl::data_row(size_t col) {
-    pre_condition(col <= height(), "Height out of range");
-    return {&m_pixbuf[col * width()], width()};
-}
-
-std::span<core::Pixel> core::window::detail::WaylandWindowImpl::span() {
-    return m_pixbuf;
-}
-
-std::span<const core::Pixel>
-core::window::detail::WaylandWindowImpl::span() const {
-    return m_pixbuf;
 }
 
 void core::window::detail::KeyboardState::new_from_string(const char* str) {

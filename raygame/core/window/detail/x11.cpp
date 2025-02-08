@@ -14,10 +14,24 @@ X11WindowImpl::X11WindowImpl(
 )
     : WindowImpl(size, std::move(title), style) {
     if constexpr (config::EnabledBackends::x11()) {
-        std::ignore = m_display;
-        std::ignore = m_screen;
+        constexpr auto background_colour = 0xFF'DD'00;
+        m_display                        = XOpenDisplay(nullptr);
+        m_window                         = XCreateSimpleWindow(
+            m_display, // our connection to server
+            RootWindow(m_display, 0), // parent window (none in this example)
+            0,                        // x
+            0,                        // y
+            math::numeric_cast<uint32_t>(size.x), // width
+            math::numeric_cast<uint32_t>(size.y), // height
+            0,          // border width
+            0x00'00'00, // border color (ignored in this example)
+            background_colour // background color (mustard yellow)
+        );
+        XStoreName(m_display, m_window, title.c_str());
+        XMapWindow(m_display, m_window);
+        XFlush(m_display);
         std::ignore = m_event;
-        std::ignore = m_window;
+        std::ignore = m_screen;
     } else {
         unreachable();
     }
@@ -25,7 +39,9 @@ X11WindowImpl::X11WindowImpl(
 
 X11WindowImpl::~X11WindowImpl() {
     if constexpr (config::EnabledBackends::x11()) {
-        // XCloseDisplay(m_display);
+        XUnmapWindow(m_display, m_window);
+        XDestroyWindow(m_display, m_window);
+        XCloseDisplay(m_display);
     } else {
         std::unreachable();
     }

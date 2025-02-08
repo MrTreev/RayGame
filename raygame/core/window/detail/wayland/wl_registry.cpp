@@ -1,7 +1,8 @@
-#include "raygame/core/logger.h"
 #include "raygame/core/window/detail/wayland.h"
-#include <wayland-client-protocol.h>
-#include <xdg-shell-client-protocol.h>
+#if defined(RAYGAME_GUI_BACKEND_WAYLAND)
+#    include "raygame/core/logger.h"
+#    include <wayland-client-protocol.h>
+#    include <xdg-shell-client-protocol.h>
 
 const wl_registry_listener
     core::window::detail::WaylandWindowImpl::m_wl_registry_listener = {
@@ -63,3 +64,4 @@ void core::window::detail::WaylandWindowImpl::wl_registry_handle_global_remove(
     wl_registry_destroy(registry);
     core::log::trace("removed registry: {}", name);
 }
+#endif

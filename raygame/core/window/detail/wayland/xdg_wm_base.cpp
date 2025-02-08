@@ -1,5 +1,6 @@
 #include "raygame/core/window/detail/wayland.h"
-#include <xdg-shell-client-protocol.h>
+#if defined(RAYGAME_GUI_BACKEND_WAYLAND)
+#    include <xdg-shell-client-protocol.h>
 
 const xdg_wm_base_listener
     core::window::detail::WaylandWindowImpl::m_xdg_wm_base_listener = {
@@ -15,3 +16,4 @@ void core::window::detail::WaylandWindowImpl::xdg_wm_base_handle_ping(
     auto* this_impl = static_cast<WaylandWindowImpl*>(data);
     xdg_wm_base_pong(xdg_wm_base, serial);
 }
+#endif

@@ -1,7 +1,8 @@
-#include "raygame/core/condition.h"
-#include "raygame/core/logger.h"
 #include "raygame/core/window/detail/wayland.h"
-#include <wayland-client-protocol.h>
+#if defined(RAYGAME_GUI_BACKEND_WAYLAND)
+#    include "raygame/core/condition.h"
+#    include "raygame/core/logger.h"
+#    include <wayland-client-protocol.h>
 
 const wl_pointer_listener
     core::window::detail::WaylandWindowImpl::m_wl_pointer_listener = {
@@ -175,7 +176,7 @@ void core::window::detail::WaylandWindowImpl::wl_pointer_handle_frame(
     void*                        data,
     [[maybe_unused]] wl_pointer* wl_pointer
 ) {
-    const auto*          this_impl = static_cast<WaylandWindowImpl*>(data);
+    const auto*         this_impl = static_cast<WaylandWindowImpl*>(data);
     const PointerEvent& event     = this_impl->m_pointer_event;
     if ((event.event_mask & POINTER_EVENT_ENTER) != 0U) {
         core::log::trace(
@@ -262,3 +263,4 @@ void core::window::detail::WaylandWindowImpl::wl_pointer_handle_motion(
 }
 
 // NOLINTEND(*-easily-swappable-parameters)
+#endif

@@ -94,8 +94,6 @@ public:
 #endif
 
 class WaylandWindowImpl final: public WindowImpl {
-#if defined(RAYGAME_GUI_BACKEND_WAYLAND)
-
 public:
     explicit WaylandWindowImpl(
         Vec2<size_t> size  = DEFAULT_WINDOW_SIZE,
@@ -118,6 +116,8 @@ public:
     [[nodiscard]]
     bool should_close() const final;
 
+#if defined(RAYGAME_GUI_BACKEND_WAYLAND)
+
 private:
     using wl_fixed_t  = int32_t;
     using clock_t     = std::chrono::high_resolution_clock;
@@ -125,26 +125,23 @@ private:
 
     math::RingAverage<size_t, config::TARGET_FPS> m_counter;
 
-    timepoint_t      m_frame_beg;
-    timepoint_t      m_frame_end;
-    int              m_shm_fd = -1;
-    uint32_t         m_wl_shm_format;
-    std::span<Pixel> m_pixbuf;
+    timepoint_t m_frame_beg;
+    timepoint_t m_frame_end;
+    int         m_shm_fd = -1;
+    uint32_t    m_wl_shm_format;
+
+    std::mdspan<Pixel, std::dextents<size_t, 2>> m_pixbuf;
 
     void new_buffer();
     void set_style(WindowStyle style);
-    void draw_line(std::span<const Pixel> line, Vec2<size_t> pos);
-
-    [[nodiscard]]
-    std::span<const Pixel> span() const;
-    std::span<Pixel>       span();
-    std::span<Pixel>       data_row(size_t col);
 
     bool          m_should_close = false;
     bool          m_configured   = false;
     PointerEvent  m_pointer_event{};
     KeyboardState m_keyboard_state;
 
+    size_t         m_buffer_width  = 0;
+    size_t         m_buffer_height = 0;
     wl_buffer*     m_wl_buffer     = nullptr;
     wl_callback*   m_wl_callback   = nullptr;
     wl_compositor* m_wl_compositor = nullptr;

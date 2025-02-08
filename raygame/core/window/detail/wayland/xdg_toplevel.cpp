@@ -1,5 +1,7 @@
+#include "raygame/core/logger.h"
 #include "raygame/core/window/detail/wayland.h"
-#include <xdg-shell-client-protocol.h>
+#if defined(RAYGAME_GUI_BACKEND_WAYLAND)
+#    include <xdg-shell-client-protocol.h>
 
 const xdg_toplevel_listener
     core::window::detail::WaylandWindowImpl::m_xdg_toplevel_listener = {
@@ -14,12 +16,18 @@ const xdg_toplevel_listener
 void core::window::detail::WaylandWindowImpl::xdg_toplevel_handle_configure(
     void*                                 data,
     [[maybe_unused]] struct xdg_toplevel* xdg_toplevel,
-    [[maybe_unused]] int32_t              width,
-    [[maybe_unused]] int32_t              height,
+    int32_t                               width,
+    int32_t                               height,
     [[maybe_unused]] struct wl_array*     states
 ) {
-    [[maybe_unused]]
     auto* this_impl = static_cast<WaylandWindowImpl*>(data);
+    if (width == 0 || height == 0) {
+        return;
+    }
+    log::debug("width: {}, height: {}", width, height);
+    this_impl->set_size(
+        {math::numeric_cast<size_t>(width), math::numeric_cast<size_t>(height)}
+    );
 }
 
 void core::window::detail::WaylandWindowImpl::xdg_toplevel_handle_close(
@@ -34,11 +42,13 @@ void core::window::detail::WaylandWindowImpl::
     xdg_toplevel_handle_configure_bounds(
         void*                                 data,
         [[maybe_unused]] struct xdg_toplevel* xdg_toplevel,
-        [[maybe_unused]] int32_t              width,
-        [[maybe_unused]] int32_t              height
+        int32_t                               width,
+        int32_t                               height
     ) {
-    [[maybe_unused]]
     auto* this_impl = static_cast<WaylandWindowImpl*>(data);
+    this_impl->set_size(
+        {math::numeric_cast<size_t>(width), math::numeric_cast<size_t>(height)}
+    );
 }
 
 void core::window::detail::WaylandWindowImpl::
@@ -52,3 +62,4 @@ void core::window::detail::WaylandWindowImpl::
 }
 
 //NOLINTEND(*-easily-swappable-parameters)
+#endif

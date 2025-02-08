@@ -16,6 +16,7 @@
 #include "raygame/core/config/user_defines.h" // IWYU pragma: export
 
 namespace core::config {
+constexpr bool   time_frames        = false;
 //! Game's target FPS
 constexpr size_t TARGET_FPS         = RAYGAME_TARGET_FPS;
 //! Force generic implementations

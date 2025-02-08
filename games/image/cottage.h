@@ -1,4 +1,4 @@
-/* GIMP RGBA C-Source image dump (cottage.c) */
+#pragma once
 #include <array>
 
 constexpr  std::array<unsigned char,(92 * 96 * 4) + 1>	 cottage_image{

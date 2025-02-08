@@ -81,6 +81,8 @@ public:
         return {&m_mdspan[0, col], &m_mdspan[width() - 1, col]};
     }
 
+    constexpr void move(size_t posx, size_t posy) { m_rect.pos(posx, posy); }
+
     [[nodiscard]]
     constexpr Vec2<size_t> pos() const {
         return m_rect.pos();
@@ -114,6 +116,16 @@ public:
     [[nodiscard]]
     constexpr const Pixel& get_item(size_t row, size_t col) const {
         return m_mdspan[row, col];
+    }
+
+    [[nodiscard]]
+    constexpr auto operator[](size_t row, size_t col) const {
+        return m_mdspan[row, col];
+    }
+
+    [[nodiscard]]
+    constexpr auto extent(size_t ext) const {
+        return m_mdspan.extent(ext);
     }
 };
 

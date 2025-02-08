@@ -1,18 +1,4 @@
 load("//rules:rg_cc_singlefile.bzl", "rg_cc_library")
-COCOA_DEPS = []
-DWM_DEPS = []
-WAYLAND_DEPS = [
-    "//raygame/core:logger",
-    "//raygame/core/drawing:colour",
-    "//raygame/core/math:random",
-    "//raygame/core/math:ring_average",
-    "//third_party/wayland",
-    "//third_party/system/xkbcommon"
-]
-X11_DEPS = [
-    "//third_party/system/x11",
-]
-
 rg_cc_library(
     name = "window",
     hdrs = ["window.h"],
@@ -44,11 +30,22 @@ rg_cc_library(
         "//raygame/core/math:vector",
         "//raygame/core/drawing:image",
     ],
-    implementation_deps = [] + select({
-        "//rules/gui:cocoa":    COCOA_DEPS,
-        "//rules/gui:dwm":      DWM_DEPS,
-        "//rules/gui:wayland":  WAYLAND_DEPS,
-        "//rules/gui:x11":      X11_DEPS,
+    implementation_deps = [
+    ] + select({
+        "//rules/os:android":   [],
+        "//rules/os:bsd":       [],
+        "//rules/os:linux":     [
+            "//raygame/core:logger",
+            "//raygame/core/drawing:colour",
+            "//raygame/core/math:random",
+            "//raygame/core/math:ring_average",
+            "//third_party/wayland",
+            "//third_party/system/xkbcommon",
+            "//third_party/system/x11",
+        ],
+        "//rules/os:mac":       [],
+        "//rules/os:qnx":       [],
+        "//rules/os:windows":   [],
         "//conditions:default": [],
     }),
     visibility = [ "//visibility:public" ],

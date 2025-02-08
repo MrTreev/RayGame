@@ -4,6 +4,7 @@ cc_library(
     srcs = [
         "icon.cpp",
         "cottage.h",
+        "icon.h",
     ],
     deps = [
         "//raygame/core/drawing:image",

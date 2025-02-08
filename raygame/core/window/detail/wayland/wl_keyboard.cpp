@@ -1,9 +1,10 @@
-#include "raygame/core/logger.h"
 #include "raygame/core/window/detail/wayland.h"
-#include <sys/mman.h>
-#include <unistd.h>
-#include <wayland-client-protocol.h>
-#include <xkbcommon/xkbcommon.h>
+#if defined(RAYGAME_GUI_BACKEND_WAYLAND)
+#    include "raygame/core/logger.h"
+#    include <sys/mman.h>
+#    include <unistd.h>
+#    include <wayland-client-protocol.h>
+#    include <xkbcommon/xkbcommon.h>
 
 const wl_keyboard_listener
     core::window::detail::WaylandWindowImpl::m_wl_keyboard_listener = {
@@ -93,3 +94,4 @@ void core::window::detail::WaylandWindowImpl::wl_keyboard_repeat_info(
 }
 
 // NOLINTEND(*-easily-swappable-parameters)
+#endif
