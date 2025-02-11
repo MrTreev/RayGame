@@ -187,17 +187,12 @@ void core::window::detail::WaylandWindowImpl::draw(
         const auto max_col{
             std::min(m_buffer_height, image.pos_y() + image.height())
         };
-        size_t max_used_row = 0;
-        size_t max_used_col = 0;
         for (size_t row{min_row}; row < max_row; ++row) {
-            max_used_row = row;
             for (size_t col{min_col}; col < max_col; ++col) {
-                max_used_col = col;
                 m_pixbuf[row, col] =
                     image[row - image.pos_x(), col - image.pos_y()];
             }
         }
-        log::debug("Max: {}, {}", max_used_row, max_used_col);
     } else {
         condition::unreachable();
     }
@@ -229,6 +224,8 @@ void core::window::detail::WaylandWindowImpl::restyle(WindowStyle style) {
 
 void core::window::detail::WaylandWindowImpl::render_frame() {
     if constexpr (config::EnabledBackends::wayland()) {
+        wl_surface_commit(m_wl_surface);
+        log::trace("Surface Committed");
         wl_display_dispatch(m_wl_display);
     } else {
         condition::unreachable();
@@ -306,10 +303,12 @@ void core::window::detail::WaylandWindowImpl::new_buffer() {
         );
         m_buffer_width  = bufwidth;
         m_buffer_height = bufheight;
+        check_ptr(m_wl_buffer, "Failed to create buffer");
+        wl_surface_attach(m_wl_surface, m_wl_buffer, 0, 0);
+        log::trace("Surface Attached");
         if (m_wl_shm_pool != nullptr) {
             wl_shm_pool_destroy(m_wl_shm_pool);
         }
-        check_ptr(m_wl_buffer, "Failed to create buffer");
     } else {
         condition::unreachable();
     }
