@@ -1,66 +1,16 @@
 #pragma once
-#include "raygame/core/types.h"
+#include "raygame/core/config.h"
 #include <format>
 #include <source_location>
 #include <string>
-#include <utility>
 
 namespace core::log {
-
-//! Logging level
-enum class Level : uint8_t {
-    TRACE    = 0,
-    DEBUG    = 10,
-    INFO     = 20,
-    NOTE     = 30,
-    PROGRESS = 40,
-    /* 50 - 80 */
-    WARNING  = 80,
-    ERROR    = 90,
-    FATAL    = 255,
-};
-
-#if defined(RAYGAME_LOG_TRACE)
-constexpr Level logging_level = Level::TRACE;
-#elif defined(RAYGAME_LOG_DEBUG)
-constexpr Level logging_level = Level::DEBUG;
-#elif defined(RAYGAME_LOG_INFO)
-constexpr Level logging_level = Level::INFO;
-#elif defined(RAYGAME_LOG_NOTE)
-constexpr Level logging_level = Level::NOTE;
-#elif defined(RAYGAME_LOG_PROGRESS)
-constexpr Level logging_level = Level::PROGRESS;
-#elif defined(RAYGAME_LOG_WARNING)
-constexpr Level logging_level = Level::WARNING;
-#elif defined(RAYGAME_LOG_ERROR)
-constexpr Level logging_level = Level::ERROR;
-#elif defined(RAYGAME_LOG_FATAL)
-constexpr Level logging_level = Level::FATAL;
-#else
-#    warning "No logging level set for RAYGAME, using NOTE"
-constexpr Level logging_level = Level::NOTE;
-#endif
-
 //! Logging level to string converter
-constexpr std::string to_string(Level level) {
-    switch (level) {
-    case Level::TRACE:    return "TRACE";
-    case Level::DEBUG:    return "DEBUG";
-    case Level::INFO:     return "INFO ";
-    case Level::NOTE:     return "NOTE ";
-    case Level::PROGRESS: return "PROG ";
-    case Level::WARNING:  return "WARN ";
-    case Level::ERROR:    return "ERROR";
-    case Level::FATAL:    return "FATAL";
-    }
-    std::unreachable();
-}
-
 namespace detail {
 void logger(
     const core::log::Level&     level,
     const std::string&          text,
-    const std::source_location& loc = std::source_location::current()
+    const std::source_location& loc
 );
 } // namespace detail
 

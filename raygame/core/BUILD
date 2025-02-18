@@ -18,21 +18,21 @@ rg_cc_single(
 
 rg_cc_single(
     name = "config",
-    private_srcs = glob(["config/*.h"]),
     defines = [
-        ] + select({
-            "//rules/log/level:trace":    ["RAYGAME_LOG_TRACE"],
-            "//rules/log/level:debug":    ["RAYGAME_LOG_DEBUG"],
-            "//rules/log/level:info":     ["RAYGAME_LOG_INFO"],
-            "//rules/log/level:note":     ["RAYGAME_LOG_NOTE"],
-            "//rules/log/level:progress": ["RAYGAME_LOG_PROGRESS"],
-            "//rules/log/level:warning":  ["RAYGAME_LOG_WARNING"],
-            "//rules/log/level:error":    ["RAYGAME_LOG_ERROR"],
-            "//rules/log/level:fatal":    ["RAYGAME_LOG_FATAL"],
-        }) + select({
-            "//rules/log/source_location:enabled":  ["RAYGAME_ENABLE_SOURCE_LOC"],
-            "//rules/log/source_location:disabled": ["RAYGAME_DISABLE_SOURCE_LOC"],
-        }),
+    ] + select({
+        "//rules/log/level:trace":    ["RAYGAME_LOG_TRACE"],
+        "//rules/log/level:debug":    ["RAYGAME_LOG_DEBUG"],
+        "//rules/log/level:info":     ["RAYGAME_LOG_INFO"],
+        "//rules/log/level:note":     ["RAYGAME_LOG_NOTE"],
+        "//rules/log/level:progress": ["RAYGAME_LOG_PROGRESS"],
+        "//rules/log/level:warning":  ["RAYGAME_LOG_WARNING"],
+        "//rules/log/level:error":    ["RAYGAME_LOG_ERROR"],
+        "//rules/log/level:fatal":    ["RAYGAME_LOG_FATAL"],
+    }) + select({
+        "//rules/log/source_location:enabled":  ["RAYGAME_ENABLE_SOURCE_LOC"],
+        "//rules/log/source_location:disabled": ["RAYGAME_DISABLE_SOURCE_LOC"],
+    }),
+    visibility = ["//visibility:public"],
 )
 
 rg_cc_single(

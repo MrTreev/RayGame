@@ -5,6 +5,20 @@
 #include <string_view>
 
 namespace {
+constexpr std::string to_string(core::log::Level level) {
+    switch (level) {
+    case core::log::Level::TRACE:    return "TRACE";
+    case core::log::Level::DEBUG:    return "DEBUG";
+    case core::log::Level::INFO:     return "INFO ";
+    case core::log::Level::NOTE:     return "NOTE ";
+    case core::log::Level::PROGRESS: return "PROG ";
+    case core::log::Level::WARNING:  return "WARN ";
+    case core::log::Level::ERROR:    return "ERROR";
+    case core::log::Level::FATAL:    return "FATAL";
+    }
+    std::unreachable();
+}
+
 #if defined(RAYGAME_ENABLE_SOURCE_LOC)
 constexpr bool enable_source_loc = true;
 #elif defined(RAYGAME_DISABLE_SOURCE_LOC)

@@ -234,13 +234,13 @@ void core::window::detail::WaylandWindowImpl::render_frame() {
 
 bool core::window::detail::WaylandWindowImpl::next_frame() {
     if constexpr (config::EnabledBackends::wayland()) {
-        if constexpr (core::config::time_frames) {
+        if constexpr (core::config::TIME_FRAMES) {
             m_frame_beg = clock_t::now();
         }
         if (!should_close()) {
             render_frame();
         }
-        if constexpr (core::config::time_frames) {
+        if constexpr (core::config::TIME_FRAMES) {
             m_frame_end = clock_t::now();
             using units = std::chrono::microseconds;
             const auto frame_time =
