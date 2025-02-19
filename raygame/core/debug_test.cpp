@@ -30,7 +30,7 @@ TEST_SUITE("core::debug::type_name") {
         CHECK_EQ(testclass_name, "TestClass");
     }
     TEST_CASE("type_name(auto val)") {
-        TestClass         testclass;
+        const TestClass   testclass;
         const std::string uint8_name      = type_name(uint8_t());
         const std::string testclass_name  = type_name(testclass);
         const std::string ul_literal_name = type_name(1UL);

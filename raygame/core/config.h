@@ -535,12 +535,10 @@ consteval bool debug() {
 // NOLINTNEXTLINE(*-macro-usage)
 #    define RAYGAME_RELEASE_ONLY(x) x
 #    define RAYGAME_DEBUG_ONLY(x)
-#    define RAYGAME_BUILD_TYPE RELEASE
 #else
 // NOLINTNEXTLINE(*-macro-usage)
 #    define RAYGAME_DEBUG_ONLY(x) x
 #    define RAYGAME_RELEASE_ONLY(x)
-#    define RAYGAME_BUILD_TYPE DEBUG
 #endif
 
 namespace core::config {
