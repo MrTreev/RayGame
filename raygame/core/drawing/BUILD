@@ -26,6 +26,9 @@ rg_cc_single(
     deps = [
         "//raygame/core:types",
     ],
+    testonlydeps = [
+        ":colour",
+    ],
 )
 
 filegroup(
