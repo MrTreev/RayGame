@@ -10,6 +10,7 @@ bazel_dep(name = "doctest", version = "2.4.11")
 bazel_dep(name = "aspect_bazel_lib", version = "2.13.0")
 bazel_dep(name = "bazel_skylib", version = "1.7.1")
 
+bazel_dep(name = "imgui", version = "1.91.8")
 
 bazel_dep(name = "hedron_compile_commands", dev_dependency = True)
 git_override(
@@ -38,28 +39,6 @@ llvm.toolchain(
         # Security
         "-fstack-protector",
         "-fno-omit-frame-pointer",
-        # Diagnostics
-        "-fcolor-diagnostics",
-        "-Werror",
-        "-Wall",
-        "-Weverything",
-        "-pedantic",
-        "-Wthread-safety",
-        "-Wself-assign",
-        "-Wno-padded",
-        "-Wno-c99-extensions",
-        "-Wno-c99-compat",
-        "-Wno-c++-compat",
-        "-Wno-c++20-compat",
-        "-Wno-c++98-compat",
-        "-Wno-c++98-compat-pedantic",
-        "-Wno-pre-c++20-compat-pedantic",
-        "-Wno-pre-c++17-compat-pedantic",
-        "-Wno-switch-default",
-        "-Wno-c++20-extensions",
-        "-Wno-unused-macros",
-        "-Wno-unsafe-buffer-usage",
-        "-Wno-c23-extensions",
     ]},
 )
 use_repo(llvm, "llvm_toolchain")

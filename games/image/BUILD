@@ -7,8 +7,8 @@ cc_library(
         "icon.h",
     ],
     deps = [
-        "//raygame/core/drawing:image",
-    ],
+        "//raygame/core/drawing:pixel",
+    ]
 )
 
 cc_binary(

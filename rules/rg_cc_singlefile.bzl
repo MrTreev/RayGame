@@ -5,6 +5,7 @@ def _rg_cc_library_impl(
     srcs,
     hdrs,
     tsts,
+    copts,
     deps,
     size,
     testlibs,
@@ -14,11 +15,36 @@ def _rg_cc_library_impl(
     visibility,
     **kwargs
 ):
+    add_copts = [
+        # Diagnostics
+        "-fcolor-diagnostics",
+        "-Werror",
+        "-Wall",
+        "-Weverything",
+        "-pedantic",
+        "-Wthread-safety",
+        "-Wself-assign",
+        "-Wno-padded",
+        "-Wno-c99-extensions",
+        "-Wno-c99-compat",
+        "-Wno-c++-compat",
+        "-Wno-c++20-compat",
+        "-Wno-c++98-compat",
+        "-Wno-c++98-compat-pedantic",
+        "-Wno-pre-c++20-compat-pedantic",
+        "-Wno-pre-c++17-compat-pedantic",
+        "-Wno-switch-default",
+        "-Wno-c++20-extensions",
+        "-Wno-unused-macros",
+        "-Wno-unsafe-buffer-usage",
+        "-Wno-c23-extensions",
+    ]
     cc_library(
         name = name,
         deps = deps,
         hdrs = hdrs,
         srcs = srcs + private_srcs,
+        copts = copts + add_copts,
         visibility = visibility,
         **kwargs
     )
@@ -27,6 +53,7 @@ def _rg_cc_library_impl(
         cc_test(
             name = name + "_test",
             srcs = tsts,
+            copts = copts + add_copts,
             deps = [":" + name] + testonlydeps + testlibs,
             size = size,
             visibility = visibility,
@@ -41,6 +68,7 @@ rg_cc_library = macro(
         "testlibs":     attr.label_list(default=["//raygame/core/test"]),
         "testonlydeps": attr.label_list(default=[]),
         "tsts":         attr.label_list(default=[]),
+        "copts":        attr.label_list(default=[])
     },
     implementation = _rg_cc_library_impl,
 )

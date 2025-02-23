@@ -2,8 +2,6 @@
 #include "raygame/core/math/ring_average.h"
 #include "raygame/core/window/detail/wayland/wayland_fwd.h"
 #include "raygame/core/window/window.h"
-#include <chrono>
-#include <cstddef>
 
 namespace core::window::detail {
 

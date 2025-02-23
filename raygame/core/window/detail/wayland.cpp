@@ -1,8 +1,7 @@
 #include "raygame/core/window/detail/wayland.h"
-#include "raygame/core/window/detail/backends.h"
 #if defined(RAYGAME_GUI_BACKEND_WAYLAND)
 #    include "raygame/core/condition.h"
-#    include "raygame/core/drawing/colour.h"
+#    include "raygame/core/drawing/pixel.h"
 #    include "raygame/core/logger.h"
 #    include "raygame/core/math/random.h"
 #    include <algorithm>

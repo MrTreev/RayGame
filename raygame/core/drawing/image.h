@@ -127,6 +127,11 @@ public:
     constexpr auto extent(size_t ext) const {
         return m_mdspan.extent(ext);
     }
+
+    [[nodiscard]]
+    constexpr auto data() const {
+        return m_mdspan.data_handle();
+    }
 };
 
 static_assert(concepts::Drawable<ImageView>, "ImageView not Drawable");

@@ -65,7 +65,7 @@ void core::log::detail::logger(
 ) {
     if (logging_level <= level) {
         std::println(
-            std::cout,
+            std::cerr,
             "{:%T} [{}] {}- {}",
             std::chrono::system_clock::now(),
             to_string(level),
