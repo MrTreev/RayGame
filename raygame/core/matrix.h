@@ -5,6 +5,7 @@ namespace core {
 
 template<typename T, auto Width, auto Height>
 class Matrix {
+private:
     std::array<T, (Width * Height)>                     m_buffer;
     std::mdspan<T, std::extents<size_t, Width, Height>> m_mdspan;
 
@@ -37,13 +38,19 @@ public:
 
 template<typename T>
 class ViewMatrix {
+private:
     std::mdspan<T, std::dextents<size_t, 2>> m_mdspan;
 
 public:
-    explicit ViewMatrix(const auto&& container, size_t width_, size_t height_)
+    explicit constexpr ViewMatrix(
+        const auto&& container,
+        size_t       width_,
+        size_t       height_
+    )
         : m_mdspan(container, width_, height_) {}
 
-    const T& operator[](const size_t& xpos, const size_t& ypos) const {
+    constexpr const T&
+    operator[](const size_t& xpos, const size_t& ypos) const {
         return m_mdspan[ypos, xpos];
     }
 

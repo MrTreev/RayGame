@@ -4,6 +4,8 @@
 
 namespace core::window::detail {
 class CocoaWindowImpl final: public WindowImpl {
+    consteval bool enabled() { return config::EnabledBackends::cocoa(); }
+
 public:
     explicit CocoaWindowImpl(
         Vec2<size_t> size  = DEFAULT_WINDOW_SIZE,

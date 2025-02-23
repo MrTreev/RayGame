@@ -4,8 +4,10 @@
 #    include <utility>
 
 namespace core::window::detail {
+namespace {
 using core::condition::unimplemented;
 using core::condition::unreachable;
+} // namespace
 
 X11WindowImpl::X11WindowImpl(
     Vec2<size_t> size,

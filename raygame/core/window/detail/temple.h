@@ -4,6 +4,8 @@
 
 namespace core::window::detail {
 class TempleWindowImpl final: public WindowImpl {
+    consteval bool enabled() { return config::EnabledBackends::temple(); }
+
 public:
     explicit TempleWindowImpl(
         Vec2<size_t> size  = DEFAULT_WINDOW_SIZE,

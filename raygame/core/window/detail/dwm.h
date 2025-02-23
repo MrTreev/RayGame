@@ -4,6 +4,8 @@
 
 namespace core::window::detail {
 class DwmWindowImpl final: public WindowImpl {
+    consteval bool enabled() { return config::EnabledBackends::dwm(); }
+
 public:
     explicit DwmWindowImpl(
         Vec2<size_t> size  = DEFAULT_WINDOW_SIZE,

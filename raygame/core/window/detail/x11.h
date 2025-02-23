@@ -10,6 +10,8 @@ RAYGAME_CLANG_SUPPRESS_WARNING_POP
 
 namespace core::window::detail {
 class X11WindowImpl final: public WindowImpl {
+    consteval bool enabled() { return config::EnabledBackends::x11(); }
+
 public:
     explicit X11WindowImpl(
         Vec2<size_t> size  = DEFAULT_WINDOW_SIZE,
