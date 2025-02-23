@@ -1,5 +1,5 @@
 #pragma once
-#include "raygame/core/window/detail/backends.h" // IWYU pragma: keep
+#include "raygame/core/window/detail/backends.h"
 #include "raygame/core/window/window.h"
 
 namespace core::window::detail {

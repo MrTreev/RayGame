@@ -1,3 +1,4 @@
+#pragma once
 #include "raygame/core/window/detail/backends.h"
 #include "raygame/core/window/window.h"
 

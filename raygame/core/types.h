@@ -5,6 +5,7 @@
 #include <format>
 #include <sstream>
 #include <string>
+#include <type_traits>
 
 #define RAYGAME_MAKE_FORMAT_TEMPLATE_1(classname)                              \
     template<typename TNAME>                                                   \
@@ -177,18 +178,18 @@ public:
     //NOLINTEND(*-non-private-member-*)
 
     constexpr explicit operator std::string() const {
-        if constexpr (std::is_same_v<A, B>) {
+        if constexpr (std::is_same_v<decltype(a), decltype(b)>) {
             return std::format(
                 "Pair<{}>(a: {}, b: {})",
-                core::debug::type_name<A>(),
+                core::debug::type_name(a),
                 a,
                 b
             );
         } else {
             return std::format(
                 "Pair<{}, {}>(a: {}, b: {})",
-                core::debug::type_name<A>(),
-                core::debug::type_name<B>(),
+                core::debug::type_name(a),
+                core::debug::type_name(b),
                 a,
                 b
             );
@@ -212,10 +213,11 @@ public:
     //NOLINTEND(*-non-private-member-*)
 
     constexpr explicit operator std::string() const {
-        if constexpr (std::is_same_v<A, B> && std::is_same_v<A, C>) {
+        if constexpr (std::is_same_v<decltype(a), decltype(b)>
+                      && std::is_same_v<decltype(a), decltype(c)>) {
             return std::format(
                 "Triple<{}>(a: {}, b: {}, c: {})",
-                core::debug::type_name<A>(),
+                core::debug::type_name(a),
                 a,
                 b,
                 c
@@ -223,9 +225,9 @@ public:
         } else {
             return std::format(
                 "Triple<{}, {}, {}>(a: {}, b: {}, c: {})",
-                core::debug::type_name<A>(),
-                core::debug::type_name<B>(),
-                core::debug::type_name<C>(),
+                core::debug::type_name(a),
+                core::debug::type_name(b),
+                core::debug::type_name(c),
                 a,
                 b,
                 c
@@ -255,11 +257,12 @@ public:
 
     //NOLINTEND(*-non-private-member-*)
     constexpr explicit operator std::string() const {
-        if constexpr (std::is_same_v<A, B> && std::is_same_v<A, C>
-                      && std::is_same_v<A, D>) {
+        if constexpr (std::is_same_v<decltype(a), decltype(b)>
+                      && std::is_same_v<decltype(a), decltype(c)>
+                      && std::is_same_v<decltype(a), decltype(d)>) {
             return std::format(
                 "Quad<{}>(a: {}, b: {}, c: {}, d: {})",
-                core::debug::type_name<A>(),
+                core::debug::type_name(a),
                 a,
                 b,
                 c,
@@ -268,10 +271,10 @@ public:
         } else {
             return std::format(
                 "Quad<{}, {}, {}, {}>(a: {}, b: {}, c: {}, d: {})",
-                core::debug::type_name<A>(),
-                core::debug::type_name<B>(),
-                core::debug::type_name<C>(),
-                core::debug::type_name<D>(),
+                core::debug::type_name(a),
+                core::debug::type_name(b),
+                core::debug::type_name(c),
+                core::debug::type_name(d),
                 a,
                 b,
                 c,
