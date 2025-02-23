@@ -36,7 +36,7 @@ rg_cc_library(
         "//rules/os:bsd":       [],
         "//rules/os:linux":     [
             "//raygame/core:logger",
-            "//raygame/core/drawing:colour",
+            "//raygame/core/drawing:pixel",
             "//raygame/core/math:random",
             "//raygame/core/math:ring_average",
             "//third_party/wayland",

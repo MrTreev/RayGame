@@ -1,4 +1,3 @@
-#include "raygame/core/drawing/colour.h"
 #include "raygame/core/drawing/image.h"
 #include "raygame/core/drawing/pixel.h"
 #include "raygame/core/test/tests_begin.h"

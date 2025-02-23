@@ -1,13 +1,6 @@
 load("//rules:rg_cc_singlefile.bzl", "rg_cc_single")
 
 rg_cc_single(
-    name = "colour",
-    deps = [
-        ":pixel",
-    ],
-)
-
-rg_cc_single(
     name = "image",
     deps = [
         ":pixel",
@@ -16,18 +9,12 @@ rg_cc_single(
         "//raygame/core/math:vector",
         "//raygame/core/math:rect",
     ],
-    testonlydeps = [
-        ":colour",
-    ],
 )
 
 rg_cc_single(
     name = "pixel",
     deps = [
         "//raygame/core:types",
-    ],
-    testonlydeps = [
-        ":colour",
     ],
 )
 
