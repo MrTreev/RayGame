@@ -1,7 +1,4 @@
 # Build defaults
-common --compilation_mode dbg
-common --verbose_failures
-
 build --flag_alias=gui=//rules/gui:linux_backend
 
 # for system_library rule

@@ -45,9 +45,8 @@ int create_shm_file() {
     constexpr int N_RETRIES = 100;
     constexpr int RAND_LEN  = 6;
     for (int retries = N_RETRIES; retries > 0; --retries) {
-        std::string name("/wl_shm-");
-        name.append(random_string(RAND_LEN));
-        const int shm_fd =
+        const std::string name("/wl_shm-" + random_string(RAND_LEN));
+        const int         shm_fd =
             shm_open(name.c_str(), O_RDWR | O_CREAT | O_EXCL, 0600);
         if (shm_fd >= 0) {
             shm_unlink(name.c_str());
@@ -108,7 +107,7 @@ core::window::detail::WaylandWindowImpl::WaylandWindowImpl(
     WindowStyle  style
 )
     : WindowImpl(size, std::move(title), style) {
-    if constexpr (config::EnabledBackends::wayland()) {
+    if constexpr (enabled()) {
         m_wl_shm_format = get_colour_format();
         m_wl_display    = wl_display_connect(nullptr);
         check_ptr(m_wl_display, "Display setup failed");
@@ -274,7 +273,7 @@ void core::window::detail::WaylandWindowImpl::new_buffer() {
         }
         m_shm_fd = allocate_shm_file(bufsize);
         check_condition(m_shm_fd >= 0, "creation of shm buffer file failed");
-        auto* pixbuf = static_cast<Pixel*>(mmap(
+        auto* const pixbuf = static_cast<Pixel*>(mmap(
             nullptr,
             bufsize,
             PROT_READ | PROT_WRITE,

@@ -86,6 +86,15 @@ constexpr void check_ptr(
     }
 }
 
+constexpr auto check_ret(
+    concepts::Pointer auto      check,
+    const std::string&          message,
+    const std::source_location& loc = std::source_location::current()
+) -> decltype(check) {
+    check_ptr(check, message, loc);
+    return check;
+}
+
 //! Function to mark an unknown case
 /*!
  *  @throws core::exception::Condition If hit

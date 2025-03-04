@@ -11,7 +11,6 @@
 
 namespace {
 
-#if !defined(RAYGAME_GUI_BACKEND_IMGUI)
 core::config::GuiBackend wayland_or_x11() {
     const std::string session_type{
         std::getenv("XDG_SESSION_TYPE") // NOLINT(concurrency-mt-unsafe)
@@ -28,15 +27,14 @@ core::config::GuiBackend wayland_or_x11() {
     );
     return core::config::GuiBackend::X11;
 }
-#endif
 
-constexpr core::config::GuiBackend get_backend() {
+core::config::GuiBackend get_backend() {
     using core::condition::unimplemented;
     using core::config::GuiBackend;
     using core::config::OperatingSystem;
-#if defined(RAYGAME_GUI_BACKEND_IMGUI)
-    return GuiBackend::IMGUI;
-#else
+    if constexpr (core::config::EnabledBackends::imgui()) {
+        return GuiBackend::IMGUI;
+    }
     switch (core::config::OPERATING_SYSTEM) {
     case OperatingSystem::ANDROID:  unimplemented();
     case OperatingSystem::BSD:      [[fallthrough]];
@@ -48,7 +46,6 @@ constexpr core::config::GuiBackend get_backend() {
     case OperatingSystem::WIN32:    [[fallthrough]];
     case OperatingSystem::WIN64:    return GuiBackend::DWM;
     }
-#endif
 }
 } // namespace
 

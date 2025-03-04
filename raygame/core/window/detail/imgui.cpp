@@ -24,12 +24,14 @@ ImguiWindowImpl::ImguiWindowImpl(
     WindowStyle  style
 )
     : WindowImpl(size, std::move(title), style) {
-    if constexpr (config::EnabledBackends::imgui()) {
+    if constexpr (enabled()) {
         log::debug("constructing ImGUI window");
         glfwSetErrorCallback(glfw_error_callback);
         if (glfwInit() == 0) {
             condition::pre_condition(false, "Could not initialise GLFW");
         }
+        glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
+        glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
         m_window = glfwCreateWindow(
             math::numeric_cast<int>(size.x),
             math::numeric_cast<int>(size.y),
@@ -52,7 +54,6 @@ ImguiWindowImpl::ImguiWindowImpl(
         m_window_flags    |= ImGuiWindowFlags_NoInputs;
         // NOLINTEND(*-signed-bitwise)
 
-        ImGui::StyleColorsDark();
         ImGui_ImplGlfw_InitForOpenGL(m_window, true);
         ImGui_ImplOpenGL3_Init();
         pre_frame();
@@ -110,6 +111,9 @@ void ImguiWindowImpl::restyle(WindowStyle style) {
 }
 
 void ImguiWindowImpl::render_frame() {
+    glfwPollEvents();
+    ImGui::SetNextWindowPos(ImVec2(0.0F, 0.0F));
+    ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
 #ifdef IMGUI_HAS_VIEWPORT
     ImGuiViewport* viewport = ImGui::GetMainViewport();
     ImGui::SetNextWindowPos(viewport->GetWorkPos());
@@ -119,11 +123,14 @@ void ImguiWindowImpl::render_frame() {
     ImGui::SetNextWindowPos(ImVec2(0.0F, 0.0F));
     ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
 #endif
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0F);
+    glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
     const bool begin =
         ImGui::Begin(get_title().c_str(), nullptr, m_window_flags);
     condition::check_condition(begin, "Could not begin window");
     // FRAME HERE
     ImGui::End();
+    ImGui::PopStyleVar(1);
     post_frame();
     pre_frame();
 }
@@ -140,19 +147,21 @@ bool ImguiWindowImpl::should_close() const {
 }
 
 void ImguiWindowImpl::post_frame() {
-    ImGui::Render();
     int display_w = 0;
     int display_h = 0;
+    ImGui::Render();
+
     glfwGetFramebufferSize(m_window, &display_w, &display_h);
     glViewport(0, 0, display_w, display_h);
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearColor(0, 0, 0, 0);
-    glClear(GL_COLOR_BUFFER_BIT);
+
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     glfwSwapBuffers(m_window);
 }
 
 void ImguiWindowImpl::pre_frame() {
-    glfwPollEvents();
     if (glfwGetWindowAttrib(m_window, GLFW_ICONIFIED) != 0) {
         constexpr auto SLEEP_AMOUNT = 10;
         ImGui_ImplGlfw_Sleep(SLEEP_AMOUNT);
