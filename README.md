@@ -4,7 +4,7 @@ An experimental game engine in C++
 
 ## Licencing
 
-The code written here is covered under the MIT licence, given in the [LICENCE](LICENCE) file.
+The code written here is covered under the MIT licence, given in the [LICENSE](LICENSE) file.
 
 RayGame uses trademarks and/or copyrights owned by Paizo Inc.,
 used under Paizo's Fan Content Policy (paizo.com/licenses/fancontent).
