@@ -166,6 +166,12 @@ using std::size_t;
 using rad_t = float;
 using deg_t = float;
 
+using pos_t = RAYGAME_POSITION_TYPE;
+static_assert(std::is_signed_v<pos_t>);
+
+using dis_t = RAYGAME_DISTANCE_TYPE;
+static_assert(std::is_unsigned_v<dis_t>);
+
 template<typename first, typename second = first>
 class Pair {
 public:

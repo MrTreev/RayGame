@@ -65,6 +65,18 @@ static_assert(
  *  User-defined configuration macros
  */
 
+#if !defined(RAYGAME_POSITION_TYPE)
+//! @ingroup macros_config
+//! Position type used in game (signed)
+#    define RAYGAME_POSITION_TYPE int64_t
+#endif
+
+#if !defined(RAYGAME_DISTANCE_TYPE)
+//! @ingroup macros_config
+//! Distance type used in game (unsigned)
+#    define RAYGAME_DISTANCE_TYPE uint64_t
+#endif
+
 #if !defined(RAYGAME_TIME_FRAMES)
 //! @ingroup macros_config
 //! Log the average frame time

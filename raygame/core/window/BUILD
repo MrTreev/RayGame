@@ -37,7 +37,7 @@ rg_cc_library(
         "//raygame/core/drawing:image",
     ],
     defines = [
-        "RAYGAME_GUI_BACKEND_IMGUI",
+        # "RAYGAME_GUI_BACKEND_IMGUI",
     ],
     implementation_deps = [
     ] + select({

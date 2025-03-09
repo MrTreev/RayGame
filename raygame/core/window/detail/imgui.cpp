@@ -24,7 +24,7 @@ ImguiWindowImpl::ImguiWindowImpl(
     WindowStyle  style
 )
     : WindowImpl(size, std::move(title), style) {
-    if constexpr (enabled()) {
+    if constexpr (config::EnabledBackends::imgui()) {
         log::debug("constructing ImGUI window");
         glfwSetErrorCallback(glfw_error_callback);
         if (glfwInit() == 0) {

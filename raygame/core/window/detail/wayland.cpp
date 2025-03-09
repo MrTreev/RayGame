@@ -107,7 +107,7 @@ core::window::detail::WaylandWindowImpl::WaylandWindowImpl(
     WindowStyle  style
 )
     : WindowImpl(size, std::move(title), style) {
-    if constexpr (enabled()) {
+    if constexpr (config::EnabledBackends::wayland()) {
         m_wl_shm_format = get_colour_format();
         m_wl_display    = wl_display_connect(nullptr);
         check_ptr(m_wl_display, "Display setup failed");
@@ -177,14 +177,6 @@ void core::window::detail::WaylandWindowImpl::draw(
     const drawing::ImageView& image
 ) {
     if constexpr (config::EnabledBackends::wayland()) {
-        const auto min_row{image.pos_x()};
-        const auto min_col{image.pos_y()};
-        const auto max_row{
-            std::min(m_buffer_width, image.pos_x() + image.width())
-        };
-        const auto max_col{
-            std::min(m_buffer_height, image.pos_y() + image.height())
-        };
         for (size_t row{min_row}; row < max_row; ++row) {
             for (size_t col{min_col}; col < max_col; ++col) {
                 m_pixbuf[row, col] =
@@ -264,9 +256,9 @@ bool core::window::detail::WaylandWindowImpl::should_close() const {
 
 void core::window::detail::WaylandWindowImpl::new_buffer() {
     if constexpr (config::EnabledBackends::wayland()) {
-        const auto buflen    = safe_mult<size_t>(width(), height());
         const auto bufwidth  = width();
         const auto bufheight = height();
+        const auto buflen    = safe_mult<size_t>(bufwidth, bufheight);
         const auto bufsize   = safe_mult<size_t>(buflen, COLOUR_CHANNELS);
         if (m_shm_fd >= 0) {
             close(m_shm_fd);

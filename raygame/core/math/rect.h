@@ -70,6 +70,26 @@ public:
         return m_height;
     }
 
+    [[nodiscard]]
+    constexpr Pos_t left() const {
+        return m_x;
+    }
+
+    [[nodiscard]]
+    constexpr Pos_t right() const {
+        return math::safe_add<Pos_t>(m_x, m_width);
+    }
+
+    [[nodiscard]]
+    constexpr Pos_t top() const {
+        return m_y;
+    }
+
+    [[nodiscard]]
+    constexpr Pos_t bottom() const {
+        return math::safe_add<Pos_t>(m_y, m_height);
+    }
+
     constexpr explicit operator std::string() const {
         return std::format(
             "Rect(x: {}, y: {}, width: {}, height: {})",
