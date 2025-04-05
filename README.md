@@ -1,6 +1,10 @@
 # RayGame
 
-An experimental game engine in C++
+An experimental game engine, written in C++
+
+## Documentation
+
+For documentation on how to use the engine, look under [docs](docs).
 
 ## Licencing
 

@@ -10,8 +10,6 @@ rg_cc_single(
         ":config",
         ":exception",
         ":concepts",
-    ],
-    implementation_deps = [
         ":logger",
     ],
 )

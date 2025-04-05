@@ -2,32 +2,32 @@
 #include "raygame/core/concepts.h"
 #include "raygame/core/config.h"
 #include "raygame/core/exception.h"
+#include "raygame/core/logger.h"
 #include <source_location>
 #include <string>
 #include <type_traits>
 #include <utility>
 
 namespace core::condition {
-namespace detail {
-void conditionlog(const std::string& message, const std::source_location& loc);
-} // namespace detail
 
 //! Pre-Condition Checker
 /*!
  *  @see PreCondition
  *  @throws core::exception::PreCondition If condition does not hold
  */
+template<typename... Args>
 constexpr void pre_condition(
     const concepts::Checkable auto& check,
-    const std::string&              message,
-    const std::source_location&     loc = std::source_location::current()
-) {
+    std::format_string<Args...>     fmt,
+    Args&&... args,
+    std::source_location loc = std::source_location::current()
+) noexcept(false) {
     using exception::PreCondition;
     if (!check) {
         if (!std::is_constant_evaluated()) {
-            detail::conditionlog(message, loc);
+            log::error(fmt, std::forward<Args>(args)..., loc);
         }
-        throw PreCondition(message);
+        throw PreCondition(std::format(fmt, std::forward<Args>(args)...));
     }
 }
 
@@ -36,16 +36,20 @@ constexpr void pre_condition(
  *  @see CheckCondition
  *  @throws core::exception::CheckCondition If condition does not hold
  */
+template<typename... Args>
 constexpr void check_condition(
     const concepts::Checkable auto& check,
-    const std::string&              message,
-    const std::source_location&     loc = std::source_location::current()
-) {
+    std::format_string<Args...>     fmt,
+    Args&&... args,
+    std::source_location loc = std::source_location::current()
+) noexcept(false) {
     if (!check) {
         if (!std::is_constant_evaluated()) {
-            detail::conditionlog(message, loc);
+            log::error(fmt, std::forward<Args>(args)..., loc);
         }
-        throw core::exception::CheckCondition(message);
+        throw exception::CheckCondition(
+            std::format(fmt, std::forward<Args>(args)...)
+        );
     }
 }
 
@@ -54,17 +58,20 @@ constexpr void check_condition(
  *  @see PostCondition
  *  @throws core::exception::PostCondition If condition does not hold
  */
-template<core::concepts::Checkable T>
+template<typename... Args>
 constexpr void post_condition(
-    const T&                    check,
-    const std::string&          message,
-    const std::source_location& loc = std::source_location::current()
-) {
+    const core::concepts::Checkable auto& check,
+    std::format_string<Args...>           fmt,
+    Args&&... args,
+    std::source_location loc = std::source_location::current()
+) noexcept(false) {
     if (!check) {
         if (!std::is_constant_evaluated()) {
-            detail::conditionlog(message, loc);
+            log::error(fmt, std::forward<Args>(args)..., loc);
         }
-        throw core::exception::PostCondition(message);
+        throw exception::PostCondition(
+            std::format(fmt, std::forward<Args>(args)..., loc)
+        );
     }
 }
 
@@ -73,42 +80,42 @@ constexpr void post_condition(
  *  @see CheckCondition
  *  @throws core::exception::CheckCondition If pointer is null
  */
+template<typename... Args>
 constexpr void check_ptr(
     const concepts::Pointer auto& check,
-    const std::string&            message,
-    const std::source_location&   loc = std::source_location::current()
-) {
+    std::format_string<Args...>   fmt,
+    Args&&... args,
+    std::source_location loc = std::source_location::current()
+) noexcept(false) {
     if (check == nullptr) {
         if (!std::is_constant_evaluated()) {
-            detail::conditionlog(message, loc);
+            log::error(fmt, std::forward<Args>(args)..., loc);
         }
-        throw core::exception::CheckCondition(message);
+        throw exception::CheckCondition(
+            std::format(fmt, std::forward<Args>(args)..., loc)
+        );
     }
-}
-
-constexpr auto check_ret(
-    concepts::Pointer auto      check,
-    const std::string&          message,
-    const std::source_location& loc = std::source_location::current()
-) -> decltype(check) {
-    check_ptr(check, message, loc);
-    return check;
 }
 
 //! Function to mark an unknown case
 /*!
  *  @throws core::exception::Condition If hit
  */
-RAYGAME_DEBUG_ONLY([[noreturn]])
+template<typename... Args>
+RAYGAME_DEBUG_ONLY([[noreturn]]
+)
 
 constexpr void unknown(
-    const std::string&          name,
-    const std::source_location& loc = std::source_location::current()
+    std::format_string<Args...> fmt,
+    Args&&... args,
+    std::source_location loc = std::source_location::current()
 ) {
     if constexpr (config::BUILD_TYPE == config::BuildType::RELEASE) {
-        detail::conditionlog("Unknown " + name, loc);
+        log::error(fmt, std::forward<Args>(args)..., loc);
     } else {
-        throw exception::UnknownCase("Unknown " + name);
+        throw exception::UnknownCase(
+            std::format(fmt, std::forward<Args>(args)..., loc)
+        );
     }
 }
 
@@ -120,7 +127,8 @@ constexpr void unknown(
 constexpr void
 unreachable(const std::source_location& loc = std::source_location::current()) {
     if constexpr (config::BUILD_TYPE == config::BuildType::RELEASE) {
-        detail::conditionlog("Reached block marked unreachable", loc);
+        constexpr std::string msg{"Reached block marked unreachable"};
+        log::error(loc, msg);
         throw exception::Unreachable("Reached block marked unreachable");
     } else {
         std::unreachable();
@@ -136,7 +144,7 @@ constexpr void unimplemented(
     const std::source_location& loc = std::source_location::current()
 ) {
     if constexpr (config::BUILD_TYPE == config::BuildType::RELEASE) {
-        detail::conditionlog("Reached block marked unimplemented", loc);
+        log::error("Reached block marked unimplemented", loc);
     } else {
         throw exception::Unimplemented("Unimplemented");
     }
