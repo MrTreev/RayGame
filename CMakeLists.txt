@@ -2,7 +2,7 @@
 # Initial project setup                                                        #
 ################################################################################
 
-cmake_minimum_required(VERSION 3.6...3.29)
+cmake_minimum_required(VERSION 4.0)
 
 project(
     RayGame
@@ -34,6 +34,15 @@ set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "RelWithD
 # CMake config vars
 ################################################################################
 
+set(RAYGAME_OS_IS_ANDROID OFF)
+set(RAYGAME_OS_IS_BSD OFF)
+set(RAYGAME_OS_IS_HURD OFF)
+set(RAYGAME_OS_IS_LINUX ON)
+set(RAYGAME_OS_IS_MAC OFF)
+set(RAYGAME_OS_IS_WINDOWS OFF)
+
+set(RAYGAME_BT_IS_DEBUG ON)
+set(RAYGAME_BT_IS_RELEASE OFF)
 
 ################################################################################
 # Options                                                                      #
@@ -46,17 +55,16 @@ option(RAYGAME_BUILD_TESTS "Build tests" ON)
 option(RAYGAME_BUILD_DOCS  "Build documentation" ON)
 option(RAYGAME_BUILD_GAMES "Build games" ON)
 
-option(RAYGAME_GUI_DISABLE_COCOA "Disable the MacOS Cocoa GUI backend" OFF)
-option(RAYGAME_GUI_DISABLE_DWM "Disable the Windows DWM GUI backend" OFF)
-option(RAYGAME_GUI_DISABLE_WAYLAND "Disable the Linux Wayland GUI backend" OFF)
-option(RAYGAME_GUI_DISABLE_X11 "Disable the Linux X11 GUI backend" OFF)
-option(RAYGAME_GUI_DISABLE_IMGUI "Disable the IMGUI GUI backend" OFF)
+option(RAYGAME_GUI_DISABLE_COCOA "Disable the MacOS Cocoa GUI backend" $<NOT:${RAYGAME_OS_IS_MAC}>)
+option(RAYGAME_GUI_DISABLE_DWM "Disable the Windows DWM GUI backend" $<NOT:${RAYGAME_OS_IS_WINDOWS}>)
+option(RAYGAME_GUI_DISABLE_WAYLAND "Disable the Linux Wayland GUI backend" $<NOT:${RAYGAME_OS_IS_LINUX}>)
+option(RAYGAME_GUI_DISABLE_X11 "Disable the Linux X11 GUI backend" $<NOT:${RAYGAME_OS_IS_LINUX}>)
+option(RAYGAME_GUI_DISABLE_IMGUI "Disable the IMGUI GUI backend" $<NOT:${RAYGAME_BT_IS_DEBUG}>)
 option(RAYGAME_GUI_DEFAULT_WINDOW_HEIGHT "Default GUI window height" 640)
 option(RAYGAME_GUI_DEFAULT_WINDOW_WIDTH "Default GUI window width" 480)
-option(RAYGAME_GUI_DEFAULT_WINDOW_TITLE "Default GUI window width" "RAYGAME")
+set(RAYGAME_GUI_DEFAULT_WINDOW_TITLE "RayGame" CACHE STRING "Default GUI window width")
 
 option(RAYGAME_MATH_RANDOM_FULL "Non-deterministic random numbers" OFF)
-option(RAYGAME_MATH_RANDOM_INIT "Random-number generation seed" 42)
 option(RAYGAME_MATH_FORCE_GENERIC "Force generic implementations of maths functions" OFF)
 
 option(RAYGAME_LOG_DISABLE_SOURCE_LOCATION "Disable source_location in logs" OFF)
@@ -69,9 +77,45 @@ option(RAYGAME_TIME_FRAMES "Record the average frame time" OFF)
 # Main
 ################################################################################
 
+set(RAYGAME_PATH_SRC ${PROJECT_SOURCE_DIR})
+list(APPEND CMAKE_MODULE_PATH cmake)
+include(GenerateExportHeader)
+
 if(RAYGAME_ENABLE_COMPILE_COMMANDS)
     set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 endif()
+
+include(RayGameCompilerArgs)
+if(RAYGAME_WARNINGS_AS_ERRORS)
+    message(TRACE "Warnings are treated as errors")
+    list(APPEND CLANG_WARNINGS -Werror)
+    list(APPEND GCC_WARNINGS -Werror)
+    list(APPEND MSVC_WARNINGS /WX)
+endif()
+
+function(raygame_lib _target)
+    add_library(${_target})
+    target_compile_features(${_target} PUBLIC cxx_std_23)
+    target_include_directories(${_target} PUBLIC
+        $<BUILD_INTERFACE:${RayGame_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:include/raygame>
+    )
+    set_target_properties(
+        ${_target}
+        PROPERTIES VERSION ${RayGame_VERSION}
+                   CXX_VISIBILITY_PRESET hidden
+                   CXX_STANDARD 23
+                   CXX_STANDARD_REQUIRED YES
+                   VISIBILITY_INLINES_HIDDEN YES
+    )
+    raygame_add_warnings(${_target})
+    target_compile_definitions(${_target} PRIVATE "RAYGAME_LOG_${RAYGAME_LOG_LEVEL}")
+    if(RAYGAME_DISABLE_SOURCE_LOCATION)
+        target_compile_definitions(${_target} PRIVATE "RAYGAME_DISABLE_SOURCE_LOCATION")
+    elseif(RAYGAME_BT_IS_DEBUG)
+        target_compile_definitions(${_target} PRIVATE "RAYGAME_ENABLE_SOURCE_LOCATION")
+    endif()
+endfunction()
 
 add_subdirectory(raygame)
 

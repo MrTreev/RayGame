@@ -1,0 +1,20 @@
+raygame_lib(RayGameCore)
+add_library(RayGame::Core ALIAS RayGameCore)
+add_subdirectory(core)
+target_link_libraries(RayGameCore PUBLIC RayGame::Core::Base)
+target_link_libraries(RayGameCore PUBLIC RayGame::Core::Math)
+target_link_libraries(RayGameCore PUBLIC RayGame::Core::Window)
+
+# raygame_lib(RayGameSystems)
+# add_library(RayGame::Systems ALIAS RayGameSystems)
+# add_subdirectory(systems)
+
+# raygame_lib(RayGameWorld)
+# add_library(RayGame::World ALIAS RayGameWorld)
+# add_subdirectory(world)
+
+add_library(RayGame)
+add_library(RayGame::RayGame ALIAS RayGame)
+target_link_libraries(RayGame PUBLIC RayGame::Core)
+# target_link_libraries(RayGame PUBLIC RayGame::Systems)
+# target_link_libraries(RayGame PUBLIC RayGame::World)
