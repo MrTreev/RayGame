@@ -5,6 +5,7 @@
 #include "raygame/core/logger.h"
 #include <source_location>
 #include <string>
+#include <string_view>
 #include <type_traits>
 #include <utility>
 
@@ -25,7 +26,7 @@ constexpr void pre_condition(
     using exception::PreCondition;
     if (!check) {
         if (!std::is_constant_evaluated()) {
-            log::error(fmt, std::forward<Args>(args)..., loc);
+            log::error(loc, fmt, std::forward<Args>(args)...);
         }
         throw PreCondition(std::format(fmt, std::forward<Args>(args)...));
     }
@@ -125,10 +126,10 @@ constexpr void unknown(
  */
 [[noreturn]]
 constexpr void
-unreachable(const std::source_location& loc = std::source_location::current()) {
+unreachable(std::source_location loc = std::source_location::current()) {
     if constexpr (config::BUILD_TYPE == config::BuildType::RELEASE) {
-        constexpr std::string msg{"Reached block marked unreachable"};
-        log::error(loc, msg);
+        constexpr std::string_view msgv{"Reached block marked unreachable"};
+        log::error(loc, msgv);
         throw exception::Unreachable("Reached block marked unreachable");
     } else {
         std::unreachable();
@@ -140,11 +141,10 @@ unreachable(const std::source_location& loc = std::source_location::current()) {
  *  @throws core::exception::Condition If hit
  */
 [[noreturn]]
-constexpr void unimplemented(
-    const std::source_location& loc = std::source_location::current()
-) {
+constexpr void
+unimplemented(std::source_location loc = std::source_location::current()) {
     if constexpr (config::BUILD_TYPE == config::BuildType::RELEASE) {
-        log::error("Reached block marked unimplemented", loc);
+        log::error(loc, std::string("Reached block marked unimplemented"));
     } else {
         throw exception::Unimplemented("Unimplemented");
     }

@@ -19,13 +19,10 @@ constexpr std::string to_string(core::log::Level level) {
     std::unreachable();
 }
 
-#if defined(RAYGAME_ENABLE_SOURCE_LOC)
+#if defined(RAYGAME_DISABLE_SOURCE_LOC) || !defined(RAYGAME_ENABLE_SOURCE_LOC)
+constexpr bool enable_source_loc = false;
+#elif defined(RAYGAME_ENABLE_SOURCE_LOC)
 constexpr bool enable_source_loc = true;
-#elif defined(RAYGAME_DISABLE_SOURCE_LOC)
-constexpr bool enable_source_loc = false;
-#else
-#    warning "No source location macro defined, disabling"
-constexpr bool enable_source_loc = false;
 #endif
 
 consteval size_t get_prefix_len(

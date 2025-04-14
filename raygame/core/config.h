@@ -18,8 +18,10 @@
 #define RAYGAME_CPP_23 202302L
 // clang-format on
 
-#if !defined(RAYGAME_MIN_CPP_VERSION)
-#    define RAYGAME_MIN_CPP_VERSION RAYGAME_CPP_23
+#if !defined(RAYGAME_DISABLE_SOURCE_LOCATION)
+#    if !defined(RAYGAME_MIN_CPP_VERSION)
+#        define RAYGAME_MIN_CPP_VERSION RAYGAME_CPP_23
+#    endif
 #endif
 
 #if RAYGAME_MIN_CPP_VERSION <= 0
