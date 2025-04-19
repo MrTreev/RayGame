@@ -1,5 +1,5 @@
 #include "raygame/core/math/mathrule.h"
-#include "raygame/core/test/tests_begin.h"
+#include "raytest/tests_begin.h"
 
 TEST_SUITE("core::math::MathRule") {
     using core::math::MathRule::ALLOW;

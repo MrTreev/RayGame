@@ -1,4 +1,4 @@
-#include "raygame/core/test/tests_begin.h"
+#include "raytest/tests_begin.h"
 #include "raygame/core/types.h" // IWYU pragma: keep
 
 TEST_SUITE("core::Pair") {

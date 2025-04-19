@@ -1,5 +1,5 @@
 #include "raygame/core/math/arithmetic/safe_mult.h"
-#include "raygame/core/test/tests_begin.h"
+#include "raytest/tests_begin.h"
 
 TEST_SUITE("core::math::safe_mult") {
     using core::math::safe_mult;

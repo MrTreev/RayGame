@@ -1,5 +1,5 @@
 #include "raygame/core/concepts.h" // IWYU pragma: keep
-#include "raygame/core/test/tests_begin.h"
+#include "raytest/tests_begin.h"
 
 //NOLINTBEGIN(*-use-anonymous-namespace)
 
