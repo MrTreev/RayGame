@@ -1,0 +1,4 @@
+[submodule "third_party/doctest"]
+	path = third_party/doctest
+	url = https://github.com/doctest/doctest.git
+	branch = master
