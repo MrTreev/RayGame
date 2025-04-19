@@ -1,0 +1,1 @@
+raygame_test(RayGameTestCore)

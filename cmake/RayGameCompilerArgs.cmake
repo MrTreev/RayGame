@@ -1,6 +1,5 @@
-function(raygame_add_warnings _target)
+function(raygame_add_args _target)
     if(MSVC)
-        target_compile_options(${_target} PRIVATE /WX)          # Warnings as errors
         target_compile_options(${_target} PRIVATE /W4)          # Baseline reasonable warnings
         target_compile_options(${_target} PRIVATE /w14242)      # 'identifier': conversion from 'type1' to 'type2', possible loss of data
         target_compile_options(${_target} PRIVATE /w14254)      # 'operator': conversion from 'type1:field_bits' to 'type2:field_bits', possible loss of data
@@ -22,9 +21,10 @@ function(raygame_add_warnings _target)
         target_compile_options(${_target} PRIVATE /w14906)      # string literal cast to 'LPWSTR'
         target_compile_options(${_target} PRIVATE /w14928)      # illegal copy-initialization; more than one user-defined conversion has been implicitly applied
         target_compile_options(${_target} PRIVATE /permissive-) # standards conformance mode for MSVC compiler.
+        target_compile_options(${_target} PRIVATE ${RAYGAME_MSVC_OPTIONS})
     elseif(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
         target_compile_options(${_target} PRIVATE -stdlib=libc++)
-        target_compile_options(${_target} PRIVATE -Werror)
+        target_link_options(${_target} PRIVATE -stdlib=libc++)
         target_compile_options(${_target} PRIVATE -fcolor-diagnostics)
         target_compile_options(${_target} PRIVATE -Wall)
         target_compile_options(${_target} PRIVATE -Wextra)
@@ -46,8 +46,8 @@ function(raygame_add_warnings _target)
         target_compile_options(${_target} PRIVATE -Wno-unused-macros)
         target_compile_options(${_target} PRIVATE -Wno-unsafe-buffer-usage)
         target_compile_options(${_target} PRIVATE -Wno-c23-extensions)
+        target_compile_options(${_target} PRIVATE ${RAYGAME_CLANG_OPTIONS})
     elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-        target_compile_options(${_target} PRIVATE -Werror)
         target_compile_options(${_target} PRIVATE -Wall)
         target_compile_options(${_target} PRIVATE -Wextra)
         target_compile_options(${_target} PRIVATE -Wshadow)                 # warn the user if a variable declaration shadows one from a parent context
@@ -71,6 +71,7 @@ function(raygame_add_warnings _target)
         target_compile_options(${_target} PRIVATE -Wsuggest-override)       # warn if an overridden member function is not marked 'override' or 'final'
         target_compile_options(${_target} PRIVATE -Wno-return-type)         # Too many false-positives
         target_compile_options(${_target} PRIVATE -Wno-duplicate-branches)  # Too many false-positives
+        target_compile_options(${_target} PRIVATE ${RAYGAME_GCC_OPTIONS})
     else()
         message(AUTHOR_WARNING "No compiler warnings set for CXX compiler: '${CMAKE_CXX_COMPILER_ID}'")
     endif()

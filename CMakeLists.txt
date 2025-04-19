@@ -76,21 +76,22 @@ option(RAYGAME_TIME_FRAMES "Record the average frame time" OFF)
 ################################################################################
 # Main
 ################################################################################
+include(GenerateExportHeader)
 
 set(RAYGAME_PATH_SRC ${PROJECT_SOURCE_DIR})
-list(APPEND CMAKE_MODULE_PATH cmake)
-include(GenerateExportHeader)
+list(APPEND CMAKE_MODULE_PATH ${RAYGAME_PATH_SRC}/cmake)
+include(RayGameWayland)
+include(RayGameCompilerArgs)
 
 if(RAYGAME_ENABLE_COMPILE_COMMANDS)
     set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 endif()
 
-include(RayGameCompilerArgs)
 if(RAYGAME_WARNINGS_AS_ERRORS)
     message(TRACE "Warnings are treated as errors")
-    list(APPEND CLANG_WARNINGS -Werror)
-    list(APPEND GCC_WARNINGS -Werror)
-    list(APPEND MSVC_WARNINGS /WX)
+    list(APPEND RAYGAME_CLANG_OPTIONS -Werror)
+    list(APPEND RAYGAME_GCC_OPTIONS -Werror)
+    list(APPEND RAYGAME_MSVC_OPTIONS /WX)
 endif()
 
 function(raygame_lib _target)
@@ -108,12 +109,12 @@ function(raygame_lib _target)
                    CXX_STANDARD_REQUIRED YES
                    VISIBILITY_INLINES_HIDDEN YES
     )
-    raygame_add_warnings(${_target})
-    target_compile_definitions(${_target} PRIVATE "RAYGAME_LOG_${RAYGAME_LOG_LEVEL}")
-    if(RAYGAME_DISABLE_SOURCE_LOCATION)
-        target_compile_definitions(${_target} PRIVATE "RAYGAME_DISABLE_SOURCE_LOCATION")
+    raygame_add_args(${_target})
+    target_compile_definitions(${_target} PUBLIC "RAYGAME_LOG_${RAYGAME_LOG_LEVEL}")
+    if(RAYGAME_LOG_DISABLE_SOURCE_LOCATION)
+        target_compile_definitions(${_target} PUBLIC "RAYGAME_DISABLE_SOURCE_LOCATION")
     elseif(RAYGAME_BT_IS_DEBUG)
-        target_compile_definitions(${_target} PRIVATE "RAYGAME_ENABLE_SOURCE_LOCATION")
+        target_compile_definitions(${_target} PUBLIC "RAYGAME_ENABLE_SOURCE_LOCATION")
     endif()
 endfunction()
 

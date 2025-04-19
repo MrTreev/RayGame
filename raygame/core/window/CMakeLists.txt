@@ -29,8 +29,8 @@ if($<NOT:RAYGAME_GUI_DISABLE_DWM> AND RAYGAME_OS_IS_WINDOWS)
     )
 endif()
 
-if(RAYGAME_OS_IS_LINUX)
-    if($<NOT:RAYGAME_GUI_DISABLE_WAYLAND>)
+# if(RAYGAME_OS_IS_LINUX)
+#     if($<NOT:RAYGAME_GUI_DISABLE_WAYLAND>)
         target_sources(
             RayGameCoreWindow
             PRIVATE
@@ -49,17 +49,23 @@ if(RAYGAME_OS_IS_LINUX)
         raygame_add_wayland_protocols(
             TARGET RayGameCoreWindow
             PROTOCOLS
+                wayland
                 xdg-shell
         )
-    endif()
-    if($<NOT:RAYGAME_GUI_DISABLE_X11>)
+        find_package(X11 REQUIRED)
+        target_link_libraries(RayGameCoreWindow PRIVATE X11::xkbcommon)
+        target_link_libraries(RayGameCoreWindow PRIVATE xkbcommon)
+#     endif()
+#     if($<NOT:RAYGAME_GUI_DISABLE_X11>)
         target_sources(
             RayGameCoreWindow
             PRIVATE
                 detail/x11.h
                 detail/x11.cpp
         )
-    endif()
-endif()
+        find_package(X11 REQUIRED)
+        target_link_libraries(RayGameCoreWindow PRIVATE X11::X11)
+#     endif()
+# endif()
 
 target_link_libraries(RayGameCore PUBLIC RayGame::Core::Window)
