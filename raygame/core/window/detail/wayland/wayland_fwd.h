@@ -1,6 +1,5 @@
 #pragma once
 #include "raygame/core/window/detail/backends.h" // IWYU pragma: keep
-// Using the C header here, to guarantee the global-namespace types
 #if defined(RAYGAME_GUI_BACKEND_WAYLAND)
 #    include <wayland-client-protocol.h>   // IWYU pragma: export
 #    include <xdg-shell-client-protocol.h> // IWYU pragma: export

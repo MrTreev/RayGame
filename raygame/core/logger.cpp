@@ -19,10 +19,13 @@ constexpr std::string to_string(core::log::Level level) {
     std::unreachable();
 }
 
-#if defined(RAYGAME_DISABLE_SOURCE_LOC) || !defined(RAYGAME_ENABLE_SOURCE_LOC)
-constexpr bool enable_source_loc = false;
-#elif defined(RAYGAME_ENABLE_SOURCE_LOC)
+#if defined(RAYGAME_ENABLE_SOURCE_LOCATION)
 constexpr bool enable_source_loc = true;
+#elif defined(RAYGAME_DISABLE_SOURCE_LOCATION)
+constexpr bool enable_source_loc = false;
+#else
+#    warning "No source location macro defined, disabling"
+constexpr bool enable_source_loc = false;
 #endif
 
 consteval size_t get_prefix_len(
@@ -44,10 +47,9 @@ constexpr std::string
 location_string([[maybe_unused]] const std::source_location& loc) {
     if (enable_source_loc) {
         return std::format(
-            "{}:{}:{} ",
+            "{}:{} ",
             shorten_name(loc.file_name()),
-            loc.line(),
-            loc.function_name()
+            loc.line() //, loc.function_name()
         );
     }
     return {};
@@ -56,9 +58,9 @@ location_string([[maybe_unused]] const std::source_location& loc) {
 } // namespace
 
 void core::log::detail::logger(
-    core::log::Level     level,
-    std::string          text,
-    std::source_location loc
+    const core::log::Level&     level,
+    const std::string&          text,
+    const std::source_location& loc
 ) {
     if (logging_level <= level) {
         std::println(

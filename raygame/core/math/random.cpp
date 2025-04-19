@@ -34,7 +34,10 @@ uint64_t rand_seed() {
 template<typename T>
 requires std::is_integral_v<T> && std::is_trivial_v<T>
 T core::math::rand(T min, T max) {
-    core::condition::pre_condition(min < max, "min: {} < max: {}", min, max);
+    core::condition::pre_condition(
+        min < max,
+        std::format("min: {} < max: {}", min, max)
+    );
     std::mt19937                     rng(rand_seed());
     std::uniform_int_distribution<T> dist(min, max);
     return dist(rng);

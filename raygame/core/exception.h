@@ -17,6 +17,7 @@ namespace core::exception {
         name& operator=(name&&)      = default;                                \
         name& operator=(const name&) = default;                                \
         ~name() override;                                                      \
+        const char* type() override;                                           \
     }
 
 // NOLINTEND(*-macro-usage,*-macro-parentheses)
@@ -25,7 +26,17 @@ namespace core::exception {
 /*!
  * 	This is the parent class for all RayGame exceptions
  */
-RAYGAME_EXCEPTION_DECL_BASE(Exception, std::runtime_error);
+class Exception: public std::runtime_error {
+public:
+    explicit Exception(const std::string& message);
+    explicit Exception(const std::runtime_error&& error);
+    Exception(Exception&&)                 = default;
+    Exception(const Exception&)            = default;
+    Exception& operator=(Exception&&)      = default;
+    Exception& operator=(const Exception&) = default;
+    ~Exception() override;
+    virtual const char* type();
+};
 
 //! Unimplemented exception
 /*!

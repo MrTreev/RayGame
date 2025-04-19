@@ -52,6 +52,19 @@ public:
     }
 
     [[nodiscard]]
+    constexpr const Pixel& at(dis_t row, dis_t col) const {
+        condition::pre_condition(
+            row <= height(),
+            std::format("{} <= {}", row, height())
+        );
+        condition::pre_condition(
+            col <= width(),
+            std::format("{} <= {}", col, height())
+        );
+        return m_mdspan[row, col];
+    }
+
+    [[nodiscard]]
     constexpr const Pixel& get_item(dis_t row, dis_t col) const {
         return m_mdspan[row, col];
     }

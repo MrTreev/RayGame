@@ -1,4 +1,5 @@
 #include "raygame/core/exception.h" // IWYU pragma: keep
+#include "raygame/core/debug.h"
 
 namespace core::exception {
 // Honestly, just easier this way, macro is pretty obvious what it does
@@ -9,6 +10,10 @@ namespace core::exception {
         : base(message) {}                                                     \
     name::name(const base&& error)                                             \
         : base(error) {}                                                       \
+    const char* name::type() {                                                 \
+        static const std::string typestring{debug::type_name(this)};           \
+        return typestring.c_str();                                             \
+    }                                                                          \
     name::~name() = default
 
 // NOLINTEND(*-macro-usage)

@@ -2,33 +2,32 @@
 #include "raygame/core/concepts.h"
 #include "raygame/core/config.h"
 #include "raygame/core/exception.h"
-#include "raygame/core/logger.h"
 #include <source_location>
 #include <string>
-#include <string_view>
 #include <type_traits>
 #include <utility>
 
 namespace core::condition {
+namespace detail {
+void conditionlog(const std::string& message, const std::source_location& loc);
+} // namespace detail
 
 //! Pre-Condition Checker
 /*!
  *  @see PreCondition
  *  @throws core::exception::PreCondition If condition does not hold
  */
-template<typename... Args>
 constexpr void pre_condition(
     const concepts::Checkable auto& check,
-    std::format_string<Args...>     fmt,
-    Args&&... args,
-    std::source_location loc = std::source_location::current()
-) noexcept(false) {
+    const std::string&              message,
+    const std::source_location&     loc = std::source_location::current()
+) {
     using exception::PreCondition;
     if (!check) {
         if (!std::is_constant_evaluated()) {
-            log::error(loc, fmt, std::forward<Args>(args)...);
+            detail::conditionlog(message, loc);
         }
-        throw PreCondition(std::format(fmt, std::forward<Args>(args)...));
+        throw PreCondition(message);
     }
 }
 
@@ -37,20 +36,16 @@ constexpr void pre_condition(
  *  @see CheckCondition
  *  @throws core::exception::CheckCondition If condition does not hold
  */
-template<typename... Args>
 constexpr void check_condition(
     const concepts::Checkable auto& check,
-    std::format_string<Args...>     fmt,
-    Args&&... args,
-    std::source_location loc = std::source_location::current()
-) noexcept(false) {
+    const std::string&              message,
+    const std::source_location&     loc = std::source_location::current()
+) {
     if (!check) {
         if (!std::is_constant_evaluated()) {
-            log::error(fmt, std::forward<Args>(args)..., loc);
+            detail::conditionlog(message, loc);
         }
-        throw exception::CheckCondition(
-            std::format(fmt, std::forward<Args>(args)...)
-        );
+        throw core::exception::CheckCondition(message);
     }
 }
 
@@ -59,20 +54,17 @@ constexpr void check_condition(
  *  @see PostCondition
  *  @throws core::exception::PostCondition If condition does not hold
  */
-template<typename... Args>
+template<core::concepts::Checkable T>
 constexpr void post_condition(
-    const core::concepts::Checkable auto& check,
-    std::format_string<Args...>           fmt,
-    Args&&... args,
-    std::source_location loc = std::source_location::current()
-) noexcept(false) {
+    const T&                    check,
+    const std::string&          message,
+    const std::source_location& loc = std::source_location::current()
+) {
     if (!check) {
         if (!std::is_constant_evaluated()) {
-            log::error(fmt, std::forward<Args>(args)..., loc);
+            detail::conditionlog(message, loc);
         }
-        throw exception::PostCondition(
-            std::format(fmt, std::forward<Args>(args)..., loc)
-        );
+        throw core::exception::PostCondition(message);
     }
 }
 
@@ -81,42 +73,42 @@ constexpr void post_condition(
  *  @see CheckCondition
  *  @throws core::exception::CheckCondition If pointer is null
  */
-template<typename... Args>
 constexpr void check_ptr(
     const concepts::Pointer auto& check,
-    std::format_string<Args...>   fmt,
-    Args&&... args,
-    std::source_location loc = std::source_location::current()
-) noexcept(false) {
+    const std::string&            message,
+    const std::source_location&   loc = std::source_location::current()
+) {
     if (check == nullptr) {
         if (!std::is_constant_evaluated()) {
-            log::error(fmt, std::forward<Args>(args)..., loc);
+            detail::conditionlog(message, loc);
         }
-        throw exception::CheckCondition(
-            std::format(fmt, std::forward<Args>(args)..., loc)
-        );
+        throw core::exception::CheckCondition(message);
     }
+}
+
+constexpr auto check_ret(
+    concepts::Pointer auto      check,
+    const std::string&          message,
+    const std::source_location& loc = std::source_location::current()
+) -> decltype(check) {
+    check_ptr(check, message, loc);
+    return check;
 }
 
 //! Function to mark an unknown case
 /*!
  *  @throws core::exception::Condition If hit
  */
-template<typename... Args>
-RAYGAME_DEBUG_ONLY([[noreturn]]
-)
+RAYGAME_DEBUG_ONLY([[noreturn]])
 
 constexpr void unknown(
-    std::format_string<Args...> fmt,
-    Args&&... args,
-    std::source_location loc = std::source_location::current()
+    const std::string&          name,
+    const std::source_location& loc = std::source_location::current()
 ) {
     if constexpr (config::BUILD_TYPE == config::BuildType::RELEASE) {
-        log::error(fmt, std::forward<Args>(args)..., loc);
+        detail::conditionlog("Unknown " + name, loc);
     } else {
-        throw exception::UnknownCase(
-            std::format(fmt, std::forward<Args>(args)..., loc)
-        );
+        throw exception::UnknownCase("Unknown " + name);
     }
 }
 
@@ -126,10 +118,9 @@ constexpr void unknown(
  */
 [[noreturn]]
 constexpr void
-unreachable(std::source_location loc = std::source_location::current()) {
+unreachable(const std::source_location& loc = std::source_location::current()) {
     if constexpr (config::BUILD_TYPE == config::BuildType::RELEASE) {
-        constexpr std::string_view msgv{"Reached block marked unreachable"};
-        log::error(loc, msgv);
+        detail::conditionlog("Reached block marked unreachable", loc);
         throw exception::Unreachable("Reached block marked unreachable");
     } else {
         std::unreachable();
@@ -141,10 +132,11 @@ unreachable(std::source_location loc = std::source_location::current()) {
  *  @throws core::exception::Condition If hit
  */
 [[noreturn]]
-constexpr void
-unimplemented(std::source_location loc = std::source_location::current()) {
+constexpr void unimplemented(
+    const std::source_location& loc = std::source_location::current()
+) {
     if constexpr (config::BUILD_TYPE == config::BuildType::RELEASE) {
-        log::error(loc, std::string("Reached block marked unimplemented"));
+        detail::conditionlog("Reached block marked unimplemented", loc);
     } else {
         throw exception::Unimplemented("Unimplemented");
     }

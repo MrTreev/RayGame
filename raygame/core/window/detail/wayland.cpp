@@ -2,6 +2,7 @@
 #if defined(RAYGAME_GUI_BACKEND_WAYLAND)
 #    include "raygame/core/condition.h"
 #    include "raygame/core/drawing/pixel.h"
+#    include "raygame/core/exception.h"
 #    include "raygame/core/logger.h"
 #    include "raygame/core/math/random.h"
 #    include <algorithm>
@@ -177,11 +178,44 @@ void core::window::detail::WaylandWindowImpl::draw(
     const drawing::ImageView& image
 ) {
     if constexpr (config::EnabledBackends::wayland()) {
-        for (size_t row{min_row}; row < max_row; ++row) {
-            for (size_t col{min_col}; col < max_col; ++col) {
-                m_pixbuf[row, col] =
-                    image[row - image.pos_x(), col - image.pos_y()];
+        constexpr auto domin = [](const pos_t val) {
+            return numeric_cast<dis_t>(std::max(pos_t(0), val));
+        };
+        constexpr auto domax = [](const dis_t max, const pos_t val) {
+            return numeric_cast<dis_t>(std::min(numeric_cast<pos_t>(max), val));
+        };
+        const dis_t min_row = domin(image.top());
+        const dis_t max_row = domax(height(), image.bottom());
+        const dis_t min_col = domin(image.left());
+        const dis_t max_col = domax(width(), image.right());
+
+        dis_t row{min_row};
+        dis_t col{min_col};
+        try {
+            for (; row < max_row; ++row) {
+                col = min_col;
+                for (; col < max_col; ++col) {
+                    m_pixbuf[row, col] = image.at(
+                        math::safe_sub<dis_t, math::MathRule::CLAMP>(
+                            row,
+                            image.pos_y()
+                        ),
+                        math::safe_sub<dis_t, math::MathRule::CLAMP>(
+                            col,
+                            image.pos_x()
+                        )
+                    );
+                }
             }
+            log::debug("Drawn: {} rows, {} cols", row - min_row, col - min_col);
+        } catch (exception::Exception& exc) {
+            log::error("Failed accessing: row: {}, col: {}", row, col);
+            log::debug("min row: {}", min_row);
+            log::debug("max row: {}", max_row);
+            log::debug("min col: {}", min_col);
+            log::debug("max col: {}", max_col);
+            log::error("{}: {}", exc.type(), exc.what());
+            throw exc;
         }
     } else {
         condition::unreachable();
