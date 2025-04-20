@@ -1,7 +1,3 @@
-enable_testing()
-find_package(doctest REQUIRED)
-include(CTest)
-
 raygame_lib(RayGameRayTest)
 set_target_properties(RayGameRayTest PROPERTIES LINKER_LANGUAGE CXX)
 add_library(RayGame::RayTest ALIAS RayGameRayTest)

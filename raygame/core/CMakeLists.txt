@@ -1,5 +1,7 @@
 raygame_lib(RayGameCoreBase)
 add_library(RayGame::Core::Base ALIAS RayGameCoreBase)
+target_link_libraries(RayGameCoreBase PUBLIC c++)
+target_link_libraries(RayGameCoreBase PUBLIC c++abi)
 target_sources(
     RayGameCoreBase
     PUBLIC

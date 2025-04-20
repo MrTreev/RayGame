@@ -4,7 +4,6 @@
 namespace core::exception {
 // Honestly, just easier this way, macro is pretty obvious what it does
 // NOLINTBEGIN(*-macro-usage)
-#define RAYGAME_EXCEPTION_DEF(name) RAYGAME_EXCEPTION_DEF_BASE(name, Exception)
 #define RAYGAME_EXCEPTION_DEF_BASE(name, base)                                 \
     name::name(const std::string& message)                                     \
         : base(message) {}                                                     \
@@ -18,13 +17,24 @@ namespace core::exception {
 
 // NOLINTEND(*-macro-usage)
 
-RAYGAME_EXCEPTION_DEF_BASE(Exception, std::runtime_error);
+Exception ::Exception(const std ::string& message)
+    : std ::runtime_error(message) {}
 
-RAYGAME_EXCEPTION_DEF(Unimplemented);
-RAYGAME_EXCEPTION_DEF(UnknownCase);
-RAYGAME_EXCEPTION_DEF(Unreachable);
+Exception ::Exception(const std ::runtime_error&& error)
+    : std ::runtime_error(error) {}
 
-RAYGAME_EXCEPTION_DEF(Condition);
+const char* Exception::type() {
+    static const std::string typestring{debug::type_name(this)};
+    return typestring.c_str();
+}
+
+Exception ::~Exception() = default;
+
+RAYGAME_EXCEPTION_DEF_BASE(Unimplemented, Exception);
+RAYGAME_EXCEPTION_DEF_BASE(UnknownCase, Exception);
+RAYGAME_EXCEPTION_DEF_BASE(Unreachable, Exception);
+
+RAYGAME_EXCEPTION_DEF_BASE(Condition, Exception);
 RAYGAME_EXCEPTION_DEF_BASE(PreCondition, Condition);
 RAYGAME_EXCEPTION_DEF_BASE(CheckCondition, Condition);
 RAYGAME_EXCEPTION_DEF_BASE(PostCondition, Condition);

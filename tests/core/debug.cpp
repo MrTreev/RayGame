@@ -3,9 +3,9 @@
 
 class TestClass {};
 
-TEST_SUITE("core::debug::type_name") {
+TEST_CASE("core::debug::type_name") {
     using core::debug::type_name;
-    TEST_CASE("type_name<T>()") {
+    SUBCASE("type_name<T>()") {
         const std::string uint8_name     = type_name<uint8_t>();
         const std::string uint16_name    = type_name<uint16_t>();
         const std::string uint32_name    = type_name<uint32_t>();
@@ -29,7 +29,7 @@ TEST_SUITE("core::debug::type_name") {
         CHECK_EQ(char_name, "char");
         CHECK_EQ(testclass_name, "TestClass");
     }
-    TEST_CASE("type_name(auto val)") {
+    SUBCASE("type_name(auto val)") {
         const TestClass   testclass;
         const std::string uint8_name      = type_name(uint8_t());
         const std::string testclass_name  = type_name(testclass);

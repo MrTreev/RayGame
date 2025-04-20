@@ -1,18 +1,18 @@
 #include "raygame/core/matrix.h" // IWYU pragma: keep
 #include "raytest/tests_begin.h"
 
-TEST_SUITE("core::Matrix") {
-    TEST_CASE("Construction") {
+TEST_CASE("core::Matrix") {
+    SUBCASE("Construction") {
         const core::Matrix<int, 2, 2> item{0, 1, 2, 4};
     }
-    TEST_CASE("multi-dim read") {
+    SUBCASE("multi-dim read") {
         const core::Matrix<int, 2, 2> item{0, 1, 2, 4};
         CHECK_EQ(item[0, 0], 0);
         CHECK_EQ(item[1, 0], 1);
         CHECK_EQ(item[0, 1], 2);
         CHECK_EQ(item[1, 1], 4);
     }
-    TEST_CASE("multi-dim write") {
+    SUBCASE("multi-dim write") {
         core::Matrix<int, 2, 2> item{0, 0, 0, 0};
         item[0, 0] = 1;
         item[1, 0] = 2;

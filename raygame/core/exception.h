@@ -5,8 +5,6 @@ namespace core::exception {
 // Honestly, just easier this way, macro is pretty obvious what it does
 // macro-parentheses is because it's wrong to do that here
 // NOLINTBEGIN(*-macro-usage,*-macro-parentheses)
-#define RAYGAME_EXCEPTION_DECL(name)                                           \
-    RAYGAME_EXCEPTION_DECL_BASE(name, Exception)
 #define RAYGAME_EXCEPTION_DECL_BASE(name, base)                                \
     class name: public base {                                                  \
     public:                                                                    \
@@ -45,7 +43,7 @@ public:
  *
  *  Guarantees: No side-effects
  */
-RAYGAME_EXCEPTION_DECL(Unimplemented);
+RAYGAME_EXCEPTION_DECL_BASE(Unimplemented, Exception);
 
 //! UnknownCase
 /*!
@@ -53,7 +51,7 @@ RAYGAME_EXCEPTION_DECL(Unimplemented);
  *
  *  Guarantees: None
  */
-RAYGAME_EXCEPTION_DECL(UnknownCase);
+RAYGAME_EXCEPTION_DECL_BASE(UnknownCase, Exception);
 
 //! Unreachable exception
 /*!
@@ -61,7 +59,7 @@ RAYGAME_EXCEPTION_DECL(UnknownCase);
  *
  *  Guarantees: None
  */
-RAYGAME_EXCEPTION_DECL(Unreachable);
+RAYGAME_EXCEPTION_DECL_BASE(Unreachable, Exception);
 
 //! Condition parent class
 /*!
@@ -72,7 +70,7 @@ RAYGAME_EXCEPTION_DECL(Unreachable);
  *  @see CheckCondition
  *  @see PostCondition
  */
-RAYGAME_EXCEPTION_DECL(Condition);
+RAYGAME_EXCEPTION_DECL_BASE(Condition, Exception);
 
 //! Pre-Condition exception
 /*!
@@ -101,6 +99,5 @@ RAYGAME_EXCEPTION_DECL_BASE(CheckCondition, Condition);
  */
 RAYGAME_EXCEPTION_DECL_BASE(PostCondition, Condition);
 
-#undef RAYGAME_EXCEPTION_DECL
 #undef RAYGAME_EXCEPTION_DECL_BASE
 } // namespace core::exception

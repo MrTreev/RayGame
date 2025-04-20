@@ -1,5 +1,5 @@
-raygame_test(
-    Types
-    SOURCES types.cpp
-    DEPENDS RayGame::Core::Base
-)
+raygame_test(Condition SOURCES condition.cpp DEPENDS RayGame::Core::Base)
+raygame_test(Debug SOURCES debug.cpp DEPENDS RayGame::Core::Base)
+raygame_test(Logger SOURCES logger.cpp DEPENDS RayGame::Core::Base)
+raygame_test(Matrix SOURCES matrix.cpp DEPENDS RayGame::Core::Base)
+raygame_test(Types SOURCES types.cpp DEPENDS RayGame::Core::Base)

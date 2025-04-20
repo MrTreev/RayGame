@@ -9,7 +9,7 @@
 
 namespace core::condition {
 namespace detail {
-void conditionlog(const std::string& message, const std::source_location& loc);
+void conditionlog(std::string message, std::source_location loc);
 } // namespace detail
 
 //! Pre-Condition Checker

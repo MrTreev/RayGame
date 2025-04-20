@@ -7,11 +7,7 @@
 namespace core::log {
 //! Logging level to string converter
 namespace detail {
-void logger(
-    const core::log::Level&     level,
-    const std::string&          text,
-    const std::source_location& loc
-);
+void logger(core::log::Level level, std::string text, std::source_location loc);
 } // namespace detail
 
 // Makes it easier to have a single definition
@@ -20,16 +16,16 @@ void logger(
     template<typename... Args>                                                 \
     struct level {                                                             \
         constexpr explicit level(                                              \
-            const std::string&          message,                               \
-            const std::source_location& loc = std::source_location::current()  \
+            std::string          message,                                      \
+            std::source_location loc = std::source_location::current()         \
         ) {                                                                    \
-            detail::logger(Level::LEVEL, message, loc);                        \
+            detail::logger(Level::LEVEL, std::move(message), loc);             \
         }                                                                      \
                                                                                \
         constexpr explicit level(                                              \
             std::format_string<Args...> fmt,                                   \
             Args&&... args,                                                    \
-            const std::source_location& loc = std::source_location::current()  \
+            std::source_location loc = std::source_location::current()         \
         )                                                                      \
             : level(                                                           \
                   std::vformat(fmt.get(), std::make_format_args(args...)),     \

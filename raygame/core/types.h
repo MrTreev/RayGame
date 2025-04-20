@@ -203,8 +203,6 @@ public:
     }
 };
 
-RAYGAME_EXTERN_INTS(Pair);
-
 template<typename first, typename second = first, typename third = second>
 class Triple {
 public:
@@ -241,8 +239,6 @@ public:
         }
     }
 };
-
-RAYGAME_EXTERN_INTS(Triple);
 
 template<
     typename first,
@@ -289,8 +285,6 @@ public:
         }
     }
 };
-
-RAYGAME_EXTERN_INTS(Quad);
 
 } // namespace core
 

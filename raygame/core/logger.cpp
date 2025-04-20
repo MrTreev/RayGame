@@ -49,7 +49,8 @@ location_string([[maybe_unused]] const std::source_location& loc) {
         return std::format(
             "{}:{} ",
             shorten_name(loc.file_name()),
-            loc.line() //, loc.function_name()
+            loc.line(),
+            loc.function_name()
         );
     }
     return {};
@@ -58,9 +59,9 @@ location_string([[maybe_unused]] const std::source_location& loc) {
 } // namespace
 
 void core::log::detail::logger(
-    const core::log::Level&     level,
-    const std::string&          text,
-    const std::source_location& loc
+    core::log::Level     level,
+    std::string          text,
+    std::source_location loc
 ) {
     if (logging_level <= level) {
         std::println(
