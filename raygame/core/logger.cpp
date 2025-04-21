@@ -28,9 +28,8 @@ constexpr bool enable_source_loc = false;
 constexpr bool enable_source_loc = false;
 #endif
 
-consteval size_t get_prefix_len(
-    const std::source_location loc = std::source_location::current()
-) {
+consteval size_t
+get_prefix_len(std::source_location loc = std::source_location::current()) {
     const std::string_view search_str = "/raygame/";
     const std::string_view locname    = loc.file_name();
     const size_t           nopref_len = locname.rfind(search_str);
@@ -42,20 +41,6 @@ constexpr std::string_view shorten_name(std::string_view full_loc) {
     shortloc.remove_prefix(get_prefix_len());
     return shortloc;
 }
-
-constexpr std::string
-location_string([[maybe_unused]] const std::source_location& loc) {
-    if (enable_source_loc) {
-        return std::format(
-            "{}:{} ",
-            shorten_name(loc.file_name()),
-            loc.line(),
-            loc.function_name()
-        );
-    }
-    return {};
-}
-
 } // namespace
 
 void core::log::detail::logger(
@@ -64,13 +49,28 @@ void core::log::detail::logger(
     std::source_location loc
 ) {
     if (logging_level <= level) {
-        std::println(
-            std::cerr,
-            "{:%T} [{}] {}- {}",
-            std::chrono::system_clock::now(),
-            to_string(level),
-            location_string(loc),
-            text
-        );
+        if (enable_source_loc) {
+            std::println(
+                std::cerr,
+                "{:%T} [{}] {}- {}",
+                std::chrono::system_clock::now(),
+                to_string(level),
+                std::format(
+                    "{}:{} ",
+                    shorten_name(loc.file_name()),
+                    loc.line(),
+                    loc.function_name()
+                ),
+                text
+            );
+        } else {
+            std::println(
+                std::cerr,
+                "{:%T} [{}] {}",
+                std::chrono::system_clock::now(),
+                to_string(level),
+                text
+            );
+        }
     }
 }

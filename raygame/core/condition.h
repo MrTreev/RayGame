@@ -4,7 +4,6 @@
 #include "raygame/core/exception.h"
 #include <source_location>
 #include <string>
-#include <type_traits>
 #include <utility>
 
 namespace core::condition {
@@ -22,12 +21,11 @@ constexpr void pre_condition(
     const std::string&              message,
     const std::source_location&     loc = std::source_location::current()
 ) {
-    using exception::PreCondition;
     if (!check) {
         if (!std::is_constant_evaluated()) {
             detail::conditionlog(message, loc);
         }
-        throw PreCondition(message);
+        throw exception::PreCondition(message);
     }
 }
 
