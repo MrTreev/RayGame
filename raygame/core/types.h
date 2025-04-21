@@ -1,7 +1,8 @@
 #pragma once
+#include "raygame/core/config.h"
 #include "raygame/core/debug.h"
-#include <cstddef> // IWYU pragma: export
-#include <cstdint> // IWYU pragma: export
+#include <cstddef>
+#include <cstdint>
 #include <format>
 #include <sstream>
 #include <string>
@@ -121,26 +122,6 @@
         }                                                                      \
     };
 
-#define RAYGAME_TEMPLATE_INTS(name)                                            \
-    template class name<uint8_t>;                                              \
-    template class name<uint16_t>;                                             \
-    template class name<uint32_t>;                                             \
-    template class name<uint64_t>;                                             \
-    template class name<int8_t>;                                               \
-    template class name<int16_t>;                                              \
-    template class name<int32_t>;                                              \
-    template class name<int64_t>
-
-#define RAYGAME_EXTERN_INTS(name)                                              \
-    extern template class name<uint8_t>;                                       \
-    extern template class name<uint16_t>;                                      \
-    extern template class name<uint32_t>;                                      \
-    extern template class name<uint64_t>;                                      \
-    extern template class name<int8_t>;                                        \
-    extern template class name<int16_t>;                                       \
-    extern template class name<int32_t>;                                       \
-    extern template class name<int64_t>
-
 namespace core {
 
 using std::int16_t;
@@ -203,6 +184,8 @@ public:
     }
 };
 
+RAYGAME_EXTERN_TEMPLATE_INTS(Pair);
+
 template<typename first, typename second = first, typename third = second>
 class Triple {
 public:
@@ -239,6 +222,8 @@ public:
         }
     }
 };
+
+RAYGAME_EXTERN_TEMPLATE_INTS(Triple);
 
 template<
     typename first,
@@ -285,6 +270,8 @@ public:
         }
     }
 };
+
+RAYGAME_EXTERN_TEMPLATE_INTS(Quad);
 
 } // namespace core
 

@@ -644,4 +644,31 @@ consteval bool x256() {
 }
 } // namespace core::config::simd
 
+//=============================================================================
+// Development Utility Macros
+//=============================================================================
+
+// Parentheses would be incorrect here
+// NOLINTBEGIN(bugprone-macro-parentheses)
+#define RAYGAME_TEMPLATE_INTS(name)                                            \
+    template class name<uint8_t>;                                              \
+    template class name<uint16_t>;                                             \
+    template class name<uint32_t>;                                             \
+    template class name<uint64_t>;                                             \
+    template class name<int8_t>;                                               \
+    template class name<int16_t>;                                              \
+    template class name<int32_t>;                                              \
+    template class name<int64_t>
+
+#define RAYGAME_EXTERN_TEMPLATE_INTS(name)                                     \
+    extern template class name<uint8_t>;                                       \
+    extern template class name<uint16_t>;                                      \
+    extern template class name<uint32_t>;                                      \
+    extern template class name<uint64_t>;                                      \
+    extern template class name<int8_t>;                                        \
+    extern template class name<int16_t>;                                       \
+    extern template class name<int32_t>;                                       \
+    extern template class name<int64_t>
+
+// NOLINTEND(bugprone-macro-parentheses)
 // NOLINTEND(*-macro-usage)
