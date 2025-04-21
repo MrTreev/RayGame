@@ -41,6 +41,8 @@ function(raygame_test _target)
             ${RAYGAME_TESTARGS_SOURCES}
     )
     target_include_directories(${_target} PUBLIC ${DOCTEST_INCLUDE_DIR})
+    target_compile_definitions(${_target} PUBLIC ${RAYGAME_TESTARGS_DEFINES})
+    target_link_libraries(${_target} PUBLIC ${RAYGAME_TESTARGS_DEPENDS})
     target_link_libraries(${_target} PUBLIC RayGame::RayTest)
     doctest_discover_tests(${_target})
 endfunction()
