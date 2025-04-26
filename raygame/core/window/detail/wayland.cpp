@@ -80,10 +80,18 @@ wl_shm_format get_colour_format() {
     constexpr auto ARGB      = 0b11000011'00000000'11111111'00111100;
     constexpr auto colourval = rgba(RVAL, GVAL, BVAL, AVAL);
     switch (bit_cast<uint32_t>(colourval)) {
-    case (ARGB): return WL_SHM_FORMAT_ARGB8888;
-    case (ABGR): return WL_SHM_FORMAT_ABGR8888;
-    case (BGRA): return WL_SHM_FORMAT_BGRA8888;
-    case (RGBA): return WL_SHM_FORMAT_RGBA8888;
+    case (ARGB):
+        core::log::debug("Colour Format: ARGB");
+        return WL_SHM_FORMAT_ARGB8888;
+    case (ABGR):
+        core::log::debug("Colour Format: ABGR");
+        return WL_SHM_FORMAT_ABGR8888;
+    case (BGRA):
+        core::log::debug("Colour Format: BGRA");
+        return WL_SHM_FORMAT_BGRA8888;
+    case (RGBA):
+        core::log::debug("Colour Format: RGBA");
+        return WL_SHM_FORMAT_RGBA8888;
     default:
         throw std::invalid_argument(std::format(
             "Could not determine colour format:\n"
@@ -178,42 +186,44 @@ void core::window::detail::WaylandWindowImpl::draw(
     const drawing::ImageView& image
 ) {
     if constexpr (config::EnabledBackends::wayland()) {
-        constexpr auto domin = [](const pos_t val) {
+        constexpr auto clamp = [](const pos_t val) {
             return numeric_cast<dis_t>(std::max(pos_t(0), val));
         };
-        constexpr auto domax = [](const dis_t max, const pos_t val) {
+        constexpr auto domin = [](const dis_t max, const pos_t val) {
             return numeric_cast<dis_t>(std::min(numeric_cast<pos_t>(max), val));
         };
-        const dis_t min_row = domin(image.top());
-        const dis_t max_row = domax(height(), image.bottom());
-        const dis_t min_col = domin(image.left());
-        const dis_t max_col = domax(width(), image.right());
+        const dis_t row_left  = clamp(image.top());
+        const dis_t row_right = domin(height(), image.bottom());
+        const dis_t col_top   = clamp(image.left());
+        const dis_t col_bot   = domin(width(), image.right());
+        if (std::cmp_greater(col_top, width())
+            || std::cmp_greater(row_left, height())) {
+            return;
+        }
 
-        dis_t row{min_row};
-        dis_t col{min_col};
+        dis_t row{row_left};
+        dis_t col{col_top};
         try {
-            for (; row < max_row; ++row) {
-                col = min_col;
-                for (; col < max_col; ++col) {
+            for (; row < row_right; ++row) {
+                col = col_top;
+                for (; col < col_bot; ++col) {
                     m_pixbuf[row, col] = image.at(
-                        math::safe_sub<dis_t, math::MathRule::CLAMP>(
-                            row,
-                            image.pos_y()
-                        ),
-                        math::safe_sub<dis_t, math::MathRule::CLAMP>(
-                            col,
-                            image.pos_x()
-                        )
+                        math::safe_sub<dis_t>(row, image.pos_y()),
+                        math::safe_sub<dis_t>(col, image.pos_x())
                     );
                 }
             }
-            log::debug("Drawn: {} rows, {} cols", row - min_row, col - min_col);
+            log::debug(
+                "Drawn: {} rows, {} cols",
+                row - row_left,
+                col - col_top
+            );
         } catch (exception::Exception& exc) {
             log::error("Failed accessing: row: {}, col: {}", row, col);
-            log::debug("min row: {}", min_row);
-            log::debug("max row: {}", max_row);
-            log::debug("min col: {}", min_col);
-            log::debug("max col: {}", max_col);
+            log::debug("min row: {}", row_left);
+            log::debug("max row: {}", row_right);
+            log::debug("min col: {}", col_top);
+            log::debug("max col: {}", col_bot);
             log::error("{}: {}", exc.type(), exc.what());
             throw exc;
         }
@@ -293,7 +303,8 @@ void core::window::detail::WaylandWindowImpl::new_buffer() {
         const auto bufwidth  = width();
         const auto bufheight = height();
         const auto buflen    = safe_mult<size_t>(bufwidth, bufheight);
-        const auto bufsize   = safe_mult<size_t>(buflen, COLOUR_CHANNELS);
+        const auto bufsize =
+            safe_mult<size_t>(safe_mult<size_t>(buflen, COLOUR_CHANNELS), 4U);
         if (m_shm_fd >= 0) {
             close(m_shm_fd);
         }
@@ -333,6 +344,12 @@ void core::window::detail::WaylandWindowImpl::new_buffer() {
         if (m_wl_shm_pool != nullptr) {
             wl_shm_pool_destroy(m_wl_shm_pool);
         }
+        for (size_t idx{0}; idx <= height(); ++idx) {
+            for (size_t jdx{0}; jdx <= width(); ++jdx) {
+                constexpr uint8_t max = 255;
+                m_pixbuf[idx, jdx]    = colour::rgba(0, 0, 0, max);
+            }
+        }
     } else {
         condition::unreachable();
     }
@@ -368,10 +385,11 @@ void core::window::detail::KeyboardState::update_mask(
 }
 
 void core::window::detail::KeyboardState::event(
-    const uint32_t& key, // NOLINT(*-swappable-parameters)
-    const uint32_t& state
+    [[maybe_unused]] const uint32_t& key, // NOLINT(*-swappable-parameters)
+    [[maybe_unused]] const uint32_t& state
 ) {
-    const uint32_t     keycode = key + ADD_VAL;
+#    if 0
+    const uint32_t keycode = key + ADD_VAL;
     const xkb_keysym_t sym     = xkb_keysym_to_upper(
         xkb_state_key_get_one_sym(m_xkb_state.get(), keycode)
     );
@@ -380,5 +398,6 @@ void core::window::detail::KeyboardState::event(
         (state == WL_KEYBOARD_KEY_STATE_PRESSED) ? "down" : "up",
         sym
     );
+#    endif
 }
 #endif

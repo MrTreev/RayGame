@@ -31,10 +31,12 @@ Hover:
   ShowAKA: True
 ---
 If:
-  PathMatch: .*_test\.cpp
+  PathMatch: tests/.*\.cpp
 Diagnostics:
   ClangTidy:
     Remove:
       - misc-use-anonymous-namespace
       - cppcoreguidelines-avoid-do-while
       - readability-function-cognitive-complexity
+      - modernize-type-traits
+      - readability-math-missing-parentheses

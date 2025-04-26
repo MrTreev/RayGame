@@ -1,6 +1,5 @@
 #include "raygame/core/window/detail/wayland.h"
 #if defined(RAYGAME_GUI_BACKEND_WAYLAND)
-#    include "raygame/core/logger.h"
 #    include <sys/mman.h>
 #    include <unistd.h>
 #    include <wayland-client-protocol.h>

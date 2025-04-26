@@ -24,7 +24,7 @@ void core::window::detail::WaylandWindowImpl::xdg_toplevel_handle_configure(
     if (width == 0 || height == 0) {
         return;
     }
-    log::debug("width: {}, height: {}", width, height);
+    log::debug("Configure: {}, {}", width, height);
     this_impl->set_size(
         {math::numeric_cast<size_t>(width), math::numeric_cast<size_t>(height)}
     );
@@ -46,6 +46,7 @@ void core::window::detail::WaylandWindowImpl::
         int32_t                               height
     ) {
     auto* this_impl = static_cast<WaylandWindowImpl*>(data);
+    log::debug("Configure Bounds: {}, {}", width, height);
     this_impl->set_size(
         {math::numeric_cast<size_t>(width), math::numeric_cast<size_t>(height)}
     );

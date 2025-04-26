@@ -1,6 +1,6 @@
 #pragma once
-#include "doctest/doctest.h" // IWYU pragma: export
-#include "raytest/test.h"    // IWYU pragma: export
+// NOLINTBEGIN(*-macro-usage)
+#include "raytest/test.h" // IWYU pragma: export
 #define RG_TEST_EPSILON_FLOAT  0.000001F
 #define RG_TEST_EPSILON_DOUBLE 0.000001D
 
@@ -72,3 +72,16 @@
 
 #define RG_TEST_DOUBLE(a, b)                                                   \
     REQUIRE(a == doctest::Approx(b).epsilon(RG_TEST_EPSILON_DOUBLE))
+
+#define RG_TEST_SUITE(str)         TEST_SUITE(str)
+#define RG_TEST_CASE(str)          TEST_CASE(str)
+#define RG_TEST_CASE_TEMPLATE(...) TEST_CASE_TEMPLATE(__VA_ARGS__)
+#define RG_SUBCASE(str)            SUBCASE(str)
+
+#define RG_CHECK_THROWS_AS(expr, except) CHECK_THROWS_AS(expr, except)
+#define RG_CHECK_NOTHROW(expr)           CHECK_NOTHROW(expr)
+#define RG_CHECK_EQ(aval, bval)          CHECK_EQ(aval, bval)
+
+// NOLINTEND(*-macro-usage)
+
+#include "doctest/doctest.h" // IWYU pragma: export
