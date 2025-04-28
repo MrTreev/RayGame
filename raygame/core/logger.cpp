@@ -28,19 +28,6 @@ constexpr std::string to_string(core::log::Level level) {
     }
     core::condition::unreachable();
 }
-
-constexpr std::string location_string(std::source_location loc) {
-    if (enable_source_loc) {
-        constexpr std::string_view search_str = "/raygame/";
-        std::string_view           shortloc{loc.file_name()};
-        shortloc.remove_prefix(
-            std::string_view(loc.file_name()).rfind(search_str)
-            + search_str.length()
-        );
-        return std::format("{}:{} ", shortloc, loc.line());
-    }
-    return {};
-}
 } // namespace
 
 void core::log::detail::logger(
@@ -49,24 +36,25 @@ void core::log::detail::logger(
     std::source_location loc
 ) {
     if (logging_level <= level) {
-        if (enable_source_loc) {
+        if constexpr (enable_source_loc) {
+            constexpr std::string_view search_str = "/raygame/";
+            std::string_view           shortloc{loc.file_name()};
+            shortloc.remove_prefix(
+                std::string_view(loc.file_name()).rfind(search_str)
+                + search_str.length()
+            );
             std::println(
                 std::cerr,
-                "{:%T} [{}] {}- {}",
+                "{:%T} [{}] {} - {}",
                 std::chrono::system_clock::now(),
                 to_string(level),
-                std::format(
-                    "{}:{} ",
-                    shorten_name(loc.file_name()),
-                    loc.line(),
-                    loc.function_name()
-                ),
+                std::format("{}:{}", shortloc, loc.line()),
                 text
             );
         } else {
             std::println(
                 std::cerr,
-                "{:%T} [{}] {}",
+                "{:%T} [{}] - {}",
                 std::chrono::system_clock::now(),
                 to_string(level),
                 text
