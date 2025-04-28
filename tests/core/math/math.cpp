@@ -1,5 +1,5 @@
 #include "raygame/core/math/math.h"
-#include "raytest/tests_begin.h"
+#include "raytest/raytest.h"
 
 TEST_SUITE("core::math::deg2rad") {
     using core::math::deg2rad;

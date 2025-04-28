@@ -1,5 +1,5 @@
 #include "raygame/core/math/arithmetic/safe_sub.h" // IWYU pragma: keep
-#include "raytest/tests_begin.h"
+#include "raytest/raytest.h"
 
 TEST_SUITE("core::math::safe_sub") {
     using core::math::safe_sub;

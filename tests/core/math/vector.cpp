@@ -1,5 +1,5 @@
 #include "raygame/core/math/vector.h"
-#include "raytest/tests_begin.h"
+#include "raytest/raytest.h"
 
 TEST_SUITE("core::Vec2") {
     using core::Vec2;

@@ -29,3 +29,4 @@ target_sources(
         ring_average.cpp
         vector.cpp
 )
+target_link_libraries(RayGameCoreMath PUBLIC RayGame::Core::Base)

@@ -9,3 +9,8 @@ target_sources(
         image.cpp
         pixel.cpp
 )
+target_link_libraries(RayGameCoreDrawing
+    PUBLIC
+        RayGame::Core::Base
+        RayGame::Core::Math
+)

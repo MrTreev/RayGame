@@ -1,5 +1,5 @@
 #include "raygame/core/matrix.h" // IWYU pragma: keep
-#include "raytest/tests_begin.h"
+#include "raytest/raytest.h"
 
 TEST_CASE("core::Matrix") {
     SUBCASE("Construction") {

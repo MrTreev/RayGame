@@ -1,5 +1,5 @@
 #include "raygame/core/debug.h"
-#include "raytest/tests_begin.h"
+#include "raytest/raytest.h"
 
 class TestClass {};
 

@@ -1,6 +1,6 @@
 #include "raygame/core/drawing/image.h"
 #include "raygame/core/drawing/pixel.h"
-#include "raytest/tests_begin.h"
+#include "raytest/raytest.h"
 
 TEST_SUITE("core::drawing::image") {
     TEST_CASE("Construct Image") {

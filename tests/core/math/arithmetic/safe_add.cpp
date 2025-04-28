@@ -1,5 +1,5 @@
 #include "raygame/core/math/arithmetic/safe_add.h"
-#include "raytest/tests_begin.h"
+#include "raytest/raytest.h"
 
 TEST_SUITE("core::math::safe_add") {
     using core::math::safe_add;

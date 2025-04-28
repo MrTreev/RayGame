@@ -1,5 +1,5 @@
 #include "raygame/core/math/arithmetic/safe_div.h"
-#include "raytest/tests_begin.h"
+#include "raytest/raytest.h"
 
 TEST_SUITE("core::math::safe_div") {
     using core::math::safe_div;

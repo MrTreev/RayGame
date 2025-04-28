@@ -1,5 +1,5 @@
 #include "raygame/core/math/rect.h"
-#include "raytest/tests_begin.h"
+#include "raytest/raytest.h"
 
 TEST_SUITE("core::Rect") {
     using core::Rect;

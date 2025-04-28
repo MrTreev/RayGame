@@ -1,5 +1,5 @@
 #include "raygame/core/logger.h" // IWYU pragma: keep
-#include "raytest/tests_begin.h"
+#include "raytest/raytest.h"
 
 TEST_CASE("core::log::logger") {
     SUBCASE("trace") {

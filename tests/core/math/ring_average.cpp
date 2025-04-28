@@ -1,6 +1,6 @@
 #include "raygame/core/concepts.h"
 #include "raygame/core/math/ring_average.h" // IWYU pragma: keep
-#include "raytest/tests_begin.h"
+#include "raytest/raytest.h"
 #include <algorithm>
 #include <deque>
 #include <numeric>

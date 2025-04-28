@@ -1,5 +1,5 @@
 #include "raygame/core/drawing/pixel.h" // IWYU pragma: keep
-#include "raytest/tests_begin.h"
+#include "raytest/raytest.h"
 
 TEST_SUITE("core::Pixel") {
     TEST_CASE("String functions") {
