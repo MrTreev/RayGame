@@ -26,7 +26,7 @@ Out_T safe_sub(const std::integral auto aval, const std::integral auto bval) {
 
     if constexpr (core::config::COMPILER_IS_GCC_LIKE
                   && !core::config::FORCE_GENERIC_IMPL) {
-        Out_T res = 0;
+        std::remove_const_t<Out_T> res = 0;
         if (__builtin_sub_overflow(aval, bval, &res)) {
             if constexpr (MR == MathRule::ALLOW) {
                 return core::math::numeric_cast<Out_T, MR>(res);

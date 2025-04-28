@@ -2,41 +2,52 @@
 #include "raytest/raytest.h"
 #include <cstdint>
 
-TEST_SUITE("core::math::numeric_cast") {
-    using core::math::numeric_cast;
-    using core::math::MathRule::CLAMP;
-    using core::math::MathRule::STRICT;
-    using test::lowest;
-    using test::max;
-    using test::min;
-    TEST_CASE_TEMPLATE("Strict in-range does not throw", T, FWINTS) {
-        CHECK_NOTHROW(numeric_cast<T, STRICT>(max<T>()));
-        CHECK_NOTHROW(numeric_cast<T, STRICT>(min<T>()));
-        CHECK_NOTHROW(numeric_cast<T, STRICT>(lowest<T>()));
+using exp_t = core::exception::Condition;
+using core::math::numeric_cast;
+using core::math::MathRule::CLAMP;
+using core::math::MathRule::STRICT;
+using test::lowest;
+using test::max;
+using test::min;
+
+template<typename T>
+class NumericCast: public ::testing::Test {
+public:
+    T val() { return 1; }
+};
+
+RG_TYPED_TEST_SUITE(NumericCast, test::types::Integral);
+
+RG_TYPED_TEST(NumericCast, Strict) {
+    using T = decltype(this->val());
+    RG_CHECK_NO_THROW((numeric_cast<T, STRICT>(max<T>())));
+    RG_CHECK_NO_THROW((numeric_cast<T, STRICT>(min<T>())));
+    RG_CHECK_NO_THROW((numeric_cast<T, STRICT>(lowest<T>())));
+    if constexpr (sizeof(T) < sizeof(intmax_t)) {
+        RG_CHECK_THROW((numeric_cast<T, STRICT>(max<T>() + 1)), exp_t);
+        RG_CHECK_THROW((numeric_cast<T, STRICT>(min<T>() - 1)), exp_t);
     }
-    TEST_CASE_TEMPLATE("Strict out-of-range", T, FWINTS) {
-        if constexpr (sizeof(T) < sizeof(intmax_t)) {
-            CHECK_THROWS(numeric_cast<T, STRICT>(max<T>() + 1));
-            CHECK_THROWS(numeric_cast<T, STRICT>(min<T>() - 1));
-        }
-    }
-    TEST_CASE_TEMPLATE("Clamp Out-of-range", T, FWINTS) {
-        if constexpr (sizeof(T) < sizeof(intmax_t)) {
-            CHECK_EQ(numeric_cast<T, CLAMP>(max<T>() + 1), max<T>());
-            if constexpr (std::is_signed_v<T>) {
-                CHECK_EQ(numeric_cast<T, CLAMP>(min<T>() - 1), min<T>());
-            }
-        }
-    }
-    TEST_CASE_TEMPLATE("Different signedness", T, FWINTS) {
-        CHECK_NOTHROW(numeric_cast<T, STRICT>(1U));
-        CHECK_NOTHROW(numeric_cast<T, STRICT>(1U));
+}
+
+RG_TYPED_TEST(NumericCast, Clamp) {
+    using T = decltype(this->val());
+    if constexpr (sizeof(T) < sizeof(intmax_t)) {
+        RG_CHECK_EQ((numeric_cast<T, CLAMP>(max<T>() + 1)), max<T>());
         if constexpr (std::is_signed_v<T>) {
-            CHECK_NOTHROW(numeric_cast<T, STRICT>(-1));
-            CHECK_NOTHROW(numeric_cast<T, STRICT>(-1));
-        } else {
-            CHECK_THROWS(numeric_cast<T, STRICT>(-1));
-            CHECK_THROWS(numeric_cast<T, STRICT>(-1));
+            RG_CHECK_EQ((numeric_cast<T, CLAMP>(min<T>() - 1)), min<T>());
         }
+    }
+}
+
+RG_TYPED_TEST(NumericCast, Signedness) {
+    using T = decltype(this->val());
+    RG_CHECK_NO_THROW((numeric_cast<T, STRICT>(1U)));
+    RG_CHECK_NO_THROW((numeric_cast<T, STRICT>(1U)));
+    if constexpr (std::is_signed_v<T>) {
+        RG_CHECK_NO_THROW((numeric_cast<T, STRICT>(-1)));
+        RG_CHECK_NO_THROW((numeric_cast<T, STRICT>(-1)));
+    } else {
+        RG_CHECK_THROW((numeric_cast<T, STRICT>(-1)), exp_t);
+        RG_CHECK_THROW((numeric_cast<T, STRICT>(-1)), exp_t);
     }
 }

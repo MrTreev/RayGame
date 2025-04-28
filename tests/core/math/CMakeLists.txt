@@ -1,7 +1,4 @@
-raygame_test(ArithmeticAdd SOURCES arithmetic/safe_add.cpp DEPENDS RayGame::Core::Math)
-raygame_test(ArithmeticDiv SOURCES arithmetic/safe_div.cpp DEPENDS RayGame::Core::Math)
-raygame_test(ArithmeticMul SOURCES arithmetic/safe_mult.cpp DEPENDS RayGame::Core::Math)
-raygame_test(ArithmeticSub SOURCES arithmetic/safe_sub.cpp DEPENDS RayGame::Core::Math)
+raygame_test(Arithmetic SOURCES arithmetic.cpp DEPENDS RayGame::Core::Math)
 raygame_test(Math SOURCES math.cpp DEPENDS RayGame::Core::Math)
 raygame_test(MathRule SOURCES mathrule.cpp DEPENDS RayGame::Core::Math)
 raygame_test(NumericCast SOURCES numeric_cast.cpp DEPENDS RayGame::Core::Math)

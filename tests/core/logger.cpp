@@ -1,8 +1,8 @@
 #include "raygame/core/logger.h" // IWYU pragma: keep
 #include "raytest/raytest.h"
 
-TEST_CASE("core::log::logger") {
-    SUBCASE("trace") {
+RG_TEST(Logger, API) {
+    RG_SUBCASE("trace") {
         using core::log::trace;
         const int tmp = 1;
         trace("test");
@@ -11,7 +11,7 @@ TEST_CASE("core::log::logger") {
         trace("{}, {}", 1, tmp);
     }
 
-    SUBCASE("debug") {
+    RG_SUBCASE("debug") {
         using core::log::debug;
         const int tmp = 1;
         debug("test");
@@ -20,7 +20,7 @@ TEST_CASE("core::log::logger") {
         debug("{}, {}", 1, tmp);
     }
 
-    SUBCASE("info") {
+    RG_SUBCASE("info") {
         using core::log::info;
         const int tmp = 1;
         info("test");
@@ -29,7 +29,7 @@ TEST_CASE("core::log::logger") {
         info("{}, {}", 1, tmp);
     }
 
-    SUBCASE("note") {
+    RG_SUBCASE("note") {
         using core::log::note;
         const int tmp = 1;
         note("test");
@@ -38,7 +38,7 @@ TEST_CASE("core::log::logger") {
         note("{}, {}", 1, tmp);
     }
 
-    SUBCASE("progress") {
+    RG_SUBCASE("progress") {
         using core::log::progress;
         const int tmp = 1;
         progress("test");
@@ -47,7 +47,7 @@ TEST_CASE("core::log::logger") {
         progress("{}, {}", 1, tmp);
     }
 
-    SUBCASE("warning") {
+    RG_SUBCASE("warning") {
         using core::log::warning;
         const int tmp = 1;
         warning("test");
@@ -56,7 +56,7 @@ TEST_CASE("core::log::logger") {
         warning("{}, {}", 1, tmp);
     }
 
-    SUBCASE("error") {
+    RG_SUBCASE("error") {
         using core::log::error;
         const int tmp = 1;
         error("test");
@@ -65,7 +65,7 @@ TEST_CASE("core::log::logger") {
         error("{}, {}", 1, tmp);
     }
 
-    SUBCASE("fatal") {
+    RG_SUBCASE("fatal") {
         using core::log::fatal;
         const int tmp = 1;
         fatal("test");

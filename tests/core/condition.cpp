@@ -2,101 +2,120 @@
 #include "raygame/core/exception.h"
 #include "raytest/raytest.h"
 
-RG_TEST_SUITE("core::condition Pre-Tests") {
+namespace {
+template<typename T>
+class ConditionTest: public ::testing::Test {
+public:
+    ConditionTest()                                = default;
+    ConditionTest(const ConditionTest&)            = delete;
+    ConditionTest(ConditionTest&&)                 = delete;
+    ConditionTest& operator=(const ConditionTest&) = delete;
+    ConditionTest& operator=(ConditionTest&&)      = delete;
+    ~ConditionTest() override                      = default;
+
+    void SetUp() override {}
+
+    void TearDown() override {}
+
+    T::A amin() { return 1; }
+
+    T::B bmin() { return 1; }
+
+    T::A aval() { return 2; }
+
+    T::B bval() { return 2; }
+
+    T::A amax() { return 3; }
+
+    T::B bmax() { return 3; }
+};
+
+RG_TYPED_TEST_SUITE(ConditionTest, test::types::IntegralPairs);
+
+RG_TYPED_TEST(ConditionTest, Basics) {
     using cond_t = core::exception::PreCondition;
-    using core::condition::pre_check_max;
-    using core::condition::pre_check_min;
-    using core::condition::pre_check_range;
-
-    RG_TEST_CASE("Basic checks") {
-        using core::condition::pre_condition;
-        CHECK_NOTHROW(pre_condition(true, "true"));
-        CHECK_THROWS_AS(pre_condition(false, "false"), cond_t);
+    RG_SUBCASE("Min Tests") {
+        using core::condition::pre_check_min;
+        RG_CHECK_NO_THROW(pre_check_min(this->aval(), this->amin()));
+        RG_CHECK_NO_THROW(pre_check_min(this->aval(), this->bmin()));
+        RG_CHECK_NO_THROW(pre_check_min(this->bval(), this->amin()));
+        RG_CHECK_NO_THROW(pre_check_min(this->bval(), this->bmin()));
+        RG_CHECK_THROW(pre_check_min(this->aval(), this->amax()), cond_t);
+        RG_CHECK_THROW(pre_check_min(this->aval(), this->bmax()), cond_t);
+        RG_CHECK_THROW(pre_check_min(this->bval(), this->amax()), cond_t);
+        RG_CHECK_THROW(pre_check_min(this->bval(), this->bmax()), cond_t);
     }
 
-    RG_TEST_CASE_TEMPLATE("Range checks", T, FWINT_PAIRS) {
-        using a_t      = T::A;
-        using b_t      = T::B;
-        const a_t amin = 1;
-        const b_t bmin = 1;
-        const a_t aval = 2;
-        const b_t bval = 2;
-        const a_t amax = 3;
-        const b_t bmax = 3;
+    RG_SUBCASE("Max Tests") {
+        using core::condition::pre_check_max;
+        RG_CHECK_NO_THROW(pre_check_max(this->aval(), this->amax()));
+        RG_CHECK_NO_THROW(pre_check_max(this->aval(), this->bmax()));
+        RG_CHECK_NO_THROW(pre_check_max(this->bval(), this->amax()));
+        RG_CHECK_NO_THROW(pre_check_max(this->bval(), this->bmax()));
+        RG_CHECK_THROW(pre_check_max(this->aval(), this->amin()), cond_t);
+        RG_CHECK_THROW(pre_check_max(this->aval(), this->bmin()), cond_t);
+        RG_CHECK_THROW(pre_check_max(this->bval(), this->amin()), cond_t);
+        RG_CHECK_THROW(pre_check_max(this->bval(), this->bmin()), cond_t);
+    }
 
-        RG_SUBCASE("Min Tests") {
-            RG_CHECK_NOTHROW(pre_check_min(aval, amin));
-            RG_CHECK_NOTHROW(pre_check_min(aval, bmin));
-            RG_CHECK_NOTHROW(pre_check_min(bval, amin));
-            RG_CHECK_NOTHROW(pre_check_min(bval, bmin));
-            RG_CHECK_THROWS_AS(pre_check_min(aval, amax), cond_t);
-            RG_CHECK_THROWS_AS(pre_check_min(aval, bmax), cond_t);
-            RG_CHECK_THROWS_AS(pre_check_min(bval, amax), cond_t);
-            RG_CHECK_THROWS_AS(pre_check_min(bval, bmax), cond_t);
-        }
+    RG_SUBCASE("In-Range Tests") {
+        using core::condition::pre_check_range;
+#define CRTHIS(i, j, k)                                                        \
+    pre_check_range(this->i##val(), this->j##min(), this->k##max())
+        RG_CHECK_NO_THROW(CRTHIS(a, a, a));
+        RG_CHECK_NO_THROW(CRTHIS(a, a, b));
+        RG_CHECK_NO_THROW(CRTHIS(a, b, a));
+        RG_CHECK_NO_THROW(CRTHIS(a, b, b));
+        RG_CHECK_NO_THROW(CRTHIS(b, a, a));
+        RG_CHECK_NO_THROW(CRTHIS(b, a, b));
+        RG_CHECK_NO_THROW(CRTHIS(b, b, a));
+        RG_CHECK_NO_THROW(CRTHIS(b, b, b));
+#undef CRTHIS
+    }
 
-        RG_SUBCASE("Max Tests") {
-            RG_CHECK_NOTHROW(pre_check_max(aval, amax));
-            RG_CHECK_NOTHROW(pre_check_max(aval, bmax));
-            RG_CHECK_NOTHROW(pre_check_max(bval, amax));
-            RG_CHECK_NOTHROW(pre_check_max(bval, bmax));
-            RG_CHECK_THROWS_AS(pre_check_max(aval, amin), cond_t);
-            RG_CHECK_THROWS_AS(pre_check_max(aval, bmin), cond_t);
-            RG_CHECK_THROWS_AS(pre_check_max(bval, amin), cond_t);
-            RG_CHECK_THROWS_AS(pre_check_max(bval, bmin), cond_t);
-        }
-
-        RG_SUBCASE("In-Range Tests") {
-            RG_CHECK_NOTHROW(pre_check_range(aval, amin, amax));
-            RG_CHECK_NOTHROW(pre_check_range(aval, amin, bmax));
-            RG_CHECK_NOTHROW(pre_check_range(aval, bmin, amax));
-            RG_CHECK_NOTHROW(pre_check_range(aval, bmin, bmax));
-            RG_CHECK_NOTHROW(pre_check_range(bval, amin, amax));
-            RG_CHECK_NOTHROW(pre_check_range(bval, amin, bmax));
-            RG_CHECK_NOTHROW(pre_check_range(bval, bmin, amax));
-            RG_CHECK_NOTHROW(pre_check_range(bval, bmin, bmax));
-        }
-
-        RG_SUBCASE("Out-of-Range Tests") {
-            // Swapping these is intentional here
-            // NOLINTBEGIN(*-suspicious-call-argument)
-            RG_CHECK_THROWS_AS(pre_check_range(aval, amax, amin), cond_t);
-            RG_CHECK_THROWS_AS(pre_check_range(aval, amax, bmin), cond_t);
-            RG_CHECK_THROWS_AS(pre_check_range(aval, bmax, amin), cond_t);
-            RG_CHECK_THROWS_AS(pre_check_range(aval, bmax, bmin), cond_t);
-            RG_CHECK_THROWS_AS(pre_check_range(bval, amax, amin), cond_t);
-            RG_CHECK_THROWS_AS(pre_check_range(bval, amax, bmin), cond_t);
-            RG_CHECK_THROWS_AS(pre_check_range(bval, bmax, amin), cond_t);
-            RG_CHECK_THROWS_AS(pre_check_range(bval, bmax, bmin), cond_t);
-            // NOLINTEND(*-suspicious-call-argument)
-        }
+    RG_SUBCASE("Out-of-Range Tests") {
+        using core::condition::pre_check_range;
+        // Swapping these is intentional here
+        // NOLINTBEGIN(*-suspicious-call-argument)
+#define CRTHIS(i, j, k)                                                        \
+    pre_check_range(this->i##val(), this->j##max(), this->k##min())
+        RG_CHECK_THROW(CRTHIS(a, a, a), cond_t);
+        RG_CHECK_THROW(CRTHIS(a, a, b), cond_t);
+        RG_CHECK_THROW(CRTHIS(a, b, a), cond_t);
+        RG_CHECK_THROW(CRTHIS(a, b, b), cond_t);
+        RG_CHECK_THROW(CRTHIS(b, a, a), cond_t);
+        RG_CHECK_THROW(CRTHIS(b, a, b), cond_t);
+        RG_CHECK_THROW(CRTHIS(b, b, a), cond_t);
+        RG_CHECK_THROW(CRTHIS(b, b, b), cond_t);
+#undef CRTHIS
+        // NOLINTEND(*-suspicious-call-argument)
     }
 }
 
-RG_TEST_SUITE("core::condition::post") {
+RG_TEST(Condition, Post) {
     using cond_t = core::exception::PostCondition;
-    RG_TEST_CASE("Basic checks") {
-        using core::condition::post_condition;
-        RG_CHECK_NOTHROW(post_condition(true, "true"));
-        RG_CHECK_THROWS_AS(post_condition(false, "false"), cond_t);
-    }
+    using core::condition::post_condition;
+    RG_CHECK_NO_THROW(post_condition(true, "true"));
+    RG_CHECK_THROW(post_condition(false, "false"), cond_t);
 }
 
-RG_TEST_SUITE("core::condition::check") {
+RG_TEST(Condition, Checks) {
     using cond_t = core::exception::CheckCondition;
 
-    RG_TEST_CASE("Basic checks") {
+    RG_SUBCASE("Basic checks") {
         using core::condition::check_condition;
-        RG_CHECK_NOTHROW(check_condition(true, "true"));
-        RG_CHECK_THROWS_AS(check_condition(false, "false"), cond_t);
+        RG_CHECK_NO_THROW(check_condition(true, "true"));
+        RG_CHECK_THROW(check_condition(false, "false"), cond_t);
     }
 
-    RG_TEST_CASE_TEMPLATE("core::condition::check_ptr", T, FWINTS) {
+    RG_SUBCASE("core::condition::check_ptr") {
         using core::condition::check_ptr;
-        const T* tst_null = nullptr;
-        const T  tst_val  = 1;
-        const T* tst      = &tst_val;
-        RG_CHECK_NOTHROW(check_ptr(tst, "non-null"));
-        RG_CHECK_THROWS_AS(check_ptr(tst_null, "null"), cond_t);
+        const int* tst_null = nullptr;
+        const int  tst_val  = 1;
+        const int* tst      = &tst_val;
+        RG_CHECK_NO_THROW(check_ptr(tst, "non-null"));
+        RG_CHECK_THROW(check_ptr(tst_null, "null"), cond_t);
     }
 }
+
+} // namespace

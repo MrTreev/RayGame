@@ -52,7 +52,7 @@ set(RAYGAME_BT_IS_RELEASE OFF)
 option(RAYGAME_ENABLE_COMPILE_COMMANDS "Create compile_commands.json file" ON)
 
 option(RAYGAME_BUILD_TESTS "Build tests" ON)
-option(RAYGAME_BUILD_DOCS  "Build documentation" ON)
+option(RAYGAME_BUILD_DOCS "Build documentation" ON)
 option(RAYGAME_BUILD_GAMES "Build games" ON)
 
 option(RAYGAME_GUI_DISABLE_COCOA "Disable the MacOS Cocoa GUI backend" $<NOT:${RAYGAME_OS_IS_MAC}>)
@@ -62,14 +62,31 @@ option(RAYGAME_GUI_DISABLE_X11 "Disable the Linux X11 GUI backend" $<NOT:${RAYGA
 option(RAYGAME_GUI_DISABLE_IMGUI "Disable the IMGUI GUI backend" $<NOT:${RAYGAME_BT_IS_DEBUG}>)
 option(RAYGAME_GUI_DEFAULT_WINDOW_HEIGHT "Default GUI window height" 640)
 option(RAYGAME_GUI_DEFAULT_WINDOW_WIDTH "Default GUI window width" 480)
-set(RAYGAME_GUI_DEFAULT_WINDOW_TITLE "RayGame" CACHE STRING "Default GUI window title")
+set(RAYGAME_GUI_DEFAULT_WINDOW_TITLE
+    "RayGame"
+    CACHE STRING "Default GUI window title"
+)
 
 option(RAYGAME_MATH_RANDOM_FULL "Non-deterministic random numbers" OFF)
 option(RAYGAME_MATH_FORCE_GENERIC "Force generic implementations of maths functions" OFF)
 
 option(RAYGAME_LOG_DISABLE_SOURCE_LOCATION "Disable source_location in logs" OFF)
-set(RAYGAME_LOG_LEVEL "DEBUG" CACHE STRING "Minimum log level to be displayed")
-set_property(CACHE RAYGAME_LOG_LEVEL PROPERTY STRINGS "TRACE" "DEBUG" "INFO" "NOTE" "PROGRESS" "WARNING" "ERROR" "FATAL")
+set(RAYGAME_LOG_LEVEL
+    "DEBUG"
+    CACHE STRING "Minimum log level to be displayed"
+)
+set_property(
+    CACHE RAYGAME_LOG_LEVEL
+    PROPERTY STRINGS
+             "TRACE"
+             "DEBUG"
+             "INFO"
+             "NOTE"
+             "PROGRESS"
+             "WARNING"
+             "ERROR"
+             "FATAL"
+)
 
 option(RAYGAME_TIME_FRAMES "Record the average frame time" OFF)
 
@@ -110,9 +127,8 @@ function(raygame_lib _target)
     cmake_parse_arguments(RAYGAME_TESTARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     add_library(${_target})
     target_compile_features(${_target} PUBLIC cxx_std_23)
-    target_include_directories(${_target} PUBLIC
-        $<BUILD_INTERFACE:${RayGame_SOURCE_DIR}>
-        $<INSTALL_INTERFACE:include/raygame>
+    target_include_directories(
+        ${_target} PUBLIC $<BUILD_INTERFACE:${RayGame_SOURCE_DIR}> $<INSTALL_INTERFACE:include/raygame>
     )
     set_target_properties(
         ${_target}

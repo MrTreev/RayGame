@@ -6,7 +6,7 @@ class TestClass {};
 template<typename T>
 class TestClassTemplate {};
 
-RG_TEST_CASE("core::debug::type_name") {
+RG_TEST(Logger, TypeName) {
     using core::debug::type_name;
 
     RG_SUBCASE("type_name<T>()") {

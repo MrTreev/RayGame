@@ -15,5 +15,5 @@ set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 
-add_compile_options(-stdlib=libc++)
-add_link_options(-stdlib=libc++)
+add_compile_options(-stdlib=libstdc++)
+add_link_options(-stdlib=libstdc++)
