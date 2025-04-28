@@ -303,8 +303,10 @@ void core::window::detail::WaylandWindowImpl::new_buffer() {
         const auto bufwidth  = width();
         const auto bufheight = height();
         const auto buflen    = safe_mult<size_t>(bufwidth, bufheight);
-        const auto bufsize =
-            safe_mult<size_t>(safe_mult<size_t>(buflen, COLOUR_CHANNELS), 4U);
+        const auto bufsize   = safe_mult<size_t>(buflen, COLOUR_CHANNELS);
+        log::debug("Requesting buffer with size: {}, {}", bufwidth, bufheight);
+        log::debug("buflen: {}", buflen);
+        log::debug("bufsize: {}", bufsize);
         if (m_shm_fd >= 0) {
             close(m_shm_fd);
         }

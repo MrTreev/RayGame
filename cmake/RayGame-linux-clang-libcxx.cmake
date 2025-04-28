@@ -1,0 +1,16 @@
+set(CMAKE_SYSTEM_NAME Linux)
+set(CMAKE_SYSTEM_PROCESSOR x86)
+
+set(tools /usr)
+set(CMAKE_C_COMPILER    ${tools}/bin/clang)
+set(CMAKE_CXX_COMPILER  ${tools}/bin/clang++)
+set(CMAKE_AR            ${tools}/bin/llvm-ar)
+set(CMAKE_LINKER        ${tools}/bin/ld.lld)
+set(CMAKE_NM            ${tools}/bin/llvm-nm)
+set(CMAKE_OBJDUMP       ${tools}/bin/llvm-objdump)
+set(CMAKE_RANLIB        ${tools}/bin/llvm-ranlib)
+
+set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)

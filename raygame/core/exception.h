@@ -15,7 +15,7 @@ namespace core::exception {
         name& operator=(name&&)      = default;                                \
         name& operator=(const name&) = default;                                \
         ~name() override;                                                      \
-        const char* type() override;                                           \
+        std::string type() override;                                           \
     }
 
 // NOLINTEND(*-macro-usage,*-macro-parentheses)
@@ -33,7 +33,7 @@ public:
     Exception& operator=(Exception&&)      = default;
     Exception& operator=(const Exception&) = default;
     ~Exception() override;
-    virtual const char* type();
+    virtual std::string type();
 };
 
 //! Unimplemented exception

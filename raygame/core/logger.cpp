@@ -1,10 +1,20 @@
 #include "raygame/core/logger.h" // IWYU pragma: keep
+#include "raygame/core/condition.h"
 #include <chrono>
 #include <iostream>
 #include <source_location>
 #include <string_view>
 
 namespace {
+#if defined(RAYGAME_ENABLE_SOURCE_LOCATION)
+constexpr bool enable_source_loc = true;
+#elif defined(RAYGAME_DISABLE_SOURCE_LOCATION)
+constexpr bool enable_source_loc = false;
+#else
+#    warning "No source location macro defined, disabling"
+constexpr bool enable_source_loc = false;
+#endif
+
 constexpr std::string to_string(core::log::Level level) {
     switch (level) {
     case core::log::Level::TRACE:    return "TRACE";
@@ -16,30 +26,20 @@ constexpr std::string to_string(core::log::Level level) {
     case core::log::Level::ERROR:    return "ERROR";
     case core::log::Level::FATAL:    return "FATAL";
     }
-    std::unreachable();
+    core::condition::unreachable();
 }
 
-#if defined(RAYGAME_ENABLE_SOURCE_LOCATION)
-constexpr bool enable_source_loc = true;
-#elif defined(RAYGAME_DISABLE_SOURCE_LOCATION)
-constexpr bool enable_source_loc = false;
-#else
-#    warning "No source location macro defined, disabling"
-constexpr bool enable_source_loc = false;
-#endif
-
-consteval size_t
-get_prefix_len(std::source_location loc = std::source_location::current()) {
-    const std::string_view search_str = "/raygame/";
-    const std::string_view locname    = loc.file_name();
-    const size_t           nopref_len = locname.rfind(search_str);
-    return nopref_len + search_str.length() + 2;
-}
-
-constexpr std::string_view shorten_name(std::string_view full_loc) {
-    std::string_view shortloc(full_loc);
-    shortloc.remove_prefix(get_prefix_len());
-    return shortloc;
+constexpr std::string location_string(std::source_location loc) {
+    if (enable_source_loc) {
+        constexpr std::string_view search_str = "/raygame/";
+        std::string_view           shortloc{loc.file_name()};
+        shortloc.remove_prefix(
+            std::string_view(loc.file_name()).rfind(search_str)
+            + search_str.length()
+        );
+        return std::format("{}:{} ", shortloc, loc.line());
+    }
+    return {};
 }
 } // namespace
 

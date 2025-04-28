@@ -44,7 +44,7 @@ constexpr void check_condition(
         if (!std::is_constant_evaluated()) {
             detail::conditionlog(message, loc);
         }
-        throw core::exception::CheckCondition(message);
+        throw exception::CheckCondition(message);
     }
 }
 
@@ -63,7 +63,7 @@ constexpr void post_condition(
         if (!std::is_constant_evaluated()) {
             detail::conditionlog(message, loc);
         }
-        throw core::exception::PostCondition(message);
+        throw exception::PostCondition(message);
     }
 }
 
@@ -81,7 +81,7 @@ constexpr void check_ptr(
         if (!std::is_constant_evaluated()) {
             detail::conditionlog(message, loc);
         }
-        throw core::exception::CheckCondition(message);
+        throw exception::CheckCondition(message);
     }
 }
 
