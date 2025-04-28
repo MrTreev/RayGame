@@ -2,7 +2,6 @@
 #if defined(RAYGAME_GUI_BACKEND_WAYLAND)
 #    include "raygame/core/condition.h"
 #    include "raygame/core/drawing/pixel.h"
-#    include "raygame/core/exception.h"
 #    include "raygame/core/logger.h"
 #    include "raygame/core/math/random.h"
 #    include <algorithm>
@@ -193,8 +192,8 @@ void core::window::detail::WaylandWindowImpl::draw(
             return numeric_cast<dis_t>(std::min(numeric_cast<pos_t>(max), val));
         };
         const dis_t row_left  = clamp(image.top());
-        const dis_t row_right = domin(height(), image.bottom());
         const dis_t col_top   = clamp(image.left());
+        const dis_t row_right = domin(height(), image.bottom());
         const dis_t col_bot   = domin(width(), image.right());
         if (std::cmp_greater(col_top, width())
             || std::cmp_greater(row_left, height())) {
@@ -203,30 +202,15 @@ void core::window::detail::WaylandWindowImpl::draw(
 
         dis_t row{row_left};
         dis_t col{col_top};
-        try {
-            for (; row < row_right; ++row) {
-                col = col_top;
-                for (; col < col_bot; ++col) {
-                    m_pixbuf[row, col] = image.at(
-                        math::safe_sub<dis_t>(row, image.pos_y()),
-                        math::safe_sub<dis_t>(col, image.pos_x())
-                    );
-                }
+        for (; row < row_right; ++row) {
+            col = col_top;
+            for (; col < col_bot; ++col) {
+                const auto therow  = math::safe_sub<dis_t>(row, image.pos_y());
+                const auto thecol  = math::safe_sub<dis_t>(col, image.pos_x());
+                m_pixbuf[row, col] = image.at(therow, thecol);
             }
-            log::debug(
-                "Drawn: {} rows, {} cols",
-                row - row_left,
-                col - col_top
-            );
-        } catch (exception::Exception& exc) {
-            log::error("Failed accessing: row: {}, col: {}", row, col);
-            log::debug("min row: {}", row_left);
-            log::debug("max row: {}", row_right);
-            log::debug("min col: {}", col_top);
-            log::debug("max col: {}", col_bot);
-            log::error("{}: {}", exc.type(), exc.what());
-            throw exc;
         }
+        log::debug("Drawn: {} rows, {} cols", row - row_left, col - col_top);
     } else {
         condition::unreachable();
     }
@@ -302,19 +286,18 @@ void core::window::detail::WaylandWindowImpl::new_buffer() {
     if constexpr (config::EnabledBackends::wayland()) {
         const auto bufwidth  = width();
         const auto bufheight = height();
-        const auto buflen    = safe_mult<size_t>(bufwidth, bufheight);
-        const auto bufsize   = safe_mult<size_t>(buflen, COLOUR_CHANNELS);
+        const auto bufstride = safe_mult<size_t>(bufwidth, COLOUR_CHANNELS);
+        const auto buflen    = safe_mult<size_t>(bufstride, bufheight);
         log::debug("Requesting buffer with size: {}, {}", bufwidth, bufheight);
         log::debug("buflen: {}", buflen);
-        log::debug("bufsize: {}", bufsize);
         if (m_shm_fd >= 0) {
             close(m_shm_fd);
         }
-        m_shm_fd = allocate_shm_file(bufsize);
+        m_shm_fd = allocate_shm_file(buflen);
         check_condition(m_shm_fd >= 0, "creation of shm buffer file failed");
         auto* const pixbuf = static_cast<Pixel*>(mmap(
             nullptr,
-            bufsize,
+            safe_mult<size_t>(buflen, 2),
             PROT_READ | PROT_WRITE,
             MAP_SHARED,
             m_shm_fd,
@@ -328,14 +311,14 @@ void core::window::detail::WaylandWindowImpl::new_buffer() {
         m_wl_shm_pool = wl_shm_create_pool(
             m_wl_shm,
             m_shm_fd,
-            numeric_cast<int32_t>(bufsize)
+            numeric_cast<int32_t>(buflen)
         );
         m_wl_buffer = wl_shm_pool_create_buffer(
             m_wl_shm_pool,
             0,
             numeric_cast<int32_t>(bufwidth),
             numeric_cast<int32_t>(bufheight),
-            safe_mult<int32_t>(bufwidth, COLOUR_CHANNELS),
+            numeric_cast<int32_t>(bufstride),
             m_wl_shm_format
         );
         m_buffer_width  = bufwidth;
@@ -348,8 +331,7 @@ void core::window::detail::WaylandWindowImpl::new_buffer() {
         }
         for (size_t idx{0}; idx <= height(); ++idx) {
             for (size_t jdx{0}; jdx <= width(); ++jdx) {
-                constexpr uint8_t max = 255;
-                m_pixbuf[idx, jdx]    = colour::rgba(0, 0, 0, max);
+                m_pixbuf[idx, jdx] = colour::BLACK;
             }
         }
     } else {
