@@ -499,7 +499,6 @@ enum class OperatingSystem : uint8_t {
     LINUX,    //!< Linux
     MAC,      //!< Mac OS
     QNX,      //!< QNX RTOS
-    TEMPLEOS, //!< TempleOS
     WIN32,    //!< Windows 32-Bit
     WIN64,    //!< Windows 64-Bit
 };
@@ -518,8 +517,6 @@ consteval OperatingSystem get_os() {
     return OperatingSystem::MAC;
 #elif defined(RAYGAME_OS_QNX)
     return OperatingSystem::QNX;
-#elif defined(RAYGAME_OS_TEMPLEOS)
-    return OperatingSystem::TEMPLEOS;
 #elif defined(RAYGAME_OS_WIN32)
     return OperatingSystem::WIN32;
 #elif defined(RAYGAME_OS_WIN64)

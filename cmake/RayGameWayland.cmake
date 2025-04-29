@@ -22,6 +22,7 @@ function(raygame_add_wayland_protocols)
                    LINKER_LANGUAGE C
                    SYSTEM ON
     )
+    target_compile_options(${RAYGAME_ARGS_TARGET}_wayland PRIVATE -w)
 
     foreach(protocol IN LISTS RAYGAME_ARGS_PROTOCOLS)
         set(${protocol}_header "${${RAYGAME_ARGS_TARGET}_proto_dir}/${protocol}-client-protocol.h")

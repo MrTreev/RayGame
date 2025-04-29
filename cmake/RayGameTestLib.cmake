@@ -21,7 +21,6 @@ endfunction()
 
 function(raygame_add_test _target)
     target_compile_definitions(${_target} PUBLIC RAYGAME_TESTLIB_GTEST)
-    target_include_directories(${_target} PUBLIC ${GTEST_INCLUDE_DIR})
     target_link_libraries(${_target} PUBLIC GTest::gtest)
     gtest_discover_tests(${_target})
 endfunction()

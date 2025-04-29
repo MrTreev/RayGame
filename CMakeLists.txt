@@ -12,6 +12,7 @@ project(
 )
 
 cmake_policy(SET CMP0063 NEW)
+cmake_policy(SET CMP0128 NEW)
 
 function(raygame_assure_out_of_source_builds)
     get_filename_component(srcdir "${CMAKE_SOURCE_DIR}" REALPATH)
@@ -28,21 +29,27 @@ raygame_assure_out_of_source_builds()
 
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
-set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "RelWithDebInfo")
+set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "RelWithDebInfo" "MinSizeRel")
 
 ################################################################################
 # CMake config vars
 ################################################################################
 
-set(RAYGAME_OS_IS_ANDROID OFF)
-set(RAYGAME_OS_IS_BSD OFF)
-set(RAYGAME_OS_IS_HURD OFF)
-set(RAYGAME_OS_IS_LINUX ON)
-set(RAYGAME_OS_IS_MAC OFF)
-set(RAYGAME_OS_IS_WINDOWS OFF)
+set(RAYGAME_OS_IS_ANDROID $<PLATFORM_ID:Android>)
+set(RAYGAME_OS_IS_BSD $<PLATFORM_ID:FreeBSD,kFreeBSD,MirBSD,NetBSD,OpenBSD>)
+set(RAYGAME_OS_IS_HURD $<PLATFORM_ID:GNU>)
+set(RAYGAME_OS_IS_LINUX $<PLATFORM_ID:Linux>)
+set(RAYGAME_OS_IS_MAC $<PLATFORM_ID:Darwin>)
+set(RAYGAME_OS_IS_WINDOWS $<PLATFORM_ID:Windows>)
+if($<NOT:$<OR:RAYGAME_OS_IS_ANDROID,RAYGAME_OS_IS_BSD,RAYGAME_OS_IS_HURD,RAYGAME_OS_IS_LINUX,RAYGAME_OS_IS_MAC,RAYGAME_OS_IS_WINDOWS>>)
+    message(FATAL_ERROR "Unknown OS")
+endif()
 
-set(RAYGAME_BT_IS_DEBUG ON)
-set(RAYGAME_BT_IS_RELEASE OFF)
+set(RAYGAME_BT_IS_DEBUG $<CONFIG:Debug>)
+set(RAYGAME_BT_IS_RELEASE $<OR:$<CONFIG:Release,RelWithDebInfo,MinSizeRel>>)
+if($<NOT:$<OR:RAYGAME_BT_IS_DEBUG,RAYGAME_BT_IS_RELEASE>>)
+    message(FATAL_ERROR "Unknown OS")
+endif()
 
 ################################################################################
 # Options                                                                      #
@@ -60,8 +67,6 @@ option(RAYGAME_GUI_DISABLE_DWM "Disable the Windows DWM GUI backend" $<NOT:${RAY
 option(RAYGAME_GUI_DISABLE_WAYLAND "Disable the Linux Wayland GUI backend" $<NOT:${RAYGAME_OS_IS_LINUX}>)
 option(RAYGAME_GUI_DISABLE_X11 "Disable the Linux X11 GUI backend" $<NOT:${RAYGAME_OS_IS_LINUX}>)
 option(RAYGAME_GUI_DISABLE_IMGUI "Disable the IMGUI GUI backend" $<NOT:${RAYGAME_BT_IS_DEBUG}>)
-option(RAYGAME_GUI_DEFAULT_WINDOW_HEIGHT "Default GUI window height" 640)
-option(RAYGAME_GUI_DEFAULT_WINDOW_WIDTH "Default GUI window width" 480)
 set(RAYGAME_GUI_DEFAULT_WINDOW_TITLE
     "RayGame"
     CACHE STRING "Default GUI window title"
@@ -101,14 +106,7 @@ include(RayGameWayland)
 include(RayGameCompilerArgs)
 
 if(RAYGAME_ENABLE_COMPILE_COMMANDS)
-    set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-endif()
-
-if(RAYGAME_WARNINGS_AS_ERRORS)
-    message(TRACE "Warnings are treated as errors")
-    list(APPEND RAYGAME_CLANG_OPTIONS -Werror)
-    list(APPEND RAYGAME_GCC_OPTIONS -Werror)
-    list(APPEND RAYGAME_MSVC_OPTIONS /WX)
+    set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE BOOL "Generate compile_commands.json")
 endif()
 
 function(raygame_add_defs _target)

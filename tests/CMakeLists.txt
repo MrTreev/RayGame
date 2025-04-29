@@ -11,6 +11,7 @@ target_include_directories(
 raygame_link_testlib(RayGameRayTest)
 
 function(raygame_test _target)
+    set(options)
     set(oneValueArgs)
     set(multiValueArgs SOURCES DEPENDS DEFINES)
     cmake_parse_arguments(RAYGAME_TESTARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})

@@ -5,7 +5,6 @@
 #include "raygame/core/window/detail/cocoa.h"
 #include "raygame/core/window/detail/dwm.h"
 #include "raygame/core/window/detail/imgui.h"
-#include "raygame/core/window/detail/temple.h"
 #include "raygame/core/window/detail/wayland.h"
 #include "raygame/core/window/detail/x11.h"
 
@@ -36,15 +35,14 @@ core::config::GuiBackend get_backend() {
         return GuiBackend::IMGUI;
     }
     switch (core::config::OPERATING_SYSTEM) {
-    case OperatingSystem::ANDROID:  unimplemented();
-    case OperatingSystem::BSD:      [[fallthrough]];
-    case OperatingSystem::HURD:     [[fallthrough]];
-    case OperatingSystem::LINUX:    return wayland_or_x11();
-    case OperatingSystem::MAC:      return GuiBackend::COCOA;
-    case OperatingSystem::QNX:      unimplemented();
-    case OperatingSystem::TEMPLEOS: return GuiBackend::TEMPLE;
-    case OperatingSystem::WIN32:    [[fallthrough]];
-    case OperatingSystem::WIN64:    return GuiBackend::DWM;
+    case OperatingSystem::ANDROID: unimplemented();
+    case OperatingSystem::BSD:     [[fallthrough]];
+    case OperatingSystem::HURD:    [[fallthrough]];
+    case OperatingSystem::LINUX:   return wayland_or_x11();
+    case OperatingSystem::MAC:     return GuiBackend::COCOA;
+    case OperatingSystem::QNX:     unimplemented();
+    case OperatingSystem::WIN32:   [[fallthrough]];
+    case OperatingSystem::WIN64:   return GuiBackend::DWM;
     }
 }
 } // namespace
@@ -83,12 +81,6 @@ core::window::Window::Window(
         using X11 = detail::X11WindowImpl;
         if (backend == config::GuiBackend::X11) {
             m_impl = std::make_unique<X11>(size, std::move(title), style);
-        }
-    }
-    if constexpr (config::EnabledBackends::temple()) {
-        using Temple = detail::TempleWindowImpl;
-        if (backend == config::GuiBackend::TEMPLE) {
-            m_impl = std::make_unique<Temple>(size, std::move(title), style);
         }
     }
 }

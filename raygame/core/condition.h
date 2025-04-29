@@ -98,17 +98,15 @@ constexpr auto check_ret(
 /*!
  *  @throws core::exception::Condition If hit
  */
-RAYGAME_DEBUG_ONLY([[noreturn]])
-
+[[noreturn]]
 constexpr void unknown(
     const std::string&          name,
     const std::source_location& loc = std::source_location::current()
 ) {
-    if constexpr (config::BUILD_TYPE == config::BuildType::RELEASE) {
+    if constexpr (config::BUILD_TYPE == config::BuildType::DEBUG) {
         detail::conditionlog("Unknown " + name, loc);
-    } else {
-        throw exception::UnknownCase("Unknown " + name);
     }
+    throw exception::UnknownCase("Unknown " + name);
 }
 
 //! Function to mark an unreachable code block
@@ -118,7 +116,7 @@ constexpr void unknown(
 [[noreturn]]
 constexpr void
 unreachable(const std::source_location& loc = std::source_location::current()) {
-    if constexpr (config::BUILD_TYPE == config::BuildType::RELEASE) {
+    if constexpr (config::BUILD_TYPE == config::BuildType::DEBUG) {
         detail::conditionlog("Reached block marked unreachable", loc);
         throw exception::Unreachable("Reached block marked unreachable");
     } else {
@@ -134,11 +132,10 @@ unreachable(const std::source_location& loc = std::source_location::current()) {
 constexpr void unimplemented(
     const std::source_location& loc = std::source_location::current()
 ) {
-    if constexpr (config::BUILD_TYPE == config::BuildType::RELEASE) {
+    if constexpr (config::BUILD_TYPE == config::BuildType::DEBUG) {
         detail::conditionlog("Reached block marked unimplemented", loc);
-    } else {
-        throw exception::Unimplemented("Unimplemented");
     }
+    throw exception::Unimplemented("Unimplemented");
 }
 
 //! Pre-Condition Check value not less than min
