@@ -2,7 +2,7 @@
 #include "raygame/core/drawing/image.h"
 #include "raygame/core/window/window.h"
 constexpr core::Vec2<size_t> IMG_SIZE = {400, 400};
-constexpr core::Vec2<size_t> WIN_SIZE = {1920, 1080};
+constexpr core::Vec2<size_t> WIN_SIZE = {1280, 720};
 
 // NOLINTNEXTLINE(*-exception-escape)
 int main() {

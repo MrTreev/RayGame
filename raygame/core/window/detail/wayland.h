@@ -84,8 +84,6 @@ public:
 };
 
 class WaylandWindowImpl final: public WindowImpl {
-    consteval bool enabled() { return config::EnabledBackends::wayland(); }
-
 public:
     explicit WaylandWindowImpl(
         Vec2<size_t> size  = DEFAULT_WINDOW_SIZE,

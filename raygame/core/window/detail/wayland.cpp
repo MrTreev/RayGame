@@ -372,16 +372,14 @@ void core::window::detail::KeyboardState::event(
     [[maybe_unused]] const uint32_t& key, // NOLINT(*-swappable-parameters)
     [[maybe_unused]] const uint32_t& state
 ) {
-#    if 0
-    const uint32_t keycode = key + ADD_VAL;
-    const xkb_keysym_t sym     = xkb_keysym_to_upper(
-        xkb_state_key_get_one_sym(m_xkb_state.get(), keycode)
-    );
-    log::debug(
-        "key {}: {}, ",
-        (state == WL_KEYBOARD_KEY_STATE_PRESSED) ? "down" : "up",
-        sym
-    );
-#    endif
+    // const uint32_t     keycode = key + ADD_VAL;
+    // const xkb_keysym_t sym     = xkb_keysym_to_upper(
+    //     xkb_state_key_get_one_sym(m_xkb_state.get(), keycode)
+    // );
+    // log::debug(
+    //     "key {}: {}, ",
+    //     (state == WL_KEYBOARD_KEY_STATE_PRESSED) ? "down" : "up",
+    //     sym
+    // );
 }
 #endif
