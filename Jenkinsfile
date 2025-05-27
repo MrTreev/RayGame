@@ -22,22 +22,22 @@ pipeline {
     stages {
         stage('Configure') {
             steps {
-                sh('''
-                    cmake \
-                        -S . \
-                        -B build \
-                        -G Ninja \
-                        --toolchain cmake/presets/${TOOLCHAIN}.cmake \
-                        -DRAYGAME_ENABLE_COMPILE_COMMANDS=OFF \
-                        -DRAYGAME_BUILD_TESTS=ON \
-                        -DRAYGAME_BUILD_DOCS=ON \
-                        -DRAYGAME_BUILD_GAMES=ON \
-                        -DRAYGAME_MATH_RANDOM_FULL=${MATH_RANDOM_FULL} \
-                        -DRAYGAME_MATH_FORCE_GENERIC=${MATH_FORCE_GENERIC} \
-                        -DRAYGAME_LOG_DISABLE_SOURCE_LOCATION=${DISABLE_SOURCE_LOCATION} \
-                        -DRAYGAME_TIME_FRAMES=${TIME_FRAMES} \
+                sh("""
+                    cmake \\
+                        -S . \\
+                        -B build \\
+                        -G Ninja \\
+                        --toolchain cmake/presets/${TOOLCHAIN}.cmake \\
+                        -DRAYGAME_ENABLE_COMPILE_COMMANDS=OFF \\
+                        -DRAYGAME_BUILD_TESTS=ON \\
+                        -DRAYGAME_BUILD_DOCS=ON \\
+                        -DRAYGAME_BUILD_GAMES=ON \\
+                        -DRAYGAME_MATH_RANDOM_FULL=${MATH_RANDOM_FULL} \\
+                        -DRAYGAME_MATH_FORCE_GENERIC=${MATH_FORCE_GENERIC} \\
+                        -DRAYGAME_LOG_DISABLE_SOURCE_LOCATION=${DISABLE_SOURCE_LOCATION} \\
+                        -DRAYGAME_TIME_FRAMES=${TIME_FRAMES} \\
                         ;
-                ''')
+                """)
             }
         }
         stage('Build') {
