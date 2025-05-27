@@ -32,10 +32,10 @@ pipeline {
                         -DRAYGAME_BUILD_TESTS=ON \\
                         -DRAYGAME_BUILD_DOCS=ON \\
                         -DRAYGAME_BUILD_GAMES=ON \\
-                        -DRAYGAME_MATH_RANDOM_FULL=${MATH_RANDOM_FULL} \\
-                        -DRAYGAME_MATH_FORCE_GENERIC=${MATH_FORCE_GENERIC} \\
-                        -DRAYGAME_LOG_DISABLE_SOURCE_LOCATION=${DISABLE_SOURCE_LOCATION} \\
-                        -DRAYGAME_TIME_FRAMES=${TIME_FRAMES} \\
+                        -DRAYGAME_MATH_RANDOM_FULL=${MATH_RANDOM_FULL ? 'ON' : 'OFF'} \\
+                        -DRAYGAME_MATH_FORCE_GENERIC=${MATH_FORCE_GENERIC ? 'ON' : 'OFF'} \\
+                        -DRAYGAME_LOG_DISABLE_SOURCE_LOCATION=${DISABLE_SOURCE_LOCATION ? 'ON' : 'OFF'} \\
+                        -DRAYGAME_TIME_FRAMES=${TIME_FRAMES ? 'ON' : 'OFF'} \\
                         ;
                 """)
             }
