@@ -52,8 +52,6 @@ pipeline {
         }
     }
     post {
-        always {
-        }
         success {
             setBuildStatus("Build succeeded", "SUCCESS");
         }
