@@ -1,7 +1,8 @@
+#pragma once
 #include "raygame/core/types.h"
 
 namespace raygame::systems::pf1e {
-enum class Size : uint8_t {
+enum class Size : core::uint8_t {
     Fine           = 0x01,
     Diminutive     = 0x02,
     Tiny           = 0x03,
@@ -17,4 +18,4 @@ enum class Size : uint8_t {
     ColossalLong   = 0x0D,
 };
 
-}
+} // namespace raygame::systems::pf1e

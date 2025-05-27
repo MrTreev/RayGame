@@ -1,34 +1,39 @@
+#pragma once
 #include "raygame/core/types.h"
 
 namespace raygame::systems::pf1e {
 class Coins {
-    size_t m_amount{0};
+    core::size_t m_amount{0};
 
-    static constexpr size_t PP = 1000;
-    static constexpr size_t GP = 100;
-    static constexpr size_t SP = 10;
-    static constexpr size_t CP = 1;
+    static constexpr core::size_t PP_ = 1000;
+    static constexpr core::size_t GP_ = 100;
+    static constexpr core::size_t SP_ = 10;
+    static constexpr core::size_t CP_ = 1;
 
 public:
     constexpr Coins() = default;
 
-    constexpr Coins(size_t amount)
+    constexpr explicit Coins(core::size_t amount)
         : m_amount(amount) {}
 
-    constexpr size_t pp() {
-        return m_amount / PP;
+    [[nodiscard]]
+    constexpr core::size_t pp() const {
+        return m_amount / PP_;
     }
 
-    constexpr size_t gp() {
-        return m_amount / GP;
+    [[nodiscard]]
+    constexpr core::size_t gp() const {
+        return m_amount / GP_;
     }
 
-    constexpr size_t sp() {
-        return m_amount / SP;
+    [[nodiscard]]
+    constexpr core::size_t sp() const {
+        return m_amount / SP_;
     }
 
-    constexpr size_t cp() {
-        return m_amount / CP;
+    [[nodiscard]]
+    constexpr core::size_t cp() const {
+        return m_amount / CP_;
     }
 };
 

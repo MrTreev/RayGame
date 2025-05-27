@@ -1,3 +1,4 @@
+#pragma once
 #include "raygame/core/types.h"
 #include "raygame/systems/core/name.h"
 #include "raygame/systems/core/sex.h"
@@ -26,27 +27,47 @@ struct EquipmentSlots {
 };
 
 struct Character {
-    Name name;
-    Sex  sex;
-    Race race;
+    Character(
+        Name         name,
+        Sex          sex,
+        Race         race,
+        core::size_t age,
+        core::size_t height,
+        core::size_t weight,
+        Alignment    alignment,
+        Deity        deity
+    )
+        : m_name(std::move(name))
+        , m_sex(sex)
+        , m_race(race)
+        , m_age(age)
+        , m_height(height)
+        , m_weight(weight)
+        , m_alignment(alignment)
+        , m_deity(deity) {}
 
-    size_t age;
-    size_t height;
-    size_t weight;
+private:
+    Name m_name;
+    Sex  m_sex;
+    Race m_race;
 
-    Alignment alignment;
-    Deity     deity;
+    core::size_t m_age;
+    core::size_t m_height;
+    core::size_t m_weight;
+
+    Alignment m_alignment;
+    Deity     m_deity;
 };
 
 struct Player: public Character {
     struct {
-        core::int32_t strength;
-        core::int32_t dexterity;
-        core::int32_t constitution;
-        core::int32_t intelligence;
-        core::int32_t wisdom;
-        core::int32_t charisma;
-    } abilities;
+        core::int32_t m_strength;
+        core::int32_t m_dexterity;
+        core::int32_t m_constitution;
+        core::int32_t m_intelligence;
+        core::int32_t m_wisdom;
+        core::int32_t m_charisma;
+    } m_abilities{};
 };
 
 } // namespace raygame::systems::pf1e

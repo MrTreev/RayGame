@@ -48,7 +48,7 @@ endif()
 set(RAYGAME_BT_IS_DEBUG $<CONFIG:Debug>)
 set(RAYGAME_BT_IS_RELEASE $<OR:$<CONFIG:Release,RelWithDebInfo,MinSizeRel>>)
 if($<NOT:$<OR:RAYGAME_BT_IS_DEBUG,RAYGAME_BT_IS_RELEASE>>)
-    message(FATAL_ERROR "Unknown OS")
+    message(FATAL_ERROR "Unknown Build Type")
 endif()
 
 ################################################################################

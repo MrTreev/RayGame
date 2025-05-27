@@ -1,4 +1,6 @@
+#pragma once
 #include <string>
+#include <utility>
 
 namespace raygame::systems {
 class Name {
@@ -7,8 +9,8 @@ class Name {
     std::string_view m_last;
 
 public:
-    Name(std::string name)
-        : m_name(name) {
+    explicit Name(std::string name)
+        : m_name(std::move(name)) {
         if (m_name.contains(' ')) {
             const auto space = m_name.find(' ');
 
@@ -21,7 +23,7 @@ public:
         }
     }
 
-    Name(std::string first, std::string last)
+    Name(const std::string& first, const std::string& last)
         : m_name(first + " " + last)
         , m_first(m_name.data(), first.size())
         , m_last(
@@ -30,8 +32,6 @@ public:
               m_name.cend()
           ) {}
 
-    operator std::string() {
-        return m_name;
-    }
+    explicit operator std::string() { return m_name; }
 };
 } // namespace raygame::systems

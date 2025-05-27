@@ -1,22 +1,25 @@
+#pragma once
 #include "raygame/core/types.h"
 
 namespace raygame::systems::pf1e {
 
 class Skill {
-    int32_t m_value{0};
+    core::int32_t m_value{0};
 
 public:
     constexpr Skill() = default;
 
-    constexpr Skill(int32_t val)
+    constexpr explicit Skill(core::int32_t val)
         : m_value(val) {}
 
-    constexpr decltype(m_value) val() {
+    [[nodiscard]]
+    constexpr decltype(m_value) val() const {
         return m_value;
     }
 };
 
 class Skills {
+public:
     Skill m_acrobatics;
     Skill m_appraise;
     Skill m_bluff;
@@ -47,7 +50,7 @@ class Skills {
         Skill m_traps;
         Skill m_weapons;
         Skill m_untrained;
-    } craft;
+    } m_craft;
 
     Skill m_diplomacy;
     Skill m_disable_device;
@@ -69,7 +72,7 @@ class Skills {
         Skill m_nobility;
         Skill m_planes;
         Skill m_religion;
-    } knowledge;
+    } m_knowledge;
 
     Skill m_linguistics;
     Skill m_perception;
@@ -85,7 +88,7 @@ class Skills {
         Skill m_string_instruments;
         Skill m_wind_instruments;
         Skill m_untrained;
-    } perform;
+    } m_perform;
 
     struct {
         Skill m_architect;
@@ -119,7 +122,7 @@ class Skills {
         Skill m_tanner;
         Skill m_trapper;
         Skill m_woodcutter;
-    } profession;
+    } m_profession;
 
     Skill m_ride;
     Skill m_sense_motive;
@@ -129,7 +132,5 @@ class Skills {
     Skill m_survival;
     Skill m_swim;
     Skill m_use_magic_device;
-
-public:
 };
 } // namespace raygame::systems::pf1e

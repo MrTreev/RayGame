@@ -217,5 +217,8 @@ using IntegralPairs = ::testing::Types<
     ::test::TypePair<int64_t, int16_t>,
     ::test::TypePair<int64_t, int32_t>,
     ::test::TypePair<int64_t, int64_t>>;
+
+using All = ::testing::Types<void>;
+
 } // namespace types
 } // namespace test
