@@ -23,7 +23,7 @@ pipeline {
         stage('Configure') {
             steps {
                 sh("""
-                    ls -lAh /usr/local/bin
+                    ls -lAh /usr/bin
                     cmake \\
                         -S . \\
                         -B build \\
