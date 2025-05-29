@@ -23,7 +23,7 @@ pipeline {
         stage('Configure') {
             steps {
                 sh("""
-                    which clang++
+                    ls -lAh /usr/local/bin
                     cmake \\
                         -S . \\
                         -B build \\
