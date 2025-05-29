@@ -23,8 +23,7 @@ pipeline {
         stage('Configure') {
             steps {
                 sh("""
-                    echo \$PATH
-                    echo \$CC
+                    which clang++
                     cmake \\
                         -S . \\
                         -B build \\
