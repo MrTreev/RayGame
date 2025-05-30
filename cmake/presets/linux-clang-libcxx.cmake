@@ -11,7 +11,6 @@ set(CMAKE_C_COMPILER_TARGET ${triple})
 
 set(CMAKE_CXX_COMPILER ${tools}/bin/clang++)
 set(CMAKE_CXX_COMPILER_AR ${tools}/bin/llvm-ar)
-set(CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS ${tools}/bin/clang-scan-deps)
 set(CMAKE_CXX_COMPILER_TARGET ${triple})
 
 set(CMAKE_ADDR2LINE ${tools}/bin/llvm-addr2line)
