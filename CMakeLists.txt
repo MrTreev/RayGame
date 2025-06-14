@@ -18,7 +18,7 @@ include(RayGameSetup)
 # CMake config vars
 ################################################################################
 
-set(RAYGAME_IS_TOPLEVEL $<NOT:${PROJECT_IS_TOP_LEVEL}>)
+set(RAYGAME_IS_TOPLEVEL ${PROJECT_IS_TOP_LEVEL})
 
 set(RAYGAME_OS_IS_ANDROID $<PLATFORM_ID:Android>)
 set(RAYGAME_OS_IS_BSD $<PLATFORM_ID:FreeBSD,kFreeBSD,MirBSD,NetBSD,OpenBSD>)
@@ -84,6 +84,7 @@ endif()
 ################################################################################
 include(GenerateExportHeader)
 
+include(RayGameBin)
 include(RayGameLib)
 include(RayGameWayland)
 include(RayGameTest)

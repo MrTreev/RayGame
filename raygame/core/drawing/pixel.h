@@ -61,4 +61,4 @@ static constexpr core::Pixel BLUE  = rgb(0x00, 0x00, 0xFF);
 } // namespace colour
 } // namespace core
 
-RAYGAME_MAKE_FORMAT_FROM_STRING(core::Pixel)
+RAYGAME_MAKE_FORMAT_FROM_STRING(core::Pixel);

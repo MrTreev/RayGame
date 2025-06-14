@@ -2,7 +2,7 @@ include_guard()
 include(RayGameCompilerArgs)
 include(RayGameDefs)
 
-function(raygame_bin _full_target)
+function(raygame_bin _target)
     set(options NO_DEFS NO_ARGS)
     set(oneValueArgs)
     set(multiValueArgs SRCS DEPS DEFS)
