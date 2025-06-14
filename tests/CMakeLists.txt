@@ -1,9 +1,7 @@
-raygame_lib(RayGameRayTest)
-add_library(RayGame::RayTest ALIAS RayGameRayTest)
-target_sources(
+raygame_lib(
     RayGameRayTest
-    PUBLIC raytest/raytest.h
-    PRIVATE raytest/main.cpp
+    HEADERS raytest/raytest.h
+    SRCS raytest/main.cpp
 )
 target_include_directories(
     RayGameRayTest PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> $<INSTALL_INTERFACE:include/raytest>
@@ -11,9 +9,9 @@ target_include_directories(
 raygame_link_testlib(RayGameRayTest)
 
 function(raygame_test _target)
-    set(options)
+    set(options NO_MAIN)
     set(oneValueArgs)
-    set(multiValueArgs SOURCES DEPENDS DEFINES)
+    set(multiValueArgs SRCS DEPS DEFS)
     cmake_parse_arguments(RAYGAME_TESTARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     set(_TARGET "RayGameTest${_target}")
     add_executable(${_TARGET})
@@ -30,10 +28,10 @@ function(raygame_test _target)
     raygame_add_args(${_TARGET})
     raygame_add_defs(${_TARGET})
     raygame_add_test(${_TARGET})
-    target_sources(${_TARGET} PUBLIC ${RAYGAME_TESTARGS_SOURCES})
-    target_compile_definitions(${_TARGET} PUBLIC ${RAYGAME_TESTARGS_DEFINES})
+    target_sources(${_TARGET} PUBLIC ${RAYGAME_TESTARGS_SRCS})
+    target_compile_definitions(${_TARGET} PUBLIC ${RAYGAME_TESTARGS_DEFS})
     target_link_libraries(${_TARGET} PUBLIC RayGame::RayTest)
-    target_link_libraries(${_TARGET} PUBLIC ${RAYGAME_TESTARGS_DEPENDS})
+    target_link_libraries(${_TARGET} PUBLIC ${RAYGAME_TESTARGS_DEPS})
 endfunction()
 
 add_subdirectory(core)

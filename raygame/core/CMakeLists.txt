@@ -23,3 +23,4 @@ target_sources(
 add_subdirectory(drawing)
 add_subdirectory(math)
 add_subdirectory(window)
+add_subdirectory(serialisation)

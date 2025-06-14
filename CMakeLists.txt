@@ -11,25 +11,9 @@ project(
     LANGUAGES CXX C
 )
 
-cmake_policy(SET CMP0063 NEW)
-cmake_policy(SET CMP0128 NEW)
-
-function(raygame_assure_out_of_source_builds)
-    get_filename_component(srcdir "${CMAKE_SOURCE_DIR}" REALPATH)
-    get_filename_component(bindir "${CMAKE_BINARY_DIR}" REALPATH)
-    if("${srcdir}" STREQUAL "${bindir}")
-        message("######################################################")
-        message("Warning: in-source builds are disabled")
-        message("Please create a separate build directory and run cmake from there")
-        message("######################################################")
-        message(FATAL_ERROR "Quitting configuration")
-    endif()
-endfunction()
-raygame_assure_out_of_source_builds()
-
-set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_VISIBILITY_PRESET hidden)
-set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "RelWithDebInfo" "MinSizeRel")
+set(RAYGAME_PATH_SRC ${PROJECT_SOURCE_DIR})
+list(APPEND CMAKE_MODULE_PATH ${RAYGAME_PATH_SRC}/cmake)
+include(RayGameSetup)
 
 ################################################################################
 # CMake config vars
@@ -95,58 +79,24 @@ set_property(
 
 option(RAYGAME_TIME_FRAMES "Record the average frame time" OFF)
 
+if(RAYGAME_ENABLE_COMPILE_COMMANDS)
+    set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE BOOL "Generate compile_commands.json")
+endif()
+
 ################################################################################
 # Main
 ################################################################################
 include(GenerateExportHeader)
 
-set(RAYGAME_PATH_SRC ${PROJECT_SOURCE_DIR})
-list(APPEND CMAKE_MODULE_PATH ${RAYGAME_PATH_SRC}/cmake)
+include(RayGameLib)
+include(RayGameTest)
 include(RayGameWayland)
-include(RayGameCompilerArgs)
+raygame_enable_testing()
 
-if(RAYGAME_ENABLE_COMPILE_COMMANDS)
-    set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE BOOL "Generate compile_commands.json")
-endif()
-
-function(raygame_add_defs _target)
-    target_compile_definitions(${_target} PUBLIC "RAYGAME_LOG_${RAYGAME_LOG_LEVEL}")
-    if(RAYGAME_LOG_DISABLE_SOURCE_LOCATION)
-        target_compile_definitions(${_target} PUBLIC "RAYGAME_DISABLE_SOURCE_LOCATION")
-    elseif(RAYGAME_BT_IS_DEBUG)
-        target_compile_definitions(${_target} PUBLIC "RAYGAME_ENABLE_SOURCE_LOCATION")
-    endif()
-endfunction()
-
-function(raygame_lib _target)
-    set(options NO_MAIN)
-    set(oneValueArgs)
-    set(multiValueArgs HEADERS SOURCES DEPENDS DEFINES)
-    cmake_parse_arguments(RAYGAME_TESTARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-    add_library(${_target})
-    target_compile_features(${_target} PUBLIC cxx_std_23)
-    target_include_directories(
-        ${_target} PUBLIC $<BUILD_INTERFACE:${RayGame_SOURCE_DIR}> $<INSTALL_INTERFACE:include/raygame>
-    )
-    set_target_properties(
-        ${_target}
-        PROPERTIES VERSION ${RayGame_VERSION}
-                   CXX_VISIBILITY_PRESET hidden
-                   CXX_STANDARD 23
-                   CXX_STANDARD_REQUIRED YES
-                   VISIBILITY_INLINES_HIDDEN YES
-    )
-    raygame_add_args(${_target})
-    raygame_add_defs(${_target})
-endfunction()
-
+add_subdirectory(third_party)
 add_subdirectory(raygame)
 
 if(RAYGAME_BUILD_TESTS)
-    include(RayGameTestLib)
-    raygame_enable_testing()
-    # add_subdirectory(third_party/doctest EXCLUDE_FROM_ALL SYSTEM)
-    include(third_party/doctest/scripts/cmake/doctest.cmake)
     add_subdirectory(tests)
 endif()
 

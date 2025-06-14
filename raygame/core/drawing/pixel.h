@@ -5,10 +5,13 @@
 namespace core {
 
 struct Pixel {
+    // NOLINTBEGIN(misc-non-private-member-variables-in-classes)
     uint8_t m_red;
     uint8_t m_green;
     uint8_t m_blue;
     uint8_t m_alpha;
+
+    // NOLINTEND(misc-non-private-member-variables-in-classes)
 
     [[nodiscard]]
     explicit constexpr operator std::string() const {

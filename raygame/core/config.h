@@ -335,12 +335,16 @@ static_assert(false, "Unknown Compiler");
 
 #if defined(RAYGAME_CC_CLANG)
 #    define RAYGAME_COMPILER CLANG;
+#    define RAYGAME_INLINE   __attribute__((always_inline))
 #elif defined(RAYGAME_CC_GCC)
 #    define RAYGAME_COMPILER GCC;
+#    define RAYGAME_INLINE   __attribute__((always_inline))
 #elif defined(RAYGAME_CC_MINGW)
 #    define RAYGAME_COMPILER MINGW;
+#    define RAYGAME_INLINE   inline
 #elif defined(RAYGAME_CC_MSC)
 #    define RAYGAME_COMPILER MSC;
+#    define ZPP_BITS_INLINE  [[msvc::forceinline]]
 #endif
 
 #define RAYGAME_PP_MACRO_STRINGIFY(x) RAYGAME_PP_STRINGIFY(x)
@@ -493,14 +497,14 @@ static_assert(false, "Unknown Operating System");
 namespace core::config {
 //! Operating System Definitions
 enum class OperatingSystem : uint8_t {
-    ANDROID,  //!< Android OS
-    BSD,      //!< BSD
-    HURD,     //!< GNU Hurd
-    LINUX,    //!< Linux
-    MAC,      //!< Mac OS
-    QNX,      //!< QNX RTOS
-    WIN32,    //!< Windows 32-Bit
-    WIN64,    //!< Windows 64-Bit
+    ANDROID, //!< Android OS
+    BSD,     //!< BSD
+    HURD,    //!< GNU Hurd
+    LINUX,   //!< Linux
+    MAC,     //!< Mac OS
+    QNX,     //!< QNX RTOS
+    WIN32,   //!< Windows 32-Bit
+    WIN64,   //!< Windows 64-Bit
 };
 
 namespace detail {
