@@ -1,8 +1,10 @@
-raygame_lib(RayGameCoreDrawing)
-add_library(RayGame::Core::Drawing ALIAS RayGameCoreDrawing)
-target_sources(
+raygame_lib(
     RayGameCoreDrawing
-    PUBLIC image.h pixel.h
-    PRIVATE image.cpp pixel.cpp
+    HDRS image.h
+         pixel.h
+    SRCS image.cpp
+         pixel.cpp
+    DEPS RayGame::Core::Base
+         RayGame::Core::Math
 )
-target_link_libraries(RayGameCoreDrawing PUBLIC RayGame::Core::Base RayGame::Core::Math)
+add_library(RayGame::Core::Drawing ALIAS RayGameCoreDrawing)

@@ -1,4 +1,5 @@
-add_executable(Image)
-target_link_libraries(Image PRIVATE RayGame::Core)
-target_sources(Image PUBLIC main.cpp icon.h icon.cpp defs.h cottage.h)
-raygame_add_args(Image)
+raygame_bin(
+    Image
+    SRCS main.cpp icon.h icon.cpp defs.h cottage.h
+    DEPS RayGame::Core
+)

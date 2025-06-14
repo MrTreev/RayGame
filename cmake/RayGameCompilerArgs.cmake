@@ -1,3 +1,6 @@
+include_guard()
+include(RayGameSetup)
+
 function(raygame_add_args _target)
     if(MSVC)
         target_compile_options(${_target} PRIVATE /W4)          # Baseline reasonable warnings

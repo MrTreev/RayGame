@@ -1,3 +1,6 @@
+include_guard()
+include(RayGameSetup)
+
 function(raygame_add_defs _target)
     target_compile_definitions(${_target} PUBLIC "RAYGAME_LOG_${RAYGAME_LOG_LEVEL}")
     if(RAYGAME_LOG_DISABLE_SOURCE_LOCATION)

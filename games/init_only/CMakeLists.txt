@@ -1,4 +1,5 @@
-add_executable(InitOnly)
-target_link_libraries(InitOnly PRIVATE RayGame::Core)
-target_sources(InitOnly PUBLIC main.cpp)
-raygame_add_args(InitOnly)
+raygame_bin(
+    InitOnly
+    SRCS main.cpp
+    DEPS RayGame::Core
+)

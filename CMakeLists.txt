@@ -1,7 +1,6 @@
 ################################################################################
 # Initial project setup                                                        #
 ################################################################################
-
 cmake_minimum_required(VERSION 4.0)
 
 project(
@@ -18,6 +17,8 @@ include(RayGameSetup)
 ################################################################################
 # CMake config vars
 ################################################################################
+
+set(RAYGAME_IS_TOPLEVEL $<NOT:${PROJECT_IS_TOP_LEVEL}>)
 
 set(RAYGAME_OS_IS_ANDROID $<PLATFORM_ID:Android>)
 set(RAYGAME_OS_IS_BSD $<PLATFORM_ID:FreeBSD,kFreeBSD,MirBSD,NetBSD,OpenBSD>)
@@ -40,30 +41,25 @@ endif()
 ################################################################################
 
 # Enable clangd compile_commands.json generation
-option(RAYGAME_ENABLE_COMPILE_COMMANDS "Create compile_commands.json file" ON)
+option(RAYGAME_ENABLE_COMPILE_COMMANDS "Create compile_commands.json file" ${RAYGAME_IS_TOPLEVEL})
 
-option(RAYGAME_BUILD_TESTS "Build tests" ON)
-option(RAYGAME_BUILD_DOCS "Build documentation" ON)
-option(RAYGAME_BUILD_GAMES "Build games" ON)
+option(RAYGAME_BUILD_TESTS "Build tests" ${RAYGAME_IS_TOPLEVEL})
+option(RAYGAME_BUILD_DOCS "Build documentation" ${RAYGAME_IS_TOPLEVEL})
+option(RAYGAME_BUILD_GAMES "Build games" ${RAYGAME_IS_TOPLEVEL})
 
-option(RAYGAME_GUI_DISABLE_COCOA "Disable the MacOS Cocoa GUI backend" $<NOT:${RAYGAME_OS_IS_MAC}>)
-option(RAYGAME_GUI_DISABLE_DWM "Disable the Windows DWM GUI backend" $<NOT:${RAYGAME_OS_IS_WINDOWS}>)
-option(RAYGAME_GUI_DISABLE_WAYLAND "Disable the Linux Wayland GUI backend" $<NOT:${RAYGAME_OS_IS_LINUX}>)
-option(RAYGAME_GUI_DISABLE_X11 "Disable the Linux X11 GUI backend" $<NOT:${RAYGAME_OS_IS_LINUX}>)
-option(RAYGAME_GUI_DISABLE_IMGUI "Disable the IMGUI GUI backend" $<NOT:${RAYGAME_BT_IS_DEBUG}>)
-set(RAYGAME_GUI_DEFAULT_WINDOW_TITLE
-    "RayGame"
-    CACHE STRING "Default GUI window title"
-)
+option(RAYGAME_GUI_DISABLE_COCOA "Disable the MacOS Cocoa GUI backend" $<NOT:RAYGAME_OS_IS_MAC>)
+option(RAYGAME_GUI_DISABLE_DWM "Disable the Windows DWM GUI backend" $<NOT:RAYGAME_OS_IS_WINDOWS>)
+option(RAYGAME_GUI_DISABLE_WAYLAND "Disable the Linux Wayland GUI backend" $<NOT:RAYGAME_OS_IS_LINUX>)
+option(RAYGAME_GUI_DISABLE_X11 "Disable the Linux X11 GUI backend" $<NOT:RAYGAME_OS_IS_LINUX>)
+option(RAYGAME_GUI_DISABLE_IMGUI "Disable the IMGUI GUI backend" $<NOT:RAYGAME_BT_IS_DEBUG>)
+
+set(RAYGAME_GUI_DEFAULT_WINDOW_TITLE "RayGame" CACHE STRING "Default GUI window title")
 
 option(RAYGAME_MATH_RANDOM_FULL "Non-deterministic random numbers" OFF)
 option(RAYGAME_MATH_FORCE_GENERIC "Force generic implementations of maths functions" OFF)
 
 option(RAYGAME_LOG_DISABLE_SOURCE_LOCATION "Disable source_location in logs" OFF)
-set(RAYGAME_LOG_LEVEL
-    "DEBUG"
-    CACHE STRING "Minimum log level to be displayed"
-)
+set(RAYGAME_LOG_LEVEL "DEBUG" CACHE STRING "Minimum log level to be displayed")
 set_property(
     CACHE RAYGAME_LOG_LEVEL
     PROPERTY STRINGS
@@ -89,21 +85,12 @@ endif()
 include(GenerateExportHeader)
 
 include(RayGameLib)
-include(RayGameTest)
 include(RayGameWayland)
+include(RayGameTest)
 raygame_enable_testing()
 
 add_subdirectory(third_party)
 add_subdirectory(raygame)
-
-if(RAYGAME_BUILD_TESTS)
-    add_subdirectory(tests)
-endif()
-
-if(RAYGAME_BUILD_DOCS)
-    add_subdirectory(docs)
-endif()
-
-if(RAYGAME_BUILD_GAMES)
-    add_subdirectory(games)
-endif()
+add_subdirectory(tests)
+add_subdirectory(docs)
+add_subdirectory(games)

@@ -1,3 +1,5 @@
+include_guard()
+
 cmake_policy(SET CMP0063 NEW)
 cmake_policy(SET CMP0128 NEW)
 
@@ -17,3 +19,4 @@ raygame_assure_out_of_source_builds()
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "RelWithDebInfo" "MinSizeRel")
+set(RAYGAME_CXX_STANDARD 23)

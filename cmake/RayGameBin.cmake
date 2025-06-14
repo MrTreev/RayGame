@@ -1,26 +1,17 @@
 include_guard()
-include(RayGameSetup)
 include(RayGameCompilerArgs)
 include(RayGameDefs)
 
-function(raygame_lib _target)
-    set(options NO_INCS)
+function(raygame_bin _full_target)
+    set(options NO_DEFS NO_ARGS)
     set(oneValueArgs)
-    set(multiValueArgs HDRS SRCS DEPS DEFS)
+    set(multiValueArgs SRCS DEPS DEFS)
     cmake_parse_arguments(RAYGAME_TESTARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-    add_library(${_target})
+    add_executable(${_target})
     target_compile_features(${_target} PUBLIC cxx_std_23)
-    if(NOT RAYGAME_TESTARGS_NO_INCS)
-        target_include_directories(
-            ${_target} PUBLIC $<BUILD_INTERFACE:${RayGame_SOURCE_DIR}> $<INSTALL_INTERFACE:include/raygame>
-        )
-    endif()
-    target_sources(${_target}
-        PUBLIC ${RAYGAME_TESTARGS_HDRS}
-        PRIVATE ${RAYGAME_TESTARGS_SRCS}
-    )
+    target_sources(${_target} PRIVATE ${RAYGAME_TESTARGS_SRCS})
     target_link_libraries(${_target} PRIVATE ${RAYGAME_TESTARGS_DEPS})
-    target_compile_definitions(${_target} PUBLIC ${RAYGAME_TESTARGS_DEFS})
+    target_compile_definitions(${_target} PRIVATE ${RAYGAME_TESTARGS_DEFS})
     set_target_properties(
         ${_target}
         PROPERTIES VERSION ${RayGame_VERSION}
@@ -29,6 +20,8 @@ function(raygame_lib _target)
                    CXX_STANDARD_REQUIRED YES
                    VISIBILITY_INLINES_HIDDEN YES
     )
-    raygame_add_args(${_target})
+    if($<NOT:${RAYGAME_TESTARGS_NO_DEFS}>)
+        raygame_add_args(${_target})
+    endif()
     raygame_add_defs(${_target})
 endfunction()

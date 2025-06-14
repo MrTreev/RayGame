@@ -1,20 +1,24 @@
-function(raygame_add_wayland_protocols)
+include_guard()
+include(RayGameSetup)
+find_package(PkgConfig)
+
+function(raygame_add_wayland_protocols _full_target)
     set(options)
-    set(oneValueArgs TARGET)
+    set(oneValueArgs)
     set(multiValueArgs PROTOCOLS)
     cmake_parse_arguments(RAYGAME_ARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-    find_package(PkgConfig)
     pkg_check_modules(RAYGAME_WL REQUIRED wayland-client)
     if(NOT RAYGAME_WL_FOUND)
         message(SEND_ERROR "wayland-client module could not be found")
     endif()
+    string(REPLACE ":" "" _target ${_full_target})
 
     find_program(WAYLAND_SCANNER_EXECUTABLE NAMES wayland-scanner)
-    set(${RAYGAME_ARGS_TARGET}_proto_dir "${CMAKE_CURRENT_BINARY_DIR}/wayland")
+    set(${_target}_proto_dir "${CMAKE_CURRENT_BINARY_DIR}/wayland")
 
-    add_library(${RAYGAME_ARGS_TARGET}_wayland SHARED)
+    add_library(${_target} SHARED)
     set_target_properties(
-        ${RAYGAME_ARGS_TARGET}_wayland
+        ${_target}
         PROPERTIES COMPILER_WARNING_AS_ERROR OFF
                    LANGUAGE C
                    C_EXTENSIONS OFF
@@ -22,11 +26,11 @@ function(raygame_add_wayland_protocols)
                    LINKER_LANGUAGE C
                    SYSTEM ON
     )
-    target_compile_options(${RAYGAME_ARGS_TARGET}_wayland PRIVATE -w)
+    target_compile_options(${_target} PRIVATE -w)
 
     foreach(protocol IN LISTS RAYGAME_ARGS_PROTOCOLS)
-        set(${protocol}_header "${${RAYGAME_ARGS_TARGET}_proto_dir}/${protocol}-client-protocol.h")
-        set(${protocol}_source "${${RAYGAME_ARGS_TARGET}_proto_dir}/${protocol}-protocol.c")
+        set(${protocol}_header "${${_target}_proto_dir}/${protocol}-client-protocol.h")
+        set(${protocol}_source "${${_target}_proto_dir}/${protocol}-protocol.c")
         set(${protocol}_xml "${RAYGAME_PATH_SRC}/third_party/wayland/${protocol}.xml")
         set_source_files_properties(${${protocol}_source} GENERATED)
         set_source_files_properties(${${protocol}_header} GENERATED)
@@ -44,20 +48,19 @@ function(raygame_add_wayland_protocols)
             VERBATIM
         )
         target_sources(
-            ${RAYGAME_ARGS_TARGET}_wayland
+            ${_target}
             PUBLIC ${${protocol}_header}
             PRIVATE ${${protocol}_source}
         )
     endforeach()
 
     target_include_directories(
-        ${RAYGAME_ARGS_TARGET}_wayland
-        PUBLIC ${${RAYGAME_ARGS_TARGET}_proto_dir}
+        ${_target}
+        PUBLIC ${${_target}_proto_dir}
         PRIVATE ${RAYGAME_WL_INCLUDE_DIRS}
     )
-    target_link_libraries(${RAYGAME_ARGS_TARGET}_wayland PUBLIC ${RAYGAME_WL_LINK_LIBRARIES})
-    target_link_options(${RAYGAME_ARGS_TARGET}_wayland PRIVATE ${RAYGAME_WL_LDFLAGS})
-    target_compile_options(${RAYGAME_ARGS_TARGET}_wayland PRIVATE ${RAYGAME_WL_CFLAGS})
-    target_include_directories(${RAYGAME_ARGS_TARGET} PUBLIC ${${RAYGAME_ARGS_TARGET}_proto_dir})
-    target_link_libraries(${RAYGAME_ARGS_TARGET} PUBLIC ${RAYGAME_ARGS_TARGET}_wayland)
+    target_link_libraries(${_target} PUBLIC ${RAYGAME_WL_LINK_LIBRARIES})
+    target_link_options(${_target} PRIVATE ${RAYGAME_WL_LDFLAGS})
+    target_compile_options(${_target} PRIVATE ${RAYGAME_WL_CFLAGS})
+    target_include_directories(${_target} PUBLIC ${${RAYGAME_ARGS_TARGET}_proto_dir})
 endfunction()

@@ -1,6 +1,7 @@
 #pragma once
-#include <third_party/zpp_bits/zpp_bits.h>
+#include "zppbits.h" // IWYU pragma: keep
 
 namespace core::serialise {
-using namespace zpp::bits;
+using zpp::bits::access;
+using zpp::bits::access;
 } // namespace core::serialise

@@ -1,24 +1,23 @@
-raygame_lib(RayGameCoreBase)
-add_library(RayGame::Core::Base ALIAS RayGameCoreBase)
-target_sources(
+raygame_lib(
     RayGameCoreBase
-    PUBLIC concepts.h
-           condition.h
-           config.h
-           debug.h
-           exception.h
-           logger.h
-           matrix.h
-           types.h
-    PRIVATE concepts.cpp
-            condition.cpp
-            config.cpp
-            debug.cpp
-            exception.cpp
-            logger.cpp
-            matrix.cpp
-            types.cpp
+    HDRS concepts.h
+         condition.h
+         config.h
+         debug.h
+         exception.h
+         logger.h
+         matrix.h
+         types.h
+    SRCS concepts.cpp
+         condition.cpp
+         config.cpp
+         debug.cpp
+         exception.cpp
+         logger.cpp
+         matrix.cpp
+         types.cpp
 )
+add_library(RayGame::Core::Base ALIAS RayGameCoreBase)
 
 add_subdirectory(drawing)
 add_subdirectory(math)
