@@ -1,1 +1,1 @@
-raygame_test(Serialisation SOURCES serialisation.cpp DEPENDS RayGame::Core::Serialisation)
+raygame_test(Serialisation SRCS serialisation.cpp DEPS RayGame::Core::Serialisation)

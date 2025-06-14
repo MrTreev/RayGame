@@ -1,6 +1,6 @@
 raygame_lib(
     RayGameRayTest
-    HEADERS raytest/raytest.h
+    HDRS raytest/raytest.h
     SRCS raytest/main.cpp
 )
 target_include_directories(

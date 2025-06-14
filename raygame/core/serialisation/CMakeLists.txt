@@ -1,6 +1,6 @@
 raygame_lib(
     RayGameCoreSerialisation
-    HEADERS serialisation.h
-    SOURCES serialisation.cpp
-    DEPENDS RayGame::Core::Base RayGame::External::ZppBits
+    HDRS serialisation.h
+    SRCS serialisation.cpp
+    DEPS RayGame::Core::Base RayGame::External::ZppBits
 )
