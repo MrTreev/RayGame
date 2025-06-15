@@ -18,11 +18,7 @@ void glfw_error_callback(int error, const char* description) {
 
 } // namespace
 
-ImguiWindowImpl::ImguiWindowImpl(
-    Vec2<size_t> size,
-    std::string  title,
-    WindowStyle  style
-)
+ImguiWindowImpl::ImguiWindowImpl(Vec2<size_t> size, std::string title, WindowStyle style)
     : WindowImpl(size, std::move(title), style) {
     if constexpr (config::EnabledBackends::imgui()) {
         log::debug("constructing ImGUI window");
@@ -94,10 +90,7 @@ void ImguiWindowImpl::draw(const drawing::ImageView& image) {
     using math::safe_add;
     ImGui::GetWindowDrawList()->AddImage(
         image_texture,
-        ImVec2(
-            static_cast<float>(image.pos_x()),
-            static_cast<float>(image.pos_y())
-        ),
+        ImVec2(static_cast<float>(image.pos_x()), static_cast<float>(image.pos_y())),
         ImVec2(
             static_cast<float>(safe_add<size_t>(image.pos_x(), image.width())),
             static_cast<float>(safe_add<size_t>(image.pos_y(), image.height()))
@@ -125,8 +118,7 @@ void ImguiWindowImpl::render_frame() {
 #endif
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0F);
     glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
-    const bool begin =
-        ImGui::Begin(get_title().c_str(), nullptr, m_window_flags);
+    const bool begin = ImGui::Begin(get_title().c_str(), nullptr, m_window_flags);
     condition::check_condition(begin, "Could not begin window");
     // FRAME HERE
     ImGui::End();

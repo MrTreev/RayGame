@@ -5,14 +5,13 @@
 #    include <wayland-client-protocol.h>
 #    include <xkbcommon/xkbcommon.h>
 
-const wl_keyboard_listener
-    core::window::detail::WaylandWindowImpl::m_wl_keyboard_listener = {
-        .keymap      = wl_keyboard_keymap,
-        .enter       = wl_keyboard_enter,
-        .leave       = wl_keyboard_leave,
-        .key         = wl_keyboard_key,
-        .modifiers   = wl_keyboard_modifiers,
-        .repeat_info = wl_keyboard_repeat_info,
+const wl_keyboard_listener core::window::detail::WaylandWindowImpl::m_wl_keyboard_listener = {
+    .keymap      = wl_keyboard_keymap,
+    .enter       = wl_keyboard_enter,
+    .leave       = wl_keyboard_leave,
+    .key         = wl_keyboard_key,
+    .modifiers   = wl_keyboard_modifiers,
+    .repeat_info = wl_keyboard_repeat_info,
 };
 
 // NOLINTBEGIN(*-easily-swappable-parameters)
@@ -48,13 +47,8 @@ void core::window::detail::WaylandWindowImpl::wl_keyboard_keymap(
         format == WL_KEYBOARD_KEYMAP_FORMAT_XKB_V1,
         "Invalid WL_KEYBOARD_KEYMAP_FORMAT"
     );
-    char* map_shm = static_cast<char*>(
-        mmap(nullptr, size, PROT_READ, MAP_PRIVATE, shm_fd, 0)
-    );
-    core::condition::check_condition(
-        map_shm != MAP_FAILED,
-        "Failed keyboard shm map"
-    );
+    char* map_shm = static_cast<char*>(mmap(nullptr, size, PROT_READ, MAP_PRIVATE, shm_fd, 0));
+    core::condition::check_condition(map_shm != MAP_FAILED, "Failed keyboard shm map");
     auto& keystate = static_cast<WaylandWindowImpl*>(data)->m_keyboard_state;
     keystate.new_from_string(map_shm);
     munmap(map_shm, size);

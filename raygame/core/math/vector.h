@@ -32,26 +32,17 @@ struct Vec2 {
 
     template<core::math::MathRule MR = core::math::MR_DEFAULT>
     constexpr Vec2<Type> operator+(auto other) {
-        return {
-            core::math::safe_add<Type>(x, other),
-            core::math::safe_add<Type>(y, other)
-        };
+        return {core::math::safe_add<Type>(x, other), core::math::safe_add<Type>(y, other)};
     }
 
     template<typename U, core::math::MathRule MR = core::math::MR_DEFAULT>
     constexpr Vec2<Type> operator+(const Vec2<U>& other) {
-        return {
-            core::math::safe_add<Type>(x, other.x),
-            core::math::safe_add<Type>(y, other.y)
-        };
+        return {core::math::safe_add<Type>(x, other.x), core::math::safe_add<Type>(y, other.y)};
     }
 
     template<core::math::MathRule MR = core::math::MR_DEFAULT>
     constexpr Vec2<Type> operator+=(auto other) {
-        return {
-            x = core::math::safe_add<Type>(x, other),
-            y = core::math::safe_add<Type>(y, other)
-        };
+        return {x = core::math::safe_add<Type>(x, other), y = core::math::safe_add<Type>(y, other)};
     }
 
     template<typename U, core::math::MathRule MR = core::math::MR_DEFAULT>

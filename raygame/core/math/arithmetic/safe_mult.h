@@ -30,21 +30,21 @@ safe_mult(const std::integral auto aval, const std::integral auto bval) {
         return 0;
     }
 
-    if constexpr (core::config::COMPILER_IS_GCC_LIKE
-                  && !core::config::FORCE_GENERIC_IMPL) {
+    if constexpr (core::config::COMPILER_IS_GCC_LIKE && !core::config::FORCE_GENERIC_IMPL) {
         std::remove_const_t<Out_T> res = 0;
-        if ((!__builtin_mul_overflow(aval, bval, &res))
-            || (MR == MathRule::ALLOW)) {
+        if ((!__builtin_mul_overflow(aval, bval, &res)) || (MR == MathRule::ALLOW)) {
             return res;
         }
         if constexpr (MR == MathRule::STRICT) {
-            throw Condition(std::format(
-                "Result of multiplication ({} * {}) is outside the range of "
-                "output type '{}'",
-                aval,
-                bval,
-                type_name<Out_T>()
-            ));
+            throw Condition(
+                std::format(
+                    "Result of multiplication ({} * {}) is outside the range of "
+                    "output type '{}'",
+                    aval,
+                    bval,
+                    type_name<Out_T>()
+                )
+            );
         } else if constexpr (MR == MathRule::CLAMP) {
             return outmax;
         } else {
@@ -52,31 +52,33 @@ safe_mult(const std::integral auto aval, const std::integral auto bval) {
         }
     } else {
         if (std::cmp_greater(bval, outmax / aval)
-            || (std::cmp_less_equal(aval, -1)
-                && std::cmp_less_equal(bval, outmin))
-            || (std::cmp_less_equal(bval, -1)
-                && std::cmp_less_equal(aval, outmin))) {
+            || (std::cmp_less_equal(aval, -1) && std::cmp_less_equal(bval, outmin))
+            || (std::cmp_less_equal(bval, -1) && std::cmp_less_equal(aval, outmin))) {
             if constexpr (MR == MathRule::STRICT) {
-                throw Condition(std::format(
-                    "Result of multiplication ({} * {}) is above the max for "
-                    "output type '{}'",
-                    aval,
-                    bval,
-                    type_name<Out_T>()
-                ));
+                throw Condition(
+                    std::format(
+                        "Result of multiplication ({} * {}) is above the max for "
+                        "output type '{}'",
+                        aval,
+                        bval,
+                        type_name<Out_T>()
+                    )
+                );
             } else if constexpr (MR == MathRule::CLAMP) {
                 return outmax;
             }
         } else if (std::is_unsigned<Out_T>()
                    && (std::cmp_less(aval, 0) || std::cmp_less(bval, 0))) {
             if constexpr (MR == MathRule::STRICT) {
-                throw Condition(std::format(
-                    "Result of multiplication ({} * {}) is below the min for "
-                    "output type '{}'",
-                    aval,
-                    bval,
-                    type_name<Out_T>()
-                ));
+                throw Condition(
+                    std::format(
+                        "Result of multiplication ({} * {}) is below the min for "
+                        "output type '{}'",
+                        aval,
+                        bval,
+                        type_name<Out_T>()
+                    )
+                );
             } else if constexpr (MR == MathRule::CLAMP) {
                 return outmin;
             }

@@ -2,9 +2,8 @@
 #if defined(RAYGAME_GUI_BACKEND_WAYLAND)
 #    include <xdg-shell-client-protocol.h>
 
-const xdg_wm_base_listener
-    core::window::detail::WaylandWindowImpl::m_xdg_wm_base_listener = {
-        .ping = xdg_wm_base_handle_ping,
+const xdg_wm_base_listener core::window::detail::WaylandWindowImpl::m_xdg_wm_base_listener = {
+    .ping = xdg_wm_base_handle_ping,
 };
 
 void core::window::detail::WaylandWindowImpl::xdg_wm_base_handle_ping(

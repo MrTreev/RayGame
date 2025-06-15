@@ -104,8 +104,7 @@ public:
     constexpr bool operator==(const Rect<P, D>& other) const {
         return (
             std::cmp_equal(m_x, other.m_x) && std::cmp_equal(m_y, other.m_y)
-            && std::cmp_equal(m_width, other.m_width)
-            && std::cmp_equal(m_height, other.m_height)
+            && std::cmp_equal(m_width, other.m_width) && std::cmp_equal(m_height, other.m_height)
         );
     }
 

@@ -114,8 +114,7 @@ constexpr void unknown(
  *  @throws core::exception::Condition If hit
  */
 [[noreturn]]
-constexpr void
-unreachable(const std::source_location& loc = std::source_location::current()) {
+constexpr void unreachable(const std::source_location& loc = std::source_location::current()) {
     if constexpr (config::BUILD_TYPE == config::BuildType::DEBUG) {
         detail::conditionlog("Reached block marked unreachable", loc);
         throw exception::Unreachable("Reached block marked unreachable");
@@ -129,9 +128,7 @@ unreachable(const std::source_location& loc = std::source_location::current()) {
  *  @throws core::exception::Condition If hit
  */
 [[noreturn]]
-constexpr void unimplemented(
-    const std::source_location& loc = std::source_location::current()
-) {
+constexpr void unimplemented(const std::source_location& loc = std::source_location::current()) {
     if constexpr (config::BUILD_TYPE == config::BuildType::DEBUG) {
         detail::conditionlog("Reached block marked unimplemented", loc);
     }

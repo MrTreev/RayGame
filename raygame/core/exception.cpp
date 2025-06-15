@@ -4,14 +4,14 @@
 namespace core::exception {
 // Honestly, just easier this way, macro is pretty obvious what it does
 // NOLINTBEGIN(*-macro-usage)
-#define RAYGAME_EXCEPTION_DEF_BASE(name, base)                                 \
-    name::name(const std::string& message)                                     \
-        : base(message) {}                                                     \
-    name::name(const base&& error)                                             \
-        : base(error) {}                                                       \
-    std::string name::type() {                                           \
-        return debug::type_name(this);                                         \
-    }                                                                          \
+#define RAYGAME_EXCEPTION_DEF_BASE(name, base)                                                     \
+    name::name(const std::string& message)                                                         \
+        : base(message) {}                                                                         \
+    name::name(const base&& error)                                                                 \
+        : base(error) {}                                                                           \
+    std::string name::type() {                                                                     \
+        return debug::type_name(this);                                                             \
+    }                                                                                              \
     name::~name() = default
 
 // NOLINTEND(*-macro-usage)

@@ -30,18 +30,13 @@ constexpr std::string to_string(core::log::Level level) {
 }
 } // namespace
 
-void core::log::detail::logger(
-    core::log::Level     level,
-    std::string          text,
-    std::source_location loc
-) {
+void core::log::detail::logger(core::log::Level level, std::string text, std::source_location loc) {
     if (logging_level <= level) {
         if constexpr (enable_source_loc) {
             constexpr std::string_view search_str = "/raygame/";
             std::string_view           shortloc{loc.file_name()};
             shortloc.remove_prefix(
-                std::string_view(loc.file_name()).rfind(search_str)
-                + search_str.length()
+                std::string_view(loc.file_name()).rfind(search_str) + search_str.length()
             );
             std::println(
                 std::cerr,

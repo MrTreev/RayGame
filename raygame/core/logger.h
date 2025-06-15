@@ -12,32 +12,29 @@ void logger(core::log::Level level, std::string text, std::source_location loc);
 
 // Makes it easier to have a single definition
 // NOLINTNEXTLINE(*-macro-usage)
-#define RG_LOG_STRUCT(level, LEVEL)                                            \
-    template<typename... Args>                                                 \
-    struct level {                                                             \
-        constexpr explicit level(                                              \
-            std::string          message,                                      \
-            std::source_location loc = std::source_location::current()         \
-        ) {                                                                    \
-            detail::logger(Level::LEVEL, std::move(message), loc);             \
-        }                                                                      \
-                                                                               \
-        constexpr explicit level(                                              \
-            std::format_string<Args...> fmt,                                   \
-            Args&&... args,                                                    \
-            std::source_location loc = std::source_location::current()         \
-        )                                                                      \
-            : level(                                                           \
-                  std::vformat(fmt.get(), std::make_format_args(args...)),     \
-                  loc                                                          \
-              ) {}                                                             \
-    };                                                                         \
-                                                                               \
-    template<typename... Args>                                                 \
-    level(Args&&...) -> level<Args...>;                                        \
-    template<typename... Args>                                                 \
-    level(const char*) -> level<std::string>;                                  \
-    template<typename... Args>                                                 \
+#define RG_LOG_STRUCT(level, LEVEL)                                                                \
+    template<typename... Args>                                                                     \
+    struct level {                                                                                 \
+        constexpr explicit level(                                                                  \
+            std::string          message,                                                          \
+            std::source_location loc = std::source_location::current()                             \
+        ) {                                                                                        \
+            detail::logger(Level::LEVEL, std::move(message), loc);                                 \
+        }                                                                                          \
+                                                                                                   \
+        constexpr explicit level(                                                                  \
+            std::format_string<Args...> fmt,                                                       \
+            Args&&... args,                                                                        \
+            std::source_location loc = std::source_location::current()                             \
+        )                                                                                          \
+            : level(std::vformat(fmt.get(), std::make_format_args(args...)), loc) {}               \
+    };                                                                                             \
+                                                                                                   \
+    template<typename... Args>                                                                     \
+    level(Args&&...) -> level<Args...>;                                                            \
+    template<typename... Args>                                                                     \
+    level(const char*) -> level<std::string>;                                                      \
+    template<typename... Args>                                                                     \
     level(const char*, Args&&...) -> level<Args...>;
 
 RG_LOG_STRUCT(trace, TRACE)

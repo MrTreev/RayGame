@@ -21,24 +21,25 @@ namespace core::math {
 template<std::integral Out_T, MathRule MR = core::math::MR_DEFAULT>
 // NOLINTNEXTLINE(*-cognitive-complexity)
 Out_T safe_sub(const std::integral auto aval, const std::integral auto bval) {
-    using work_t = decltype(work_type(work_type(aval, bval), Out_T{0}));
+    using work_t           = decltype(work_type(work_type(aval, bval), Out_T{0}));
     constexpr Out_T outmin = std::numeric_limits<Out_T>::lowest();
 
-    if constexpr (core::config::COMPILER_IS_GCC_LIKE
-                  && !core::config::FORCE_GENERIC_IMPL) {
+    if constexpr (core::config::COMPILER_IS_GCC_LIKE && !core::config::FORCE_GENERIC_IMPL) {
         std::remove_const_t<Out_T> res = 0;
         if (__builtin_sub_overflow(aval, bval, &res)) {
             if constexpr (MR == MathRule::ALLOW) {
                 return core::math::numeric_cast<Out_T, MR>(res);
             }
             if constexpr (MR == MathRule::STRICT) {
-                throw core::exception::Condition(std ::format(
-                    "Result of subtraction ({} - {}) is outside the range of "
-                    "output type '{}'",
-                    aval,
-                    bval,
-                    core ::debug ::type_name<Out_T>()
-                ));
+                throw core::exception::Condition(
+                    std ::format(
+                        "Result of subtraction ({} - {}) is outside the range of "
+                        "output type '{}'",
+                        aval,
+                        bval,
+                        core ::debug ::type_name<Out_T>()
+                    )
+                );
             }
             if constexpr (MR == MathRule::CLAMP) {
                 if (std::cmp_greater(
@@ -73,13 +74,15 @@ Out_T safe_sub(const std::integral auto aval, const std::integral auto bval) {
                 return numeric_cast<Out_T, MR>(worka - workb);
             }
             if constexpr (MR == MathRule::STRICT) {
-                throw core::exception::Condition(std ::format(
-                    "Result of subtraction ({} - {}) is outside the range of "
-                    "output type '{}'",
-                    aval,
-                    bval,
-                    core ::debug ::type_name<Out_T>()
-                ));
+                throw core::exception::Condition(
+                    std ::format(
+                        "Result of subtraction ({} - {}) is outside the range of "
+                        "output type '{}'",
+                        aval,
+                        bval,
+                        core ::debug ::type_name<Out_T>()
+                    )
+                );
             }
             if (MR == MathRule::CLAMP) {
                 return outmin;

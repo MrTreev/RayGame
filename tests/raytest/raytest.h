@@ -1,7 +1,7 @@
 #pragma once
-#include <gtest/gtest.h>
 #include <algorithm>
 #include <cstdint>
+#include <gtest/gtest.h>
 #include <limits>
 #include <vector>
 
@@ -25,7 +25,7 @@ static_assert(false, "Unknown Compiler");
 #if defined(RAYTEST_CC_CLANG)
 #    define RAYTEST_PRAGMA_TO_STR(x)            _Pragma(#x)
 #    define RAYTEST_CLANG_SUPPRESS_WARNING_PUSH _Pragma("clang diagnostic push")
-#    define RAYTEST_CLANG_SUPPRESS_WARNING(warnstr)                            \
+#    define RAYTEST_CLANG_SUPPRESS_WARNING(warnstr)                                                \
         RAYTEST_PRAGMA_TO_STR(clang diagnostic ignored warnstr)
 #    define RAYTEST_CLANG_SUPPRESS_WARNING_POP _Pragma("clang diagnostic pop")
 #else
@@ -36,7 +36,7 @@ static_assert(false, "Unknown Compiler");
 #if defined(RAYTEST_CC_GCC)
 #    define RAYTEST_PRAGMA_TO_STR(x)          _Pragma(#x)
 #    define RAYTEST_GCC_SUPPRESS_WARNING_PUSH _Pragma("GCC diagnostic push")
-#    define RAYTEST_GCC_SUPPRESS_WARNING(warnstr)                              \
+#    define RAYTEST_GCC_SUPPRESS_WARNING(warnstr)                                                  \
         RAYTEST_PRAGMA_TO_STR(GCC diagnostic ignored warnstr)
 #    define RAYTEST_GCC_SUPPRESS_WARNING_POP _Pragma("GCC diagnostic pop")
 #else
@@ -61,17 +61,16 @@ RAYTEST_CLANG_SUPPRESS_WARNING("-Wglobal-constructors")
 RAYTEST_CLANG_SUPPRESS_WARNING_POP
 
 // NOLINTBEGIN(*-macro-usage)
-#define RG_TYPED_TEST_SUITE(test_suite_name, test_name)                        \
-    TYPED_TEST_SUITE(test_suite_name, test_name)
-#define RG_TYPED_TEST(test_suite_name, test_name)                              \
-    RAYTEST_CLANG_SUPPRESS_WARNING_PUSH                                        \
-    RAYTEST_CLANG_SUPPRESS_WARNING("-Wglobal-constructors")                    \
-    TYPED_TEST(test_suite_name, test_name)                                     \
+#define RG_TYPED_TEST_SUITE(test_suite_name, test_name) TYPED_TEST_SUITE(test_suite_name, test_name)
+#define RG_TYPED_TEST(test_suite_name, test_name)                                                  \
+    RAYTEST_CLANG_SUPPRESS_WARNING_PUSH                                                            \
+    RAYTEST_CLANG_SUPPRESS_WARNING("-Wglobal-constructors")                                        \
+    TYPED_TEST(test_suite_name, test_name)                                                         \
     RAYTEST_CLANG_SUPPRESS_WARNING_POP
-#define RG_TEST(test_suite_name, test_name)                                    \
-    RAYTEST_CLANG_SUPPRESS_WARNING_PUSH                                        \
-    RAYTEST_CLANG_SUPPRESS_WARNING("-Wglobal-constructors")                    \
-    TEST(test_suite_name, test_name)                                           \
+#define RG_TEST(test_suite_name, test_name)                                                        \
+    RAYTEST_CLANG_SUPPRESS_WARNING_PUSH                                                            \
+    RAYTEST_CLANG_SUPPRESS_WARNING("-Wglobal-constructors")                                        \
+    TEST(test_suite_name, test_name)                                                               \
     RAYTEST_CLANG_SUPPRESS_WARNING_POP
 
 #define RG_TEST_FLOAT(a, b)          EXPECT_FLOAT_EQ((a), (b))
@@ -92,24 +91,21 @@ RAYTEST_CLANG_SUPPRESS_WARNING_POP
 namespace test {
 template<
     typename T,
-    typename M =
-        std::conditional_t<std::is_signed_v<T>, std::intmax_t, std::uintmax_t>>
+    typename M = std::conditional_t<std::is_signed_v<T>, std::intmax_t, std::uintmax_t>>
 constexpr M lowest() {
     return std::numeric_limits<T>::lowest();
 }
 
 template<
     typename T,
-    typename M =
-        std::conditional_t<std::is_signed_v<T>, std::intmax_t, std::uintmax_t>>
+    typename M = std::conditional_t<std::is_signed_v<T>, std::intmax_t, std::uintmax_t>>
 constexpr M min() {
     return std::numeric_limits<T>::lowest();
 }
 
 template<
     typename T,
-    typename M =
-        std::conditional_t<std::is_signed_v<T>, std::intmax_t, std::uintmax_t>>
+    typename M = std::conditional_t<std::is_signed_v<T>, std::intmax_t, std::uintmax_t>>
 constexpr M max() {
     return std::numeric_limits<T>::max();
 }
@@ -142,15 +138,8 @@ struct TypeTriple {
 };
 
 namespace types {
-using Integral = testing::Types<
-    uint8_t,
-    uint16_t,
-    uint32_t,
-    uint64_t,
-    int8_t,
-    int16_t,
-    int32_t,
-    int64_t>;
+using Integral =
+    testing::Types<uint8_t, uint16_t, uint32_t, uint64_t, int8_t, int16_t, int32_t, int64_t>;
 
 using IntegralPairs = ::testing::Types<
     ::test::TypePair<uint8_t, uint8_t>,

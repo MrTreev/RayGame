@@ -9,8 +9,7 @@ core::window::detail::CocoaWindowImpl::CocoaWindowImpl(
 
 core::window::detail::CocoaWindowImpl::~CocoaWindowImpl() = default;
 
-void core::window::detail::CocoaWindowImpl::draw(const drawing::ImageView& image
-) {
+void core::window::detail::CocoaWindowImpl::draw(const drawing::ImageView& image) {
     std::ignore = image;
     condition::unimplemented();
 }

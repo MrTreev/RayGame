@@ -2,8 +2,7 @@
 #include "raygame/core/config.h"
 #if defined(RAYGAME_GUI_BACKEND_IMGUI)
 #else
-#    if defined(RAYGAME_OS_LINUX) || defined(RAYGAME_OS_BSD)                   \
-        || defined(RAYGAME_OS_HURD)
+#    if defined(RAYGAME_OS_LINUX) || defined(RAYGAME_OS_BSD) || defined(RAYGAME_OS_HURD)
 #        if !defined(RAYGAME_GUI_BACKEND_WAYLAND)
 #            define RAYGAME_GUI_BACKEND_WAYLAND
 #        endif

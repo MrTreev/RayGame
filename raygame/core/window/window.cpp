@@ -47,11 +47,7 @@ core::config::GuiBackend get_backend() {
 }
 } // namespace
 
-core::window::Window::Window(
-    Vec2<size_t> size,
-    std::string  title,
-    WindowStyle  style
-) {
+core::window::Window::Window(Vec2<size_t> size, std::string title, WindowStyle style) {
     const auto backend = get_backend();
     if constexpr (config::EnabledBackends::imgui()) {
         using Imgui = detail::ImguiWindowImpl;
@@ -87,15 +83,11 @@ core::window::Window::Window(
 
 core::window::detail::WindowImpl::~WindowImpl() = default;
 
-void core::window::detail::WindowImpl::draw(
-    [[maybe_unused]] const drawing::ImageView& image
-) {
+void core::window::detail::WindowImpl::draw([[maybe_unused]] const drawing::ImageView& image) {
     condition::unreachable();
 }
 
-void core::window::detail::WindowImpl::restyle(
-    [[maybe_unused]] WindowStyle style
-) {
+void core::window::detail::WindowImpl::restyle([[maybe_unused]] WindowStyle style) {
     condition::unreachable();
 }
 

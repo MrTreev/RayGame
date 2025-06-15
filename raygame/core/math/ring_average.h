@@ -21,8 +21,7 @@ public:
     }
 
     T average() {
-        return (std::reduce(m_buf.cbegin(), m_buf.cend(), ZERO))
-               / static_cast<T>(m_cap);
+        return (std::reduce(m_buf.cbegin(), m_buf.cend(), ZERO)) / static_cast<T>(m_cap);
     }
 };
 extern template class RingAverage<size_t, core::config::TARGET_FPS>;

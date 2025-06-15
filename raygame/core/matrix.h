@@ -31,9 +31,7 @@ public:
         return m_mdspan[ypos, xpos];
     }
 
-    auto& operator[](const size_t& xpos, const size_t& ypos) {
-        return m_mdspan[ypos, xpos];
-    }
+    auto& operator[](const size_t& xpos, const size_t& ypos) { return m_mdspan[ypos, xpos]; }
 };
 
 template<typename T>
@@ -42,21 +40,14 @@ private:
     std::mdspan<T, std::dextents<size_t, 2>> m_mdspan;
 
 public:
-    explicit constexpr ViewMatrix(
-        const auto&& container,
-        size_t       width_,
-        size_t       height_
-    )
+    explicit constexpr ViewMatrix(const auto&& container, size_t width_, size_t height_)
         : m_mdspan(container, width_, height_) {}
 
-    constexpr const T&
-    operator[](const size_t& xpos, const size_t& ypos) const {
+    constexpr const T& operator[](const size_t& xpos, const size_t& ypos) const {
         return m_mdspan[ypos, xpos];
     }
 
-    T& operator[](const size_t& xpos, const size_t& ypos) {
-        return m_mdspan[ypos, xpos];
-    }
+    T& operator[](const size_t& xpos, const size_t& ypos) { return m_mdspan[ypos, xpos]; }
 
     [[nodiscard]]
     constexpr size_t height() const {

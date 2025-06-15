@@ -60,8 +60,7 @@ RG_TYPED_TEST(ConditionTest, Basics) {
 
     RG_SUBCASE("In-Range Tests") {
         using core::condition::pre_check_range;
-#define CRTHIS(i, j, k)                                                        \
-    pre_check_range(this->i##val(), this->j##min(), this->k##max())
+#define CRTHIS(i, j, k) pre_check_range(this->i##val(), this->j##min(), this->k##max())
         RG_CHECK_NO_THROW(CRTHIS(a, a, a));
         RG_CHECK_NO_THROW(CRTHIS(a, a, b));
         RG_CHECK_NO_THROW(CRTHIS(a, b, a));
@@ -77,8 +76,7 @@ RG_TYPED_TEST(ConditionTest, Basics) {
         using core::condition::pre_check_range;
         // Swapping these is intentional here
         // NOLINTBEGIN(*-suspicious-call-argument)
-#define CRTHIS(i, j, k)                                                        \
-    pre_check_range(this->i##val(), this->j##max(), this->k##min())
+#define CRTHIS(i, j, k) pre_check_range(this->i##val(), this->j##max(), this->k##min())
         RG_CHECK_THROW(CRTHIS(a, a, a), cond_t);
         RG_CHECK_THROW(CRTHIS(a, a, b), cond_t);
         RG_CHECK_THROW(CRTHIS(a, b, a), cond_t);

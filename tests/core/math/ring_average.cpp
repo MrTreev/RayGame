@@ -26,12 +26,9 @@ RAYGAME_CLANG_SUPPRESS_WARNING("-Wunused-template")
 
 template<core::concepts::Number T>
 T dice() {
-    static std::uniform_int_distribution<T> distr{
-        test::min<T>(),
-        test::max<T>()
-    };
-    static std::random_device device{};
-    static std::mt19937       engine{device()};
+    static std::uniform_int_distribution<T> distr{test::min<T>(), test::max<T>()};
+    static std::random_device               device{};
+    static std::mt19937                     engine{device()};
     return distr(engine);
 }
 
@@ -49,8 +46,7 @@ RG_TYPED_TEST(RingAverageTest, FPS) {
         if (queue.size() > BUFLEN) {
             queue.pop_front();
         }
-        const size_t sum =
-            (std::accumulate(queue.cbegin(), queue.cend(), 0ULL));
+        const size_t sum      = (std::accumulate(queue.cbegin(), queue.cend(), 0ULL));
         const size_t calc_ave = sum / queue.size();
         RG_CHECK_EQ(calc_ave, ringave.average());
     }
@@ -68,8 +64,7 @@ RG_TYPED_TEST(RingAverageTest, Averages) {
         if (queue.size() > BUFLEN) {
             queue.pop_front();
         }
-        const T sum =
-            std::accumulate(queue.cbegin(), queue.cend(), static_cast<T>(0));
+        const T sum      = std::accumulate(queue.cbegin(), queue.cend(), static_cast<T>(0));
         const T calc_ave = sum / static_cast<T>(queue.size());
         RG_CHECK_EQ(calc_ave, ringave.average());
     }

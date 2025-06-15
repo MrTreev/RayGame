@@ -10,6 +10,5 @@ public:
 RG_TYPED_TEST_SUITE(Serialisation, test::types::All);
 
 RG_TEST(Serialisation, test) {
-    RG_SUBCASE("test") {
-    }
+    RG_SUBCASE("test") {}
 }

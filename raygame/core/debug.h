@@ -15,8 +15,7 @@ template<typename T>
 constexpr std::string type_name() {
     const T item{};
     if constexpr (core::config::COMPILER_IS_GCC_LIKE) {
-        char* demangled_name =
-            abi::__cxa_demangle(typeid(item).name(), nullptr, nullptr, nullptr);
+        char* demangled_name = abi::__cxa_demangle(typeid(item).name(), nullptr, nullptr, nullptr);
         std::string ret_name{demangled_name};
         free(demangled_name); //NOLINT(*-no-malloc,*-owning-memory)
         if (ret_name == "unsigned char") {

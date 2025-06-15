@@ -5,17 +5,17 @@ namespace core::exception {
 // Honestly, just easier this way, macro is pretty obvious what it does
 // macro-parentheses is because it's wrong to do that here
 // NOLINTBEGIN(*-macro-usage,*-macro-parentheses)
-#define RAYGAME_EXCEPTION_DECL_BASE(name, base)                                \
-    class name: public base {                                                  \
-    public:                                                                    \
-        explicit name(const std::string& message);                             \
-        explicit name(const base&& error);                                     \
-        name(name&&)                 = default;                                \
-        name(const name&)            = default;                                \
-        name& operator=(name&&)      = default;                                \
-        name& operator=(const name&) = default;                                \
-        ~name() override;                                                      \
-        std::string type() override;                                           \
+#define RAYGAME_EXCEPTION_DECL_BASE(name, base)                                                    \
+    class name: public base {                                                                      \
+    public:                                                                                        \
+        explicit name(const std::string& message);                                                 \
+        explicit name(const base&& error);                                                         \
+        name(name&&)                 = default;                                                    \
+        name(const name&)            = default;                                                    \
+        name& operator=(name&&)      = default;                                                    \
+        name& operator=(const name&) = default;                                                    \
+        ~name() override;                                                                          \
+        std::string type() override;                                                               \
     }
 
 // NOLINTEND(*-macro-usage,*-macro-parentheses)

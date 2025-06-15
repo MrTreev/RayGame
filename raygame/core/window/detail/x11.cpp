@@ -9,24 +9,20 @@ using core::condition::unimplemented;
 using core::condition::unreachable;
 } // namespace
 
-X11WindowImpl::X11WindowImpl(
-    Vec2<size_t> size,
-    std::string  title,
-    WindowStyle  style
-)
+X11WindowImpl::X11WindowImpl(Vec2<size_t> size, std::string title, WindowStyle style)
     : WindowImpl(size, std::move(title), style) {
     if constexpr (config::EnabledBackends::x11()) {
         constexpr auto background_colour = 0xFF'DD'00;
         m_display                        = XOpenDisplay(nullptr);
         m_window                         = XCreateSimpleWindow(
-            m_display, // our connection to server
+            m_display,                // our connection to server
             RootWindow(m_display, 0), // parent window (none in this example)
             0,                        // x
             0,                        // y
             math::numeric_cast<uint32_t>(size.x), // width
             math::numeric_cast<uint32_t>(size.y), // height
-            0,          // border width
-            0x00'00'00, // border color (ignored in this example)
+            0,                                    // border width
+            0x00'00'00,       // border color (ignored in this example)
             background_colour // background color (mustard yellow)
         );
         XStoreName(m_display, m_window, title.c_str());

@@ -6,14 +6,11 @@
 
 namespace core::window {
 //! Default Window Width
-static constexpr std::size_t DEFAULT_WINDOW_WIDTH =
-    RAYGAME_DEFAULT_WINDOW_WIDTH;
+static constexpr std::size_t DEFAULT_WINDOW_WIDTH  = RAYGAME_DEFAULT_WINDOW_WIDTH;
 //! Default Window Height
-static constexpr std::size_t DEFAULT_WINDOW_HEIGHT =
-    RAYGAME_DEFAULT_WINDOW_HEIGHT;
+static constexpr std::size_t DEFAULT_WINDOW_HEIGHT = RAYGAME_DEFAULT_WINDOW_HEIGHT;
 //! Default Window Title
-static constexpr std::string DEFAULT_WINDOW_TITLE =
-    RAYGAME_DEFAULT_WINDOW_TITLE;
+static constexpr std::string DEFAULT_WINDOW_TITLE  = RAYGAME_DEFAULT_WINDOW_TITLE;
 
 //! Window display styles
 enum class WindowStyle : uint8_t {
@@ -24,10 +21,7 @@ enum class WindowStyle : uint8_t {
 
 static constexpr WindowStyle DEFAULT_WINDOW_STYLE = WindowStyle::Windowed;
 
-static constexpr Vec2<size_t> DEFAULT_WINDOW_SIZE = {
-    DEFAULT_WINDOW_WIDTH,
-    DEFAULT_WINDOW_HEIGHT
-};
+static constexpr Vec2<size_t> DEFAULT_WINDOW_SIZE = {DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT};
 
 namespace detail {
 class WindowImpl {

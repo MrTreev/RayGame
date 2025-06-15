@@ -15,13 +15,7 @@ struct Pixel {
 
     [[nodiscard]]
     explicit constexpr operator std::string() const {
-        return std::format(
-            "Pixel(r: {}, g: {}, b: {}, a: {})",
-            m_red,
-            m_green,
-            m_blue,
-            m_alpha
-        );
+        return std::format("Pixel(r: {}, g: {}, b: {}, a: {})", m_red, m_green, m_blue, m_alpha);
     }
 
     [[nodiscard]]
@@ -31,8 +25,7 @@ struct Pixel {
 
 namespace colour {
 
-static constexpr core::Pixel
-rgba(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) {
+static constexpr core::Pixel rgba(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) {
     return {
         .m_red   = red,
         .m_green = green,

@@ -26,8 +26,7 @@ using core::math::safe_mult;
 
 constexpr size_t COLOUR_CHANNELS = 4;
 
-constexpr std::string_view alnum =
-    "abcdefghijklmnaoqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+constexpr std::string_view alnum = "abcdefghijklmnaoqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 
 std::string random_string(
     const size_t&      length,
@@ -46,8 +45,7 @@ int create_shm_file() {
     constexpr int RAND_LEN  = 6;
     for (int retries = N_RETRIES; retries > 0; --retries) {
         const std::string name("/wl_shm-" + random_string(RAND_LEN));
-        const int         shm_fd =
-            shm_open(name.c_str(), O_RDWR | O_CREAT | O_EXCL, 0600);
+        const int         shm_fd = shm_open(name.c_str(), O_RDWR | O_CREAT | O_EXCL, 0600);
         if (shm_fd >= 0) {
             shm_unlink(name.c_str());
             return shm_fd;
@@ -79,32 +77,26 @@ wl_shm_format get_colour_format() {
     constexpr auto ARGB      = 0b11000011'00000000'11111111'00111100;
     constexpr auto colourval = rgba(RVAL, GVAL, BVAL, AVAL);
     switch (bit_cast<uint32_t>(colourval)) {
-    case (ARGB):
-        core::log::debug("Colour Format: ARGB");
-        return WL_SHM_FORMAT_ARGB8888;
-    case (ABGR):
-        core::log::debug("Colour Format: ABGR");
-        return WL_SHM_FORMAT_ABGR8888;
-    case (BGRA):
-        core::log::debug("Colour Format: BGRA");
-        return WL_SHM_FORMAT_BGRA8888;
-    case (RGBA):
-        core::log::debug("Colour Format: RGBA");
-        return WL_SHM_FORMAT_RGBA8888;
+    case (ARGB): core::log::debug("Colour Format: ARGB"); return WL_SHM_FORMAT_ARGB8888;
+    case (ABGR): core::log::debug("Colour Format: ABGR"); return WL_SHM_FORMAT_ABGR8888;
+    case (BGRA): core::log::debug("Colour Format: BGRA"); return WL_SHM_FORMAT_BGRA8888;
+    case (RGBA): core::log::debug("Colour Format: RGBA"); return WL_SHM_FORMAT_RGBA8888;
     default:
-        throw std::invalid_argument(std::format(
-            "Could not determine colour format:\n"
-            "functdef: {:0>32b}\n"
-            "RGBA DEF: {:0>32b}\n"
-            "RGBA set: {:0>32b}{:0>32b}{:0>32b}{:0>32b}\n"
-            "BYTE NO:  00000000111111112222222233333333\n",
-            bit_cast<uint32_t>(colourval),
-            RGBA,
-            colourval.m_alpha,
-            colourval.m_blue,
-            colourval.m_green,
-            colourval.m_red
-        ));
+        throw std::invalid_argument(
+            std::format(
+                "Could not determine colour format:\n"
+                "functdef: {:0>32b}\n"
+                "RGBA DEF: {:0>32b}\n"
+                "RGBA set: {:0>32b}{:0>32b}{:0>32b}{:0>32b}\n"
+                "BYTE NO:  00000000111111112222222233333333\n",
+                bit_cast<uint32_t>(colourval),
+                RGBA,
+                colourval.m_alpha,
+                colourval.m_blue,
+                colourval.m_green,
+                colourval.m_red
+            )
+        );
     }
 }
 } // namespace
@@ -122,25 +114,17 @@ core::window::detail::WaylandWindowImpl::WaylandWindowImpl(
         m_wl_registry = wl_display_get_registry(m_wl_display);
         check_ptr(m_wl_registry, "Registry setup failed");
         wl_registry_add_listener(m_wl_registry, &m_wl_registry_listener, this);
-        check_condition(
-            wl_display_roundtrip(m_wl_display) != 0,
-            "Display roundtrip failed"
-        );
+        check_condition(wl_display_roundtrip(m_wl_display) != 0, "Display roundtrip failed");
         check_ptr(m_wl_shm, "shm global setup failed");
         check_ptr(m_wl_compositor, "compositor global setup failed");
         check_ptr(m_xdg_wm_base, "xdg_wm_base global setup failed");
         m_wl_surface = wl_compositor_create_surface(m_wl_compositor);
         check_ptr(m_wl_surface, "wl_surface setup failed");
-        m_xdg_surface =
-            xdg_wm_base_get_xdg_surface(m_xdg_wm_base, m_wl_surface);
+        m_xdg_surface = xdg_wm_base_get_xdg_surface(m_xdg_wm_base, m_wl_surface);
         check_ptr(m_xdg_surface, "xdg_surface setup failed");
         m_xdg_toplevel = xdg_surface_get_toplevel(m_xdg_surface);
         check_ptr(m_xdg_toplevel, "xdg_toplevel setup failed");
-        xdg_toplevel_add_listener(
-            m_xdg_toplevel,
-            &m_xdg_toplevel_listener,
-            this
-        );
+        xdg_toplevel_add_listener(m_xdg_toplevel, &m_xdg_toplevel_listener, this);
         xdg_surface_add_listener(m_xdg_surface, &m_xdg_surface_listener, this);
         wl_surface_commit(m_wl_surface);
         log::trace("Surface Committed");
@@ -157,11 +141,7 @@ core::window::detail::WaylandWindowImpl::WaylandWindowImpl(
         log::trace("Surface Committed");
         m_wl_callback = wl_surface_frame(m_wl_surface);
         check_ptr(m_wl_callback, "Failed to create callback");
-        wl_callback_add_listener(
-            m_wl_callback,
-            &m_wl_surface_frame_listener,
-            this
-        );
+        wl_callback_add_listener(m_wl_callback, &m_wl_surface_frame_listener, this);
         log::trace("Return from Constructor");
     } else {
         condition::unreachable();
@@ -181,9 +161,7 @@ core::window::detail::WaylandWindowImpl::~WaylandWindowImpl() {
     }
 }
 
-void core::window::detail::WaylandWindowImpl::draw(
-    const drawing::ImageView& image
-) {
+void core::window::detail::WaylandWindowImpl::draw(const drawing::ImageView& image) {
     if constexpr (config::EnabledBackends::wayland()) {
         constexpr auto clamp = [](const pos_t val) {
             return numeric_cast<dis_t>(std::max(pos_t(0), val));
@@ -195,8 +173,7 @@ void core::window::detail::WaylandWindowImpl::draw(
         const dis_t col_top   = clamp(image.left());
         const dis_t row_right = domin(height(), image.bottom());
         const dis_t col_bot   = domin(width(), image.right());
-        if (std::cmp_greater(col_top, width())
-            || std::cmp_greater(row_left, height())) {
+        if (std::cmp_greater(col_top, width()) || std::cmp_greater(row_left, height())) {
             return;
         }
 
@@ -231,9 +208,7 @@ void core::window::detail::WaylandWindowImpl::restyle(WindowStyle style) {
             xdg_toplevel_unset_fullscreen(m_xdg_toplevel);
             xdg_toplevel_set_maximized(m_xdg_toplevel);
             return;
-        case WindowStyle::Fullscreen:
-            xdg_toplevel_set_fullscreen(m_xdg_toplevel, nullptr);
-            return;
+        case WindowStyle::Fullscreen: xdg_toplevel_set_fullscreen(m_xdg_toplevel, nullptr); return;
         }
     } else {
         condition::unreachable();
@@ -262,8 +237,7 @@ bool core::window::detail::WaylandWindowImpl::next_frame() {
             m_frame_end = clock_t::now();
             using units = std::chrono::microseconds;
             const auto frame_time =
-                std::chrono::duration_cast<units>(m_frame_end - m_frame_beg)
-                    .count();
+                std::chrono::duration_cast<units>(m_frame_end - m_frame_beg).count();
             log::trace("Frame rendered in: {}us", frame_time);
             m_counter.add(static_cast<size_t>(frame_time));
             std::print("Frame Time (us): {}\r", m_counter.average());
@@ -308,12 +282,8 @@ void core::window::detail::WaylandWindowImpl::new_buffer() {
             check_condition(false, "Could not setup shm data");
         }
         m_pixbuf      = {pixbuf, std::extents(bufwidth, bufheight)};
-        m_wl_shm_pool = wl_shm_create_pool(
-            m_wl_shm,
-            m_shm_fd,
-            numeric_cast<int32_t>(buflen)
-        );
-        m_wl_buffer = wl_shm_pool_create_buffer(
+        m_wl_shm_pool = wl_shm_create_pool(m_wl_shm, m_shm_fd, numeric_cast<int32_t>(buflen));
+        m_wl_buffer   = wl_shm_pool_create_buffer(
             m_wl_shm_pool,
             0,
             numeric_cast<int32_t>(bufwidth),

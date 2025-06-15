@@ -4,10 +4,9 @@
 #    include <wayland-client-protocol.h>
 #    include <xdg-shell-client-protocol.h>
 
-const wl_registry_listener
-    core::window::detail::WaylandWindowImpl::m_wl_registry_listener = {
-        .global        = wl_registry_handle_global,
-        .global_remove = wl_registry_handle_global_remove,
+const wl_registry_listener core::window::detail::WaylandWindowImpl::m_wl_registry_listener = {
+    .global        = wl_registry_handle_global,
+    .global_remove = wl_registry_handle_global_remove,
 };
 
 void core::window::detail::WaylandWindowImpl::wl_registry_handle_global(
@@ -21,9 +20,8 @@ void core::window::detail::WaylandWindowImpl::wl_registry_handle_global(
     const std::string interface_str{interface};
     if (interface_str == wl_shm_interface.name) {
         core::log::trace("Handled Global: {}", interface);
-        this_impl->m_wl_shm = static_cast<wl_shm*>(
-            wl_registry_bind(registry, name, &wl_shm_interface, version)
-        );
+        this_impl->m_wl_shm =
+            static_cast<wl_shm*>(wl_registry_bind(registry, name, &wl_shm_interface, version));
     } else if (interface_str == wl_compositor_interface.name) {
         core::log::trace("Handled Global: {}", interface);
         this_impl->m_wl_compositor = static_cast<wl_compositor*>(
@@ -34,21 +32,12 @@ void core::window::detail::WaylandWindowImpl::wl_registry_handle_global(
         this_impl->m_xdg_wm_base = static_cast<xdg_wm_base*>(
             wl_registry_bind(registry, name, &xdg_wm_base_interface, version)
         );
-        xdg_wm_base_add_listener(
-            this_impl->m_xdg_wm_base,
-            &m_xdg_wm_base_listener,
-            this_impl
-        );
+        xdg_wm_base_add_listener(this_impl->m_xdg_wm_base, &m_xdg_wm_base_listener, this_impl);
     } else if (interface_str == wl_seat_interface.name) {
         core::log::trace("Handled Global: {}", interface);
-        this_impl->m_wl_seat = static_cast<wl_seat*>(
-            wl_registry_bind(registry, name, &wl_seat_interface, version)
-        );
-        wl_seat_add_listener(
-            this_impl->m_wl_seat,
-            &m_wl_seat_listener,
-            this_impl
-        );
+        this_impl->m_wl_seat =
+            static_cast<wl_seat*>(wl_registry_bind(registry, name, &wl_seat_interface, version));
+        wl_seat_add_listener(this_impl->m_wl_seat, &m_wl_seat_listener, this_impl);
     } else {
         core::log::trace("Unhandled Global: {}", interface);
     }

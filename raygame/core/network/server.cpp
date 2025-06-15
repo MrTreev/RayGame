@@ -23,10 +23,7 @@ core::network::Server::Server()
     // read port
     socklen_t addr_len = sizeof(m_addr);
     getsockname(m_fd, reinterpret_cast<sockaddr*>(&m_addr), &addr_len);
-    core::log::debug(
-        "server is on port %d\n",
-        static_cast<int>(ntohs(m_addr.sin_port))
-    );
+    core::log::debug("server is on port %d\n", static_cast<int>(ntohs(m_addr.sin_port)));
 
     if (listen(m_fd, 1) != 0) {
         perror("listen error:");
@@ -36,8 +33,7 @@ core::network::Server::Server()
     // accept incoming connection
     sockaddr_storage caddr{};
     socklen_t        caddr_len = sizeof(caddr);
-    const int        cfd =
-        accept(m_fd, reinterpret_cast<sockaddr*>(&caddr), &caddr_len);
+    const int        cfd       = accept(m_fd, reinterpret_cast<sockaddr*>(&caddr), &caddr_len);
 
     // read from client with recv!
     std::array<char, BUF_SIZE> buf{};

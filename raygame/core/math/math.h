@@ -10,7 +10,7 @@
 
 namespace core::math {
 namespace constants {
-constexpr float PI = std::numbers::pi_v<float>; // NOLINT(*-identifier-length)
+constexpr float PI      = std::numbers::pi_v<float>; // NOLINT(*-identifier-length)
 constexpr float DEG2RAD = (PI / 180.0F);
 constexpr float RAD2DEG = (180.0F / PI);
 constexpr float EPSILON = 0.000001F;
@@ -66,8 +66,7 @@ consteval auto work_type(std::integral auto aval, std::integral auto bval) {
     if constexpr (std::is_same<a_t, b_t>()) {
         return a_t{};
     } else if constexpr (std::is_signed<a_t>() == std::is_signed<b_t>()) {
-        if constexpr (std::numeric_limits<a_t>::max()
-                      > std::numeric_limits<b_t>::max()) {
+        if constexpr (std::numeric_limits<a_t>::max() > std::numeric_limits<b_t>::max()) {
             return a_t{};
         } else {
             return b_t{};

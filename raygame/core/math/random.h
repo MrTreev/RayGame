@@ -15,10 +15,7 @@ namespace core::math {
  */
 template<typename T>
 requires std::is_integral_v<T> && std::is_trivial_v<T>
-T rand(
-    T min = std::numeric_limits<T>::min(),
-    T max = std::numeric_limits<T>::max()
-);
+T rand(T min = std::numeric_limits<T>::min(), T max = std::numeric_limits<T>::max());
 
 extern template uint8_t  rand(uint8_t min, uint8_t max);
 extern template uint16_t rand(uint16_t min, uint16_t max);
@@ -40,27 +37,16 @@ extern template int64_t  rand(int64_t min, int64_t max);
  */
 template<typename T>
 requires std::is_integral_v<T> && std::is_trivial_v<T>
-std::vector<T> rand_n(
-    size_t amount,
-    T      min = std::numeric_limits<T>::min(),
-    T      max = std::numeric_limits<T>::max()
-);
+std::vector<T>
+rand_n(size_t amount, T min = std::numeric_limits<T>::min(), T max = std::numeric_limits<T>::max());
 
-extern template std::vector<uint8_t>
-rand_n(size_t amount, uint8_t min, uint8_t max);
-extern template std::vector<uint16_t>
-rand_n(size_t amount, uint16_t min, uint16_t max);
-extern template std::vector<uint32_t>
-rand_n(size_t amount, uint32_t min, uint32_t max);
-extern template std::vector<uint64_t>
-rand_n(size_t amount, uint64_t min, uint64_t max);
-extern template std::vector<int8_t>
-rand_n(size_t amount, int8_t min, int8_t max);
-extern template std::vector<int16_t>
-rand_n(size_t amount, int16_t min, int16_t max);
-extern template std::vector<int32_t>
-rand_n(size_t amount, int32_t min, int32_t max);
-extern template std::vector<int64_t>
-rand_n(size_t amount, int64_t min, int64_t max);
+extern template std::vector<uint8_t>  rand_n(size_t amount, uint8_t min, uint8_t max);
+extern template std::vector<uint16_t> rand_n(size_t amount, uint16_t min, uint16_t max);
+extern template std::vector<uint32_t> rand_n(size_t amount, uint32_t min, uint32_t max);
+extern template std::vector<uint64_t> rand_n(size_t amount, uint64_t min, uint64_t max);
+extern template std::vector<int8_t>   rand_n(size_t amount, int8_t min, int8_t max);
+extern template std::vector<int16_t>  rand_n(size_t amount, int16_t min, int16_t max);
+extern template std::vector<int32_t>  rand_n(size_t amount, int32_t min, int32_t max);
+extern template std::vector<int64_t>  rand_n(size_t amount, int64_t min, int64_t max);
 
 } // namespace core::math

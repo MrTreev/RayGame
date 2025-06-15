@@ -16,8 +16,7 @@ public:
 
             m_first = std::string_view(m_name.data(), space);
             m_last  = std::string_view(
-                m_name.cbegin()
-                    + static_cast<std::string::difference_type>(space + 1),
+                m_name.cbegin() + static_cast<std::string::difference_type>(space + 1),
                 m_name.cend()
             );
         }
@@ -27,8 +26,7 @@ public:
         : m_name(first + " " + last)
         , m_first(m_name.data(), first.size())
         , m_last(
-              m_name.cbegin()
-                  + static_cast<std::string::difference_type>(first.size() + 1),
+              m_name.cbegin() + static_cast<std::string::difference_type>(first.size() + 1),
               m_name.cend()
           ) {}
 
