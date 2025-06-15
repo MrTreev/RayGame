@@ -53,35 +53,42 @@ core::window::Window::Window(Vec2<size_t> size, std::string title, WindowStyle s
         using Imgui = detail::ImguiWindowImpl;
         if (backend == config::GuiBackend::IMGUI) {
             m_impl = std::make_unique<Imgui>(size, std::move(title), style);
+            return;
         }
     }
     if constexpr (config::EnabledBackends::cocoa()) {
         using Cocoa = detail::CocoaWindowImpl;
         if (backend == config::GuiBackend::COCOA) {
             m_impl = std::make_unique<Cocoa>(size, std::move(title), style);
+            return;
         }
     }
     if constexpr (config::EnabledBackends::dwm()) {
         using Dwm = detail::DwmWindowImpl;
         if (backend == config::GuiBackend::DWM) {
             m_impl = std::make_unique<Dwm>(size, std::move(title), style);
+            return;
         }
     }
     if constexpr (config::EnabledBackends::wayland()) {
         using Wayland = detail::WaylandWindowImpl;
         if (backend == config::GuiBackend::WAYLAND) {
             m_impl = std::make_unique<Wayland>(size, std::move(title), style);
+            return;
         }
     }
     if constexpr (config::EnabledBackends::x11()) {
         using X11 = detail::X11WindowImpl;
         if (backend == config::GuiBackend::X11) {
             m_impl = std::make_unique<X11>(size, std::move(title), style);
+            return;
         }
     }
 }
 
-core::window::detail::WindowImpl::~WindowImpl() = default;
+core::window::detail::WindowImpl::~WindowImpl() {
+    core::log::debug("Destroying Window: {}", m_title);
+};
 
 void core::window::detail::WindowImpl::draw([[maybe_unused]] const drawing::ImageView& image) {
     condition::unreachable();

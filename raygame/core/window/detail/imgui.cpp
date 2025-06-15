@@ -5,7 +5,6 @@
 #include "raygame/core/math/arithmetic/safe_add.h"
 #include "raygame/core/math/numeric_cast.h"
 #include "raygame/core/window/detail/imgui/imgui_include.h"
-#include <print>
 
 namespace core::window::detail {
 namespace {
@@ -44,10 +43,16 @@ ImguiWindowImpl::ImguiWindowImpl(Vec2<size_t> size, std::string title, WindowSty
 
         // NOLINTBEGIN(*-signed-bitwise)
         m_io->ConfigFlags  = ImGuiConfigFlags_None;
-        m_window_flags    |= ImGuiWindowFlags_NoNav;
-        m_window_flags    |= ImGuiWindowFlags_NoDecoration;
-        m_window_flags    |= ImGuiWindowFlags_NoResize;
-        m_window_flags    |= ImGuiWindowFlags_NoInputs;
+        m_io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+        m_io->ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
+        m_window_flags |= ImGuiWindowFlags_NoDecoration;
+        m_window_flags |= ImGuiWindowFlags_NoInputs;
+        m_window_flags |= ImGuiWindowFlags_NoMove;
+        m_window_flags |= ImGuiWindowFlags_NoNav;
+        m_window_flags |= ImGuiWindowFlags_NoResize;
+        m_window_flags |= ImGuiWindowFlags_NoTitleBar;
+
         // NOLINTEND(*-signed-bitwise)
 
         ImGui_ImplGlfw_InitForOpenGL(m_window, true);
@@ -109,9 +114,10 @@ void ImguiWindowImpl::render_frame() {
     ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
 #ifdef IMGUI_HAS_VIEWPORT
     ImGuiViewport* viewport = ImGui::GetMainViewport();
-    ImGui::SetNextWindowPos(viewport->GetWorkPos());
-    ImGui::SetNextWindowSize(viewport->GetWorkSize());
-    ImGui::SetNextWindowViewport(viewport->ID);
+    ImGui::SetWindowPos(viewport->WorkPos);
+    ImGui::SetWindowSize(viewport->WorkSize);
+    core::log::debug("Pos: ({}, {})", viewport->Pos.x, viewport->Pos.y);
+    core::log::debug("Size: ({}, {})", viewport->Size.x, viewport->Size.y);
 #else
     ImGui::SetNextWindowPos(ImVec2(0.0F, 0.0F));
     ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);

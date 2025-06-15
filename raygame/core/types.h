@@ -57,14 +57,14 @@ public:
     constexpr explicit operator std::string() const {
         if constexpr (std::is_same_v<decltype(m_first), decltype(m_second)>) {
             return std::format(
-                "Pair<{}>(a: {}, b: {})",
+                "Pair<{}>({}, {})",
                 core::debug::type_name(m_first),
                 m_first,
                 m_second
             );
         } else {
             return std::format(
-                "Pair<{}, {}>(a: {}, b: {})",
+                "Pair<{}, {}>({}, {})",
                 core::debug::type_name(m_first),
                 core::debug::type_name(m_second),
                 m_first,
@@ -103,7 +103,7 @@ public:
         if constexpr (std::is_same_v<decltype(m_first), decltype(m_second)>
                       && std::is_same_v<decltype(m_first), decltype(m_third)>) {
             return std::format(
-                "Triple<{}>(a: {}, b: {}, c: {})",
+                "Triple<{}>({}, {}, {})",
                 core::debug::type_name(m_first),
                 m_first,
                 m_second,
@@ -111,7 +111,7 @@ public:
             );
         } else {
             return std::format(
-                "Triple<{}, {}, {}>(a: {}, b: {}, c: {})",
+                "Triple<{}, {}, {}>({}, {}, {})",
                 core::debug::type_name(m_first),
                 core::debug::type_name(m_second),
                 core::debug::type_name(m_third),
@@ -163,7 +163,7 @@ public:
                       && std::is_same_v<decltype(m_first), decltype(m_third)>
                       && std::is_same_v<decltype(m_first), decltype(m_fourth)>) {
             return std::format(
-                "Quad<{}>(a: {}, b: {}, c: {}, d: {})",
+                "Quad<{}>({}, {}, {}, {})",
                 core::debug::type_name(m_first),
                 m_first,
                 m_second,
@@ -172,7 +172,7 @@ public:
             );
         } else {
             return std::format(
-                "Quad<{}, {}, {}, {}>(a: {}, b: {}, c: {}, d: {})",
+                "Quad<{}, {}, {}, {}>({}, {}, {}, {})",
                 core::debug::type_name(m_first),
                 core::debug::type_name(m_second),
                 core::debug::type_name(m_third),

@@ -15,16 +15,4 @@ using zpp::bits::data_in;
 using zpp::bits::data_in_out;
 using zpp::bits::data_out;
 
-namespace literals {
-using namespace zpp::bits::literals;
-} // namespace literals
-
-namespace endian {
-using zpp::bits::endian::big;
-using zpp::bits::endian::little;
-using zpp::bits::endian::native;
-using zpp::bits::endian::network;
-using zpp::bits::endian::swapped;
-} // namespace endian
-
 } // namespace core::serialise

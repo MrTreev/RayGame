@@ -9,6 +9,11 @@ raygame_lib(
 )
 add_library(RayGame::Core::Window ALIAS RayGameCoreWindow)
 
+if(NOT RAYGAME_GUI_DISABLE_IMGUI)
+    target_sources(RayGameCoreWindow PRIVATE detail/imgui.h detail/imgui.cpp)
+    target_link_libraries(RayGameCoreWindow PRIVATE RayGame::External::Imgui)
+endif()
+
 if(RAYGAME_OS_IS_MACOS AND NOT RAYGAME_GUI_DISABLE_COCOA)
     target_sources(RayGameCoreWindow PRIVATE detail/cocoa.h detail/cocoa.cpp)
     target_link_libraries(RayGameCoreWindow PRIVATE )

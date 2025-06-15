@@ -12,6 +12,7 @@ constexpr std::array<T, N - 1> arr2img(std::array<T, N> in_arr) {
     return out;
 }
 } // namespace
+
 [[maybe_unused]]
 constinit const std::array<core::Pixel, 92UL * 96UL> icon_argb8888 =
     std::bit_cast<std::array<core::Pixel, 92UL * 96UL>>(arr2img(cottage_image));

@@ -3,7 +3,7 @@
 ## To-Do list
 - [ ] Document coding standards
     - Explicit private, public, etc
-    - Default-initializers
+    - Default-initialisers
     - Immediately-invoked lambda expression (TODO)
     - Use final when you have no intention of deriving
     - noexcept(bool) for all functions

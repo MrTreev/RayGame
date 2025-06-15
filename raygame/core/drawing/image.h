@@ -40,6 +40,11 @@ public:
     using ImgRect::right;
 
     [[nodiscard]]
+    constexpr auto data() const {
+        return m_mdspan.data_handle();
+    }
+
+    [[nodiscard]]
     constexpr dis_t size() const {
         return m_mdspan.size();
     }
