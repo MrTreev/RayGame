@@ -54,8 +54,6 @@ public:
 
     second_t second() const { return m_second; }
 
-    std::tuple<first_t, second_t>&& get() const { return {m_first, m_second}; }
-
     constexpr explicit operator std::string() const {
         if constexpr (std::is_same_v<decltype(m_first), decltype(m_second)>) {
             return std::format(
@@ -74,12 +72,11 @@ public:
             );
         }
     }
+
+    RAYGAME_ADD_STRUCTURED_BINDINGS_2(m_first, m_second)
 };
 
-template<
-    typename t_first_t,
-    typename t_second_t = t_first_t,
-    typename t_third_t  = t_second_t>
+template<typename t_first_t, typename t_second_t = t_first_t, typename t_third_t = t_second_t>
 class Triple {
 private:
     t_first_t  m_first;
@@ -101,10 +98,6 @@ public:
     second_t second() const { return m_second; }
 
     third_t third() const { return m_third; }
-
-    std::tuple<first_t, second_t, third_t>&& get() const {
-        return {m_first, m_second, m_third};
-    }
 
     constexpr explicit operator std::string() const {
         if constexpr (std::is_same_v<decltype(m_first), decltype(m_second)>
@@ -128,6 +121,8 @@ public:
             );
         }
     }
+
+    RAYGAME_ADD_STRUCTURED_BINDINGS_3(m_first, m_second, m_third)
 };
 
 template<
@@ -161,15 +156,12 @@ public:
 
     third_t fourth() const { return m_fourth; }
 
-    std::tuple<first_t, second_t, third_t, fourth_t>&& get() const {
-        return {m_first, m_second, m_third, m_fourth};
-    }
+    auto operator<=>(const Quad&) const = default;
 
     constexpr explicit operator std::string() const {
         if constexpr (std::is_same_v<decltype(m_first), decltype(m_second)>
                       && std::is_same_v<decltype(m_first), decltype(m_third)>
-                      && std::
-                          is_same_v<decltype(m_first), decltype(m_fourth)>) {
+                      && std::is_same_v<decltype(m_first), decltype(m_fourth)>) {
             return std::format(
                 "Quad<{}>(a: {}, b: {}, c: {}, d: {})",
                 core::debug::type_name(m_first),
@@ -192,127 +184,27 @@ public:
             );
         }
     }
+
+    RAYGAME_ADD_STRUCTURED_BINDINGS_4(m_first, m_second, m_third, m_fourth)
 };
 } // namespace core
 
+// clang-format off
 // Parentheses would be incorrect here
 // NOLINTBEGIN(*-macro-usage,bugprone-macro-parentheses)
-#define RAYGAME_MAKE_FORMAT_TEMPLATE_1(classname)                              \
-    template<typename TNAME>                                                   \
-    struct std::formatter<classname<TNAME>, char> {                            \
-        template<typename ParseContext>                                        \
-        constexpr ParseContext::iterator parse(ParseContext& ctx) {            \
-            auto iter = ctx.begin();                                           \
-            if (iter == ctx.end()) {                                           \
-                return iter;                                                   \
-            }                                                                  \
-            if (iter != ctx.end() && *iter != '}') {                           \
-                throw std::format_error("Invalid format args for classname."); \
-            }                                                                  \
-            return iter;                                                       \
-        }                                                                      \
-        template<class FmtContext>                                             \
-        FmtContext::iterator                                                   \
-        format(classname<TNAME> classitem, FmtContext& ctx) const {            \
-            std::ostringstream out{std::string(classitem)};                    \
-            return std::ranges::copy(std::move(out).str(), ctx.out()).out;     \
-        }                                                                      \
-    }
-
-#define RAYGAME_MAKE_FORMAT_TEMPLATE_2(classname)                              \
-    template<typename FIRST, typename SECOND>                                  \
-    struct std::formatter<classname<FIRST, SECOND>, char> {                    \
-        template<typename ParseContext>                                        \
-        constexpr ParseContext::iterator parse(ParseContext& ctx) {            \
-            auto iter = ctx.begin();                                           \
-            if (iter == ctx.end()) {                                           \
-                return iter;                                                   \
-            }                                                                  \
-            if (iter != ctx.end() && *iter != '}') {                           \
-                throw std::format_error("Invalid format args for classname."); \
-            }                                                                  \
-            return iter;                                                       \
-        }                                                                      \
-        template<class FmtContext>                                             \
-        FmtContext::iterator                                                   \
-        format(classname<FIRST, SECOND> classitem, FmtContext& ctx) const {    \
-            std::ostringstream out{std::string(classitem)};                    \
-            return std::ranges::copy(std::move(out).str(), ctx.out()).out;     \
-        }                                                                      \
-    }
-
-#define RAYGAME_MAKE_FORMAT_TEMPLATE_3(classname)                              \
-    template<typename FIRST, typename SECOND, typename THIRD>                  \
-    struct std::formatter<classname<FIRST, SECOND, THIRD>, char> {             \
-        template<typename ParseContext>                                        \
-        constexpr ParseContext::iterator parse(ParseContext& ctx) {            \
-            auto iter = ctx.begin();                                           \
-            if (iter == ctx.end()) {                                           \
-                return iter;                                                   \
-            }                                                                  \
-            if (iter != ctx.end() && *iter != '}') {                           \
-                throw std::format_error("Invalid format args for classname."); \
-            }                                                                  \
-            return iter;                                                       \
-        }                                                                      \
-        template<class FmtContext>                                             \
-        FmtContext::iterator format(                                           \
-            classname<FIRST, SECOND, THIRD> classitem,                         \
-            FmtContext&                     ctx                                \
-        ) const {                                                              \
-            std::ostringstream out{std::string(classitem)};                    \
-            return std::ranges::copy(std::move(out).str(), ctx.out()).out;     \
-        }                                                                      \
-    }
-
-#define RAYGAME_MAKE_FORMAT_TEMPLATE_4(classname)                              \
-    template<typename FIRST, typename SECOND, typename THIRD, typename FOUR>   \
-    struct std::formatter<classname<FIRST, SECOND, THIRD, FOUR>, char> {       \
-        template<typename ParseContext>                                        \
-        constexpr ParseContext::iterator parse(ParseContext& ctx) {            \
-            auto iter = ctx.begin();                                           \
-            if (iter == ctx.end()) {                                           \
-                return iter;                                                   \
-            }                                                                  \
-            if (iter != ctx.end() && *iter != '}') {                           \
-                throw std::format_error("Invalid format args for classname."); \
-            }                                                                  \
-            return iter;                                                       \
-        }                                                                      \
-        template<class FmtContext>                                             \
-        FmtContext::iterator format(                                           \
-            classname<FIRST, SECOND, THIRD, FOUR> classitem,                   \
-            FmtContext&                           ctx                          \
-        ) const {                                                              \
-            std::ostringstream out{std::string(classitem)};                    \
-            return std::ranges::copy(std::move(out).str(), ctx.out()).out;     \
-        }                                                                      \
-    }
-
-#define RAYGAME_MAKE_FORMAT_FROM_STRING(classname)                             \
-    template<>                                                                 \
-    struct std::formatter<classname, char> {                                   \
-        template<typename ParseContext>                                        \
-        constexpr ParseContext::iterator parse(ParseContext& ctx) {            \
-            auto iter = ctx.begin();                                           \
-            if (iter == ctx.end()) {                                           \
-                return iter;                                                   \
-            }                                                                  \
-            if (iter != ctx.end() && *iter != '}') {                           \
-                throw std::format_error("Invalid format args for classname."); \
-            }                                                                  \
-            return iter;                                                       \
-        }                                                                      \
-        template<class FmtContext>                                             \
-        FmtContext::iterator                                                   \
-        format(classname classitem, FmtContext& ctx) const {                   \
-            std::ostringstream clsout{std::string(classitem)};                 \
-            return std::ranges::copy(std::move(clsout).str(), ctx.out()).out;  \
-        }                                                                      \
-    }
-
+#define RAYGAME_MAKE_FORMAT_TEMPLATE_1(classname) template<typename TNAME> struct std::formatter<classname<TNAME>, char> { template<typename ParseContext> constexpr ParseContext::iterator parse(ParseContext& ctx) { auto iter = ctx.begin(); if (iter == ctx.end()) { return iter; } if (iter != ctx.end() && *iter != '}') { throw std::format_error("Invalid format args for classname."); } return iter; } template<class FmtContext> FmtContext::iterator format(classname<TNAME> classitem, FmtContext& ctx) const { std::ostringstream out{std::string(classitem)}; return std::ranges::copy(std::move(out).str(), ctx.out()).out; } }
+#define RAYGAME_MAKE_FORMAT_TEMPLATE_2(classname) template<typename FIRST, typename SECOND> struct std::formatter<classname<FIRST, SECOND>, char> { template<typename ParseContext> constexpr ParseContext::iterator parse(ParseContext& ctx) { auto iter = ctx.begin(); if (iter == ctx.end()) { return iter; } if (iter != ctx.end() && *iter != '}') { throw std::format_error("Invalid format args for classname."); } return iter; } template<class FmtContext> FmtContext::iterator format(classname<FIRST, SECOND> classitem, FmtContext& ctx) const { std::ostringstream out{std::string(classitem)}; return std::ranges::copy(std::move(out).str(), ctx.out()).out; } }
+#define RAYGAME_MAKE_FORMAT_TEMPLATE_3(classname) template<typename FIRST, typename SECOND, typename THIRD> struct std::formatter<classname<FIRST, SECOND, THIRD>, char> { template<typename ParseContext> constexpr ParseContext::iterator parse(ParseContext& ctx) { auto iter = ctx.begin(); if (iter == ctx.end()) { return iter; } if (iter != ctx.end() && *iter != '}') { throw std::format_error("Invalid format args for classname."); } return iter; } template<class FmtContext> FmtContext::iterator format( classname<FIRST, SECOND, THIRD> classitem, FmtContext& ctx ) const { std::ostringstream out{std::string(classitem)}; return std::ranges::copy(std::move(out).str(), ctx.out()).out; } }
+#define RAYGAME_MAKE_FORMAT_TEMPLATE_4(classname) template<typename FIRST, typename SECOND, typename THIRD, typename FOUR> struct std::formatter<classname<FIRST, SECOND, THIRD, FOUR>, char> { template<typename ParseContext> constexpr ParseContext::iterator parse(ParseContext& ctx) { auto iter = ctx.begin(); if (iter == ctx.end()) { return iter; } if (iter != ctx.end() && *iter != '}') { throw std::format_error("Invalid format args for classname."); } return iter; } template<class FmtContext> FmtContext::iterator format( classname<FIRST, SECOND, THIRD, FOUR> classitem, FmtContext& ctx ) const { std::ostringstream out{std::string(classitem)}; return std::ranges::copy(std::move(out).str(), ctx.out()).out; } }
+#define RAYGAME_MAKE_FORMAT_FROM_STRING(classname) template<> struct std::formatter<classname, char> { template<typename ParseContext> constexpr ParseContext::iterator parse(ParseContext& ctx) { auto iter = ctx.begin(); if (iter == ctx.end()){return iter; } if (iter != ctx.end() && *iter != '}') { throw std::format_error("Invalid format args for classname."); } return iter; } template<class FmtContext> FmtContext::iterator format(classname classitem, FmtContext& ctx) const { std::ostringstream clsout{std::string(classitem)}; return std::ranges::copy(std::move(clsout).str(), ctx.out()).out; } }
 // NOLINTEND(*-macro-usage,bugprone-macro-parentheses)
+// clang-format on
 
 RAYGAME_MAKE_FORMAT_TEMPLATE_2(core::Pair);
+RAYGAME_ADD_TUPLE_INTERFACE(core::Pair, 2);
+
 RAYGAME_MAKE_FORMAT_TEMPLATE_3(core::Triple);
+RAYGAME_ADD_TUPLE_INTERFACE(core::Triple, 3);
+
 RAYGAME_MAKE_FORMAT_TEMPLATE_4(core::Quad);
+RAYGAME_ADD_TUPLE_INTERFACE(core::Quad, 4);

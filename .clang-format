@@ -6,7 +6,7 @@ Standard: Latest
 InsertNewlineAtEOF: true
 KeepEmptyLinesAtEOF: false
 
-ColumnLimit: 80
+ColumnLimit: 100
 IndentWidth: 4
 TabWidth: 4
 UseTab: Never
@@ -22,7 +22,7 @@ AllowShortBlocksOnASingleLine: Empty
 AllowShortCaseLabelsOnASingleLine: true
 AllowShortEnumsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: Inline
-AllowShortIfStatementsOnASingleLine: Never
+AllowShortIfStatementsOnASingleLine: WithoutElse
 AllowShortLambdasOnASingleLine: Empty
 AllowShortLoopsOnASingleLine: false
 AlwaysBreakAfterReturnType: None
@@ -56,7 +56,7 @@ IndentGotoLabels: true
 IndentPPDirectives: AfterHash
 IndentRequiresClause: false
 IndentWrappedFunctionNames: false
-InsertBraces: true
+InsertBraces: false
 InsertTrailingCommas: Wrapped
 KeepEmptyLinesAtTheStartOfBlocks: false
 LambdaBodyIndentation: OuterScope
@@ -120,8 +120,8 @@ SpaceBeforeParensOptions:
   AfterIfMacros: false
 IntegerLiteralSeparator:
   Decimal: 3
+  DecimalMinDigits: 5
   Hex: 2
   HexMinDigits: 4
-  DecimalMinDigits: 5
   Binary: 8
   BinaryMinDigits: 9

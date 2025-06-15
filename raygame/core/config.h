@@ -1,8 +1,11 @@
 #pragma once
+#include "raygame/core/macros.h"
 #include <cstddef>
 #include <cstdint>
 
-// NOLINTBEGIN(*-macro-usage)
+//=============================================================================
+// Machine-Specific Macros
+//=============================================================================
 
 /*!
  *  @defgroup macros_machine Machine-Specific Macros
@@ -18,10 +21,8 @@
 #define RAYGAME_CPP_23 202302L
 // clang-format on
 
-#if !defined(RAYGAME_DISABLE_SOURCE_LOCATION)
-#    if !defined(RAYGAME_MIN_CPP_VERSION)
-#        define RAYGAME_MIN_CPP_VERSION RAYGAME_CPP_23
-#    endif
+#if !defined(RAYGAME_DISABLE_SOURCE_LOCATION) && !defined(RAYGAME_MIN_CPP_VERSION)
+#    define RAYGAME_MIN_CPP_VERSION RAYGAME_CPP_23
 #endif
 
 #if RAYGAME_MIN_CPP_VERSION <= 0
@@ -40,10 +41,7 @@
 #endif
 
 #if (__cplusplus < RAYGAME_MIN_CPP_VERSION)
-static_assert(
-    false,
-    "This game's code uses features from the " RAYGAME_CPP_STR " standard"
-);
+static_assert(false, "This game's code uses features from the " RAYGAME_CPP_STR " standard");
 #endif
 
 #if !__has_include(<source_location>)
@@ -102,20 +100,20 @@ static_assert(
  */
 #if !defined(RAYGAME_DEFAULT_WINDOW_WIDTH)
 //! Default Window Width
-#    define RAYGAME_DEFAULT_WINDOW_WIDTH 640
+#    define RAYGAME_DEFAULT_WINDOW_WIDTH 640 // NOLINT(*-macro-usage)
 #endif
 #if !defined(RAYGAME_DEFAULT_WINDOW_HEIGHT)
 //! Default Window Height
-#    define RAYGAME_DEFAULT_WINDOW_HEIGHT 480
+#    define RAYGAME_DEFAULT_WINDOW_HEIGHT 480 // NOLINT(*-macro-usage)
 #endif
 #if !defined(RAYGAME_DEFAULT_WINDOW_TITLE)
 //! Default Window Title
-#    define RAYGAME_DEFAULT_WINDOW_TITLE "RayGame"
+#    define RAYGAME_DEFAULT_WINDOW_TITLE "RayGame" // NOLINT(*-macro-usage)
 #endif
 //! @}
 
 #if !defined(RAYGAME_TARGET_FPS)
-#    define RAYGAME_TARGET_FPS 60
+#    define RAYGAME_TARGET_FPS 60 // NOLINT(*-macro-usage)
 #endif
 
 /*!
@@ -137,7 +135,7 @@ static_assert(
 
 #if !defined(RAYGAME_RANDOM_INITIAL_SEED)
 //! Initial seed for randomness when in deterministic mode (uint64_t)
-#    define RAYGAME_RANDOM_INITIAL_SEED 42
+#    define RAYGAME_RANDOM_INITIAL_SEED 42 // NOLINT(*-macro-usage)
 #endif
 
 #if defined(RAYGAME_LOG_TRACE)
@@ -196,8 +194,8 @@ constexpr bool FORCE_GENERIC_IMPL = RAYGAME_FORCE_GENERIC_IMPL;
 #if !defined(RAYGAME_ASSERT)
 #    include <cassert>
 
-#    define RAYGAME_ASSERT(condition, ...)                                     \
-        assert(condition __VA_OPT__(, ) __VA_ARGS__)
+// NOLINTNEXTLINE(*-macro-usage)
+#    define RAYGAME_ASSERT(condition, ...) assert(condition __VA_OPT__(, ) __VA_ARGS__)
 #endif
 
 //=============================================================================
@@ -215,8 +213,7 @@ constexpr bool FORCE_GENERIC_IMPL = RAYGAME_FORCE_GENERIC_IMPL;
 #endif
 //! @}
 
-#if defined(__amd64__) || defined(_M_X64_M_AMD64) || defined(__x86_64__)       \
-    || defined(_M_X64)
+#if defined(__amd64__) || defined(_M_X64_M_AMD64) || defined(__x86_64__) || defined(_M_X64)
 #    define RAYGAME_ARCH_X86_64
 #elif defined(i386) || defined(__i386__) || defined(__i386) || defined(_M_IX86)
 #    define RAYGAME_ARCH_X86_32
@@ -347,9 +344,6 @@ static_assert(false, "Unknown Compiler");
 #    define ZPP_BITS_INLINE  [[msvc::forceinline]]
 #endif
 
-#define RAYGAME_PP_MACRO_STRINGIFY(x) RAYGAME_PP_STRINGIFY(x)
-#define RAYGAME_PP_STRINGIFY(x)       #x
-
 #if !defined(RAYGAME_CLANG_MIN)
 // NOLINTNEXTLINE(*-macro-usage)
 #    define RAYGAME_CLANG_MIN 19
@@ -370,7 +364,7 @@ static_assert(false, "Unknown Compiler");
 #if defined(RAYGAME_CC_CLANG) && !defined(RAYGAME_DOXYGEN_INVOKED)
 #    define RAYGAME_PRAGMA_TO_STR(x)            _Pragma(#x)
 #    define RAYGAME_CLANG_SUPPRESS_WARNING_PUSH _Pragma("clang diagnostic push")
-#    define RAYGAME_CLANG_SUPPRESS_WARNING(warnstr)                            \
+#    define RAYGAME_CLANG_SUPPRESS_WARNING(warnstr)                                                \
         RAYGAME_PRAGMA_TO_STR(clang diagnostic ignored warnstr)
 #    define RAYGAME_CLANG_SUPPRESS_WARNING_POP _Pragma("clang diagnostic pop")
 #else
@@ -381,7 +375,7 @@ static_assert(false, "Unknown Compiler");
 #if defined(RAYGAME_CC_GCC) && !defined(RAYGAME_DOXYGEN_INVOKED)
 #    define RAYGAME_PRAGMA_TO_STR(x)          _Pragma(#x)
 #    define RAYGAME_GCC_SUPPRESS_WARNING_PUSH _Pragma("GCC diagnostic push")
-#    define RAYGAME_GCC_SUPPRESS_WARNING(warnstr)                              \
+#    define RAYGAME_GCC_SUPPRESS_WARNING(warnstr)                                                  \
         RAYGAME_PRAGMA_TO_STR(GCC diagnostic ignored warnstr)
 #    define RAYGAME_GCC_SUPPRESS_WARNING_POP _Pragma("GCC diagnostic pop")
 #else
@@ -413,8 +407,7 @@ enum class Compiler : uint8_t {
 constexpr Compiler COMPILER = Compiler::RAYGAME_COMPILER;
 
 //! Compiler has GCC-like compiler features
-constexpr bool COMPILER_IS_GCC_LIKE =
-    (COMPILER == Compiler::GCC || COMPILER == Compiler::CLANG);
+constexpr bool COMPILER_IS_GCC_LIKE = (COMPILER == Compiler::GCC || COMPILER == Compiler::CLANG);
 } // namespace core::config
 
 //=============================================================================
@@ -439,16 +432,14 @@ constexpr bool COMPILER_IS_GCC_LIKE =
 #if (__STDC_HOSTED__ == 1)
 #    if defined(__ANDROID__)
 #        define RAYGAME_OS_ANDROID
-#    elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)  \
-        || defined(__bsdi__)
+#    elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__bsdi__)
 #        define RAYGAME_OS_BSD
 #    elif defined(__GNU__) || defined(__gnu_hurd__)
 #        define RAYGAME_OS_HURD
 #        warning "Imagine using hurd, who are you? Richard Stallman?"
 #    elif defined(__gnu_linux__) || defined(__linux__)
 #        define RAYGAME_OS_LINUX
-#    elif defined(macintosh) || defined(Macintosh)                             \
-        || (defined(__APPLE__) && defined(__MACH__))
+#    elif defined(macintosh) || defined(Macintosh) || (defined(__APPLE__) && defined(__MACH__))
 #        define RAYGAME_OS_MAC
 #    elif defined(__QNX__) || defined(__QNXNTO__)
 #        define RAYGAME_OS_QNX
@@ -461,7 +452,7 @@ constexpr bool COMPILER_IS_GCC_LIKE =
 #    elif defined(_WIN32)
 #        define RAYGAME_OS_WIN32
 #        warning "Imagine using a niche videogame operating system..."
-#        warning                                                               \
+#        warning                                                                                   \
             "Couldn't be me, but at least the 32-bit versions"                 \
             " generally didn't have as much spyware"
 #    else
@@ -562,8 +553,7 @@ enum class BuildType : bool {
     RELEASE,
 };
 
-constexpr BuildType BUILD_TYPE =
-    detail::debug() ? BuildType::DEBUG : BuildType::RELEASE;
+constexpr BuildType BUILD_TYPE = detail::debug() ? BuildType::DEBUG : BuildType::RELEASE;
 } // namespace core::config
 
 //=============================================================================
@@ -644,32 +634,3 @@ consteval bool x256() {
 #endif
 }
 } // namespace core::config::simd
-
-//=============================================================================
-// Development Utility Macros
-//=============================================================================
-
-// Parentheses would be incorrect here
-// NOLINTBEGIN(bugprone-macro-parentheses)
-#define RAYGAME_TEMPLATE_INTS(name)                                            \
-    template class name<uint8_t>;                                              \
-    template class name<uint16_t>;                                             \
-    template class name<uint32_t>;                                             \
-    template class name<uint64_t>;                                             \
-    template class name<int8_t>;                                               \
-    template class name<int16_t>;                                              \
-    template class name<int32_t>;                                              \
-    template class name<int64_t>
-
-#define RAYGAME_EXTERN_TEMPLATE_INTS(name)                                     \
-    extern template class name<uint8_t>;                                       \
-    extern template class name<uint16_t>;                                      \
-    extern template class name<uint32_t>;                                      \
-    extern template class name<uint64_t>;                                      \
-    extern template class name<int8_t>;                                        \
-    extern template class name<int16_t>;                                       \
-    extern template class name<int32_t>;                                       \
-    extern template class name<int64_t>
-
-// NOLINTEND(bugprone-macro-parentheses)
-// NOLINTEND(*-macro-usage)

@@ -17,4 +17,5 @@ WarningsAsErrors: ''
 AnalyzeTemporaryDtors: false
 SystemHeaders:   false
 CheckOptions:
+    readability-braces-around-statements.ShortStatementLines: 1
     readability-identifier-naming.MemberPrefix: 'm_'
