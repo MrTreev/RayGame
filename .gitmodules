@@ -1,7 +1,3 @@
-[submodule "third_party/doctest"]
-	path = third_party/doctest
-	url = https://github.com/doctest/doctest.git
-	branch = master
 [submodule "third_party/zpp_bits"]
 	path = third_party/zpp_bits
 	url = https://github.com/eyalz800/zpp_bits.git
