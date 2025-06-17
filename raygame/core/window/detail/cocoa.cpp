@@ -1,11 +1,17 @@
 #include "raygame/core/window/detail/cocoa.h"
+#include "raygame/core/condition.h"
+#include "raygame/core/window/detail/backends.h"
 
 core::window::detail::CocoaWindowImpl::CocoaWindowImpl(
     Vec2<size_t> size,
     std::string  title,
     WindowStyle  style
 )
-    : WindowImpl(size, std::move(title), style) {}
+    : WindowImpl(size, std::move(title), style) {
+    if constexpr (!config::EnabledBackends::cocoa()) {
+        condition::unreachable();
+    }
+}
 
 core::window::detail::CocoaWindowImpl::~CocoaWindowImpl() = default;
 

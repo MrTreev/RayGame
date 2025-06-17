@@ -1,11 +1,17 @@
 #include "raygame/core/window/detail/dwm.h"
+#include "raygame/core/condition.h"
+#include "raygame/core/window/detail/backends.h"
 
 core::window::detail::DwmWindowImpl::DwmWindowImpl(
     Vec2<size_t> size,
     std::string  title,
     WindowStyle  style
 )
-    : WindowImpl(size, std::move(title), style) {}
+    : WindowImpl(size, std::move(title), style) {
+    if constexpr (!config::EnabledBackends::dwm()) {
+        condition::unreachable();
+    }
+}
 
 core::window::detail::DwmWindowImpl::~DwmWindowImpl() = default;
 

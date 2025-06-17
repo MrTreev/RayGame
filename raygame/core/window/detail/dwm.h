@@ -1,11 +1,8 @@
 #pragma once
-#include "raygame/core/window/detail/backends.h"
 #include "raygame/core/window/window.h"
 
 namespace core::window::detail {
 class DwmWindowImpl final: public WindowImpl {
-    consteval bool enabled() { return config::EnabledBackends::dwm(); }
-
 public:
     explicit DwmWindowImpl(
         Vec2<size_t> size  = DEFAULT_WINDOW_SIZE,
@@ -29,9 +26,5 @@ public:
 
     [[nodiscard]]
     bool should_close() const final;
-
-private:
-#if defined(RAYGAME_GUI_BACKEND_DWM)
-#endif
 };
 } // namespace core::window::detail
