@@ -6,18 +6,19 @@ RAYGAME_CLANG_SUPPRESS_WARNING_PUSH
 RAYGAME_CLANG_SUPPRESS_WARNING("-Wunsafe-buffer-usage")
 #    include <X11/Xlib.h>
 RAYGAME_CLANG_SUPPRESS_WARNING_POP
+#else
+class Display;
+
+class XEvent {};
+
+class Window {};
 #endif
 
 namespace core::window::detail {
 class X11WindowImpl final: public WindowImpl {
-    consteval bool enabled() { return config::EnabledBackends::x11(); }
-
 public:
-    explicit X11WindowImpl(
-        Vec2<size_t> size  = DEFAULT_WINDOW_SIZE,
-        std::string  title = DEFAULT_WINDOW_TITLE,
-        WindowStyle  style = DEFAULT_WINDOW_STYLE
-    );
+    RAYGAME_RETURN_X11
+    X11WindowImpl(Vec2<size_t> size, std::string title, WindowStyle style);
     X11WindowImpl(const X11WindowImpl&)           = delete;
     X11WindowImpl operator=(const X11WindowImpl&) = delete;
     X11WindowImpl(X11WindowImpl&&)                = default;
@@ -37,11 +38,9 @@ public:
     bool should_close() const final;
 
 private:
-#if defined(RAYGAME_GUI_BACKEND_X11)
     ::Display* m_display = nullptr;
     int        m_screen  = 0;
     ::XEvent   m_event{};
     ::Window   m_window{};
-#endif
 };
 } // namespace core::window::detail

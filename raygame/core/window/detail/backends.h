@@ -1,5 +1,5 @@
 #pragma once
-#include "raygame/core/config.h"
+#include "raygame/core/config.h" // IWYU pragma: export
 #if !defined(NDEBUG)
 #    define RAYGAME_GUI_BACKEND_IMGUI
 #else
@@ -13,10 +13,6 @@
 #    elif defined(RAYGAME_OS_WIN32) || defined(RAYGAME_OS_WIN64)
 #        if !defined(RAYGAME_GUI_BACKEND_DWM)
 #            define RAYGAME_GUI_BACKEND_DWM
-#        endif
-#    elif defined(RAYGAME_OS_TEMPLEOS)
-#        if !defined(RAYGAME_GUI_BACKEND_TEMPLE)
-#            define RAYGAME_GUI_BACKEND_TEMPLE
 #        endif
 #    elif defined(RAYGAME_OS_MAC)
 #        if !defined(RAYGAME_GUI_BACKEND_COCOA)
@@ -54,14 +50,6 @@ public:
 #endif
     }
 
-    static consteval bool temple() {
-#if defined(RAYGAME_GUI_BACKEND_TEMPLE)
-        return true;
-#else
-        return false;
-#endif
-    }
-
     static consteval bool wayland() {
 #if defined(RAYGAME_GUI_BACKEND_WAYLAND)
         return true;
@@ -87,3 +75,33 @@ public:
     }
 };
 } // namespace core::config
+
+#if defined(RAYGAME_GUI_BACKEND_COCOA)
+#    define RAYGAME_RETURN_COCOA
+#else
+#    define RAYGAME_RETURN_COCOA [[noreturn]]
+#endif
+
+#if defined(RAYGAME_GUI_BACKEND_DWM)
+#    define RAYGAME_RETURN_DWM
+#else
+#    define RAYGAME_RETURN_DWM [[noreturn]]
+#endif
+
+#if defined(RAYGAME_GUI_BACKEND_WAYLAND)
+#    define RAYGAME_RETURN_WAYLAND
+#else
+#    define RAYGAME_RETURN_WAYLAND [[noreturn]]
+#endif
+
+#if defined(RAYGAME_GUI_BACKEND_X11)
+#    define RAYGAME_RETURN_X11
+#else
+#    define RAYGAME_RETURN_X11 [[noreturn]]
+#endif
+
+#if defined(RAYGAME_GUI_BACKEND_IMGUI)
+#    define RAYGAME_RETURN_IMGUI
+#else
+#    define RAYGAME_RETURN_IMGUI [[noreturn]]
+#endif

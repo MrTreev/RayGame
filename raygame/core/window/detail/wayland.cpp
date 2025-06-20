@@ -1,20 +1,17 @@
 #include "raygame/core/window/detail/wayland.h"
-#if defined(RAYGAME_GUI_BACKEND_WAYLAND)
-#    include "raygame/core/condition.h"
-#    include "raygame/core/drawing/pixel.h"
-#    include "raygame/core/logger.h"
-#    include "raygame/core/math/random.h"
-#    include <algorithm>
-#    include <chrono>
-#    include <fcntl.h>
-#    include <print>
-#    include <sys/mman.h>
-#    include <unistd.h>
-#    include <utility>
-#    include <wayland-client-core.h>
-#    include <wayland-client-protocol.h>
-#    include <xdg-shell-client-protocol.h>
-#    include <xkbcommon/xkbcommon.h>
+#include "raygame/core/condition.h"
+#include "raygame/core/drawing/pixel.h"
+#include "raygame/core/logger.h"
+#include "raygame/core/math/random.h"
+#include <algorithm>
+#include <fcntl.h>
+#include <print>
+#include <sys/mman.h>
+#include <unistd.h>
+#include <utility>
+#include <wayland-client-core.h>
+#include <wayland-client-protocol.h>
+#include <xdg-shell-client-protocol.h>
 
 namespace {
 using core::condition::check_condition;
@@ -64,6 +61,7 @@ int allocate_shm_file(size_t size) {
     return shm_fd;
 }
 
+[[maybe_unused]]
 wl_shm_format get_colour_format() {
     using core::colour::rgba;
     using std::bit_cast;
@@ -82,30 +80,25 @@ wl_shm_format get_colour_format() {
     case (BGRA): core::log::debug("Colour Format: BGRA"); return WL_SHM_FORMAT_BGRA8888;
     case (RGBA): core::log::debug("Colour Format: RGBA"); return WL_SHM_FORMAT_RGBA8888;
     default:
-        throw std::invalid_argument(
-            std::format(
-                "Could not determine colour format:\n"
-                "functdef: {:0>32b}\n"
-                "RGBA DEF: {:0>32b}\n"
-                "RGBA set: {:0>32b}{:0>32b}{:0>32b}{:0>32b}\n"
-                "BYTE NO:  00000000111111112222222233333333\n",
-                bit_cast<uint32_t>(colourval),
-                RGBA,
-                colourval.m_alpha,
-                colourval.m_blue,
-                colourval.m_green,
-                colourval.m_red
-            )
-        );
+        throw std::invalid_argument(std::format(
+            "Could not determine colour format:\n"
+            "functdef: {:0>32b}\n"
+            "RGBA DEF: {:0>32b}\n"
+            "RGBA set: {:0>32b}{:0>32b}{:0>32b}{:0>32b}\n"
+            "BYTE NO:  00000000111111112222222233333333\n",
+            bit_cast<uint32_t>(colourval),
+            RGBA,
+            colourval.m_alpha,
+            colourval.m_blue,
+            colourval.m_green,
+            colourval.m_red
+        ));
     }
 }
 } // namespace
 
-core::window::detail::WaylandWindowImpl::WaylandWindowImpl(
-    Vec2<size_t> size,
-    std::string  title,
-    WindowStyle  style
-)
+namespace core::window::detail {
+WaylandWindowImpl::WaylandWindowImpl(Vec2<size_t> size, std::string title, WindowStyle style)
     : WindowImpl(size, std::move(title), style) {
     if constexpr (config::EnabledBackends::wayland()) {
         m_wl_shm_format = get_colour_format();
@@ -148,208 +141,124 @@ core::window::detail::WaylandWindowImpl::WaylandWindowImpl(
     }
 }
 
-core::window::detail::WaylandWindowImpl::~WaylandWindowImpl() {
-    if constexpr (config::EnabledBackends::wayland()) {
-        wl_buffer_destroy(m_wl_buffer);
-        m_buffer_width  = 0;
-        m_buffer_height = 0;
-        wl_surface_destroy(m_wl_surface);
-        xdg_surface_destroy(m_xdg_surface);
-        xdg_toplevel_destroy(m_xdg_toplevel);
-    } else {
-        std::unreachable();
-    }
+WaylandWindowImpl::~WaylandWindowImpl() {
+    wl_buffer_destroy(m_wl_buffer);
+    m_buffer_width  = 0;
+    m_buffer_height = 0;
+    wl_surface_destroy(m_wl_surface);
+    xdg_surface_destroy(m_xdg_surface);
+    xdg_toplevel_destroy(m_xdg_toplevel);
 }
 
-void core::window::detail::WaylandWindowImpl::draw(const drawing::ImageView& image) {
-    if constexpr (config::EnabledBackends::wayland()) {
-        constexpr auto clamp = [](const pos_t val) {
-            return numeric_cast<dis_t>(std::max(pos_t(0), val));
-        };
-        constexpr auto domin = [](const dis_t max, const pos_t val) {
-            return numeric_cast<dis_t>(std::min(numeric_cast<pos_t>(max), val));
-        };
-        const dis_t row_left  = clamp(image.top());
-        const dis_t col_top   = clamp(image.left());
-        const dis_t row_right = domin(height(), image.bottom());
-        const dis_t col_bot   = domin(width(), image.right());
-        if (std::cmp_greater(col_top, width()) || std::cmp_greater(row_left, height())) {
-            return;
-        }
-
-        dis_t row{row_left};
-        dis_t col{col_top};
-        for (; row < row_right; ++row) {
-            col = col_top;
-            for (; col < col_bot; ++col) {
-                const auto therow  = math::safe_sub<dis_t>(row, image.pos_y());
-                const auto thecol  = math::safe_sub<dis_t>(col, image.pos_x());
-                m_pixbuf[row, col] = image.at(therow, thecol);
-            }
-        }
-        log::debug("Drawn: {} rows, {} cols", row - row_left, col - col_top);
-    } else {
-        condition::unreachable();
+void WaylandWindowImpl::draw(const drawing::ImageView& image) {
+    constexpr auto clamp = [](const pos_t val) {
+        return numeric_cast<dis_t>(std::max(pos_t(0), val));
+    };
+    constexpr auto domin = [](const dis_t max, const pos_t val) {
+        return numeric_cast<dis_t>(std::min(numeric_cast<pos_t>(max), val));
+    };
+    const dis_t row_left  = clamp(image.top());
+    const dis_t col_top   = clamp(image.left());
+    const dis_t row_right = domin(height(), image.bottom());
+    const dis_t col_bot   = domin(width(), image.right());
+    if (std::cmp_greater(col_top, width()) || std::cmp_greater(row_left, height())) {
+        return;
     }
+    dis_t row{row_left};
+    dis_t col{col_top};
+    for (; row < row_right; ++row) {
+        col = col_top;
+        for (; col < col_bot; ++col) {
+            const auto therow  = math::safe_sub<dis_t>(row, image.pos_y());
+            const auto thecol  = math::safe_sub<dis_t>(col, image.pos_x());
+            m_pixbuf[row, col] = image.at(therow, thecol);
+        }
+    }
+    log::debug("Drawn: {} rows, {} cols", row - row_left, col - col_top);
 }
 
-void core::window::detail::WaylandWindowImpl::restyle() {
+void WaylandWindowImpl::restyle() {
     restyle(get_style());
 }
 
-void core::window::detail::WaylandWindowImpl::restyle(WindowStyle style) {
-    if constexpr (config::EnabledBackends::wayland()) {
-        switch (style) {
-        case WindowStyle::Windowed:
-            xdg_toplevel_unset_fullscreen(m_xdg_toplevel);
-            xdg_toplevel_unset_maximized(m_xdg_toplevel);
-            return;
-        case WindowStyle::WindowedFullscreen:
-            xdg_toplevel_unset_fullscreen(m_xdg_toplevel);
-            xdg_toplevel_set_maximized(m_xdg_toplevel);
-            return;
-        case WindowStyle::Fullscreen: xdg_toplevel_set_fullscreen(m_xdg_toplevel, nullptr); return;
-        }
-    } else {
-        condition::unreachable();
+void WaylandWindowImpl::restyle(WindowStyle style) {
+    switch (style) {
+    case WindowStyle::Windowed:
+        xdg_toplevel_unset_fullscreen(m_xdg_toplevel);
+        xdg_toplevel_unset_maximized(m_xdg_toplevel);
+        return;
+    case WindowStyle::WindowedFullscreen:
+        xdg_toplevel_unset_fullscreen(m_xdg_toplevel);
+        xdg_toplevel_set_maximized(m_xdg_toplevel);
+        return;
+    case WindowStyle::Fullscreen: xdg_toplevel_set_fullscreen(m_xdg_toplevel, nullptr); return;
     }
 }
 
-void core::window::detail::WaylandWindowImpl::render_frame() {
-    if constexpr (config::EnabledBackends::wayland()) {
-        wl_surface_commit(m_wl_surface);
-        log::trace("Surface Committed");
-        wl_display_dispatch(m_wl_display);
-    } else {
-        condition::unreachable();
+void WaylandWindowImpl::render_frame() {
+    wl_surface_commit(m_wl_surface);
+    log::trace("Surface Committed");
+    wl_display_dispatch(m_wl_display);
+}
+
+bool WaylandWindowImpl::next_frame() {
+    if constexpr (core::config::TIME_FRAMES) {
+        frame_time_start();
     }
-}
-
-bool core::window::detail::WaylandWindowImpl::next_frame() {
-    if constexpr (config::EnabledBackends::wayland()) {
-        if constexpr (core::config::TIME_FRAMES) {
-            m_frame_beg = clock_t::now();
-        }
-        if (!should_close()) {
-            render_frame();
-        }
-        if constexpr (core::config::TIME_FRAMES) {
-            m_frame_end = clock_t::now();
-            using units = std::chrono::microseconds;
-            const auto frame_time =
-                std::chrono::duration_cast<units>(m_frame_end - m_frame_beg).count();
-            log::trace("Frame rendered in: {}us", frame_time);
-            m_counter.add(static_cast<size_t>(frame_time));
-            std::print("Frame Time (us): {}\r", m_counter.average());
-        }
-        return !should_close();
-    } else {
-        condition::unreachable();
+    if (!should_close()) {
+        render_frame();
     }
-}
-
-bool core::window::detail::WaylandWindowImpl::should_close() const {
-    if constexpr (config::EnabledBackends::wayland()) {
-        return m_should_close;
-    } else {
-        condition::unreachable();
+    if constexpr (core::config::TIME_FRAMES) {
+        frame_time_end();
     }
+    return !should_close();
 }
 
-void core::window::detail::WaylandWindowImpl::new_buffer() {
-    if constexpr (config::EnabledBackends::wayland()) {
-        const auto bufwidth  = width();
-        const auto bufheight = height();
-        const auto bufstride = safe_mult<size_t>(bufwidth, COLOUR_CHANNELS);
-        const auto buflen    = safe_mult<size_t>(bufstride, bufheight);
-        log::debug("Requesting buffer with size: {}, {}", bufwidth, bufheight);
-        log::debug("buflen: {}", buflen);
-        if (m_shm_fd >= 0) {
-            close(m_shm_fd);
-        }
-        m_shm_fd = allocate_shm_file(buflen);
-        check_condition(m_shm_fd >= 0, "creation of shm buffer file failed");
-        auto* const pixbuf = static_cast<Pixel*>(mmap(
-            nullptr,
-            safe_mult<size_t>(buflen, 2),
-            PROT_READ | PROT_WRITE,
-            MAP_SHARED,
-            m_shm_fd,
-            0
-        ));
-        if (pixbuf == MAP_FAILED) {
-            close(m_shm_fd);
-            check_condition(false, "Could not setup shm data");
-        }
-        m_pixbuf      = {pixbuf, std::extents(bufwidth, bufheight)};
-        m_wl_shm_pool = wl_shm_create_pool(m_wl_shm, m_shm_fd, numeric_cast<int32_t>(buflen));
-        m_wl_buffer   = wl_shm_pool_create_buffer(
-            m_wl_shm_pool,
-            0,
-            numeric_cast<int32_t>(bufwidth),
-            numeric_cast<int32_t>(bufheight),
-            numeric_cast<int32_t>(bufstride),
-            m_wl_shm_format
-        );
-        m_buffer_width  = bufwidth;
-        m_buffer_height = bufheight;
-        check_ptr(m_wl_buffer, "Failed to create buffer");
-        wl_surface_attach(m_wl_surface, m_wl_buffer, 0, 0);
-        log::trace("Surface Attached");
-        if (m_wl_shm_pool != nullptr) {
-            wl_shm_pool_destroy(m_wl_shm_pool);
-        }
-        for (size_t idx{0}; idx <= height(); ++idx) {
-            for (size_t jdx{0}; jdx <= width(); ++jdx) {
-                m_pixbuf[idx, jdx] = colour::BLACK;
-            }
-        }
-    } else {
-        condition::unreachable();
+bool WaylandWindowImpl::should_close() const {
+    return m_should_close;
+}
+
+void WaylandWindowImpl::new_buffer() {
+    const auto bufwidth  = width();
+    const auto bufheight = height();
+    const auto bufstride = safe_mult<size_t>(bufwidth, COLOUR_CHANNELS);
+    const auto buflen    = safe_mult<size_t>(bufstride, bufheight);
+    log::debug("Requesting buffer with size: {}, {}", bufwidth, bufheight);
+    log::debug("buflen: {}", buflen);
+    if (m_shm_fd >= 0) {
+        close(m_shm_fd);
     }
-}
-
-void core::window::detail::KeyboardState::new_from_string(const char* str) {
-    m_xkb_keymap.reset(xkb_keymap_new_from_string(
-        m_xkb_context.get(),
-        str,
-        XKB_KEYMAP_FORMAT_TEXT_V1,
-        XKB_KEYMAP_COMPILE_NO_FLAGS
-    ));
-    check_condition(m_xkb_keymap, "Failed to create new xkb_keymap");
-    m_xkb_state.reset(xkb_state_new(m_xkb_keymap.get()));
-    check_condition(m_xkb_state, "Failed to create new xkb_state");
-}
-
-void core::window::detail::KeyboardState::update_mask(
-    uint32_t mods_depressed,
-    uint32_t mods_latched,
-    uint32_t mods_locked,
-    uint32_t group
-) {
-    xkb_state_update_mask(
-        m_xkb_state.get(),
-        mods_depressed,
-        mods_latched,
-        mods_locked,
-        0,
-        0,
-        group
+    m_shm_fd = allocate_shm_file(buflen);
+    check_condition(m_shm_fd >= 0, "creation of shm buffer file failed");
+    auto* const pixbuf = static_cast<Pixel*>(
+        mmap(nullptr, safe_mult<size_t>(buflen, 2), PROT_READ | PROT_WRITE, MAP_SHARED, m_shm_fd, 0)
     );
+    if (pixbuf == MAP_FAILED) {
+        close(m_shm_fd);
+        check_condition(false, "Could not setup shm data");
+    }
+    m_pixbuf      = {pixbuf, std::extents(bufwidth, bufheight)};
+    m_wl_shm_pool = wl_shm_create_pool(m_wl_shm, m_shm_fd, numeric_cast<int32_t>(buflen));
+    m_wl_buffer   = wl_shm_pool_create_buffer(
+        m_wl_shm_pool,
+        0,
+        numeric_cast<int32_t>(bufwidth),
+        numeric_cast<int32_t>(bufheight),
+        numeric_cast<int32_t>(bufstride),
+        m_wl_shm_format
+    );
+    m_buffer_width  = bufwidth;
+    m_buffer_height = bufheight;
+    check_ptr(m_wl_buffer, "Failed to create buffer");
+    wl_surface_attach(m_wl_surface, m_wl_buffer, 0, 0);
+    log::trace("Surface Attached");
+    if (m_wl_shm_pool != nullptr) {
+        wl_shm_pool_destroy(m_wl_shm_pool);
+    }
+    for (size_t idx{0}; idx <= height(); ++idx) {
+        for (size_t jdx{0}; jdx <= width(); ++jdx) {
+            m_pixbuf[idx, jdx] = colour::BLACK;
+        }
+    }
 }
-
-void core::window::detail::KeyboardState::event(
-    [[maybe_unused]] const uint32_t& key, // NOLINT(*-swappable-parameters)
-    [[maybe_unused]] const uint32_t& state
-) {
-    // const uint32_t     keycode = key + ADD_VAL;
-    // const xkb_keysym_t sym     = xkb_keysym_to_upper(
-    //     xkb_state_key_get_one_sym(m_xkb_state.get(), keycode)
-    // );
-    // log::debug(
-    //     "key {}: {}, ",
-    //     (state == WL_KEYBOARD_KEY_STATE_PRESSED) ? "down" : "up",
-    //     sym
-    // );
-}
-#endif
+} // namespace core::window::detail

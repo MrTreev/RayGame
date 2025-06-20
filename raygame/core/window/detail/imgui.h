@@ -1,4 +1,5 @@
 #pragma once
+#include "raygame/core/window/detail/backends.h"
 #include "raygame/core/window/window.h"
 
 struct ImGuiIO;
@@ -7,11 +8,8 @@ struct GLFWwindow;
 namespace core::window::detail {
 class ImguiWindowImpl final: public WindowImpl {
 public:
-    explicit ImguiWindowImpl(
-        Vec2<size_t> size  = DEFAULT_WINDOW_SIZE,
-        std::string  title = DEFAULT_WINDOW_TITLE,
-        WindowStyle  style = DEFAULT_WINDOW_STYLE
-    );
+    RAYGAME_RETURN_IMGUI
+    ImguiWindowImpl(Vec2<size_t> size, std::string title, WindowStyle style);
     ImguiWindowImpl(const ImguiWindowImpl&)           = delete;
     ImguiWindowImpl operator=(const ImguiWindowImpl&) = delete;
     ImguiWindowImpl(ImguiWindowImpl&&)                = default;

@@ -1,5 +1,5 @@
 #pragma once
-#include "raygame/core/math/ring_average.h"
+#include "raygame/core/window/detail/backends.h" // IWYU pragma: keep
 #include "raygame/core/window/detail/wayland/wayland_fwd.h"
 #include "raygame/core/window/window.h"
 
@@ -85,11 +85,8 @@ public:
 
 class WaylandWindowImpl final: public WindowImpl {
 public:
-    explicit WaylandWindowImpl(
-        Vec2<size_t> size  = DEFAULT_WINDOW_SIZE,
-        std::string  title = DEFAULT_WINDOW_TITLE,
-        WindowStyle  style = DEFAULT_WINDOW_STYLE
-    );
+    RAYGAME_RETURN_WAYLAND
+    WaylandWindowImpl(Vec2<size_t> size, std::string title, WindowStyle style);
     ~WaylandWindowImpl() final;
     WaylandWindowImpl(const WaylandWindowImpl&)           = delete;
     WaylandWindowImpl operator=(const WaylandWindowImpl&) = delete;
@@ -108,15 +105,8 @@ public:
 
 private:
     using wl_fixed_t  = int32_t;
-    using clock_t     = std::chrono::high_resolution_clock;
-    using timepoint_t = std::chrono::time_point<clock_t>;
-
-    math::RingAverage<size_t, config::TARGET_FPS> m_counter;
-
-    timepoint_t m_frame_beg;
-    timepoint_t m_frame_end;
-    int         m_shm_fd = -1;
-    uint32_t    m_wl_shm_format;
+    int      m_shm_fd = -1;
+    uint32_t m_wl_shm_format;
 
     std::mdspan<Pixel, std::dextents<size_t, 2>> m_pixbuf;
 

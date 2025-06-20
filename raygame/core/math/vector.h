@@ -10,10 +10,8 @@ template<typename T>
 struct Vec2 {
     using Type = T;
 
-    // NOLINTBEGIN(*-non-private-member-*)
-    Type x;
-    Type y;
-    // NOLINTEND(*-non-private-member-*)
+    Type x; // NOLINT(*-non-private-member-*)
+    Type y; // NOLINT(*-non-private-member-*)
 
     constexpr Vec2() = default;
 
@@ -54,7 +52,6 @@ struct Vec2 {
     }
 };
 
-// Vec2 Specialisations
 extern template struct core::Vec2<uint8_t>;
 extern template struct core::Vec2<uint16_t>;
 extern template struct core::Vec2<uint32_t>;

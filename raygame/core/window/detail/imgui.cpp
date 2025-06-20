@@ -5,6 +5,7 @@
 #include "raygame/core/math/arithmetic.h"
 #include "raygame/core/math/arithmetic/safe_add.h"
 #include "raygame/core/math/numeric_cast.h"
+#include "raygame/core/window/detail/backends.h"
 #include "raygame/core/window/detail/imgui/imgui_include.h"
 
 namespace core::window::detail {
@@ -26,7 +27,7 @@ void glfw_error_callback(int error, const char* description) {
 
 ImguiWindowImpl::ImguiWindowImpl(Vec2<size_t> size, std::string title, WindowStyle style)
     : WindowImpl(size, std::move(title), style) {
-    if constexpr (!enabled()) {
+    if constexpr (!config::EnabledBackends::imgui()) {
         unreachable();
     }
     log::debug("constructing ImGUI window");

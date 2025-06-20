@@ -109,3 +109,14 @@ bool core::window::detail::WindowImpl::next_frame() {
 bool core::window::detail::WindowImpl::should_close() const {
     condition::unreachable();
 }
+
+std::string core::window::detail::WindowImpl::frame_stats() {
+    return std::format(
+        "Min Frame Time: {}\n"
+        "Max Frame Time: {}\n"
+        "Ave Frame Time: {}",
+        m_counter.min(),
+        m_counter.max(),
+        m_counter.average()
+    );
+}

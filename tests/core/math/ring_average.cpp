@@ -1,71 +1,57 @@
 #include "raygame/core/math/ring_average.h" // IWYU pragma: keep
-#include "raygame/core/concepts.h"
 #include "raytest/raytest.h"
-#include <algorithm>
-#include <deque>
-#include <numeric>
-#include <random>
+#include <ranges>
 
 namespace {
 using core::math::RingAverage;
-constexpr size_t MULT{10ULL};
 constexpr size_t BUFLEN{60ULL};
 
 template<typename T>
 class RingAverageTest: public ::testing::Test {
 public:
+    void test_vals(
+        std::array<T, BUFLEN> values,
+        std::array<T, BUFLEN> averages,
+        std::array<T, BUFLEN> min_vals,
+        std::array<T, BUFLEN> max_vals
+    ) {
+        using T = decltype(this->val());
+        RingAverage<T, BUFLEN> ringave;
+        for (const auto [val, ave, max, min]:
+             std::ranges::zip_view(values, averages, max_vals, min_vals)) {
+            ringave.add(val);
+            RG_CHECK_EQ(ringave.average(), ave);
+            RG_CHECK_EQ(ringave.max(), max);
+            RG_CHECK_EQ(ringave.min(), min);
+        }
+    }
+
     T val() { return 1; }
 };
 
 RG_TYPED_TEST_SUITE(RingAverageTest, ::test::types::Integral);
-
-RAYGAME_CLANG_SUPPRESS_WARNING_PUSH
-RAYGAME_CLANG_SUPPRESS_WARNING("-Wglobal-constructors")
-RAYGAME_CLANG_SUPPRESS_WARNING("-Wexit-time-destructors")
-RAYGAME_CLANG_SUPPRESS_WARNING("-Wunused-template")
-
-template<core::concepts::Number T>
-T dice() {
-    static std::uniform_int_distribution<T> distr{test::min<T>(), test::max<T>()};
-    static std::random_device               device{};
-    static std::mt19937                     engine{device()};
-    return distr(engine);
-}
-
-RAYGAME_CLANG_SUPPRESS_WARNING_POP
 } // namespace
 
-RG_TYPED_TEST(RingAverageTest, FPS) {
-    RingAverage<size_t, BUFLEN>       ringave;
-    std::deque<size_t>                queue{};
-    std::array<size_t, BUFLEN * MULT> rands{};
-    std::ranges::generate(rands, dice<size_t>);
-    for (const size_t val: rands) {
-        ringave.add(val);
-        queue.push_back(val);
-        if (queue.size() > BUFLEN) {
-            queue.pop_front();
-        }
-        const size_t sum      = (std::accumulate(queue.cbegin(), queue.cend(), 0ULL));
-        const size_t calc_ave = sum / queue.size();
-        RG_CHECK_EQ(calc_ave, ringave.average());
-    }
-}
-
-RG_TYPED_TEST(RingAverageTest, Averages) {
+RG_TYPED_TEST(RingAverageTest, Stats) {
     using T = decltype(this->val());
-    RingAverage<T, BUFLEN>       ringave;
-    std::deque<T>                queue{};
-    std::array<T, BUFLEN * MULT> rands{};
-    std::ranges::generate(rands, dice<T>);
-    for (const T val: rands) {
+    RingAverage<T, BUFLEN>      ringave;
+    const std::array<T, BUFLEN> values = {
+        {0, 0, 0}
+    };
+    const std::array<T, BUFLEN> averages = {
+        {0, 0, 0}
+    };
+    const std::array<T, BUFLEN> max_vals = {
+        {0, 0, 0}
+    };
+    const std::array<T, BUFLEN> min_vals = {
+        {0, 0, 0}
+    };
+    for (const auto [val, ave, max, min]:
+         std::ranges::zip_view(values, averages, max_vals, min_vals)) {
         ringave.add(val);
-        queue.push_back(val);
-        if (queue.size() > BUFLEN) {
-            queue.pop_front();
-        }
-        const T sum      = std::accumulate(queue.cbegin(), queue.cend(), static_cast<T>(0));
-        const T calc_ave = sum / static_cast<T>(queue.size());
-        RG_CHECK_EQ(calc_ave, ringave.average());
+        RG_CHECK_EQ(ringave.average(), ave);
+        RG_CHECK_EQ(ringave.max(), max);
+        RG_CHECK_EQ(ringave.min(), min);
     }
 }

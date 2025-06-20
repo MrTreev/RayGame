@@ -1,14 +1,12 @@
 #pragma once
+#include "raygame/core/window/detail/backends.h"
 #include "raygame/core/window/window.h"
 
 namespace core::window::detail {
 class CocoaWindowImpl final: public WindowImpl {
 public:
-    explicit CocoaWindowImpl(
-        Vec2<size_t> size  = DEFAULT_WINDOW_SIZE,
-        std::string  title = DEFAULT_WINDOW_TITLE,
-        WindowStyle  style = DEFAULT_WINDOW_STYLE
-    );
+    RAYGAME_RETURN_COCOA
+    CocoaWindowImpl(Vec2<size_t> size, std::string title, WindowStyle style);
     CocoaWindowImpl(const CocoaWindowImpl&)           = delete;
     CocoaWindowImpl operator=(const CocoaWindowImpl&) = delete;
     CocoaWindowImpl(CocoaWindowImpl&&)                = default;

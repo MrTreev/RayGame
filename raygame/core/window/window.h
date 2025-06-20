@@ -1,6 +1,9 @@
 #pragma once
 #include "raygame/core/config.h"
 #include "raygame/core/drawing/image.h"
+#include "raygame/core/math/ring_average.h"
+#include "raygame/core/math/timer.h"
+#include <chrono>
 #include <string>
 #include <utility>
 
@@ -25,11 +28,26 @@ static constexpr Vec2<size_t> DEFAULT_WINDOW_SIZE = {DEFAULT_WINDOW_WIDTH, DEFAU
 
 namespace detail {
 class WindowImpl {
+private:
     Vec2<size_t> m_size;
     std::string  m_title;
     WindowStyle  m_style;
 
+    math::HighResolutionTimer                      m_timer;
+    math::RingAverage<int64_t, config::TARGET_FPS> m_counter;
+
 protected:
+    void frame_time_start() { m_timer.start(); }
+
+    void frame_time_end() {
+        m_timer.end();
+        m_counter.add(m_timer.ms().count());
+    }
+
+    int64_t frame_time() { return m_counter.average(); }
+
+    std::string frame_stats();
+
     void set_size(Vec2<size_t> size) { m_size = size; }
 
     void set_title(std::string title) { m_title = std::move(title); }
@@ -53,11 +71,7 @@ protected:
 
 public:
     //! Constructs a window
-    explicit WindowImpl(
-        Vec2<size_t> size  = DEFAULT_WINDOW_SIZE,
-        std::string  title = DEFAULT_WINDOW_TITLE,
-        WindowStyle  style = DEFAULT_WINDOW_STYLE
-    )
+    WindowImpl(Vec2<size_t> size, std::string title, WindowStyle style)
         : m_size(size)
         , m_title(std::move(title))
         , m_style(style) {}
@@ -76,7 +90,6 @@ public:
 
     [[nodiscard]]
     virtual bool next_frame();
-
     [[nodiscard]]
     virtual bool should_close() const;
 

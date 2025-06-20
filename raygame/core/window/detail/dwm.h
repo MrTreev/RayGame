@@ -1,14 +1,12 @@
 #pragma once
+#include "raygame/core/window/detail/backends.h"
 #include "raygame/core/window/window.h"
 
 namespace core::window::detail {
 class DwmWindowImpl final: public WindowImpl {
 public:
-    explicit DwmWindowImpl(
-        Vec2<size_t> size  = DEFAULT_WINDOW_SIZE,
-        std::string  title = DEFAULT_WINDOW_TITLE,
-        WindowStyle  style = DEFAULT_WINDOW_STYLE
-    );
+    RAYGAME_RETURN_DWM
+    DwmWindowImpl(Vec2<size_t> size, std::string title, WindowStyle style);
     DwmWindowImpl(const DwmWindowImpl&)           = delete;
     DwmWindowImpl operator=(const DwmWindowImpl&) = delete;
     DwmWindowImpl(DwmWindowImpl&&)                = default;
