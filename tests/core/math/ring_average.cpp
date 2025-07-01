@@ -4,18 +4,18 @@
 
 namespace {
 using core::math::RingAverage;
-constexpr size_t BUFLEN{60ULL};
 
 template<typename T>
 class RingAverageTest: public ::testing::Test {
 public:
+    static constexpr size_t BUFLEN{4};
+
     void test_vals(
-        std::array<T, BUFLEN> values,
-        std::array<T, BUFLEN> averages,
-        std::array<T, BUFLEN> min_vals,
-        std::array<T, BUFLEN> max_vals
+        std::initializer_list<T> values,
+        std::initializer_list<T> averages,
+        std::initializer_list<T> min_vals,
+        std::initializer_list<T> max_vals
     ) {
-        using T = decltype(this->val());
         RingAverage<T, BUFLEN> ringave;
         for (const auto [val, ave, max, min]:
              std::ranges::zip_view(values, averages, max_vals, min_vals)) {
@@ -33,25 +33,16 @@ RG_TYPED_TEST_SUITE(RingAverageTest, ::test::types::Integral);
 } // namespace
 
 RG_TYPED_TEST(RingAverageTest, Stats) {
-    using T = decltype(this->val());
-    RingAverage<T, BUFLEN>      ringave;
-    const std::array<T, BUFLEN> values = {
-        {0, 0, 0}
-    };
-    const std::array<T, BUFLEN> averages = {
-        {0, 0, 0}
-    };
-    const std::array<T, BUFLEN> max_vals = {
-        {0, 0, 0}
-    };
-    const std::array<T, BUFLEN> min_vals = {
-        {0, 0, 0}
-    };
-    for (const auto [val, ave, max, min]:
-         std::ranges::zip_view(values, averages, max_vals, min_vals)) {
-        ringave.add(val);
-        RG_CHECK_EQ(ringave.average(), ave);
-        RG_CHECK_EQ(ringave.max(), max);
-        RG_CHECK_EQ(ringave.min(), min);
-    }
+    this->test_vals(
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+    );
+    this->test_vals(
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+    );
 }

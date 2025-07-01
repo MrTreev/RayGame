@@ -1,6 +1,6 @@
 #pragma once
-#include "raygame/core/exception.h"
 #include "raygame/core/math/mathrule.h"
+#include "raygame/core/math/numeric_cast.h"
 #include "raygame/core/types.h"
 #include <cassert>
 #include <limits>
@@ -55,7 +55,30 @@ consteval auto larger_type(std::integral auto inval) {
     } else if constexpr (std::is_same<decltype(inval), int64_t>()) {
         return intmax_t{};
     } else {
-        throw core::exception::Condition("Invalid type");
+        static_assert(false, "Invalid type");
+    }
+}
+
+//! Get the next fixed-width integer type up in size
+consteval auto smaller_type(std::integral auto inval) {
+    if constexpr (std::is_same<decltype(inval), uint8_t>()) {
+        static_assert(false, "No integral type smaller than uint8_t");
+    } else if constexpr (std::is_same<decltype(inval), uint16_t>()) {
+        return uint8_t{};
+    } else if constexpr (std::is_same<decltype(inval), uint32_t>()) {
+        return uint16_t{};
+    } else if constexpr (std::is_same<decltype(inval), uint64_t>()) {
+        return uint32_t{};
+    } else if constexpr (std::is_same<decltype(inval), int8_t>()) {
+        static_assert(false, "No integral type smaller than int8_t");
+    } else if constexpr (std::is_same<decltype(inval), int16_t>()) {
+        return int8_t{};
+    } else if constexpr (std::is_same<decltype(inval), int32_t>()) {
+        return int16_t{};
+    } else if constexpr (std::is_same<decltype(inval), int64_t>()) {
+        return int32_t{};
+    } else {
+        static_assert(false, "Invalid type");
     }
 }
 
