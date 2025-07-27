@@ -1,8 +1,7 @@
+#include "raygame/core/condition.h"
+#include "raygame/core/logger.h"
 #include "raygame/core/window/detail/wayland.h"
-#if defined(RAYGAME_GUI_BACKEND_WAYLAND)
-#    include "raygame/core/condition.h"
-#    include "raygame/core/logger.h"
-#    include <wayland-client-protocol.h>
+#include <wayland-client-protocol.h>
 
 const wl_pointer_listener core::window::detail::WaylandWindowImpl::m_wl_pointer_listener = {
     .enter                   = wl_pointer_handle_enter,
@@ -260,4 +259,3 @@ void core::window::detail::WaylandWindowImpl::wl_pointer_handle_motion(
 }
 
 // NOLINTEND(*-easily-swappable-parameters)
-#endif

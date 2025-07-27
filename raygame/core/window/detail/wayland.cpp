@@ -5,13 +5,13 @@
 #include "raygame/core/math/random.h"
 #include <algorithm>
 #include <fcntl.h>
-#include <print>
 #include <sys/mman.h>
 #include <unistd.h>
 #include <utility>
 #include <wayland-client-core.h>
 #include <wayland-client-protocol.h>
 #include <xdg-shell-client-protocol.h>
+#include <xkbcommon/xkbcommon.h>
 
 namespace {
 using core::condition::check_condition;
@@ -80,19 +80,21 @@ wl_shm_format get_colour_format() {
     case (BGRA): core::log::debug("Colour Format: BGRA"); return WL_SHM_FORMAT_BGRA8888;
     case (RGBA): core::log::debug("Colour Format: RGBA"); return WL_SHM_FORMAT_RGBA8888;
     default:
-        throw std::invalid_argument(std::format(
-            "Could not determine colour format:\n"
-            "functdef: {:0>32b}\n"
-            "RGBA DEF: {:0>32b}\n"
-            "RGBA set: {:0>32b}{:0>32b}{:0>32b}{:0>32b}\n"
-            "BYTE NO:  00000000111111112222222233333333\n",
-            bit_cast<uint32_t>(colourval),
-            RGBA,
-            colourval.m_alpha,
-            colourval.m_blue,
-            colourval.m_green,
-            colourval.m_red
-        ));
+        throw std::invalid_argument(
+            std::format(
+                "Could not determine colour format:\n"
+                "functdef: {:0>32b}\n"
+                "RGBA DEF: {:0>32b}\n"
+                "RGBA set: {:0>32b}{:0>32b}{:0>32b}{:0>32b}\n"
+                "BYTE NO:  00000000111111112222222233333333\n",
+                bit_cast<uint32_t>(colourval),
+                RGBA,
+                colourval.m_alpha,
+                colourval.m_blue,
+                colourval.m_green,
+                colourval.m_red
+            )
+        );
     }
 }
 } // namespace
@@ -142,9 +144,9 @@ WaylandWindowImpl::WaylandWindowImpl(Vec2<size_t> size, std::string title, Windo
 }
 
 WaylandWindowImpl::~WaylandWindowImpl() {
-    wl_buffer_destroy(m_wl_buffer);
     m_buffer_width  = 0;
     m_buffer_height = 0;
+    wl_buffer_destroy(m_wl_buffer);
     wl_surface_destroy(m_wl_surface);
     xdg_surface_destroy(m_xdg_surface);
     xdg_toplevel_destroy(m_xdg_toplevel);
@@ -261,4 +263,52 @@ void WaylandWindowImpl::new_buffer() {
         }
     }
 }
+
+// NOLINTBEGIN(*-easily-swappable-parameters)
+void KeyboardState::update_mask(
+    uint32_t mods_depressed,
+    uint32_t mods_latched,
+    uint32_t mods_locked,
+    uint32_t group
+) {
+    log::debug("update_mask: {}, {}, {}, {}", mods_depressed, mods_latched, mods_locked, group);
+    xkb_state_update_mask(
+        m_xkb_state.get(),
+        mods_depressed,
+        mods_latched,
+        mods_locked,
+        0,
+        0,
+        group
+    );
+    log::debug("mask updated");
+}
+
+void KeyboardState::new_from_string(const char* str) {
+    log::debug("new_from_string start");
+    m_xkb_keymap.reset(xkb_keymap_new_from_string(
+        m_xkb_context.get(),
+        str,
+        XKB_KEYMAP_FORMAT_TEXT_V1,
+        XKB_KEYMAP_COMPILE_NO_FLAGS
+    ));
+    log::debug("new_from_string done");
+}
+
+void KeyboardState::event(const uint32_t& key, const uint32_t& state) {
+    log::debug("event: key({}), state({})", key, state);
+    constexpr size_t          BUFSIZE{128};
+    constexpr uint32_t        KEY_OFFSET{8};
+    std::array<char, BUFSIZE> buf{0};
+    const uint32_t            keycode{key + KEY_OFFSET};
+    const xkb_keysym_t        sym{xkb_state_key_get_one_sym(m_xkb_state.get(), keycode)};
+    xkb_keysym_get_name(sym, buf.data(), sizeof(buf));
+    const char* action{state == WL_KEYBOARD_KEY_STATE_PRESSED ? "press" : "release"};
+    log::debug("key {}: sym: {} ({}), ", action, buf, sym);
+    xkb_state_key_get_utf8(m_xkb_state.get(), keycode, buf.data(), buf.size());
+    log::debug("utf8: '{}'\n", buf);
+}
+
+// NOLINTEND(*-easily-swappable-parameters)
+
 } // namespace core::window::detail

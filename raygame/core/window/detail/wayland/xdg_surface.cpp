@@ -1,7 +1,6 @@
 #include "raygame/core/window/detail/wayland.h"
-#if defined(RAYGAME_GUI_BACKEND_WAYLAND)
-#    include <wayland-client-protocol.h>
-#    include <xdg-shell-client-protocol.h>
+#include <wayland-client-protocol.h>
+#include <xdg-shell-client-protocol.h>
 
 const xdg_surface_listener core::window::detail::WaylandWindowImpl::m_xdg_surface_listener = {
     .configure = xdg_surface_handle_configure,
@@ -19,4 +18,3 @@ void core::window::detail::WaylandWindowImpl::xdg_surface_handle_configure(
     }
     this_impl->m_configured = true;
 }
-#endif

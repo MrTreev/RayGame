@@ -1,7 +1,9 @@
 #pragma once
 #include "raygame/core/window/detail/backends.h" // IWYU pragma: keep
-#include "raygame/core/window/detail/wayland/wayland_fwd.h"
 #include "raygame/core/window/window.h"
+#include <wayland-client-protocol.h>
+#include <xdg-shell-client-protocol.h>
+#include <xkbcommon/xkbcommon.h>
 
 namespace core::window::detail {
 
@@ -43,9 +45,9 @@ class KeyboardState {
         void operator()(xkb_context* context) { xkb_context_unref(context); }
     };
 
-    std::unique_ptr<xkb_state, StateDelete>     m_xkb_state;
-    std::unique_ptr<xkb_keymap, KeymapDelete>   m_xkb_keymap;
-    std::unique_ptr<xkb_context, ContextDelete> m_xkb_context;
+    std::unique_ptr<xkb_state, StateDelete>     m_xkb_state{nullptr};
+    std::unique_ptr<xkb_keymap, KeymapDelete>   m_xkb_keymap{nullptr};
+    std::unique_ptr<xkb_context, ContextDelete> m_xkb_context{nullptr};
 
 public:
     KeyboardState()

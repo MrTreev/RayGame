@@ -1,7 +1,6 @@
 #include "raygame/core/logger.h"
 #include "raygame/core/window/detail/wayland.h"
-#if defined(RAYGAME_GUI_BACKEND_WAYLAND)
-#    include <xdg-shell-client-protocol.h>
+#include <xdg-shell-client-protocol.h>
 
 const xdg_toplevel_listener core::window::detail::WaylandWindowImpl::m_xdg_toplevel_listener = {
     .configure        = xdg_toplevel_handle_configure,
@@ -56,4 +55,3 @@ void core::window::detail::WaylandWindowImpl::xdg_toplevel_handle_wm_capabilitie
 }
 
 //NOLINTEND(*-easily-swappable-parameters)
-#endif

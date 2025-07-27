@@ -1,7 +1,6 @@
+#include "raygame/core/logger.h"
 #include "raygame/core/window/detail/wayland.h"
-#if defined(RAYGAME_GUI_BACKEND_WAYLAND)
-#    include "raygame/core/logger.h"
-#    include <wayland-client-protocol.h>
+#include <wayland-client-protocol.h>
 
 const wl_seat_listener core::window::detail::WaylandWindowImpl::m_wl_seat_listener = {
     .capabilities = wl_seat_handle_capabilities,
@@ -41,4 +40,3 @@ void core::window::detail::WaylandWindowImpl::wl_seat_name(
     auto* this_impl = static_cast<WaylandWindowImpl*>(data);
     core::log::trace("{}", name);
 }
-#endif

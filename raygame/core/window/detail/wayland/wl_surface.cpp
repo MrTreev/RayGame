@@ -1,6 +1,5 @@
 #include "raygame/core/window/detail/wayland.h"
-#if defined(RAYGAME_GUI_BACKEND_WAYLAND)
-#    include <wayland-client-protocol.h>
+#include <wayland-client-protocol.h>
 
 const wl_callback_listener core::window::detail::WaylandWindowImpl::m_wl_surface_frame_listener{
     .done = wl_surface_handle_done,
@@ -29,4 +28,3 @@ void core::window::detail::WaylandWindowImpl::wl_surface_handle_done(
     );
     wl_surface_commit(this_impl->m_wl_surface);
 }
-#endif
