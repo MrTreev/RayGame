@@ -20,9 +20,6 @@ set_target_properties(
 )
 add_library(RayGame::External::ZppBits ALIAS RayGameExternalZppBits)
 
-add_subdirectory(glfw)
-find_package(OpenGL)
-
 add_library(RayGameExternalImgui)
 target_sources(
     RayGameExternalImgui
@@ -54,3 +51,5 @@ target_include_directories(
            ${RayGame_SOURCE_DIR}/third_party/glfw/include
 )
 add_library(RayGame::External::Imgui ALIAS RayGameExternalImgui)
+add_subdirectory(raylib)
+add_library(RayGame::External::RayLib ALIAS raylib)

@@ -1,5 +1,8 @@
 #pragma once
 #include "raygame/core/config.h" // IWYU pragma: export
+#if !defined(RAYGAME_GUI_BACKEND_RAYLIB)
+#    define RAYGAME_GUI_BACKEND_RAYLIB
+#endif
 #if defined(RAYGAME_OS_LINUX) || defined(RAYGAME_OS_BSD) || defined(RAYGAME_OS_HURD)
 #    if !defined(RAYGAME_GUI_BACKEND_WAYLAND)
 #        define RAYGAME_GUI_BACKEND_WAYLAND
@@ -26,6 +29,7 @@ enum class GuiBackend : uint8_t {
     WAYLAND,
     X11,
     IMGUI,
+    RAYLIB,
 };
 
 class EnabledBackends {
@@ -69,6 +73,14 @@ public:
         return false;
 #endif
     }
+
+    static consteval bool raylib() {
+#if defined(RAYGAME_GUI_BACKEND_RAYLIB)
+        return true;
+#else
+        return false;
+#endif
+    }
 };
 } // namespace core::config
 
@@ -100,4 +112,10 @@ public:
 #    define RAYGAME_RETURN_IMGUI
 #else
 #    define RAYGAME_RETURN_IMGUI [[noreturn]]
+#endif
+
+#if defined(RAYGAME_GUI_BACKEND_RAYLIB)
+#    define RAYGAME_RETURN_RAYLIB
+#else
+#    define RAYGAME_RETURN_RAYLIB [[noreturn]]
 #endif

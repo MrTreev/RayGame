@@ -9,7 +9,7 @@
 namespace core::drawing {
 
 class ImageView: private Rect<pos_t, dis_t> {
-    std::mdspan<const Pixel, std::dextents<dis_t, 2>> m_mdspan;
+    std::mdspan<const Pixel, std::dextents<dis_t, 2>, std::layout_right> m_mdspan;
     using ImgRect = Rect<pos_t, dis_t>;
 
 public:

@@ -12,6 +12,11 @@ raygame_lib(
 )
 add_library(RayGame::Core::Window ALIAS RayGameCoreWindow)
 
+if(NOT RAYGAME_GUI_DISABLE_RAYLIB)
+    target_sources(RayGameCoreWindow PRIVATE detail/raylib.h detail/raylib.cpp)
+    target_link_libraries(RayGameCoreWindow PRIVATE RayGame::External::RayLib)
+endif()
+
 if(NOT RAYGAME_GUI_DISABLE_IMGUI)
     target_sources(RayGameCoreWindow PRIVATE detail/imgui.h detail/imgui.cpp)
     target_link_libraries(RayGameCoreWindow PRIVATE RayGame::External::Imgui)

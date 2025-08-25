@@ -50,8 +50,9 @@ option(RAYGAME_BUILD_GAMES "Build games" ${RAYGAME_IS_TOPLEVEL})
 option(RAYGAME_GUI_DISABLE_COCOA "Disable the MacOS Cocoa GUI backend" $<NOT:RAYGAME_OS_IS_MAC>)
 option(RAYGAME_GUI_DISABLE_DWM "Disable the Windows DWM GUI backend" $<NOT:RAYGAME_OS_IS_WINDOWS>)
 option(RAYGAME_GUI_DISABLE_WAYLAND "Disable the Linux Wayland GUI backend" $<NOT:RAYGAME_OS_IS_LINUX>)
-option(RAYGAME_GUI_DISABLE_X11 "Disable the Linux X11 GUI backend" $<NOT:RAYGAME_OS_IS_LINUX>)
-option(RAYGAME_GUI_DISABLE_IMGUI "Disable the IMGUI GUI backend" $<NOT:RAYGAME_BT_IS_DEBUG>)
+option(RAYGAME_GUI_DISABLE_X11 "Disable the Linux X11 GUI backend" ON)
+option(RAYGAME_GUI_DISABLE_IMGUI "Disable the IMGUI GUI backend" ON)
+option(RAYGAME_GUI_DISABLE_RAYLIB "Disable the RAYLIB GUI backend" $<NOT:RAYGAME_BT_IS_DEBUG>)
 
 set(RAYGAME_GUI_DEFAULT_WINDOW_TITLE "RayGame" CACHE STRING "Default GUI window title")
 
@@ -89,6 +90,9 @@ include(RayGameLib)
 include(RayGameWayland)
 include(RayGameTest)
 raygame_enable_testing()
+
+add_subdirectory(tools)
+include(RayGameImage)
 
 add_subdirectory(third_party)
 add_subdirectory(raygame)

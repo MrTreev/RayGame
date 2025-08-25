@@ -5,6 +5,7 @@
 #include "raygame/core/window/detail/cocoa.h"
 #include "raygame/core/window/detail/dwm.h"
 #include "raygame/core/window/detail/imgui.h"
+#include "raygame/core/window/detail/raylib.h"
 #include "raygame/core/window/detail/wayland.h"
 #include "raygame/core/window/detail/x11.h"
 
@@ -31,6 +32,9 @@ core::config::GuiBackend get_backend() {
     using core::condition::unimplemented;
     using core::config::GuiBackend;
     using core::config::OperatingSystem;
+    if constexpr (core::config::EnabledBackends::raylib()) {
+        return GuiBackend::RAYLIB;
+    }
     if constexpr (core::config::EnabledBackends::imgui()) {
         return GuiBackend::IMGUI;
     }
@@ -49,6 +53,13 @@ core::config::GuiBackend get_backend() {
 
 core::window::Window::Window(Vec2<size_t> size, std::string title, WindowStyle style) {
     const auto backend = get_backend();
+    if constexpr (config::EnabledBackends::raylib()) {
+        using Raylib = detail::RaylibWindowImpl;
+        if (backend == config::GuiBackend::RAYLIB) {
+            m_impl = std::make_unique<Raylib>(size, std::move(title), style);
+            return;
+        }
+    }
     if constexpr (config::EnabledBackends::imgui()) {
         using Imgui = detail::ImguiWindowImpl;
         if (backend == config::GuiBackend::IMGUI) {

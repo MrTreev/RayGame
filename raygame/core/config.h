@@ -465,9 +465,9 @@ static_assert(false, "Cannot run without an OS");
 #if (__STDC_HOSTED__ != 1)
 static_assert(false, "Cannot run without an OS");
 #elif defined(RAYGAME_OS_ANDROID)
-static_assert(false, "Not tested on Android yet");
+static_assert(false, "Not tested on Android");
 #elif defined(RAYGAME_OS_BSD)
-static_assert(false, "Not tested on BSD yet");
+static_assert(false, "Not tested on BSD");
 #elif defined(RAYGAME_OS_HURD)
 static_assert(false, "Not tested on HURD");
 #elif defined(RAYGAME_OS_LINUX)
@@ -476,11 +476,10 @@ static_assert(true);
 static_assert(false, "Not tested on Apple Macintosh");
 #elif defined(RAYGAME_OS_QNX)
 static_assert(false, "Not tested on QNX");
-#elif defined(RAYGAME_OS_TEMPLEOS)
 #elif defined(RAYGAME_OS_WIN32)
-static_assert(false, "Not tested on Windows 32-bit yet");
+static_assert(false, "Not tested on Windows 32-bit");
 #elif defined(RAYGAME_OS_WIN64)
-static_assert(false, "Not tested on Windows 64-bit yet");
+static_assert(false, "Not tested on Windows 64-bit");
 #else
 static_assert(false, "Unknown Operating System");
 #endif
