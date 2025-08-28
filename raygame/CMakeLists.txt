@@ -3,6 +3,7 @@ add_subdirectory(core)
 raygame_lib(
     RayGameCore
     DEPS RayGame::Core::Base
+         RayGame::Core::Io
          RayGame::Core::Math
          RayGame::Core::Window
 )

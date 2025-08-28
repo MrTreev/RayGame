@@ -7,6 +7,7 @@ run_configure(){
         -G Ninja \
         --toolchain ./cmake/presets/linux-clang-libcxx.cmake \
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+        -DRAYGAME_LOG_DISABLE_SOURCE_LOCATION=ON \
         ;
 };
 
@@ -24,5 +25,3 @@ run_test(){
 };
 
 run_configure && run_build && run_test;
-
-unset -f run_configure run_build run_test
