@@ -6,13 +6,18 @@
 #include <string_view>
 
 namespace {
+enum class SourceLoc : uint8_t {
+    NONE = 0,
+    FULL,
+    BASE,
+};
 #if defined(RAYGAME_ENABLE_SOURCE_LOCATION)
-constexpr bool enable_source_loc = true;
+constexpr SourceLoc sloc_type = SourceLoc::FULL;
 #elif defined(RAYGAME_DISABLE_SOURCE_LOCATION)
-constexpr bool enable_source_loc = false;
+constexpr SourceLoc sloc_type = SourceLoc::BASE;
 #else
 #    warning "No source location macro defined, disabling"
-constexpr bool enable_source_loc = false;
+constexpr bool sloc_type = false;
 #endif
 
 constexpr std::string to_string(core::log::Level level) {
@@ -32,9 +37,23 @@ constexpr std::string to_string(core::log::Level level) {
 
 void core::log::detail::logger(core::log::Level level, std::string text, std::source_location loc) {
     if (logging_level <= level) {
-        if constexpr (enable_source_loc) {
-            constexpr std::string_view search_str = "/raygame/";
-            std::string_view           shortloc{loc.file_name()};
+        if constexpr (sloc_type == SourceLoc::NONE) {
+            std::println(
+                std::cerr,
+                "{:%T} [{}] - {}",
+                std::chrono::system_clock::now(),
+                to_string(level),
+                text
+            );
+        } else {
+            constexpr std::string_view search_str = []() {
+                if constexpr (sloc_type == SourceLoc::FULL) {
+                    return "/raygame/";
+                } else {
+                    return "/";
+                }
+            }();
+            std::string_view shortloc{loc.file_name()};
             shortloc.remove_prefix(
                 std::string_view(loc.file_name()).rfind(search_str) + search_str.length()
             );
@@ -44,14 +63,6 @@ void core::log::detail::logger(core::log::Level level, std::string text, std::so
                 std::chrono::system_clock::now(),
                 to_string(level),
                 std::format("{}:{}", shortloc, loc.line()),
-                text
-            );
-        } else {
-            std::println(
-                std::cerr,
-                "{:%T} [{}] - {}",
-                std::chrono::system_clock::now(),
-                to_string(level),
                 text
             );
         }

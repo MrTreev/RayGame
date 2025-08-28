@@ -6,7 +6,8 @@
 namespace core::io {
 class File {
 private:
-    std::unique_ptr<std::FILE> m_file;
+    std::FILE*            m_file = nullptr;
+    std::filesystem::path m_path;
 
 public:
     enum class mode : uint8_t {
@@ -19,5 +20,12 @@ public:
     };
     explicit File(const std::filesystem::path& filename, mode mod);
     explicit File(const std::filesystem::path& filename, const char* mod);
+    File(File&&)                 = default;
+    File& operator=(File&&)      = default;
+    File(const File&)            = delete;
+    File& operator=(const File&) = delete;
+    ~File();
+
+    std::FILE* raw() { return m_file; }
 };
 } // namespace core::io

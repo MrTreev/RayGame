@@ -27,4 +27,8 @@ concept RandomAccessIterator = std::random_access_iterator<T>;
 template<typename T>
 concept ContiguousIterator = std::contiguous_iterator<T>;
 
+//! An iterator where the elements are contiguous in memory
+template<typename T>
+concept Exception = std::derived_from<T, std::exception>;
+
 } // namespace core::concepts
