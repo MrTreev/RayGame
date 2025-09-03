@@ -13,44 +13,32 @@ raygame_lib(
 add_library(RayGame::Core::Window ALIAS RayGameCoreWindow)
 
 if(NOT RAYGAME_GUI_DISABLE_RAYLIB)
-    target_sources(RayGameCoreWindow PRIVATE detail/raylib.h detail/raylib.cpp)
     target_link_libraries(RayGameCoreWindow PRIVATE RayGame::External::RayLib)
 endif()
 
-if(NOT RAYGAME_GUI_DISABLE_IMGUI)
-    target_sources(RayGameCoreWindow PRIVATE detail/imgui.h detail/imgui.cpp)
-    target_link_libraries(RayGameCoreWindow PRIVATE RayGame::External::Imgui)
+if(RAYGAME_OS_IS_MACOS AND NOT RAYGAME_GUI_DISABLE_COCOA)
+    target_link_libraries(RayGameCoreWindow PRIVATE)
 endif()
 
-if(RAYGAME_OS_IS_MACOS AND NOT RAYGAME_GUI_DISABLE_COCOA)
-    target_sources(RayGameCoreWindow PRIVATE detail/cocoa.h detail/cocoa.cpp)
-    target_link_libraries(RayGameCoreWindow PRIVATE)
-endif()
 if(RAYGAME_OS_IS_WINDOWS AND NOT RAYGAME_GUI_DISABLE_DWM)
-    target_sources(RayGameCoreWindow PRIVATE detail/dwm.h detail/dwm.cpp)
     target_link_libraries(RayGameCoreWindow PRIVATE)
 endif()
-if(RAYGAME_OS_IS_LINUX)
+
+if(NOT RAYGAME_GUI_DISABLE_WAYLAND)
     find_package(X11 REQUIRED)
-    if(NOT RAYGAME_GUI_DISABLE_WAYLAND)
-        raygame_add_wayland_protocols(RayGameWindowWayland PROTOCOLS wayland xdg-shell)
-        target_sources(
-            RayGameCoreWindow
-            PRIVATE detail/wayland/wl_keyboard.cpp
-                    detail/wayland/wl_pointer.cpp
-                    detail/wayland/wl_registry.cpp
-                    detail/wayland/wl_seat.cpp
-                    detail/wayland/wl_surface.cpp
-                    detail/wayland/xdg_surface.cpp
-                    detail/wayland/xdg_toplevel.cpp
-                    detail/wayland/xdg_wm_base.cpp
-                    detail/wayland.h
-                    detail/wayland.cpp
-        )
-        target_link_libraries(RayGameCoreWindow PRIVATE RayGameWindowWayland X11::xkbcommon xkbcommon)
-    endif()
-    if(NOT RAYGAME_GUI_DISABLE_X11)
-        target_sources(RayGameCoreWindow PRIVATE detail/x11.h detail/x11.cpp)
-        target_link_libraries(RayGameCoreWindow PRIVATE X11::X11 X11::xkbcommon xkbcommon)
-    endif()
+    raygame_add_wayland_protocols(RayGameWindowWayland PROTOCOLS wayland xdg-shell)
+    target_sources(
+        RayGameCoreWindow
+        PRIVATE detail/wayland/wl_keyboard.cpp
+                detail/wayland/wl_pointer.cpp
+                detail/wayland/wl_registry.cpp
+                detail/wayland/wl_seat.cpp
+                detail/wayland/wl_surface.cpp
+                detail/wayland/xdg_surface.cpp
+                detail/wayland/xdg_toplevel.cpp
+                detail/wayland/xdg_wm_base.cpp
+                detail/wayland.h
+                detail/wayland.cpp
+    )
+    target_link_libraries(RayGameCoreWindow PRIVATE RayGameWindowWayland X11::xkbcommon xkbcommon)
 endif()
