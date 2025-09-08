@@ -4,7 +4,8 @@
 
 namespace core {
 
-struct Pixel {
+class Pixel {
+public:
     // NOLINTBEGIN(misc-non-private-member-variables-in-classes)
     uint8_t m_red;
     uint8_t m_green;
