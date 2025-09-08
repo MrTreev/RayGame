@@ -100,58 +100,6 @@ wl_shm_format get_colour_format() {
 } // namespace
 
 namespace core::window::detail {
-WaylandWindowImpl::WaylandWindowImpl(Vec2<size_t> size, std::string title, WindowStyle style)
-    : WindowImpl(size, std::move(title), style) {
-    if constexpr (config::EnabledBackends::wayland()) {
-        m_wl_shm_format = get_colour_format();
-        m_wl_display    = wl_display_connect(nullptr);
-        check_ptr(m_wl_display, "Display setup failed");
-        m_wl_registry = wl_display_get_registry(m_wl_display);
-        check_ptr(m_wl_registry, "Registry setup failed");
-        wl_registry_add_listener(m_wl_registry, &m_wl_registry_listener, this);
-        check_condition(wl_display_roundtrip(m_wl_display) != 0, "Display roundtrip failed");
-        check_ptr(m_wl_shm, "shm global setup failed");
-        check_ptr(m_wl_compositor, "compositor global setup failed");
-        check_ptr(m_xdg_wm_base, "xdg_wm_base global setup failed");
-        m_wl_surface = wl_compositor_create_surface(m_wl_compositor);
-        check_ptr(m_wl_surface, "wl_surface setup failed");
-        m_xdg_surface = xdg_wm_base_get_xdg_surface(m_xdg_wm_base, m_wl_surface);
-        check_ptr(m_xdg_surface, "xdg_surface setup failed");
-        m_xdg_toplevel = xdg_surface_get_toplevel(m_xdg_surface);
-        check_ptr(m_xdg_toplevel, "xdg_toplevel setup failed");
-        xdg_toplevel_add_listener(m_xdg_toplevel, &m_xdg_toplevel_listener, this);
-        xdg_surface_add_listener(m_xdg_surface, &m_xdg_surface_listener, this);
-        wl_surface_commit(m_wl_surface);
-        log::trace("Surface Committed");
-        while ((wl_display_dispatch(m_wl_display) != -1) && (!m_configured)) {
-            log::error("Wayland display not configured");
-        }
-        log::trace("Display Dispatched");
-        xdg_toplevel_set_title(m_xdg_toplevel, get_title().c_str());
-        new_buffer();
-        restyle();
-        wl_surface_attach(m_wl_surface, m_wl_buffer, 0, 0);
-        log::trace("Surface Attached");
-        wl_surface_commit(m_wl_surface);
-        log::trace("Surface Committed");
-        m_wl_callback = wl_surface_frame(m_wl_surface);
-        check_ptr(m_wl_callback, "Failed to create callback");
-        wl_callback_add_listener(m_wl_callback, &m_wl_surface_frame_listener, this);
-        log::trace("Return from Constructor");
-    } else {
-        condition::unreachable();
-    }
-}
-
-WaylandWindowImpl::~WaylandWindowImpl() {
-    m_buffer_width  = 0;
-    m_buffer_height = 0;
-    wl_buffer_destroy(m_wl_buffer);
-    wl_surface_destroy(m_wl_surface);
-    xdg_surface_destroy(m_xdg_surface);
-    xdg_toplevel_destroy(m_xdg_toplevel);
-}
-
 void WaylandWindowImpl::draw(const drawing::ImageView& image) {
     constexpr auto clamp = [](const pos_t val) {
         return numeric_cast<dis_t>(std::max(pos_t(0), val));
