@@ -91,11 +91,11 @@ include(RayGameWayland)
 include(RayGameTest)
 raygame_enable_testing()
 
-add_subdirectory(tools)
-include(RayGameImage)
-
 add_subdirectory(third_party)
 add_subdirectory(raygame)
+
+include(RayGameImage)
+
 add_subdirectory(tests)
 add_subdirectory(docs)
 add_subdirectory(games)

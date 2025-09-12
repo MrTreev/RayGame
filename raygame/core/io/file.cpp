@@ -44,26 +44,56 @@ File::mode cstr_to_mod(const char* mod) {
 } // namespace
 
 File::File(const std::filesystem::path& filename, File::mode mod)
-    : m_path(std::filesystem::canonical(filename)) {
-    if (std::filesystem::exists(m_path)) {
-        if (std::filesystem::is_regular_file(m_path)) {
-            // NOLINTNEXTLINE(*-owning-memory) // safe, and the only way to do it
-            m_file = std::fopen(m_path.c_str(), mod_to_cstr(mod));
-            if (m_file == nullptr) {
-                log::error("Error in file: {}", filename.string());
-                throw std::system_error(errno, std::system_category());
+    : m_path(std::filesystem::absolute(filename)) {
+    if (mod == mode::read || mod == mode::read_extended) {
+        if (std::filesystem::exists(m_path)) {
+            if (std::filesystem::is_regular_file(m_path)) {
+                // NOLINTNEXTLINE(*-owning-memory) // safe, and the only way to do it
+                m_file = std::fopen(m_path.c_str(), mod_to_cstr(mod));
+                if (m_file == nullptr) {
+                    log::error("Error in file: {}", m_path.string());
+                    throw std::system_error(errno, std::system_category());
+                }
+            } else {
+                log::error("File is not regular: {}", m_path.string());
             }
+            m_good = true;
+            log::trace("File opened: {}", m_path.string());
         } else {
-            log::error("File is not regular: {}", m_path.string());
+            log::error("File does not exist: {}", m_path.string());
         }
     } else {
-        log::error("File does not exist: {}", m_path.string());
+        // NOLINTNEXTLINE(*-owning-memory) // safe, and the only way to do it
+        m_file = std::fopen(m_path.c_str(), mod_to_cstr(mod));
+        if (m_file == nullptr) {
+            log::error("Error in file: {}", m_path.string());
+            throw std::system_error(errno, std::system_category());
+        }
     }
-    log::trace("File opened: {}", m_path.string());
 }
 
 File::File(const std::filesystem::path& filename, const char* mod)
     : File::File(filename, cstr_to_mod(mod)) {}
+
+std::string File::fname() const {
+    return m_path.filename().string();
+}
+
+bool File::good() const {
+    return m_good;
+}
+
+void File::write(const std::string_view& msg) {
+    const size_t n_written = std::fwrite(msg.data(), sizeof(msg[0]), msg.size(), m_file);
+    if (n_written != msg.size()) {
+        log::error("Message not fully written to: {}", m_path.filename().string());
+    }
+}
+
+void File::writeln(const std::string_view& msg) {
+    write(msg);
+    write("\n");
+}
 
 File::~File() {
     if (m_file != nullptr) {

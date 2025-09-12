@@ -9,6 +9,8 @@ raygame_lib(
 )
 add_library(RayGame::Core ALIAS RayGameCore)
 
+add_subdirectory(tools)
+
 # raygame_lib(RayGameSystems)
 # add_library(RayGame::Systems ALIAS RayGameSystems)
 # add_subdirectory(systems)

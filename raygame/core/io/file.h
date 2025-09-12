@@ -2,10 +2,12 @@
 #include "raygame/core/types.h"
 #include <cstdio>
 #include <filesystem>
+#include <string_view>
 
 namespace core::io {
 class File {
 private:
+    bool                  m_good = false;
     std::FILE*            m_file = nullptr;
     std::filesystem::path m_path;
 
@@ -27,5 +29,14 @@ public:
     ~File();
 
     std::FILE* raw() { return m_file; }
+
+    void write(const std::string_view& msg);
+    void writeln(const std::string_view& msg);
+
+    [[nodiscard]]
+    std::string fname() const;
+
+    [[nodiscard]]
+    bool good() const;
 };
 } // namespace core::io
