@@ -2,6 +2,7 @@
 #include "raygame/core/exception.h"
 #include "raygame/core/io/file.h"
 #include "raygame/core/logger.h"
+#include <cstdint>
 #include <filesystem>
 #include <png.h>
 #include <print>
@@ -10,6 +11,7 @@
 
 namespace {
 using core::log::debug;
+using core::log::trace;
 
 constexpr std::string progname{"ray_resource"};
 
@@ -68,11 +70,11 @@ class Resource {
         }
     }
 
-    std::filesystem::path m_source;
-    std::string           m_name;
-    std::string           m_out_type;
-    std::vector<uint8_t>  m_data;
-    ResType               m_type;
+    std::filesystem::path    m_source;
+    std::string              m_name;
+    std::string              m_out_type;
+    std::vector<std::string> m_data;
+    ResType                  m_type;
 
     std::string str() { return m_source.string(); }
 
@@ -87,12 +89,12 @@ class Resource {
         if (std::fread(header.data(), 1, header.size(), pngfile.raw()) != header.size()) {
             throw std::system_error(errno, std::system_category());
         }
-        debug("{} is valid file", str());
+        trace("{} is valid file", str());
         core::condition::check_condition(
             (png_sig_cmp(header.data(), 0, header.size()) == 0),
             std::format("ERROR: '{}' is not a PNG file", str())
         );
-        debug("{} is valid PNG", str());
+        trace("{} is valid PNG", str());
         const png_ptr_t<png_struct> png_ptr{
             png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr)
         };
@@ -100,7 +102,7 @@ class Resource {
             png_ptr,
             std::format("Could not allocate png_struct for: {}", str())
         );
-        debug("{} struct allocated", str());
+        trace("{} struct allocated", str());
         const png_ptr_t<png_info> info_ptr{png_create_info_struct(png_ptr.get())};
         png_init_io(png_ptr.get(), pngfile.raw());
         png_set_sig_bytes(png_ptr.get(), static_cast<int>(PNG_HEADER_LEN));
@@ -119,7 +121,63 @@ class Resource {
         debug("    interlace_type:  {}", interlace_to_string(interlace_type));
         debug("    channels:        {}", channels_to_string(channels));
         debug("    rowbytes:        {}", rowbytes);
+        debug("    bytesize:        {}", sizeof(png_byte));
         m_out_type = std::format("core::drawing::Image<{}, {}>", width, height);
+        std::vector<png_byte*> row_ptr{};
+        row_ptr.reserve(height);
+        for (size_t row_n = 0; row_n < height; ++row_n) {
+            // NOLINTNEXTLINE
+            row_ptr[row_n] = reinterpret_cast<png_byte*>(malloc(rowbytes));
+        }
+        // read image data
+        png_read_image(png_ptr.get(), row_ptr.data());
+        for (size_t yval{0}; yval < height; ++yval) {
+            m_data.emplace_back("\n    ");
+            for (size_t xval{0}; xval < width; xval++) {
+                auto get_next = [bit_depth, &row_ptr, xval, yval]() {
+                    constexpr uint64_t bits   = sizeof(png_byte) * 8;
+                    const uint64_t     depth  = bit_depth / bits;
+                    const uint64_t     byte_0 = row_ptr[yval][((sizeof(png_byte) / 2) * xval) + 0];
+                    const uint64_t     byte_1 = row_ptr[yval][((sizeof(png_byte) / 2) * xval) + 1];
+                    const uint64_t     byte_2 = row_ptr[yval][((sizeof(png_byte) / 2) * xval) + 2];
+                    const uint64_t     byte_3 = row_ptr[yval][((sizeof(png_byte) / 2) * xval) + 3];
+                    switch (depth) {
+                        // clang-format off
+                        // NOLINTBEGIN
+                    case 1: return (byte_0 << (0 * bits));
+                    case 2: return (byte_0 << (1 * bits)) + (byte_1 << (0 * bits));
+                    case 3: return (byte_0 << (2 * bits)) + (byte_1 << (1 * bits)) + (byte_2 << (0 * bits));
+                    case 4: return (byte_0 << (3 * bits)) + (byte_1 << (2 * bits)) + (byte_2 << (1 * bits)) + (byte_3 << (0 * bits));
+                        // NOLINTEND
+                        // clang-format on
+                    default: core::condition::unknown(std::format("depth: {}", depth));
+                    }
+                };
+                const uint64_t data_r = get_next();
+                const uint64_t data_g = get_next();
+                const uint64_t data_b = get_next();
+                const uint64_t data_a = get_next();
+                const uint8_t  r_val  = data_r;
+                const uint8_t  g_val  = data_g;
+                const uint8_t  b_val  = data_b;
+                const uint8_t  a_val  = data_a;
+                m_data.push_back(
+                    std::format(
+                        "rgba({:#04x},{:#04x},{:#04x},{:#04x}), ",
+                        r_val,
+                        g_val,
+                        b_val,
+                        a_val
+                    )
+                );
+            }
+        }
+        for (auto& row: row_ptr) {
+            // NOLINTNEXTLINE
+            free(row);
+            row = nullptr;
+        }
+        debug("allocated");
     }
 
 public:
@@ -133,7 +191,19 @@ public:
             return ResType::UNKNOWN;
         }(m_source.extension().string())) {}
 
+    const std::string& name() { return m_name; }
+
     std::string declaration() { return std::format("extern const {} {};", m_out_type, m_name); }
+
+    std::string definition() {
+        std::string definition{};
+        definition += std::format("const {} {} = {{", m_out_type, m_name);
+        for (size_t idx{0}; idx < m_data.size(); ++idx) {
+            definition += m_data[idx];
+        }
+        definition += std::format("}};");
+        return definition;
+    }
 
     void process() {
         debug("Processing: {}", m_name);
@@ -172,5 +242,11 @@ int main(int argc, char* argv[]) {
     }
     for (auto& resource: resources) {
         resource.process();
+    }
+    for (auto& resource: resources) {
+        debug("Resource declaration:");
+        debug("{}", resource.declaration());
+        debug("Resource definition:");
+        debug("{}", resource.definition());
     }
 }
