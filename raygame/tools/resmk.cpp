@@ -42,7 +42,8 @@ class Resource {
         PNG,
     };
 
-    constexpr std::string to_string(ResType enum_item) {
+    [[nodiscard]]
+    constexpr std::string to_string(ResType enum_item) const {
         switch (enum_item) {
         case ResType::UNKNOWN: return "UNKNOWN";
         case ResType::PNG:     return "PNG";
@@ -55,7 +56,10 @@ class Resource {
     std::vector<std::string> m_data;
     ResType                  m_type;
 
-    std::string str() { return m_source.string(); }
+    [[nodiscard]]
+    std::string str() const {
+        return m_source.string();
+    }
 
     void process_png() {
         constexpr size_t N_CH = 4;
@@ -66,6 +70,7 @@ class Resource {
         if (!pngfile.good()) {
             throw FileError(std::format("Bad file"));
         }
+        debug("pngfile: {}", pngfile.fname());
         uint8_t* const data = stbi_load_from_file(pngfile.raw(), &width, &height, &channels, N_CH);
         m_out_type          = std::format("core::drawing::Image<{}, {}>", width, height);
         for (int yval{0}; yval < height; ++yval) {
@@ -103,7 +108,10 @@ public:
             return ResType::UNKNOWN;
         }(m_source.extension().string())) {}
 
-    const std::string& name() { return m_name; }
+    [[nodiscard]]
+    const std::string& name() const {
+        return m_name;
+    }
 
     [[nodiscard]]
     std::string declaration() const {
@@ -134,76 +142,75 @@ public:
     }
 };
 
-void write_source(
-    core::io::File&    srcfile,
-    const Resource&    resource,
-    const std::string& outer_namespace,
-    const std::string& ns_name
-) {
-    srcfile.writeln("#include \"raygame/core/drawing/image.h\"");
-    srcfile.writeln("using core::colour::rgba;");
-    if (!outer_namespace.empty()) {
-        srcfile.writeln(std::format("namespace {} {{", outer_namespace));
-    }
-    srcfile.writeln(std::format("namespace {} {{", ns_name));
-    srcfile.writeln(resource.definition());
-    srcfile.writeln("}");
-    if (!outer_namespace.empty()) {
-        srcfile.writeln("}");
-    }
-}
-
-} // namespace
-
-// NOLINTNEXTLINE(*-exception-escape)
-int main(int argc, char* argv[]) {
+struct Config {
     bool                  header_set{false};
-    std::filesystem::path header{};
+    std::filesystem::path header;
     std::vector<Resource> resources;
     std::string           outer_namespace;
-    for (int argn{1}; argn < argc;) {
-        const std::string arg{argv[++argn]}; //NOLINT(*-pointer-arithmetic)
+    std::string           ns_name;
+};
+
+// NOLINTNEXTLINE(*-c-arrays)
+Config handle_args(const int argc, char* const argv[]) {
+    Config config;
+    for (int argn{1}; argn < argc; argn++) {
+        const std::string arg{argv[argn]}; //NOLINT(*-pointer-arithmetic)
         if (arg.starts_with('-')) {
             if (arg == "-h" || arg == "--help") {
                 print_help();
             }
             if (arg == "-n" || arg == "--namespace") {
-                outer_namespace = argv[++argn]; //NOLINT(*-pointer-arithmetic)
+                config.outer_namespace = argv[++argn]; //NOLINT(*-pointer-arithmetic)
             }
         } else {
-            if (!header_set) {
-                header_set = true;
-                header     = arg;
+            if (!config.header_set) {
+                config.header_set = true;
+                config.header     = arg;
             } else {
-                resources.emplace_back(arg);
+                config.resources.emplace_back(arg);
             }
         }
     }
-    for (auto& resource: resources) {
-        try {
-            resource.process();
-        } catch (FileError& e) {
-            core::log::error("{} - {}", e.what(), resource.name());
-            return 1;
-        }
+    config.ns_name = config.header.stem().string();
+    for (auto& resource: config.resources) {
+        resource.process();
     }
-    core::io::File hdrfile{header, "w"};
+    return config;
+}
+} // namespace
+
+// NOLINTNEXTLINE(*-exception-escape)
+int main(int argc, char* argv[]) {
+    const Config config = handle_args(argc, argv);
+    if (config.header.string().empty()) {
+        return 1;
+    }
+    core::io::File hdrfile{config.header, core::io::File::mode::write};
     hdrfile.writeln("#include \"raygame/core/drawing/image.h\"");
-    const std::string ns_name = header.stem().string();
-    if (!outer_namespace.empty()) {
-        hdrfile.writeln(std::format("namespace {} {{", outer_namespace));
+    if (!config.outer_namespace.empty()) {
+        hdrfile.writeln(std::format("namespace {} {{", config.outer_namespace));
     }
-    hdrfile.writeln(std::format("namespace {} {{", ns_name));
-    for (auto& resource: resources) {
+    hdrfile.writeln(std::format("namespace {} {{", config.ns_name));
+    for (const auto& resource: config.resources) {
         hdrfile.writeln(resource.declaration());
         std::string fname         = hdrfile.fname();
         fname[fname.length() - 1] = 'c';
         fname.append("pp");
         core::io::File srcfile{fname, "w"};
-        write_source(srcfile, resource, outer_namespace, ns_name);
+        srcfile.writeln("#include \"raygame/core/drawing/image.h\"");
+        srcfile.writeln("using core::colour::rgba;");
+        if (!config.outer_namespace.empty()) {
+            srcfile.writeln(std::format("namespace {} {{", config.outer_namespace));
+        }
+        srcfile.writeln(std::format("namespace {} {{", config.ns_name));
+        srcfile.writeln(resource.definition());
+        srcfile.writeln("}");
+        if (!config.outer_namespace.empty()) {
+            srcfile.writeln("}");
+        }
     }
     hdrfile.writeln("}");
-    if (!outer_namespace.empty()) {
+    if (!config.outer_namespace.empty()) {
         hdrfile.writeln("}");
     }
 }

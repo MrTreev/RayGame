@@ -81,6 +81,14 @@ public:
     constexpr explicit Image(std::array<Pixel, img_size> in_buf)
         : m_buffer(std::move(in_buf))
         , ImageView(m_buffer, {Width, Height}) {}
+
+    constexpr explicit Image(const std::array<Pixel, img_size>& in_buf)
+        : m_buffer(in_buf)
+        , ImageView(m_buffer, {Width, Height}) {}
+
+    constexpr explicit Image(std::array<Pixel, img_size>&& in_buf)
+        : m_buffer(std::move(in_buf))
+        , ImageView(m_buffer, {Width, Height}) {}
 };
 
 } // namespace core::drawing

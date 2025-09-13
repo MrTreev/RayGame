@@ -17,3 +17,4 @@ raygame_link_testlib(RayGameRayTest)
 
 add_library(RayGame::RayTest ALIAS RayGameRayTest)
 add_subdirectory(core)
+add_subdirectory(tools)

@@ -20,8 +20,8 @@ public:
         write_extended,
         append_extended
     };
-    explicit File(const std::filesystem::path& filename, mode mod);
-    explicit File(const std::filesystem::path& filename, const char* mod);
+    explicit File(std::filesystem::path filename, File::mode mod);
+    explicit File(std::filesystem::path filename, const char* mod);
     File(File&&)                 = default;
     File& operator=(File&&)      = default;
     File(const File&)            = delete;

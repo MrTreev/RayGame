@@ -14,9 +14,6 @@
 
 namespace {
 using cstr = const char* const;
-constexpr std::string exe{RESMK};
-constexpr std::string datadir{RESMK_DATA_DIR};
-constexpr std::string filedir{RESMK_FILE_DIR};
 
 int resmk(cstr hdr, cstr png) {
     int       status = 0;
@@ -24,20 +21,24 @@ int resmk(cstr hdr, cstr png) {
     if (pid != 0) {
         waitpid(pid, &status, 0);
     } else {
-        const char* const executable{exe.c_str()};
+        const char* const executable{RESMK};
         // NOLINTNEXTLINE(*-vararg)
         execl(executable, executable, hdr, png, nullptr);
     }
     return status;
 }
 
+// cstr imgtest_header{};
+// cstr imgtest_source{};
+
 } // namespace
 
 RG_TEST(ResMK, stuff) {
     RG_SUBCASE("imgtest") {
-        constexpr std::string imgtest_hdr = filedir + "/imgtest.h";
-        constexpr std::string imgtest_src = filedir + "/imgtest.cpp";
-        constexpr std::string imgtest_png = datadir + "/imgtest.png";
-        RG_CHECK_EQ(0, resmk(imgtest_hdr.c_str(), imgtest_png.c_str()));
+        cstr imgtest_hdr{RESMK_FILE_DIR "/imgtest.h"};
+        cstr imgtest_png{RESMK_DATA_DIR "/imgtest.png"};
+        RG_CHECK_EQ(0, resmk(imgtest_hdr, imgtest_png));
+        [[maybe_unused]]
+        cstr imgtest_src{RESMK_FILE_DIR "/imgtest.cpp"};
     }
 }

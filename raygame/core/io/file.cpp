@@ -43,12 +43,12 @@ File::mode cstr_to_mod(const char* mod) {
 }
 } // namespace
 
-File::File(const std::filesystem::path& filename, File::mode mod)
-    : m_path(std::filesystem::absolute(filename)) {
+File::File(std::filesystem::path filename, File::mode mod)
+    : m_path(std::move(filename)) {
     if (mod == mode::read || mod == mode::read_extended) {
         if (std::filesystem::exists(m_path)) {
             if (std::filesystem::is_regular_file(m_path)) {
-                // NOLINTNEXTLINE(*-owning-memory) // safe, and the only way to do it
+                // NOLINTNEXTLINE(*-owning-memory)
                 m_file = std::fopen(m_path.c_str(), mod_to_cstr(mod));
                 if (m_file == nullptr) {
                     log::error("Error in file: {}", m_path.string());
@@ -63,17 +63,18 @@ File::File(const std::filesystem::path& filename, File::mode mod)
             log::error("File does not exist: {}", m_path.string());
         }
     } else {
-        // NOLINTNEXTLINE(*-owning-memory) // safe, and the only way to do it
+        // NOLINTNEXTLINE(*-owning-memory)
         m_file = std::fopen(m_path.c_str(), mod_to_cstr(mod));
         if (m_file == nullptr) {
+            log::error("File: '{}'", m_path.c_str());
             log::error("Error in file: {}", m_path.string());
             throw std::system_error(errno, std::system_category());
         }
     }
 }
 
-File::File(const std::filesystem::path& filename, const char* mod)
-    : File::File(filename, cstr_to_mod(mod)) {}
+File::File(std::filesystem::path filename, const char* mod)
+    : File::File(std::move(filename), cstr_to_mod(mod)) {}
 
 std::string File::fname() const {
     return m_path.filename().string();

@@ -85,7 +85,7 @@ function(stb_lib _target)
     )
     target_compile_options(
         RayGameExternalStb${_target}
-        PRIVATE -w
+        PRIVATE -w -Wno-tautological-comprare
     )
     target_include_directories(
         RayGameExternalStb${_target}

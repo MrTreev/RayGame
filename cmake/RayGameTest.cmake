@@ -5,9 +5,14 @@ include(FetchContent)
 macro(raygame_enable_testing)
     if(RAYGAME_BUILD_TESTS)
         enable_testing()
-        FetchContent_Declare(googletest URL https://github.com/google/googletest/releases/download/v1.16.0/googletest-1.16.0.tar.gz)
+        FetchContent_Declare(
+            googletest URL https://github.com/google/googletest/releases/download/v1.16.0/googletest-1.16.0.tar.gz
+        )
         # For Windows: Prevent overriding the parent project's compiler/linker settings
-        set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+        set(gtest_force_shared_crt
+            ON
+            CACHE BOOL "" FORCE
+        )
         FetchContent_MakeAvailable(googletest)
         include(CTest)
         include(GoogleTest)
@@ -20,8 +25,7 @@ function(raygame_link_testlib _target)
 endfunction()
 
 function(raygame_add_test _target)
-    target_compile_definitions(${_target} PUBLIC RAYGAME_TESTLIB_GTEST)
-    target_link_libraries(${_target} PUBLIC GTest::gtest)
+    raygame_link_testlib(${_target})
     gtest_discover_tests(${_target})
 endfunction()
 
@@ -45,6 +49,8 @@ function(raygame_test _target)
     raygame_add_args(${_TARGET})
     raygame_add_defs(${_TARGET})
     raygame_add_test(${_TARGET})
+    target_compile_options(${_TARGET} PRIVATE -coverage)
+    target_link_options(${_TARGET} PRIVATE -coverage)
     if($<NOT:${RAYGAME_TESTARGS_NO_MAIN}>)
         target_compile_definitions(${_TARGET} PUBLIC RAYTEST_NO_MAIN)
     endif()
