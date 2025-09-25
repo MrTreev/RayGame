@@ -19,3 +19,6 @@
 [submodule "third_party/raddebugger"]
 	path = third_party/raddebugger
 	url = https://github.com/EpicGamesExt/raddebugger.git
+[submodule "third_party/clang-uml"]
+	path = third_party/clang-uml
+	url = https://github.com/bkryza/clang-uml.git

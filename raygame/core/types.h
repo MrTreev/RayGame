@@ -36,6 +36,8 @@ static_assert(std::is_signed_v<pos_t>);
 using dis_t = RAYGAME_DISTANCE_TYPE;
 static_assert(std::is_unsigned_v<dis_t>);
 
+/*! Simplified Pair of objects
+ */
 template<typename t_first_t, typename t_second_t = t_first_t>
 class Pair {
 private:
