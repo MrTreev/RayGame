@@ -6,6 +6,7 @@ raygame_lib(
          debug.h
          exception.h
          logger.h
+         macros.h
          matrix.h
          types.h
     SRCS concepts.cpp
@@ -14,6 +15,7 @@ raygame_lib(
          debug.cpp
          exception.cpp
          logger.cpp
+         macros.cpp
          matrix.cpp
          types.cpp
 )

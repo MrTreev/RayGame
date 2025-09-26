@@ -12,6 +12,7 @@
  *  Macros used to specify machine-specific traits/features
  */
 
+// preprocessor doesn't allow apostrophe separated numbers
 // clang-format off
 #if (__cplusplus < 202302L)
 // clang-format on
@@ -30,31 +31,10 @@ static_assert(false, "This game's code uses features from the C++23 standard");
  *  User-defined configuration macros
  */
 
-#if !defined(RAYGAME_POSITION_TYPE)
-//! @ingroup macros_config
-//! Position type used in game (signed)
-#    define RAYGAME_POSITION_TYPE int64_t
-#endif
-
-#if !defined(RAYGAME_DISTANCE_TYPE)
-//! @ingroup macros_config
-//! Distance type used in game (unsigned)
-#    define RAYGAME_DISTANCE_TYPE uint64_t
-#endif
-
 #if !defined(RAYGAME_TIME_FRAMES)
 //! @ingroup macros_config
 //! Log the average frame time
 #    define RAYGAME_TIME_FRAMES false
-#endif
-
-#if !defined(RAYGAME_FORCE_GENERIC_IMPL)
-//! @ingroup macros_config
-//! Force generic implementations of operations
-/*!
- *  Used for Testing, ignores compiler-specific optimisations in some functions
- */
-#    define RAYGAME_FORCE_GENERIC_IMPL false
 #endif
 
 /*!
@@ -139,6 +119,7 @@ enum class Level : uint8_t {
     FATAL    = 255,
 };
 
+//! Current logging level
 constexpr Level logging_level = Level::RAYGAME_LOG_LEVEL;
 } // namespace core::log
 
@@ -149,8 +130,6 @@ constexpr bool TIME_FRAMES = RAYGAME_TIME_FRAMES;
 //! Game's target FPS
 constexpr size_t TARGET_FPS = RAYGAME_TARGET_FPS;
 
-//! Force generic implementations
-constexpr bool FORCE_GENERIC_IMPL = RAYGAME_FORCE_GENERIC_IMPL;
 } // namespace core::config
 
 //=============================================================================
@@ -384,12 +363,8 @@ constexpr bool COMPILER_IS_GCC_LIKE = (COMPILER == Compiler::GCC || COMPILER == 
 #if defined(RAYGAME_DOXYGEN_INVOKED)
 #    define RAYGAME_OS_ANDROID
 #    define RAYGAME_OS_BSD
-#    define RAYGAME_OS_HURD
 #    define RAYGAME_OS_LINUX
 #    define RAYGAME_OS_MAC
-#    define RAYGAME_OS_QNX
-#    define RAYGAME_OS_TEMPLEOS
-#    define RAYGAME_OS_WIN32
 #    define RAYGAME_OS_WIN64
 #endif
 //! @}
@@ -399,29 +374,12 @@ constexpr bool COMPILER_IS_GCC_LIKE = (COMPILER == Compiler::GCC || COMPILER == 
 #        define RAYGAME_OS_ANDROID
 #    elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__bsdi__)
 #        define RAYGAME_OS_BSD
-#    elif defined(__GNU__) || defined(__gnu_hurd__)
-#        define RAYGAME_OS_HURD
-#        warning "Imagine using hurd, who are you? Richard Stallman?"
 #    elif defined(__gnu_linux__) || defined(__linux__)
 #        define RAYGAME_OS_LINUX
 #    elif defined(macintosh) || defined(Macintosh) || (defined(__APPLE__) && defined(__MACH__))
 #        define RAYGAME_OS_MAC
-#    elif defined(__QNX__) || defined(__QNXNTO__)
-#        define RAYGAME_OS_QNX
-#        warning "Why? Just why?"
-#        warning "What possessed you to try running games on QNX?"
 #    elif defined(_WIN64)
 #        define RAYGAME_OS_WIN64
-#        warning "Imagine using a niche videogame operating system..."
-#        warning "Couldn't be me"
-#    elif defined(_WIN32)
-#        define RAYGAME_OS_WIN32
-#        warning "Imagine using a niche videogame operating system..."
-#        warning                                                                                   \
-            "Couldn't be me, but at least the 32-bit versions"                 \
-            " generally didn't have as much spyware"
-#    else
-static_assert(false, "Unknown Operating System");
 #    endif
 #else
 static_assert(false, "Cannot run without an OS");
@@ -433,18 +391,12 @@ static_assert(false, "Cannot run without an OS");
 static_assert(false, "Not tested on Android");
 #elif defined(RAYGAME_OS_BSD)
 static_assert(false, "Not tested on BSD");
-#elif defined(RAYGAME_OS_HURD)
-static_assert(false, "Not tested on HURD");
 #elif defined(RAYGAME_OS_LINUX)
 static_assert(true);
 #elif defined(RAYGAME_OS_MAC)
 static_assert(false, "Not tested on Apple Macintosh");
-#elif defined(RAYGAME_OS_QNX)
-static_assert(false, "Not tested on QNX");
-#elif defined(RAYGAME_OS_WIN32)
-static_assert(false, "Not tested on Windows 32-bit");
 #elif defined(RAYGAME_OS_WIN64)
-static_assert(false, "Not tested on Windows 64-bit");
+static_assert(false, "Not tested on Windows");
 #else
 static_assert(false, "Unknown Operating System");
 #endif
@@ -454,11 +406,8 @@ namespace core::config {
 enum class OperatingSystem : uint8_t {
     ANDROID, //!< Android OS
     BSD,     //!< BSD
-    HURD,    //!< GNU Hurd
     LINUX,   //!< Linux
     MAC,     //!< Mac OS
-    QNX,     //!< QNX RTOS
-    WIN32,   //!< Windows 32-Bit
     WIN64,   //!< Windows 64-Bit
 };
 
@@ -468,16 +417,10 @@ consteval OperatingSystem get_os() {
     return OperatingSystem::ANDROID;
 #elif defined(RAYGAME_OS_BSD)
     return OperatingSystem::BSD;
-#elif defined(RAYGAME_OS_HURD)
-    return OperatingSystem::HURD;
 #elif defined(RAYGAME_OS_LINUX)
     return OperatingSystem::LINUX;
 #elif defined(RAYGAME_OS_MAC)
     return OperatingSystem::MAC;
-#elif defined(RAYGAME_OS_QNX)
-    return OperatingSystem::QNX;
-#elif defined(RAYGAME_OS_WIN32)
-    return OperatingSystem::WIN32;
 #elif defined(RAYGAME_OS_WIN64)
     return OperatingSystem::WIN64;
 #endif
@@ -519,82 +462,3 @@ enum class BuildType : bool {
 
 constexpr BuildType BUILD_TYPE = detail::debug() ? BuildType::DEBUG : BuildType::RELEASE;
 } // namespace core::config
-
-//=============================================================================
-// SIMD Config
-//=============================================================================
-namespace core::config::simd {
-
-consteval bool avx();      //!< SIMD supports AVX
-consteval bool avx2();     //!< SIMD supports AVX2
-consteval bool float256(); //!< SIMD supports 256-bit float operations
-consteval bool neon();     //!< SIMD supports ARM NEON
-consteval bool simd128();  //!< SIMD supports 128-bit integer operations
-consteval bool sse2();     //!< SIMD supports SSE2
-consteval bool ssse3();    //!< SIMD supports SSSE3
-consteval bool x256();     //!< SIMD supports 256-bit integer operations
-
-consteval bool sse2() {
-#if defined(__SSE2__)
-    return true;
-#else
-    return false;
-#endif
-}
-
-consteval bool avx() {
-#if defined(__AVX__)
-    return true;
-#else
-    return false;
-#endif
-}
-
-consteval bool avx2() {
-#if defined(__AVX2__)
-    return true;
-#else
-    return false;
-#endif
-}
-
-consteval bool ssse3() {
-#if defined(__SSSE3__)
-    return true;
-#else
-    return false;
-#endif
-}
-
-consteval bool neon() {
-#if defined(__ARM_NEON)
-    return true;
-#else
-    return false;
-#endif
-}
-
-consteval bool simd128() {
-#if defined(RAYGAME_HAS_NEON) || defined(RAYGAME_HAS_SSE2)
-    return true;
-#else
-    return false;
-#endif
-}
-
-consteval bool float256() {
-#if defined(RAYGAME_HAS_AVX)
-    return true;
-#else
-    return false;
-#endif
-}
-
-consteval bool x256() {
-#if defined(RAYGAME_HAS_AVX2)
-    return true;
-#else
-    return false;
-#endif
-}
-} // namespace core::config::simd

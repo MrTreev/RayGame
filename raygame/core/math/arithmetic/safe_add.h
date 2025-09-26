@@ -18,7 +18,7 @@ constexpr Out_T
 // NOLINTNEXTLINE(*-cognitive-complexity)
 safe_add(const std::integral auto aval, const std::integral auto bval) {
     using work_t = decltype(work_type(work_type(aval, bval), Out_T{0}));
-    if constexpr (core::config::COMPILER_IS_GCC_LIKE && !core::config::FORCE_GENERIC_IMPL) {
+    if constexpr (core::config::COMPILER_IS_GCC_LIKE) {
         std::remove_const_t<Out_T> res = 0;
         if ((!__builtin_add_overflow(aval, bval, &res)) || (MR == MathRule::ALLOW)) {
             return res;

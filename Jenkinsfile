@@ -16,7 +16,6 @@ pipeline {
         choice(name: 'LOG_LEVEL', choices: ['TRACE', 'DEBUG', 'INFO', 'NOTE', 'PROGRESS', 'WARNING', 'ERROR', 'FATAL'], description: 'Logging Level')
         booleanParam(name: 'TIME_FRAMES', defaultValue: false, description: 'Add frame times to logs')
         booleanParam(name: 'MATH_RANDOM_FULL', defaultValue: false, description: 'Use non-deterministic randomness')
-        booleanParam(name: 'MATH_FORCE_GENERIC', defaultValue: false, description: 'Force generic implementations of mathematics')
         booleanParam(name: 'DISABLE_SOURCE_LOCATION', defaultValue: false, description: 'Disable source location in logs')
     }
     stages {
@@ -35,7 +34,6 @@ pipeline {
                         -DRAYGAME_BUILD_GAMES=ON \\
                         -DRAYGAME_LOG_LEVEL=${LOG_LEVEL} \\
                         -DRAYGAME_MATH_RANDOM_FULL=${MATH_RANDOM_FULL ? 'ON' : 'OFF'} \\
-                        -DRAYGAME_MATH_FORCE_GENERIC=${MATH_FORCE_GENERIC ? 'ON' : 'OFF'} \\
                         -DRAYGAME_LOG_DISABLE_SOURCE_LOCATION=${DISABLE_SOURCE_LOCATION ? 'ON' : 'OFF'} \\
                         -DRAYGAME_TIME_FRAMES=${TIME_FRAMES ? 'ON' : 'OFF'} \\
                         ;

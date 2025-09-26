@@ -54,12 +54,11 @@ option(RAYGAME_GUI_DISABLE_X11 "Disable the Linux X11 GUI backend" ON)
 option(RAYGAME_GUI_DISABLE_IMGUI "Disable the IMGUI GUI backend" ON)
 option(RAYGAME_GUI_DISABLE_RAYLIB "Disable the RAYLIB GUI backend" $<NOT:RAYGAME_BT_IS_DEBUG>)
 
-option(RAYGAME_ENABLE_COVERAGE "Enable code coverage" ON)
+option(RAYGAME_ENABLE_COVERAGE "Enable code coverage" OFF)
 
 set(RAYGAME_GUI_DEFAULT_WINDOW_TITLE "RayGame" CACHE STRING "Default GUI window title")
 
 option(RAYGAME_MATH_RANDOM_FULL "Non-deterministic random numbers" OFF)
-option(RAYGAME_MATH_FORCE_GENERIC "Force generic implementations of maths functions" OFF)
 
 option(RAYGAME_LOG_DISABLE_SOURCE_LOCATION "Disable source_location in logs" OFF)
 set(RAYGAME_LOG_LEVEL "DEBUG" CACHE STRING "Minimum log level to be displayed")
@@ -112,20 +111,17 @@ raygame_enable_testing()
 
 add_subdirectory(third_party)
 add_subdirectory(raygame)
-
-include(RayGameImage)
-
 add_subdirectory(tests)
 add_subdirectory(docs)
 
 find_package(Doxygen REQUIRED COMPONENTS dot)
 if(Doxygen_FOUND)
     set(DOXYGEN_WARN_IF_UNDOCUMENTED YES)
+    set(DOXYGEN_EXTRACT_ALL YES) # Change to no to generate warnings for all undocumented items
     configure_file(third_party/doxygen/Doxyfile.in Doxyfile)
     doxygen_add_docs(
         RayGameDocs
         raygame README.md
-        ALL
         CONFIG_FILE ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
     )
 endif()

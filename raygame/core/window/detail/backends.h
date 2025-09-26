@@ -7,9 +7,6 @@
 #    if !defined(RAYGAME_GUI_BACKEND_WAYLAND)
 #        define RAYGAME_GUI_BACKEND_WAYLAND
 #    endif
-#    if !defined(RAYGAME_GUI_BACKEND_X11)
-#        define RAYGAME_GUI_BACKEND_X11
-#    endif
 #elif defined(RAYGAME_OS_WIN32) || defined(RAYGAME_OS_WIN64)
 #    if !defined(RAYGAME_GUI_BACKEND_DWM)
 #        define RAYGAME_GUI_BACKEND_DWM
@@ -27,7 +24,6 @@ enum class GuiBackend : uint8_t {
     DWM,
     TEMPLE,
     WAYLAND,
-    X11,
     IMGUI,
     RAYLIB,
 };
@@ -52,22 +48,6 @@ public:
 
     static consteval bool wayland() {
 #if defined(RAYGAME_GUI_BACKEND_WAYLAND)
-        return true;
-#else
-        return false;
-#endif
-    }
-
-    static consteval bool x11() {
-#if defined(RAYGAME_GUI_BACKEND_X11)
-        return true;
-#else
-        return false;
-#endif
-    }
-
-    static consteval bool imgui() {
-#if defined(RAYGAME_GUI_BACKEND_IMGUI)
         return true;
 #else
         return false;
@@ -100,12 +80,6 @@ public:
 #    define RAYGAME_RETURN_WAYLAND
 #else
 #    define RAYGAME_RETURN_WAYLAND [[noreturn]]
-#endif
-
-#if defined(RAYGAME_GUI_BACKEND_X11)
-#    define RAYGAME_RETURN_X11
-#else
-#    define RAYGAME_RETURN_X11 [[noreturn]]
 #endif
 
 #if defined(RAYGAME_GUI_BACKEND_IMGUI)

@@ -1,8 +1,13 @@
+#include "raygame/core/condition.h"
+#include "raygame/core/config.h"
 #include "raygame/core/exception.h"
 #include "raygame/core/io/file.h"
 #include "raygame/core/logger.h"
+#include "raygame/core/math/numeric_cast.h"
+#include <algorithm>
 #include <cstdint>
 #include <filesystem>
+#include <memory>
 #include <print>
 #include <stb_image.h>
 #include <string>
@@ -21,9 +26,6 @@ public:
     explicit FileError(const std ::string& message)
         : core::exception::Exception(message) {}
 
-    explicit FileError(const core::exception::Exception&& error)
-        : core::exception::Exception(error) {}
-
     ~FileError() noexcept override = default;
 };
 
@@ -37,117 +39,137 @@ int print_help() {
 }
 
 class Resource {
-    enum class ResType : uint8_t {
-        UNKNOWN,
-        PNG,
-    };
-
-    [[nodiscard]]
-    constexpr std::string to_string(ResType enum_item) const {
-        switch (enum_item) {
-        case ResType::UNKNOWN: return "UNKNOWN";
-        case ResType::PNG:     return "PNG";
-        }
+    virtual void process_impl() {
+        throw core::exception::Unimplemented(
+            std::format("Unknown file extension: {}", m_source.extension().string())
+        );
     }
 
-    std::filesystem::path    m_source;
-    std::string              m_name;
-    std::string              m_out_type;
-    std::vector<std::string> m_data;
-    ResType                  m_type;
-
     [[nodiscard]]
-    std::string str() const {
-        return m_source.string();
+    virtual std::string type() const {
+        core::condition::unimplemented();
     }
 
-    void process_png() {
-        constexpr size_t N_CH = 4;
-        int              height{0};
-        int              width{0};
-        int              channels{0};
-        core::io::File   pngfile{m_source, "rb"};
-        if (!pngfile.good()) {
-            throw FileError(std::format("Bad file"));
-        }
-        debug("pngfile: {}", pngfile.fname());
-        uint8_t* const data = stbi_load_from_file(pngfile.raw(), &width, &height, &channels, N_CH);
-        m_out_type          = std::format("core::drawing::Image<{}, {}>", width, height);
-        for (int yval{0}; yval < height; ++yval) {
-            m_data.emplace_back("\n    ");
-            const size_t row_off = (N_CH * width * yval);
-            for (int xval{0}; xval < width; xval++) {
-                const size_t  col_off = (N_CH * static_cast<size_t>(xval));
-                // NOLINTBEGIN(*-pointer-arithmetic)
-                const uint8_t r_val   = data[row_off + col_off + 0U];
-                const uint8_t g_val   = data[row_off + col_off + 1U];
-                const uint8_t b_val   = data[row_off + col_off + 2U];
-                const uint8_t a_val   = data[row_off + col_off + 3U];
-                // NOLINTEND(*-pointer-arithmetic)
-                m_data.push_back(
-                    std::format(
-                        "rgba({:#04x},{:#04x},{:#04x},{:#04x}), ",
-                        r_val,
-                        g_val,
-                        b_val,
-                        a_val
-                    )
-                );
-            }
-        }
+    virtual void content([[maybe_unused]] std::string& stuff) const {
+        core::condition::unimplemented();
     }
 
 public:
+    std::filesystem::path m_source; // NOLINT
+    std::string           m_name;   // NOLINT
+
+    RAYGAME_CLANG_SUPPRESS_WARNING_PUSH
+    RAYGAME_CLANG_SUPPRESS_WARNING("-Wunused-member-function")
+    virtual ~Resource()                  = default;
+    Resource(const Resource&)            = default;
+    Resource(Resource&&)                 = default;
+    Resource& operator=(const Resource&) = default;
+    Resource& operator=(Resource&&)      = default;
+    RAYGAME_CLANG_SUPPRESS_WARNING_POP
+
     explicit Resource(std::filesystem::path source)
         : m_source(std::move(source))
-        , m_name(m_source.stem().string())
-        , m_type([](const std::string& ext) {
-            //NOLINTBEGIN(*-braces-around-statements)
-            if (ext == ".png") return ResType::PNG;
-            //NOLINTEND(*-braces-around-statements)
-            return ResType::UNKNOWN;
-        }(m_source.extension().string())) {}
-
-    [[nodiscard]]
-    const std::string& name() const {
-        return m_name;
-    }
+        , m_name(m_source.stem().string()) {}
 
     [[nodiscard]]
     std::string declaration() const {
-        return std::format("extern const {} {};", m_out_type, m_name);
+        return std::format("extern const {} {};", type(), m_name);
     }
 
     [[nodiscard]]
-    std::string definition() const {
+    std::string definition(std::string prefix) const {
         std::string definition{};
-        definition += std::format("const {} {} = {{", m_out_type, m_name);
-        for (size_t idx{0}; idx < m_data.size(); ++idx) {
-            definition += m_data[idx];
-        }
-        definition += std::format("}};");
+        definition += "RAYGAME_CLANG_SUPPRESS_WARNING_PUSH\n";
+        definition += "RAYGAME_CLANG_SUPPRESS_WARNING(\"-Wglobal-constructors\")\n";
+        definition += "// NOLINTNEXTLINE(cert-err58-cpp)\n";
+        definition += std::format("const {} {}{} {{\n", type(), prefix, m_name);
+        content(definition);
+        definition += std::format("\n}};\n");
+        definition += "RAYGAME_CLANG_SUPPRESS_WARNING_POP\n";
         return definition;
     }
 
     void process() {
         debug("Processing: {}", m_name);
-        debug("    Type: {}", to_string(m_type));
-        switch (m_type) {
-        case ResType::PNG: process_png(); break;
-        case ResType::UNKNOWN:
-            throw core::exception::Unimplemented(
-                std::format("Unknown file extension: {}", m_source.extension().string())
-            );
-        }
+        process_impl();
     }
 };
 
+class PngFile: public Resource {
+    int      m_width{0};
+    int      m_height{0};
+    int      m_channels{0};
+    uint8_t* m_data{nullptr};
+
+    static constexpr size_t N_CH = 4;
+
+    void process_impl() override {
+        core::io::File pngfile{m_source, "rb"};
+        if (!pngfile.good()) {
+            throw FileError(std::format("Bad file"));
+        }
+        debug("pngfile: {}", pngfile.fname());
+        m_data = stbi_load_from_file(pngfile.raw(), &m_width, &m_height, &m_channels, N_CH);
+    }
+
+    void content(std::string& stuff) const override {
+        stuff += std::format("    std::array<core::Pixel, {}>{{", (m_width * m_height));
+        for (int yval{0}; yval < m_height; ++yval) {
+            stuff += "\n        ";
+            const size_t row_off =
+                (N_CH * core::math::numeric_cast<size_t>(m_width)
+                 * core::math::numeric_cast<size_t>(yval));
+            for (int xval{0}; xval < m_width; xval++) {
+                const size_t  col_off  = (N_CH * static_cast<size_t>(xval));
+                // NOLINTBEGIN(*-pointer-arithmetic)
+                const uint8_t r_val    = m_data[row_off + col_off + 0U];
+                const uint8_t g_val    = m_data[row_off + col_off + 1U];
+                const uint8_t b_val    = m_data[row_off + col_off + 2U];
+                const uint8_t a_val    = m_data[row_off + col_off + 3U];
+                // NOLINTEND(*-pointer-arithmetic)
+                stuff                 += std::format(
+                    "core::colour::rgba({:#04x},{:#04x},{:#04x},{:#04x}), ",
+                    r_val,
+                    g_val,
+                    b_val,
+                    a_val
+                );
+            }
+        }
+        stuff += "\n    }";
+    }
+
+    [[nodiscard]]
+    std::string type() const override {
+        return std::format("core::drawing::Image<{}, {}>", m_width, m_height);
+    }
+
+public:
+    explicit PngFile(std::filesystem::path source)
+        : Resource(std::move(source)) {}
+};
+
+std::unique_ptr<Resource> make_resource(std::filesystem::path source) {
+    std::string ext = source.extension().string();
+    std::ranges::transform(ext, ext.begin(), [](char cha) {
+        if (cha >= 'A' && cha <= 'Z') {
+            constexpr char TO_LOW{32};
+            return static_cast<char>(cha + TO_LOW);
+        }
+        return cha;
+    });
+    if (ext == ".png") {
+        return std::make_unique<PngFile>(std::move(source));
+    }
+    return std::make_unique<Resource>(std::move(source));
+}
+
 struct Config {
-    bool                  header_set{false};
-    std::filesystem::path header;
-    std::vector<Resource> resources;
-    std::string           outer_namespace;
-    std::string           ns_name;
+    bool                                   header_set{false};
+    std::filesystem::path                  header;
+    std::vector<std::unique_ptr<Resource>> resources;
+    std::string                            outer_namespace;
+    std::string                            ns_name;
 };
 
 // NOLINTNEXTLINE(*-c-arrays)
@@ -167,13 +189,13 @@ Config handle_args(const int argc, char* const argv[]) {
                 config.header_set = true;
                 config.header     = arg;
             } else {
-                config.resources.emplace_back(arg);
+                config.resources.push_back(make_resource(arg));
             }
         }
     }
     config.ns_name = config.header.stem().string();
     for (auto& resource: config.resources) {
-        resource.process();
+        resource->process();
     }
     return config;
 }
@@ -187,30 +209,23 @@ int main(int argc, char* argv[]) {
     }
     core::io::File hdrfile{config.header, core::io::File::mode::write};
     hdrfile.writeln("#include \"raygame/core/drawing/image.h\"");
+    hdrfile.writeln("");
     if (!config.outer_namespace.empty()) {
         hdrfile.writeln(std::format("namespace {} {{", config.outer_namespace));
     }
     hdrfile.writeln(std::format("namespace {} {{", config.ns_name));
     for (const auto& resource: config.resources) {
-        hdrfile.writeln(resource.declaration());
+        hdrfile.writeln(resource->declaration());
         std::string fname         = hdrfile.fname();
         fname[fname.length() - 1] = 'c';
         fname.append("pp");
         core::io::File srcfile{fname, "w"};
         srcfile.writeln("#include \"raygame/core/drawing/image.h\"");
-        srcfile.writeln("using core::colour::rgba;");
-        if (!config.outer_namespace.empty()) {
-            srcfile.writeln(std::format("namespace {} {{", config.outer_namespace));
-        }
-        srcfile.writeln(std::format("namespace {} {{", config.ns_name));
-        srcfile.writeln(resource.definition());
-        srcfile.writeln("}");
-        if (!config.outer_namespace.empty()) {
-            srcfile.writeln("}");
-        }
+        srcfile.writeln(std::format("#include \"{}\"", config.header.string()));
+        srcfile.writeln(resource->definition(config.ns_name + "::"));
     }
-    hdrfile.writeln("}");
+    hdrfile.writeln(std::format("}} // namespace {}", config.ns_name));
     if (!config.outer_namespace.empty()) {
-        hdrfile.writeln("}");
+        hdrfile.writeln(std::format("}} // namespace {}", config.outer_namespace));
     }
 }

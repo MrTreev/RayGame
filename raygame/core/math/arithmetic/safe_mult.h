@@ -30,7 +30,7 @@ safe_mult(const std::integral auto aval, const std::integral auto bval) {
         return 0;
     }
 
-    if constexpr (core::config::COMPILER_IS_GCC_LIKE && !core::config::FORCE_GENERIC_IMPL) {
+    if constexpr (core::config::COMPILER_IS_GCC_LIKE) {
         std::remove_const_t<Out_T> res = 0;
         if ((!__builtin_mul_overflow(aval, bval, &res)) || (MR == MathRule::ALLOW)) {
             return res;

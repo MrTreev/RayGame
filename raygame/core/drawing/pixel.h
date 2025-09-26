@@ -4,6 +4,7 @@
 
 namespace core {
 
+//! RGBA Pixel
 class Pixel {
 public:
     // NOLINTBEGIN(misc-non-private-member-variables-in-classes)
@@ -26,6 +27,7 @@ public:
 
 namespace colour {
 
+//! Create Pixel from rgba
 static constexpr core::Pixel rgba(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) {
     return {
         .m_red   = red,
@@ -35,6 +37,7 @@ static constexpr core::Pixel rgba(uint8_t red, uint8_t green, uint8_t blue, uint
     };
 }
 
+//! Create non-transparent Pixel from rgb
 static constexpr core::Pixel rgb(uint8_t red, uint8_t green, uint8_t blue) {
     return {
         .m_red   = red,
@@ -44,12 +47,18 @@ static constexpr core::Pixel rgb(uint8_t red, uint8_t green, uint8_t blue) {
     };
 }
 
+//! Transparent
 static constexpr core::Pixel VOID = rgba(0x00, 0x00, 0x00, 0x00);
 
+//! Black
 static constexpr core::Pixel BLACK = rgb(0x00, 0x00, 0x00);
+//! White
 static constexpr core::Pixel WHITE = rgb(0xFF, 0xFF, 0xFF);
+//! Red
 static constexpr core::Pixel RED   = rgb(0xFF, 0x00, 0x00);
+//! Green
 static constexpr core::Pixel GREEN = rgb(0x00, 0xFF, 0x00);
+//! Blue
 static constexpr core::Pixel BLUE  = rgb(0x00, 0x00, 0xFF);
 
 } // namespace colour

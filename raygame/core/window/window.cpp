@@ -2,50 +2,26 @@
 #include "raygame/core/condition.h"
 #include "raygame/core/config.h"
 #include "raygame/core/logger.h"
+#include "raygame/core/window/detail/backends.h"
 #include "raygame/core/window/detail/cocoa.h"
 #include "raygame/core/window/detail/dwm.h"
-#include "raygame/core/window/detail/imgui.h"
 #include "raygame/core/window/detail/raylib.h"
 #include "raygame/core/window/detail/wayland.h"
-#include "raygame/core/window/detail/x11.h"
 
 namespace {
-
-core::config::GuiBackend wayland_or_x11() {
-    const std::string session_type{
-        std::getenv("XDG_SESSION_TYPE") // NOLINT(concurrency-mt-unsafe)
-    };
-    if (session_type == "wayland") {
-        return core::config::GuiBackend::WAYLAND;
-    }
-    if (session_type == "x11") {
-        return core::config::GuiBackend::X11;
-    }
-    core::log::warning(
-        "Could not find XDG_SESSION_TYPE environment variable, "
-        "falling back to X11"
-    );
-    return core::config::GuiBackend::X11;
-}
 
 core::config::GuiBackend get_backend() {
     using core::condition::unimplemented;
     using core::config::GuiBackend;
     using core::config::OperatingSystem;
-    if constexpr (core::config::EnabledBackends::raylib()) {
-        return GuiBackend::RAYLIB;
-    }
-    if constexpr (core::config::EnabledBackends::imgui()) {
-        return GuiBackend::IMGUI;
-    }
+    // if constexpr (core::config::EnabledBackends::raylib()) {
+    //     return GuiBackend::RAYLIB;
+    // }
     switch (core::config::OPERATING_SYSTEM) {
     case OperatingSystem::ANDROID: unimplemented();
     case OperatingSystem::BSD:     [[fallthrough]];
-    case OperatingSystem::HURD:    [[fallthrough]];
-    case OperatingSystem::LINUX:   return wayland_or_x11();
+    case OperatingSystem::LINUX:   return GuiBackend::WAYLAND;
     case OperatingSystem::MAC:     return GuiBackend::COCOA;
-    case OperatingSystem::QNX:     unimplemented();
-    case OperatingSystem::WIN32:   [[fallthrough]];
     case OperatingSystem::WIN64:   return GuiBackend::DWM;
     }
 }
@@ -57,13 +33,6 @@ core::window::Window::Window(Vec2<size_t> size, std::string title, WindowStyle s
         using Raylib = detail::RaylibWindowImpl;
         if (backend == config::GuiBackend::RAYLIB) {
             m_impl = std::make_unique<Raylib>(size, std::move(title), style);
-            return;
-        }
-    }
-    if constexpr (config::EnabledBackends::imgui()) {
-        using Imgui = detail::ImguiWindowImpl;
-        if (backend == config::GuiBackend::IMGUI) {
-            m_impl = std::make_unique<Imgui>(size, std::move(title), style);
             return;
         }
     }
@@ -85,13 +54,6 @@ core::window::Window::Window(Vec2<size_t> size, std::string title, WindowStyle s
         using Wayland = detail::WaylandWindowImpl;
         if (backend == config::GuiBackend::WAYLAND) {
             m_impl = std::make_unique<Wayland>(size, std::move(title), style);
-            return;
-        }
-    }
-    if constexpr (config::EnabledBackends::x11()) {
-        using X11 = detail::X11WindowImpl;
-        if (backend == config::GuiBackend::X11) {
-            m_impl = std::make_unique<X11>(size, std::move(title), style);
             return;
         }
     }

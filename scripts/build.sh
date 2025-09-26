@@ -6,6 +6,7 @@ run_configure(){
         -S . \
         -G Ninja \
         --toolchain ./cmake/presets/linux-clang-libcxx.cmake \
+        -DCMAKE_BUILD_TYPE=Debug \
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
         -DRAYGAME_LOG_DISABLE_SOURCE_LOCATION=ON \
         ;
