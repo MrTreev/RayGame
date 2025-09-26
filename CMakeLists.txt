@@ -117,4 +117,16 @@ include(RayGameImage)
 
 add_subdirectory(tests)
 add_subdirectory(docs)
+
+find_package(Doxygen REQUIRED COMPONENTS dot)
+if(Doxygen_FOUND)
+    set(DOXYGEN_WARN_IF_UNDOCUMENTED YES)
+    configure_file(third_party/doxygen/Doxyfile.in Doxyfile)
+    doxygen_add_docs(
+        RayGameDocs
+        raygame README.md
+        ALL
+        CONFIG_FILE ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
+    )
+endif()
 add_subdirectory(games)
