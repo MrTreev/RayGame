@@ -158,30 +158,11 @@ WaylandWindowImpl::~WaylandWindowImpl() {
 }
 
 void WaylandWindowImpl::draw(const drawing::ImageView& image) {
-    constexpr auto clamp = [](const pos_t val) {
-        return numeric_cast<dis_t>(std::max(pos_t(0), val));
-    };
-    constexpr auto domin = [](const dis_t max, const pos_t val) {
-        return numeric_cast<dis_t>(std::min(numeric_cast<pos_t>(max), val));
-    };
-    const dis_t row_left  = clamp(image.top());
-    const dis_t col_top   = clamp(image.left());
-    const dis_t row_right = domin(height(), image.bottom());
-    const dis_t col_bot   = domin(width(), image.right());
-    if (std::cmp_greater(col_top, width()) || std::cmp_greater(row_left, height())) {
-        return;
-    }
-    dis_t row{row_left};
-    dis_t col{col_top};
-    for (; row < row_right; ++row) {
-        col = col_top;
-        for (; col < col_bot; ++col) {
-            const auto therow  = math::safe_sub<dis_t>(row, image.pos_y());
-            const auto thecol  = math::safe_sub<dis_t>(col, image.pos_x());
-            m_pixbuf[row, col] = image[therow, thecol];
+    for (dis_t row{0}; row < image.height(); ++row) {
+        for (dis_t col{0}; col < image.width(); ++col) {
+            m_pixbuf[row, col] = image[row, col];
         }
     }
-    log::debug("Drawn: {} rows, {} cols", row - row_left, col - col_top);
 }
 
 void WaylandWindowImpl::restyle() {
@@ -229,7 +210,7 @@ void WaylandWindowImpl::new_buffer() {
     const auto bufwidth  = width();
     const auto bufheight = height();
     const auto bufstride = safe_mult<size_t>(bufwidth, COLOUR_CHANNELS);
-    const auto buflen    = safe_mult<size_t>(bufstride, bufheight);
+    const auto buflen    = safe_mult<size_t>(bufstride, bufheight * 2);
     log::debug("Requesting buffer with size: {}, {}", bufwidth, bufheight);
     log::trace("buflen: {}", buflen);
     if (m_shm_fd >= 0) {
@@ -262,7 +243,7 @@ void WaylandWindowImpl::new_buffer() {
         wl_shm_pool_destroy(m_wl_shm_pool);
     }
     for (size_t idx{0}; idx <= bufheight; ++idx) {
-        for (size_t jdx{0}; jdx <= bufwidth; ++jdx) {
+        for (size_t jdx{0}; jdx <= bufstride; ++jdx) {
             m_pixbuf[idx, jdx] = colour::BLACK;
         }
     }

@@ -2,7 +2,7 @@
 #include "raygame/core/window/window.h"
 #include "test.h"
 
-constexpr core::Vec2<size_t> WIN_SIZE = {1280, 720};
+constexpr core::Vec2<size_t> WIN_SIZE = {1240, 720};
 
 // NOLINTNEXTLINE(*-exception-escape)
 int main() {

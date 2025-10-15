@@ -109,7 +109,7 @@ public:
     [[nodiscard]]
     bool should_close() const final;
 
-// private:
+private:
     using wl_fixed_t  = int32_t;
     int      m_shm_fd = -1;
     uint32_t m_wl_shm_format;
