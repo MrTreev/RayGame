@@ -22,7 +22,7 @@ void core::window::detail::WaylandWindowImpl::xdg_toplevel_handle_configure(
     if (width == 0 || height == 0) {
         return;
     }
-    log::debug("Configure: {}, {}", width, height);
+    log::debug("Configure: width={}, height={}", width, height);
     this_impl->set_size({math::numeric_cast<size_t>(width), math::numeric_cast<size_t>(height)});
 }
 

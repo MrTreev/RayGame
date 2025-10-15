@@ -6,5 +6,5 @@ raygame_lib(
 raygame_bin(
     RayLibTest
     SRCS main.cpp
-    DEPS RayGame::Core RayLibTestImage
+    DEPS RayGame::Core RayLibTestImage RayGameWindowWayland
 )

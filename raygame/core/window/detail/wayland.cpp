@@ -4,6 +4,7 @@
 #include "raygame/core/logger.h"
 #include "raygame/core/math/random.h"
 #include <algorithm>
+#include <cstdlib>
 #include <fcntl.h>
 #include <string_view>
 #include <sys/mman.h>
@@ -177,10 +178,10 @@ void WaylandWindowImpl::draw(const drawing::ImageView& image) {
         for (; col < col_bot; ++col) {
             const auto therow  = math::safe_sub<dis_t>(row, image.pos_y());
             const auto thecol  = math::safe_sub<dis_t>(col, image.pos_x());
-            m_pixbuf[row, col] = image.at(therow, thecol);
+            m_pixbuf[row, col] = image[therow, thecol];
         }
     }
-    log::trace("Drawn: {} rows, {} cols", row - row_left, col - col_top);
+    log::debug("Drawn: {} rows, {} cols", row - row_left, col - col_top);
 }
 
 void WaylandWindowImpl::restyle() {
@@ -229,16 +230,15 @@ void WaylandWindowImpl::new_buffer() {
     const auto bufheight = height();
     const auto bufstride = safe_mult<size_t>(bufwidth, COLOUR_CHANNELS);
     const auto buflen    = safe_mult<size_t>(bufstride, bufheight);
-    log::trace("Requesting buffer with size: {}, {}", bufwidth, bufheight);
+    log::debug("Requesting buffer with size: {}, {}", bufwidth, bufheight);
     log::trace("buflen: {}", buflen);
     if (m_shm_fd >= 0) {
         close(m_shm_fd);
     }
     m_shm_fd = allocate_shm_file(buflen);
     check_condition(m_shm_fd >= 0, "creation of shm buffer file failed");
-    auto* const pixbuf = static_cast<Pixel*>(
-        mmap(nullptr, safe_mult<size_t>(buflen, 2), PROT_READ | PROT_WRITE, MAP_SHARED, m_shm_fd, 0)
-    );
+    auto* const pixbuf =
+        static_cast<Pixel*>(mmap(nullptr, buflen, PROT_READ | PROT_WRITE, MAP_SHARED, m_shm_fd, 0));
     if (pixbuf == MAP_FAILED) {
         close(m_shm_fd);
         check_condition(false, "Could not setup shm data");
@@ -261,8 +261,8 @@ void WaylandWindowImpl::new_buffer() {
     if (m_wl_shm_pool != nullptr) {
         wl_shm_pool_destroy(m_wl_shm_pool);
     }
-    for (size_t idx{0}; idx <= height(); ++idx) {
-        for (size_t jdx{0}; jdx <= width(); ++jdx) {
+    for (size_t idx{0}; idx <= bufheight; ++idx) {
+        for (size_t jdx{0}; jdx <= bufwidth; ++jdx) {
             m_pixbuf[idx, jdx] = colour::BLACK;
         }
     }

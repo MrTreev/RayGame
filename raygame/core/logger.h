@@ -76,3 +76,5 @@ RG_LOG_STRUCT(fatal, FATAL)
 
 #undef RG_LOG_STRUCT
 } // namespace core::log
+
+#define RG_TRACEVAR(var) ::core::log::debug(#var ": {}", (var))
