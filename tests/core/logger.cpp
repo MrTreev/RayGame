@@ -29,24 +29,6 @@ RG_TEST(Logger, API) {
         info("{}, {}", 1, tmp);
     }
 
-    RG_SUBCASE("note") {
-        using core::log::note;
-        const int tmp = 1;
-        note("test");
-        note(std::string{"Welp"});
-        note("{}", 1);
-        note("{}, {}", 1, tmp);
-    }
-
-    RG_SUBCASE("progress") {
-        using core::log::progress;
-        const int tmp = 1;
-        progress("test");
-        progress(std::string{"Welp"});
-        progress("{}", 1);
-        progress("{}, {}", 1, tmp);
-    }
-
     RG_SUBCASE("warning") {
         using core::log::warning;
         const int tmp = 1;

@@ -1,11 +1,40 @@
 #pragma once
-#include "raygame/core/config.h"
 #include "raygame/core/drawing/image.h"
 #include "raygame/core/math/ring_average.h"
 #include "raygame/core/math/timer.h"
 #include <chrono>
 #include <string>
 #include <utility>
+
+#if !defined(RAYGAME_TIME_FRAMES)
+//! @ingroup macros_config
+//! Log the average frame time
+#    define RAYGAME_TIME_FRAMES false
+#endif
+
+/*!
+ *  @ingroup macros_config
+ *  @defgroup macros_config_window_defaults Window Creation Defaults
+ *  Defaults for window creation
+ *  @{
+ */
+#if !defined(RAYGAME_DEFAULT_WINDOW_WIDTH)
+//! Default Window Width
+#    define RAYGAME_DEFAULT_WINDOW_WIDTH 640
+#endif
+#if !defined(RAYGAME_DEFAULT_WINDOW_HEIGHT)
+//! Default Window Height
+#    define RAYGAME_DEFAULT_WINDOW_HEIGHT 480
+#endif
+#if !defined(RAYGAME_DEFAULT_WINDOW_TITLE)
+//! Default Window Title
+#    define RAYGAME_DEFAULT_WINDOW_TITLE "RayGame"
+#endif
+#if !defined(RAYGAME_TARGET_FPS)
+//! Target FPS
+#    define RAYGAME_TARGET_FPS 60
+#endif
+//! @}
 
 namespace core::window {
 //! Default Window Width
@@ -14,6 +43,11 @@ static constexpr std::size_t DEFAULT_WINDOW_WIDTH  = RAYGAME_DEFAULT_WINDOW_WIDT
 static constexpr std::size_t DEFAULT_WINDOW_HEIGHT = RAYGAME_DEFAULT_WINDOW_HEIGHT;
 //! Default Window Title
 static constexpr std::string DEFAULT_WINDOW_TITLE  = RAYGAME_DEFAULT_WINDOW_TITLE;
+//! Log the average frame time
+constexpr bool               TIME_FRAMES           = RAYGAME_TIME_FRAMES;
+
+//! Game's target FPS
+constexpr size_t TARGET_FPS = RAYGAME_TARGET_FPS;
 
 //! Window display styles
 enum class WindowStyle : uint8_t {
@@ -33,8 +67,8 @@ private:
     std::string  m_title;
     WindowStyle  m_style;
 
-    math::HighResolutionTimer                      m_timer;
-    math::RingAverage<int64_t, config::TARGET_FPS> m_counter;
+    math::HighResolutionTimer              m_timer;
+    math::RingAverage<int64_t, TARGET_FPS> m_counter;
 
 protected:
     void frame_time_start() { m_timer.start(); }

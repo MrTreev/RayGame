@@ -1,23 +1,27 @@
 raygame_lib(
     RayGameCoreBase
-    HDRS concepts.h
-         condition.h
-         config.h
-         debug.h
-         exception.h
-         logger.h
-         macros.h
-         matrix.h
-         types.h
-    SRCS concepts.cpp
-         condition.cpp
-         config.cpp
-         debug.cpp
-         exception.cpp
-         logger.cpp
-         macros.cpp
-         matrix.cpp
-         types.cpp
+    HDRS
+    assert.h
+    concepts.h
+    condition.h
+    config.h
+    debug.h
+    exception.h
+    logger.h
+    macros.h
+    matrix.h
+    types.h
+    SRCS
+    assert.cpp
+    concepts.cpp
+    condition.cpp
+    config.cpp
+    debug.cpp
+    exception.cpp
+    logger.cpp
+    macros.cpp
+    matrix.cpp
+    types.cpp
 )
 add_library(RayGame::Core::Base ALIAS RayGameCoreBase)
 

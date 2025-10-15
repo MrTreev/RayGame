@@ -5,6 +5,7 @@
 #include "raygame/core/math/random.h"
 #include <algorithm>
 #include <fcntl.h>
+#include <string_view>
 #include <sys/mman.h>
 #include <unistd.h>
 #include <utility>
@@ -12,6 +13,10 @@
 #include <wayland-client-protocol.h>
 #include <xdg-shell-client-protocol.h>
 #include <xkbcommon/xkbcommon.h>
+
+#if !defined(NDEBUG)
+#    define PRINT_KEY
+#endif
 
 namespace {
 using core::condition::check_condition;
@@ -146,10 +151,9 @@ WaylandWindowImpl::WaylandWindowImpl(Vec2<size_t> size, std::string title, Windo
 WaylandWindowImpl::~WaylandWindowImpl() {
     m_buffer_width  = 0;
     m_buffer_height = 0;
-    wl_buffer_destroy(m_wl_buffer);
-    wl_surface_destroy(m_wl_surface);
-    xdg_surface_destroy(m_xdg_surface);
     xdg_toplevel_destroy(m_xdg_toplevel);
+    xdg_surface_destroy(m_xdg_surface);
+    wl_surface_destroy(m_wl_surface);
 }
 
 void WaylandWindowImpl::draw(const drawing::ImageView& image) {
@@ -176,7 +180,7 @@ void WaylandWindowImpl::draw(const drawing::ImageView& image) {
             m_pixbuf[row, col] = image.at(therow, thecol);
         }
     }
-    log::debug("Drawn: {} rows, {} cols", row - row_left, col - col_top);
+    log::trace("Drawn: {} rows, {} cols", row - row_left, col - col_top);
 }
 
 void WaylandWindowImpl::restyle() {
@@ -204,13 +208,13 @@ void WaylandWindowImpl::render_frame() {
 }
 
 bool WaylandWindowImpl::next_frame() {
-    if constexpr (core::config::TIME_FRAMES) {
+    if constexpr (TIME_FRAMES) {
         frame_time_start();
     }
     if (!should_close()) {
         render_frame();
     }
-    if constexpr (core::config::TIME_FRAMES) {
+    if constexpr (TIME_FRAMES) {
         frame_time_end();
     }
     return !should_close();
@@ -225,8 +229,8 @@ void WaylandWindowImpl::new_buffer() {
     const auto bufheight = height();
     const auto bufstride = safe_mult<size_t>(bufwidth, COLOUR_CHANNELS);
     const auto buflen    = safe_mult<size_t>(bufstride, bufheight);
-    log::debug("Requesting buffer with size: {}, {}", bufwidth, bufheight);
-    log::debug("buflen: {}", buflen);
+    log::trace("Requesting buffer with size: {}, {}", bufwidth, bufheight);
+    log::trace("buflen: {}", buflen);
     if (m_shm_fd >= 0) {
         close(m_shm_fd);
     }
@@ -271,7 +275,7 @@ void KeyboardState::update_mask(
     uint32_t mods_locked,
     uint32_t group
 ) {
-    log::debug("update_mask: {}, {}, {}, {}", mods_depressed, mods_latched, mods_locked, group);
+    log::trace("update_mask: {}, {}, {}, {}", mods_depressed, mods_latched, mods_locked, group);
     xkb_state_update_mask(
         m_xkb_state.get(),
         mods_depressed,
@@ -281,32 +285,32 @@ void KeyboardState::update_mask(
         0,
         group
     );
-    log::debug("mask updated");
+    log::trace("mask updated");
 }
 
 void KeyboardState::new_from_string(const char* str) {
-    log::debug("new_from_string start");
+    log::trace("new_from_string start");
     m_xkb_keymap.reset(xkb_keymap_new_from_string(
         m_xkb_context.get(),
         str,
         XKB_KEYMAP_FORMAT_TEXT_V1,
         XKB_KEYMAP_COMPILE_NO_FLAGS
     ));
-    log::debug("new_from_string done");
+    log::trace("new_from_string done");
 }
 
 void KeyboardState::event(const uint32_t& key, const uint32_t& state) {
     log::debug("event: key({}), state({})", key, state);
-    constexpr size_t          BUFSIZE{128};
+#if defined(PRINT_KEY)
     constexpr uint32_t        KEY_OFFSET{8};
-    std::array<char, BUFSIZE> buf{0};
     const uint32_t            keycode{key + KEY_OFFSET};
     const xkb_keysym_t        sym{xkb_state_key_get_one_sym(m_xkb_state.get(), keycode)};
+    constexpr size_t          BUFSIZE{128};
+    std::array<char, BUFSIZE> buf{0};
     xkb_keysym_get_name(sym, buf.data(), sizeof(buf));
     const char* action{state == WL_KEYBOARD_KEY_STATE_PRESSED ? "press" : "release"};
-    log::debug("key {}: sym: {} ({}), ", action, buf, sym);
-    xkb_state_key_get_utf8(m_xkb_state.get(), keycode, buf.data(), buf.size());
-    log::debug("utf8: '{}'\n", buf);
+    log::debug("key {}: sym: {} ({}), ", action, std::string_view(buf), sym);
+#endif
 }
 
 // NOLINTEND(*-easily-swappable-parameters)

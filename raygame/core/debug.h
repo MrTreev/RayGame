@@ -2,6 +2,8 @@
 #include "raygame/core/config.h"
 #include <cstdlib>
 #include <cstring>
+#include <format>
+#include <source_location>
 #include <string>
 #include <typeinfo>
 
@@ -10,6 +12,38 @@
 #endif
 
 namespace core::debug {
+enum class SourceLoc : uint8_t {
+    NONE = 0,
+    FULL,
+    BASE,
+};
+#if defined(RAYGAME_ENABLE_SOURCE_LOCATION)
+constexpr SourceLoc sloc_type = SourceLoc::FULL;
+#elif defined(RAYGAME_DISABLE_SOURCE_LOCATION)
+#    if defined(NDEBUG)
+constexpr SourceLoc sloc_type = SourceLoc::NONE;
+#    else
+constexpr SourceLoc sloc_type = SourceLoc::BASE;
+#    endif
+#else
+#    warning "No source location macro defined, disabling"
+constexpr SourceLoc sloc_type = SourceLoc::BASE;
+#endif
+
+constexpr std::string location_message(std::source_location loc) {
+    constexpr std::string_view search_str = []() {
+        if constexpr (debug::sloc_type == SourceLoc::FULL) {
+            return "/raygame/";
+        } else {
+            return "/";
+        }
+    }();
+    std::string_view shortloc{loc.file_name()};
+    shortloc.remove_prefix(
+        std::string_view(loc.file_name()).rfind(search_str) + search_str.length()
+    );
+    return std::format("{}:{}", shortloc, loc.line());
+}
 
 template<typename T>
 constexpr std::string type_name() {

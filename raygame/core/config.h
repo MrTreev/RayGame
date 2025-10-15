@@ -31,36 +31,6 @@ static_assert(false, "This game's code uses features from the C++23 standard");
  *  User-defined configuration macros
  */
 
-#if !defined(RAYGAME_TIME_FRAMES)
-//! @ingroup macros_config
-//! Log the average frame time
-#    define RAYGAME_TIME_FRAMES false
-#endif
-
-/*!
- *  @ingroup macros_config
- *  @defgroup macros_config_window_defaults Window Creation Defaults
- *  Defaults for window creation
- *  @{
- */
-#if !defined(RAYGAME_DEFAULT_WINDOW_WIDTH)
-//! Default Window Width
-#    define RAYGAME_DEFAULT_WINDOW_WIDTH 640 // NOLINT(*-macro-usage)
-#endif
-#if !defined(RAYGAME_DEFAULT_WINDOW_HEIGHT)
-//! Default Window Height
-#    define RAYGAME_DEFAULT_WINDOW_HEIGHT 480 // NOLINT(*-macro-usage)
-#endif
-#if !defined(RAYGAME_DEFAULT_WINDOW_TITLE)
-//! Default Window Title
-#    define RAYGAME_DEFAULT_WINDOW_TITLE "RayGame" // NOLINT(*-macro-usage)
-#endif
-//! @}
-
-#if !defined(RAYGAME_TARGET_FPS)
-#    define RAYGAME_TARGET_FPS 60 // NOLINT(*-macro-usage)
-#endif
-
 /*!
  *  @ingroup macros_config
  *  @defgroup macros_config_random Random Number Generator
@@ -81,65 +51,6 @@ static_assert(false, "This game's code uses features from the C++23 standard");
 #if !defined(RAYGAME_RANDOM_INITIAL_SEED)
 //! Initial seed for randomness when in deterministic mode (uint64_t)
 #    define RAYGAME_RANDOM_INITIAL_SEED 42 // NOLINT(*-macro-usage)
-#endif
-
-#if defined(RAYGAME_LOG_TRACE)
-#    define RAYGAME_LOG_LEVEL TRACE
-#elif defined(RAYGAME_LOG_DEBUG)
-#    define RAYGAME_LOG_LEVEL DEBUG
-#elif defined(RAYGAME_LOG_INFO)
-#    define RAYGAME_LOG_LEVEL INFO
-#elif defined(RAYGAME_LOG_NOTE)
-#    define RAYGAME_LOG_LEVEL NOTE
-#elif defined(RAYGAME_LOG_PROGRESS)
-#    define RAYGAME_LOG_LEVEL PROGRESS
-#elif defined(RAYGAME_LOG_WARNING)
-#    define RAYGAME_LOG_LEVEL WARNING
-#elif defined(RAYGAME_LOG_ERROR)
-#    define RAYGAME_LOG_LEVEL ERROR
-#elif defined(RAYGAME_LOG_FATAL)
-#    define RAYGAME_LOG_LEVEL FATAL
-#else
-#    warning "No logging level set for RAYGAME, using NOTE"
-constexpr Level logging_level = Level::NOTE;
-#endif
-//! @}
-
-namespace core::log {
-//! Logging level
-enum class Level : uint8_t {
-    TRACE    = 0,
-    DEBUG    = 10,
-    INFO     = 20,
-    NOTE     = 30,
-    PROGRESS = 40,
-    /* 50 - 80 */
-    WARNING  = 80,
-    ERROR    = 90,
-    FATAL    = 255,
-};
-
-//! Current logging level
-constexpr Level logging_level = Level::RAYGAME_LOG_LEVEL;
-} // namespace core::log
-
-namespace core::config {
-//! Log the average frame time
-constexpr bool TIME_FRAMES = RAYGAME_TIME_FRAMES;
-
-//! Game's target FPS
-constexpr size_t TARGET_FPS = RAYGAME_TARGET_FPS;
-
-} // namespace core::config
-
-//=============================================================================
-// Assertion
-//=============================================================================
-#if !defined(RAYGAME_ASSERT)
-#    include <cassert>
-
-// NOLINTNEXTLINE(*-macro-usage)
-#    define RAYGAME_ASSERT(condition, ...) assert(condition __VA_OPT__(, ) __VA_ARGS__)
 #endif
 
 //=============================================================================
@@ -392,7 +303,7 @@ static_assert(false, "Not tested on Android");
 #elif defined(RAYGAME_OS_BSD)
 static_assert(false, "Not tested on BSD");
 #elif defined(RAYGAME_OS_LINUX)
-static_assert(true);
+static_assert(true, "Tested with Linux");
 #elif defined(RAYGAME_OS_MAC)
 static_assert(false, "Not tested on Apple Macintosh");
 #elif defined(RAYGAME_OS_WIN64)
@@ -411,8 +322,7 @@ enum class OperatingSystem : uint8_t {
     WIN64,   //!< Windows 64-Bit
 };
 
-namespace detail {
-consteval OperatingSystem get_os() {
+constexpr OperatingSystem OPERATING_SYSTEM = []() {
 #if defined(RAYGAME_OS_ANDROID)
     return OperatingSystem::ANDROID;
 #elif defined(RAYGAME_OS_BSD)
@@ -424,25 +334,13 @@ consteval OperatingSystem get_os() {
 #elif defined(RAYGAME_OS_WIN64)
     return OperatingSystem::WIN64;
 #endif
-}
-} // namespace detail
-
-constexpr OperatingSystem OPERATING_SYSTEM = detail::get_os();
+}();
 
 } // namespace core::config
 
 //=============================================================================
 // Build Type Config
 //=============================================================================
-namespace core::config::detail {
-consteval bool debug() {
-#if defined(NDEBUG)
-    return false;
-#else
-    return true;
-#endif
-}
-} // namespace core::config::detail
 
 #if defined(NDEBUG)
 // NOLINTNEXTLINE(*-macro-usage)
@@ -460,5 +358,11 @@ enum class BuildType : bool {
     RELEASE,
 };
 
-constexpr BuildType BUILD_TYPE = detail::debug() ? BuildType::DEBUG : BuildType::RELEASE;
+constexpr BuildType BUILD_TYPE = []() {
+#if defined(NDEBUG)
+    return BuildType::RELEASE;
+#else
+    return BuildType::DEBUG;
+#endif
+}();
 } // namespace core::config

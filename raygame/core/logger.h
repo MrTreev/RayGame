@@ -1,13 +1,43 @@
 #pragma once
-#include "raygame/core/config.h"
 #include <format>
 #include <source_location>
-#include <string>
+#include <string_view>
+
+#if defined(RAYGAME_LOG_TRACE)
+#    define RAYGAME_LOG_LEVEL TRACE
+#elif defined(RAYGAME_LOG_DEBUG)
+#    define RAYGAME_LOG_LEVEL DEBUG
+#elif defined(RAYGAME_LOG_INFO)
+#    define RAYGAME_LOG_LEVEL INFO
+#elif defined(RAYGAME_LOG_WARNING)
+#    define RAYGAME_LOG_LEVEL WARNING
+#elif defined(RAYGAME_LOG_ERROR)
+#    define RAYGAME_LOG_LEVEL ERROR
+#elif defined(RAYGAME_LOG_FATAL)
+#    define RAYGAME_LOG_LEVEL FATAL
+#else
+#    warning "No logging level set for RAYGAME, using NOTE"
+constexpr Level logging_level = Level::NOTE;
+#endif
 
 namespace core::log {
+//! Logging level
+enum class Level : uint8_t {
+    TRACE   = 0,
+    DEBUG   = 10,
+    INFO    = 20,
+    /* 50 - 80 */
+    WARNING = 80,
+    ERROR   = 90,
+    FATAL   = 255,
+};
+
+//! Current logging level
+constexpr Level logging_level = Level::RAYGAME_LOG_LEVEL;
+
 //! Logging level to string converter
 namespace detail {
-void logger(core::log::Level level, std::string text, std::source_location loc);
+void logger(core::log::Level level, std::string_view text, std::source_location loc);
 } // namespace detail
 
 // Makes it easier to have a single definition
@@ -16,7 +46,7 @@ void logger(core::log::Level level, std::string text, std::source_location loc);
     template<typename... Args>                                                                     \
     struct level {                                                                                 \
         constexpr explicit level(                                                                  \
-            std::string          message,                                                          \
+            std::string_view     message,                                                          \
             std::source_location loc = std::source_location::current()                             \
         ) {                                                                                        \
             detail::logger(Level::LEVEL, std::move(message), loc);                                 \
@@ -40,8 +70,6 @@ void logger(core::log::Level level, std::string text, std::source_location loc);
 RG_LOG_STRUCT(trace, TRACE)
 RG_LOG_STRUCT(debug, DEBUG)
 RG_LOG_STRUCT(info, INFO)
-RG_LOG_STRUCT(note, NOTE)
-RG_LOG_STRUCT(progress, PROGRESS)
 RG_LOG_STRUCT(warning, WARNING)
 RG_LOG_STRUCT(error, ERROR)
 RG_LOG_STRUCT(fatal, FATAL)

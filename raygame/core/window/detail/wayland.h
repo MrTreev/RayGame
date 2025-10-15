@@ -45,13 +45,17 @@ class KeyboardState {
         void operator()(xkb_context* context) { xkb_context_unref(context); }
     };
 
-    std::unique_ptr<xkb_state, StateDelete>     m_xkb_state{nullptr};
-    std::unique_ptr<xkb_keymap, KeymapDelete>   m_xkb_keymap{nullptr};
     std::unique_ptr<xkb_context, ContextDelete> m_xkb_context{nullptr};
+    std::unique_ptr<xkb_keymap, KeymapDelete>   m_xkb_keymap{nullptr};
+    std::unique_ptr<xkb_state, StateDelete>     m_xkb_state{nullptr};
 
 public:
     KeyboardState()
-        : m_xkb_context(xkb_context_new(XKB_CONTEXT_NO_FLAGS)) {}
+        : m_xkb_context(xkb_context_new(XKB_CONTEXT_NO_FLAGS))
+        , m_xkb_keymap(
+              xkb_keymap_new_from_names(m_xkb_context.get(), nullptr, XKB_KEYMAP_COMPILE_NO_FLAGS)
+          )
+        , m_xkb_state(xkb_state_new(m_xkb_keymap.get())) {}
 
     void new_from_string(const char* str);
 

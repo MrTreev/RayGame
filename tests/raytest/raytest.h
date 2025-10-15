@@ -1,9 +1,11 @@
 #pragma once
 #include <algorithm>
 #include <cstdint>
-#include <gtest/gtest.h>
 #include <limits>
 #include <vector>
+
+// sort
+#include <gtest/gtest.h>
 
 #if defined(__clang__)
 #    define RAYTEST_CC_CLANG

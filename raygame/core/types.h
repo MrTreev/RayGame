@@ -38,7 +38,6 @@ using deg_t = float;
 using pos_t = RAYGAME_POSITION_TYPE;
 static_assert(std::is_signed_v<pos_t>);
 
-
 #if !defined(RAYGAME_DISTANCE_TYPE)
 //! @ingroup macros_config
 //! Distance type used in game (unsigned)

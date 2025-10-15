@@ -2,7 +2,6 @@
 #include "raygame/core/math/mathrule.h"
 #include "raygame/core/math/numeric_cast.h"
 #include "raygame/core/types.h"
-#include <cassert>
 #include <limits>
 #include <numbers>
 #include <type_traits>
