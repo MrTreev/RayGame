@@ -5,7 +5,6 @@
 #include "raygame/core/window/detail/backends.h"
 #include "raygame/core/window/detail/cocoa.h"
 #include "raygame/core/window/detail/dwm.h"
-#include "raygame/core/window/detail/raylib.h"
 #include "raygame/core/window/detail/wayland.h"
 
 namespace {
@@ -14,9 +13,6 @@ core::config::GuiBackend get_backend() {
     using core::condition::unimplemented;
     using core::config::GuiBackend;
     using core::config::OperatingSystem;
-    // if constexpr (core::config::EnabledBackends::raylib()) {
-    //     return GuiBackend::RAYLIB;
-    // }
     switch (core::config::OPERATING_SYSTEM) {
     case OperatingSystem::ANDROID: unimplemented();
     case OperatingSystem::BSD:     [[fallthrough]];
@@ -29,13 +25,6 @@ core::config::GuiBackend get_backend() {
 
 core::window::Window::Window(Vec2<size_t> size, std::string title, WindowStyle style) {
     const auto backend = get_backend();
-    if constexpr (config::EnabledBackends::raylib()) {
-        using Raylib = detail::RaylibWindowImpl;
-        if (backend == config::GuiBackend::RAYLIB) {
-            m_impl = std::make_unique<Raylib>(size, std::move(title), style);
-            return;
-        }
-    }
     if constexpr (config::EnabledBackends::cocoa()) {
         using Cocoa = detail::CocoaWindowImpl;
         if (backend == config::GuiBackend::COCOA) {

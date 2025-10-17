@@ -12,11 +12,6 @@ raygame_lib(
 )
 add_library(RayGame::Core::Window ALIAS RayGameCoreWindow)
 
-if(NOT RAYGAME_GUI_DISABLE_RAYLIB)
-    target_sources(RayGameCoreWindow PRIVATE detail/raylib.h detail/raylib.cpp)
-    target_link_libraries(RayGameCoreWindow PRIVATE RayGame::External::RayLib)
-endif()
-
 if(RAYGAME_OS_IS_MACOS AND NOT RAYGAME_GUI_DISABLE_COCOA)
     target_sources(RayGameCoreWindow PRIVATE detail/cocoa.h detail/cocoa.cpp)
     target_link_libraries(RayGameCoreWindow PRIVATE)

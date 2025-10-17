@@ -15,10 +15,6 @@
 #include <xdg-shell-client-protocol.h>
 #include <xkbcommon/xkbcommon.h>
 
-#if !defined(NDEBUG)
-#    define PRINT_KEY
-#endif
-
 namespace {
 using core::condition::check_condition;
 using core::condition::check_ptr;
@@ -27,6 +23,7 @@ using core::condition::pre_condition;
 using core::math::numeric_cast;
 using core::math::safe_mult;
 
+constexpr bool   PRINT_KEY       = false;
 constexpr size_t COLOUR_CHANNELS = 4;
 
 constexpr std::string_view alnum = "abcdefghijklmnaoqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
@@ -81,10 +78,10 @@ constexpr wl_shm_format get_colour_format() {
     constexpr auto ARGB      = 0b11000011'00000000'11111111'00111100;
     constexpr auto colourval = rgba(RVAL, GVAL, BVAL, AVAL);
     switch (bit_cast<uint32_t>(colourval)) {
-    case (ARGB): core::log::debug("Colour Format: ARGB"); return WL_SHM_FORMAT_ARGB8888;
-    case (ABGR): core::log::debug("Colour Format: ABGR"); return WL_SHM_FORMAT_ABGR8888;
-    case (BGRA): core::log::debug("Colour Format: BGRA"); return WL_SHM_FORMAT_BGRA8888;
-    case (RGBA): core::log::debug("Colour Format: RGBA"); return WL_SHM_FORMAT_RGBA8888;
+    case (ARGB): core::log::debug("Colour Format: ARGB"); return WL_SHM_FORMAT_XRGB8888;
+    case (ABGR): core::log::debug("Colour Format: ABGR"); return WL_SHM_FORMAT_XBGR8888;
+    case (BGRA): core::log::debug("Colour Format: BGRA"); return WL_SHM_FORMAT_BGRX8888;
+    case (RGBA): core::log::debug("Colour Format: RGBA"); return WL_SHM_FORMAT_RGBX8888;
     default:
         throw std::invalid_argument(
             std::format(
@@ -158,11 +155,30 @@ WaylandWindowImpl::~WaylandWindowImpl() {
 }
 
 void WaylandWindowImpl::draw(const drawing::ImageView& image) {
-    for (dis_t row{0}; row < image.height(); ++row) {
-        for (dis_t col{0}; col < image.width(); ++col) {
-            m_pixbuf[row, col] = image[row, col];
+    constexpr auto clamp = [](const pos_t val) {
+        return numeric_cast<dis_t>(std::max(pos_t(0), val));
+    };
+    constexpr auto domin = [](const dis_t max, const pos_t val) {
+        return numeric_cast<dis_t>(std::min(numeric_cast<pos_t>(max), val));
+    };
+    const dis_t row_left  = clamp(image.top());
+    const dis_t col_top   = clamp(image.left());
+    const dis_t row_right = domin(height(), image.bottom());
+    const dis_t col_bot   = domin(width(), image.right());
+    if (std::cmp_greater(col_top, width()) || std::cmp_greater(row_left, height())) {
+        return;
+    }
+    dis_t row{row_left};
+    dis_t col{col_top};
+    for (; row < row_right; ++row) {
+        col = col_top;
+        for (; col < col_bot; ++col) {
+            const auto therow  = math::safe_sub<dis_t>(row, image.pos_y());
+            const auto thecol  = math::safe_sub<dis_t>(col, image.pos_x());
+            m_pixbuf[row, col] = image[therow, thecol];
         }
     }
+    log::trace("Drawn: {} rows, {} cols", row - row_left, col - col_top);
 }
 
 void WaylandWindowImpl::restyle() {
@@ -211,7 +227,7 @@ void WaylandWindowImpl::new_buffer() {
     const auto bufheight = height();
     const auto bufstride = safe_mult<size_t>(bufwidth, COLOUR_CHANNELS);
     const auto buflen    = safe_mult<size_t>(bufstride, bufheight * 2);
-    log::debug("Requesting buffer with size: {}, {}", bufwidth, bufheight);
+    log::trace("Requesting buffer with size: {}, {}", bufwidth, bufheight);
     log::trace("buflen: {}", buflen);
     if (m_shm_fd >= 0) {
         close(m_shm_fd);
@@ -224,7 +240,7 @@ void WaylandWindowImpl::new_buffer() {
         close(m_shm_fd);
         check_condition(false, "Could not setup shm data");
     }
-    m_pixbuf      = {pixbuf, std::extents(bufwidth, bufheight)};
+    m_pixbuf      = {pixbuf, std::extents(bufheight, bufwidth)};
     m_wl_shm_pool = wl_shm_create_pool(m_wl_shm, m_shm_fd, numeric_cast<int32_t>(buflen));
     m_wl_buffer   = wl_shm_pool_create_buffer(
         m_wl_shm_pool,
@@ -241,11 +257,6 @@ void WaylandWindowImpl::new_buffer() {
     log::trace("Surface Attached");
     if (m_wl_shm_pool != nullptr) {
         wl_shm_pool_destroy(m_wl_shm_pool);
-    }
-    for (size_t idx{0}; idx <= bufheight; ++idx) {
-        for (size_t jdx{0}; jdx <= bufstride; ++jdx) {
-            m_pixbuf[idx, jdx] = colour::BLACK;
-        }
     }
 }
 
@@ -282,16 +293,16 @@ void KeyboardState::new_from_string(const char* str) {
 
 void KeyboardState::event(const uint32_t& key, const uint32_t& state) {
     log::debug("event: key({}), state({})", key, state);
-#if defined(PRINT_KEY)
-    constexpr uint32_t        KEY_OFFSET{8};
-    const uint32_t            keycode{key + KEY_OFFSET};
-    const xkb_keysym_t        sym{xkb_state_key_get_one_sym(m_xkb_state.get(), keycode)};
-    constexpr size_t          BUFSIZE{128};
-    std::array<char, BUFSIZE> buf{0};
-    xkb_keysym_get_name(sym, buf.data(), sizeof(buf));
-    const char* action{state == WL_KEYBOARD_KEY_STATE_PRESSED ? "press" : "release"};
-    log::debug("key {}: sym: {} ({}), ", action, std::string_view(buf), sym);
-#endif
+    if constexpr (PRINT_KEY) {
+        constexpr uint32_t        KEY_OFFSET{8};
+        const uint32_t            keycode{key + KEY_OFFSET};
+        const xkb_keysym_t        sym{xkb_state_key_get_one_sym(m_xkb_state.get(), keycode)};
+        constexpr size_t          BUFSIZE{128};
+        std::array<char, BUFSIZE> buf{0};
+        xkb_keysym_get_name(sym, buf.data(), sizeof(buf));
+        const char* action{state == WL_KEYBOARD_KEY_STATE_PRESSED ? "press" : "release"};
+        log::debug("key {}: sym: {} ({}), ", action, std::string_view(buf), sym);
+    }
 }
 
 // NOLINTEND(*-easily-swappable-parameters)

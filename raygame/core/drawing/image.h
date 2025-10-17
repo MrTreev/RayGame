@@ -70,6 +70,7 @@ public:
     constexpr auto extent(dis_t ext) const {
         return m_mdspan.extent(ext);
     }
+
 };
 
 template<dis_t Width, dis_t Height>

@@ -51,8 +51,6 @@ option(RAYGAME_GUI_DISABLE_COCOA "Disable the MacOS Cocoa GUI backend" $<NOT:RAY
 option(RAYGAME_GUI_DISABLE_DWM "Disable the Windows DWM GUI backend" $<NOT:RAYGAME_OS_IS_WINDOWS>)
 option(RAYGAME_GUI_DISABLE_WAYLAND "Disable the Linux Wayland GUI backend" $<NOT:RAYGAME_OS_IS_LINUX>)
 option(RAYGAME_GUI_DISABLE_X11 "Disable the Linux X11 GUI backend" ON)
-option(RAYGAME_GUI_DISABLE_IMGUI "Disable the IMGUI GUI backend" ON)
-option(RAYGAME_GUI_DISABLE_RAYLIB "Disable the RAYLIB GUI backend" $<NOT:RAYGAME_BT_IS_DEBUG>)
 
 option(RAYGAME_ENABLE_COVERAGE "Enable code coverage" OFF)
 

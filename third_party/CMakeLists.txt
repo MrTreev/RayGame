@@ -20,40 +20,6 @@ set_target_properties(
 )
 add_library(RayGame::External::ZppBits ALIAS RayGameExternalZppBits)
 
-add_library(RayGameExternalImgui)
-target_sources(
-    RayGameExternalImgui
-    PUBLIC imgui/imgui.h
-           imgui/backends/imgui_impl_glfw.h
-           imgui/backends/imgui_impl_opengl3.h
-    PRIVATE
-            imgui/imconfig.h
-            imgui/imgui_internal.h
-            imgui/imstb_rectpack.h
-            imgui/imstb_textedit.h
-            imgui/imstb_truetype.h
-            imgui/imgui.cpp
-            imgui/imgui_draw.cpp
-            imgui/imgui_tables.cpp
-            imgui/imgui_widgets.cpp
-            imgui/backends/imgui_impl_glfw.cpp
-            imgui/backends/imgui_impl_opengl3.cpp
-)
-target_link_libraries(
-    RayGameExternalImgui
-    PUBLIC glfw ${GLFW_LIBRARIES} ${OPENGL_LIBRARIES}
-)
-target_include_directories(
-    RayGameExternalImgui
-    PUBLIC include
-           imgui
-           imgui/backends
-           glfw/include
-)
-add_library(RayGame::External::Imgui ALIAS RayGameExternalImgui)
-add_subdirectory(raylib)
-add_library(RayGame::External::RayLib ALIAS raylib)
-
 function(stb_lib _target)
     set(options)
     set(oneValueArgs IMPLDEF HDRDEF PRELUDE)
