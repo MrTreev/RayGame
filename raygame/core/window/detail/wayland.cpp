@@ -68,7 +68,7 @@ int allocate_shm_file(size_t size) {
 }
 
 [[maybe_unused]]
-wl_shm_format get_colour_format() {
+constexpr wl_shm_format get_colour_format() {
     using core::colour::rgba;
     using std::bit_cast;
     constexpr auto RVAL      = 0b00000000;
