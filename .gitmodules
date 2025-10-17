@@ -4,21 +4,6 @@
 [submodule "third_party/googletest"]
 	path = third_party/googletest
 	url = https://github.com/google/googletest.git
-[submodule "third_party/imgui"]
-	path = third_party/imgui
-	url = https://github.com/ocornut/imgui.git
-[submodule "third_party/glfw"]
-	path = third_party/glfw
-	url = https://github.com/glfw/glfw.git
-[submodule "third_party/raylib"]
-	path = third_party/raylib
-	url = https://github.com/raysan5/raylib.git
 [submodule "third_party/stb"]
 	path = third_party/stb
 	url = https://github.com/nothings/stb.git
-[submodule "third_party/raddebugger"]
-	path = third_party/raddebugger
-	url = https://github.com/EpicGamesExt/raddebugger.git
-[submodule "third_party/clang-uml"]
-	path = third_party/clang-uml
-	url = https://github.com/bkryza/clang-uml.git
