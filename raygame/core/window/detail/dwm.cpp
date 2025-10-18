@@ -2,16 +2,19 @@
 #include "raygame/core/condition.h"
 #include "raygame/core/window/detail/backends.h"
 
+RAYGAME_CLANG_SUPPRESS_WARNING_PUSH
+RAYGAME_CLANG_SUPPRESS_WARNING("-Wmissing-noreturn")
+
 core::window::detail::DwmWindowImpl::DwmWindowImpl(
     Vec2<size_t> size,
     std::string  title,
     WindowStyle  style
 )
     : WindowImpl(size, std::move(title), style) {
-    if constexpr (!config::EnabledBackends::dwm()) {
-        condition::unreachable();
-    }
+    condition::unreachable();
 }
+
+RAYGAME_CLANG_SUPPRESS_WARNING_POP
 
 core::window::detail::DwmWindowImpl::~DwmWindowImpl() = default;
 

@@ -1,4 +1,5 @@
 #pragma once
+#include "raygame/core/condition.h"
 #include "raygame/core/config.h" // IWYU pragma: export
 #if defined(RAYGAME_OS_LINUX) || defined(RAYGAME_OS_BSD) || defined(RAYGAME_OS_HURD)
 #    if !defined(RAYGAME_GUI_BACKEND_WAYLAND)
@@ -19,52 +20,19 @@ namespace core::config {
 enum class GuiBackend : uint8_t {
     COCOA,
     DWM,
-    TEMPLE,
     WAYLAND,
 };
 
-class EnabledBackends {
-public:
-    static consteval bool cocoa() {
-#if defined(RAYGAME_GUI_BACKEND_COCOA)
-        return true;
-#else
-        return false;
-#endif
+constexpr auto BACKEND = []() {
+    using core::condition::unimplemented;
+    using core::config::GuiBackend;
+    using core::config::OperatingSystem;
+    switch (core::config::OPERATING_SYSTEM) {
+    case OperatingSystem::ANDROID: unimplemented();
+    case OperatingSystem::BSD:     [[fallthrough]];
+    case OperatingSystem::LINUX:   return GuiBackend::WAYLAND;
+    case OperatingSystem::MAC:     return GuiBackend::COCOA;
+    case OperatingSystem::WIN64:   return GuiBackend::DWM;
     }
-
-    static consteval bool dwm() {
-#if defined(RAYGAME_GUI_BACKEND_DWM)
-        return true;
-#else
-        return false;
-#endif
-    }
-
-    static consteval bool wayland() {
-#if defined(RAYGAME_GUI_BACKEND_WAYLAND)
-        return true;
-#else
-        return false;
-#endif
-    }
-};
+}();
 } // namespace core::config
-
-#if defined(RAYGAME_GUI_BACKEND_COCOA)
-#    define RAYGAME_RETURN_COCOA
-#else
-#    define RAYGAME_RETURN_COCOA [[noreturn]]
-#endif
-
-#if defined(RAYGAME_GUI_BACKEND_DWM)
-#    define RAYGAME_RETURN_DWM
-#else
-#    define RAYGAME_RETURN_DWM [[noreturn]]
-#endif
-
-#if defined(RAYGAME_GUI_BACKEND_WAYLAND)
-#    define RAYGAME_RETURN_WAYLAND
-#else
-#    define RAYGAME_RETURN_WAYLAND [[noreturn]]
-#endif

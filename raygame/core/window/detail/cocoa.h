@@ -1,11 +1,9 @@
 #pragma once
-#include "raygame/core/window/detail/backends.h"
 #include "raygame/core/window/window.h"
 
 namespace core::window::detail {
 class CocoaWindowImpl final: public WindowImpl {
 public:
-    RAYGAME_RETURN_COCOA
     CocoaWindowImpl(Vec2<size_t> size, std::string title, WindowStyle style);
     CocoaWindowImpl(const CocoaWindowImpl&)           = delete;
     CocoaWindowImpl operator=(const CocoaWindowImpl&) = delete;

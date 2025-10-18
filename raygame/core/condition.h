@@ -138,7 +138,7 @@ constexpr void unimplemented(const std::source_location& loc = std::source_locat
 //! Pre-Condition Check value not less than min
 /*!
  *  @param  val Value
- *  @param  min Minimum value
+ *  @param  min minimum value
  *  @param  loc Source location
  *  @throws core::exception::PreCondition If @p val is less than min
  */

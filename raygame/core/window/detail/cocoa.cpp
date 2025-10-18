@@ -1,6 +1,10 @@
 #include "raygame/core/window/detail/cocoa.h"
 #include "raygame/core/condition.h"
+#include "raygame/core/config.h"
 #include "raygame/core/window/detail/backends.h"
+
+RAYGAME_CLANG_SUPPRESS_WARNING_PUSH
+RAYGAME_CLANG_SUPPRESS_WARNING("-Wmissing-noreturn")
 
 core::window::detail::CocoaWindowImpl::CocoaWindowImpl(
     Vec2<size_t> size,
@@ -8,10 +12,10 @@ core::window::detail::CocoaWindowImpl::CocoaWindowImpl(
     WindowStyle  style
 )
     : WindowImpl(size, std::move(title), style) {
-    if constexpr (!config::EnabledBackends::cocoa()) {
-        condition::unreachable();
-    }
+    condition::unimplemented();
 }
+
+RAYGAME_CLANG_SUPPRESS_WARNING_POP
 
 core::window::detail::CocoaWindowImpl::~CocoaWindowImpl() = default;
 

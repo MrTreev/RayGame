@@ -91,7 +91,6 @@ public:
 
 class WaylandWindowImpl final: public WindowImpl {
 public:
-    RAYGAME_RETURN_WAYLAND
     WaylandWindowImpl(Vec2<size_t> size, std::string title, WindowStyle style);
     ~WaylandWindowImpl() final;
     WaylandWindowImpl(const WaylandWindowImpl&)           = delete;

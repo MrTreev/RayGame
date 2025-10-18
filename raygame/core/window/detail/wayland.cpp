@@ -3,6 +3,7 @@
 #include "raygame/core/drawing/pixel.h"
 #include "raygame/core/logger.h"
 #include "raygame/core/math/random.h"
+#include "raygame/core/window/detail/backends.h"
 #include <algorithm>
 #include <cstdlib>
 #include <fcntl.h>
@@ -105,7 +106,7 @@ constexpr wl_shm_format get_colour_format() {
 namespace core::window::detail {
 WaylandWindowImpl::WaylandWindowImpl(Vec2<size_t> size, std::string title, WindowStyle style)
     : WindowImpl(size, std::move(title), style) {
-    if constexpr (config::EnabledBackends::wayland()) {
+    if constexpr (config::BACKEND == config::GuiBackend::WAYLAND) {
         m_wl_shm_format = get_colour_format();
         m_wl_display    = wl_display_connect(nullptr);
         check_ptr(m_wl_display, "Display setup failed");
