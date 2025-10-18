@@ -2,6 +2,7 @@
 #include "raygame/core/drawing/image.h"
 #include "raygame/core/math/ring_average.h"
 #include "raygame/core/math/timer.h"
+#include "raygame/core/window/input.h"
 #include <chrono>
 #include <string>
 #include <utility>

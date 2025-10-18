@@ -294,6 +294,7 @@ void KeyboardState::new_from_string(const char* str) {
 
 void KeyboardState::event(const uint32_t& key, const uint32_t& state) {
     log::debug("event: key({}), state({})", key, state);
+    m_inputmapper.map(key, state);
     if constexpr (PRINT_KEY) {
         constexpr uint32_t        KEY_OFFSET{8};
         const uint32_t            keycode{key + KEY_OFFSET};

@@ -2,8 +2,10 @@ raygame_lib(
     RayGameCoreWindow
     HDRS
     window.h
+    input.h
     SRCS
     window.cpp
+    input.cpp
     detail/backends.h
     detail/backends.cpp
     DEPS

@@ -1,5 +1,6 @@
 #pragma once
 #include "raygame/core/window/detail/backends.h" // IWYU pragma: keep
+#include "raygame/core/window/input.h"
 #include "raygame/core/window/window.h"
 #include <wayland-client-protocol.h>
 #include <xdg-shell-client-protocol.h>
@@ -27,6 +28,7 @@ struct PointerEvent {
 };
 
 class KeyboardState {
+    InputMapper             m_inputmapper;
     static constexpr size_t BUF_SIZE{64};
     static constexpr int    ADD_VAL{8};
 

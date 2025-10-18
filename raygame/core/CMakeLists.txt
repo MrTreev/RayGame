@@ -1,6 +1,7 @@
 raygame_lib(
     RayGameCoreBase
     HDRS
+    application.h
     assert.h
     concepts.h
     condition.h
@@ -12,6 +13,7 @@ raygame_lib(
     matrix.h
     types.h
     SRCS
+    application.cpp
     assert.cpp
     concepts.cpp
     condition.cpp
