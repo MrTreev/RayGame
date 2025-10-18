@@ -2,7 +2,6 @@
 #include "raygame/core/drawing/image.h"
 #include "raygame/core/math/ring_average.h"
 #include "raygame/core/math/timer.h"
-#include "raygame/core/window/input.h"
 #include <chrono>
 #include <string>
 #include <utility>
@@ -88,6 +87,8 @@ protected:
     void set_title(std::string title) { m_title = std::move(title); }
 
     void set_style(WindowStyle style) { m_style = style; }
+
+    void set_close();
 
     [[nodiscard]]
     const Vec2<size_t>& get_size() const {

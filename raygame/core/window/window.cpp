@@ -47,6 +47,15 @@ bool core::window::detail::WindowImpl::should_close() const {
     condition::unreachable();
 }
 
+RAYGAME_CLANG_SUPPRESS_WARNING_PUSH
+RAYGAME_CLANG_SUPPRESS_WARNING("-Wmissing-noreturn")
+
+void core::window::detail::WindowImpl::set_close() {
+    condition::unreachable();
+}
+
+RAYGAME_CLANG_SUPPRESS_WARNING_POP
+
 std::string core::window::detail::WindowImpl::frame_stats() {
     return std::format(
         "Min Frame Time: {}\n"
