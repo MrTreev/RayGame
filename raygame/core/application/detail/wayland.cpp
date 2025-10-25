@@ -1,9 +1,9 @@
-#include "raygame/core/window/detail/wayland.h"
+#include "raygame/core/application/detail/wayland.h"
+#include "raygame/core/application/detail/backends.h"
 #include "raygame/core/condition.h"
 #include "raygame/core/drawing/pixel.h"
 #include "raygame/core/logger.h"
 #include "raygame/core/math/random.h"
-#include "raygame/core/window/detail/backends.h"
 #include <algorithm>
 #include <cstdlib>
 #include <fcntl.h>
@@ -103,9 +103,9 @@ constexpr wl_shm_format get_colour_format() {
 }
 } // namespace
 
-namespace core::window::detail {
-WaylandWindowImpl::WaylandWindowImpl(Vec2<size_t> size, std::string title, WindowStyle style)
-    : WindowImpl(size, std::move(title), style) {
+namespace core::detail {
+AppImplWayland::AppImplWayland(Vec2<size_t> size, std::string title, WindowStyle style)
+    : AppImpl(size, std::move(title), style) {
     if constexpr (config::BACKEND == config::GuiBackend::WAYLAND) {
         m_wl_shm_format = get_colour_format();
         m_wl_display    = wl_display_connect(nullptr);
@@ -147,7 +147,7 @@ WaylandWindowImpl::WaylandWindowImpl(Vec2<size_t> size, std::string title, Windo
     }
 }
 
-WaylandWindowImpl::~WaylandWindowImpl() {
+AppImplWayland::~AppImplWayland() {
     m_buffer_width  = 0;
     m_buffer_height = 0;
     xdg_toplevel_destroy(m_xdg_toplevel);
@@ -155,7 +155,7 @@ WaylandWindowImpl::~WaylandWindowImpl() {
     wl_surface_destroy(m_wl_surface);
 }
 
-void WaylandWindowImpl::draw(const drawing::ImageView& image) {
+void AppImplWayland::draw(const drawing::ImageView& image) {
     constexpr auto clamp = [](const pos_t val) {
         return numeric_cast<dis_t>(std::max(pos_t(0), val));
     };
@@ -182,11 +182,11 @@ void WaylandWindowImpl::draw(const drawing::ImageView& image) {
     log::trace("Drawn: {} rows, {} cols", row - row_left, col - col_top);
 }
 
-void WaylandWindowImpl::restyle() {
+void AppImplWayland::restyle() {
     restyle(get_style());
 }
 
-void WaylandWindowImpl::restyle(WindowStyle style) {
+void AppImplWayland::restyle(WindowStyle style) {
     switch (style) {
     case WindowStyle::Windowed:
         xdg_toplevel_unset_fullscreen(m_xdg_toplevel);
@@ -200,13 +200,13 @@ void WaylandWindowImpl::restyle(WindowStyle style) {
     }
 }
 
-void WaylandWindowImpl::render_frame() {
+void AppImplWayland::render_frame() {
     wl_surface_commit(m_wl_surface);
     log::trace("Surface Committed");
     wl_display_dispatch(m_wl_display);
 }
 
-bool WaylandWindowImpl::next_frame() {
+bool AppImplWayland::next_frame() {
     if constexpr (TIME_FRAMES) {
         frame_time_start();
     }
@@ -219,11 +219,15 @@ bool WaylandWindowImpl::next_frame() {
     return !should_close();
 }
 
-bool WaylandWindowImpl::should_close() const {
+bool AppImplWayland::should_close() const {
     return m_should_close;
 }
 
-void WaylandWindowImpl::new_buffer() {
+void AppImplWayland::set_close() {
+    m_should_close = true;
+}
+
+void AppImplWayland::new_buffer() {
     const auto bufwidth  = width();
     const auto bufheight = height();
     const auto bufstride = safe_mult<size_t>(bufwidth, COLOUR_CHANNELS);
@@ -309,4 +313,4 @@ void KeyboardState::event(const uint32_t& key, const uint32_t& state) {
 
 // NOLINTEND(*-easily-swappable-parameters)
 
-} // namespace core::window::detail
+} // namespace core::detail

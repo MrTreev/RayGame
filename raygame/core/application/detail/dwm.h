@@ -1,8 +1,8 @@
 #pragma once
-#include "raygame/core/window/window.h"
+#include "raygame/core/application.h"
 
-namespace core::window::detail {
-class DwmWindowImpl final: public WindowImpl {
+namespace core::detail {
+class DwmWindowImpl final: public AppImpl {
 public:
     DwmWindowImpl(Vec2<size_t> size, std::string title, WindowStyle style);
     DwmWindowImpl(const DwmWindowImpl&)           = delete;
@@ -19,4 +19,4 @@ public:
     [[nodiscard]]
     bool should_close() const final;
 };
-} // namespace core::window::detail
+} // namespace core::detail

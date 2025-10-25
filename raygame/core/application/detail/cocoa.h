@@ -1,8 +1,8 @@
 #pragma once
-#include "raygame/core/window/window.h"
+#include "raygame/core/application.h"
 
-namespace core::window::detail {
-class CocoaWindowImpl final: public WindowImpl {
+namespace core::detail {
+class CocoaWindowImpl final: public AppImpl {
 public:
     CocoaWindowImpl(Vec2<size_t> size, std::string title, WindowStyle style);
     CocoaWindowImpl(const CocoaWindowImpl&)           = delete;
@@ -27,4 +27,4 @@ private:
 #if defined(RAYGAME_GUI_BACKEND_COCOA)
 #endif
 };
-} // namespace core::window::detail
+} // namespace core::detail

@@ -1,46 +1,190 @@
 #pragma once
-#include "raygame/core/window/input.h"
-#include "raygame/core/window/window.h"
+#include "raygame/core/drawing/image.h"
+#include "raygame/core/math/ring_average.h"
+#include "raygame/core/math/timer.h"
+#include <chrono>
+#include <string>
+#include <utility>
+
+#if !defined(RAYGAME_TIME_FRAMES)
+//! @ingroup macros_config
+//! Log the average frame time
+#    define RAYGAME_TIME_FRAMES false
+#endif
+
+/*!
+ *  @ingroup macros_config
+ *  @defgroup macros_config_window_defaults Window Creation Defaults
+ *  Defaults for window creation
+ *  @{
+ */
+#if !defined(RAYGAME_DEFAULT_WINDOW_WIDTH)
+//! Default Window Width
+#    define RAYGAME_DEFAULT_WINDOW_WIDTH 640
+#endif
+#if !defined(RAYGAME_DEFAULT_WINDOW_HEIGHT)
+//! Default Window Height
+#    define RAYGAME_DEFAULT_WINDOW_HEIGHT 480
+#endif
+#if !defined(RAYGAME_DEFAULT_WINDOW_TITLE)
+//! Default Window Title
+#    define RAYGAME_DEFAULT_WINDOW_TITLE "RayGame"
+#endif
+#if !defined(RAYGAME_TARGET_FPS)
+//! Target FPS
+#    define RAYGAME_TARGET_FPS 60
+#endif
+//! @}
 
 namespace core {
-class Application {
-    window::Window      m_window;
-    window::InputMapper m_inputmapper;
+//! Default Window Width
+static constexpr std::size_t DEFAULT_WINDOW_WIDTH  = RAYGAME_DEFAULT_WINDOW_WIDTH;
+//! Default Window Height
+static constexpr std::size_t DEFAULT_WINDOW_HEIGHT = RAYGAME_DEFAULT_WINDOW_HEIGHT;
+//! Default Window Title
+static constexpr std::string DEFAULT_WINDOW_TITLE  = RAYGAME_DEFAULT_WINDOW_TITLE;
+//! Log the average frame time
+constexpr bool               TIME_FRAMES           = RAYGAME_TIME_FRAMES;
+
+//! Game's target FPS
+constexpr size_t TARGET_FPS = RAYGAME_TARGET_FPS;
+
+//! Window display styles
+enum class WindowStyle : uint8_t {
+    Windowed,           //!< Windowed mode (resizable)
+    WindowedFullscreen, //!< Windowed mode with no decorations (resizable)
+    Fullscreen,         //!< Fullscreen mode
+};
+
+static constexpr WindowStyle DEFAULT_WINDOW_STYLE = WindowStyle::Windowed;
+
+static constexpr Vec2<size_t> DEFAULT_WINDOW_SIZE = {DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT};
+
+namespace detail {
+class AppImpl {
+private:
+    Vec2<size_t> m_size;
+    std::string  m_title;
+    WindowStyle  m_style;
+
+    math::HighResolutionTimer              m_timer;
+    math::RingAverage<int64_t, TARGET_FPS> m_counter;
+
+protected:
+    void frame_time_start() { m_timer.start(); }
+
+    void frame_time_end() {
+        m_timer.end();
+        m_counter.add(m_timer.ms().count());
+    }
+
+    int64_t frame_time() { return m_counter.average(); }
+
+    std::string frame_stats();
+
+    void set_size(Vec2<size_t> size) { m_size = size; }
+
+    void set_title(std::string title) { m_title = std::move(title); }
+
+    void set_style(WindowStyle style) { m_style = style; }
+
+    [[nodiscard]]
+    const Vec2<size_t>& get_size() const {
+        return m_size;
+    }
+
+    [[nodiscard]]
+    const std::string& get_title() const {
+        return m_title;
+    }
+
+    [[nodiscard]]
+    const WindowStyle& get_style() const {
+        return m_style;
+    }
 
 public:
-    explicit Application(
-        Vec2<size_t>        size  = window::DEFAULT_WINDOW_SIZE,
-        std::string         title = window::DEFAULT_WINDOW_TITLE,
-        window::WindowStyle style = window::DEFAULT_WINDOW_STYLE
-    )
-        : m_window(size, std::move(title), style) {
-        m_inputmapper.set();
-    }
+    //! Constructs a window
+    AppImpl(Vec2<size_t> size, std::string title, WindowStyle style)
+        : m_size(size)
+        , m_title(std::move(title))
+        , m_style(style) {}
 
-    constexpr void draw(const drawing::ImageView& image) { m_window.draw(image); }
+    AppImpl(const AppImpl&)           = delete;
+    AppImpl operator=(const AppImpl&) = delete;
+    AppImpl(AppImpl&&)                = default;
+    AppImpl& operator=(AppImpl&&)     = default;
+    virtual ~AppImpl();
 
-    constexpr void restyle(core::window::WindowStyle style) { m_window.restyle(style); }
+    virtual void draw(const drawing::ImageView& image);
 
-    constexpr void render_frame() { m_window.render_frame(); }
+    virtual void restyle(WindowStyle style);
 
-    [[nodiscard]]
-    constexpr bool next_frame() {
-        return m_window.next_frame();
-    }
+    virtual void render_frame();
 
     [[nodiscard]]
-    constexpr bool should_close() const {
-        return m_window.should_close();
+    virtual bool next_frame();
+    [[nodiscard]]
+    virtual bool should_close() const;
+
+    virtual void set_close();
+
+    [[nodiscard]]
+    const size_t& width() const {
+        return m_size.x;
     }
 
     [[nodiscard]]
-    constexpr const size_t& width() const {
-        return m_window.width();
-    }
-
-    [[nodiscard]]
-    constexpr const size_t& height() const {
-        return m_window.height();
+    const size_t& height() const {
+        return m_size.y;
     }
 };
+} // namespace detail
+
+class Application {
+    std::unique_ptr<detail::AppImpl> m_impl;
+
+public:
+    //! Constructs a window
+    explicit Application(
+        Vec2<size_t> size  = DEFAULT_WINDOW_SIZE,
+        std::string  title = DEFAULT_WINDOW_TITLE,
+        WindowStyle  style = DEFAULT_WINDOW_STYLE
+    );
+
+    Application(const Application&)           = delete;
+    Application operator=(const Application&) = delete;
+    Application(Application&&)                = default;
+    Application& operator=(Application&&)     = default;
+    ~Application()                            = default;
+
+    void draw(const drawing::ImageView& image) { m_impl->draw(image); }
+
+    void restyle(WindowStyle style) { m_impl->restyle(style); }
+
+    void render_frame() { m_impl->render_frame(); }
+
+    [[nodiscard]]
+    bool next_frame() {
+        return m_impl->next_frame();
+    }
+
+    [[nodiscard]]
+    bool should_close() const {
+        return m_impl->should_close();
+    }
+
+    void set_close() { m_impl->set_close(); }
+
+    [[nodiscard]]
+    const size_t& width() const {
+        return m_impl->width();
+    }
+
+    [[nodiscard]]
+    const size_t& height() const {
+        return m_impl->height();
+    }
+};
+
 } // namespace core

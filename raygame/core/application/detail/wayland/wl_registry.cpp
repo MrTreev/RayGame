@@ -1,21 +1,21 @@
+#include "raygame/core/application/detail/wayland.h"
 #include "raygame/core/logger.h"
-#include "raygame/core/window/detail/wayland.h"
 #include <wayland-client-protocol.h>
 #include <xdg-shell-client-protocol.h>
 
-const wl_registry_listener core::window::detail::WaylandWindowImpl::m_wl_registry_listener = {
+const wl_registry_listener core::detail::AppImplWayland::m_wl_registry_listener = {
     .global        = wl_registry_handle_global,
     .global_remove = wl_registry_handle_global_remove,
 };
 
-void core::window::detail::WaylandWindowImpl::wl_registry_handle_global(
+void core::detail::AppImplWayland::wl_registry_handle_global(
     void*        data,
     wl_registry* registry,
     uint32_t     name,
     const char*  interface,
     uint32_t     version
 ) {
-    auto*             this_impl = static_cast<WaylandWindowImpl*>(data);
+    auto*             this_impl = static_cast<AppImplWayland*>(data);
     const std::string interface_str{interface};
     if (interface_str == wl_shm_interface.name) {
         core::log::trace("Handled Global: {}", interface);
@@ -42,13 +42,13 @@ void core::window::detail::WaylandWindowImpl::wl_registry_handle_global(
     }
 }
 
-void core::window::detail::WaylandWindowImpl::wl_registry_handle_global_remove(
+void core::detail::AppImplWayland::wl_registry_handle_global_remove(
     void*        data,
     wl_registry* registry,
     uint32_t     name
 ) {
     [[maybe_unused]]
-    auto* this_impl = static_cast<WaylandWindowImpl*>(data);
+    auto* this_impl = static_cast<AppImplWayland*>(data);
     wl_registry_destroy(registry);
     core::log::trace("removed registry: {}", name);
 }

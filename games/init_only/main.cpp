@@ -1,6 +1,6 @@
-#include "raygame/core/window/window.h"
+#include "raygame/core/application.h"
 
 int main() {
-    core::window::Window mywindow{};
+    core::Application mywindow{};
     while (mywindow.next_frame()) {}
 }

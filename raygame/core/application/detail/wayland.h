@@ -1,12 +1,12 @@
 #pragma once
-#include "raygame/core/window/detail/backends.h" // IWYU pragma: keep
-#include "raygame/core/window/input.h"
-#include "raygame/core/window/window.h"
+#include "raygame/core/application.h"
+#include "raygame/core/application/detail/backends.h" // IWYU pragma: keep
+#include "raygame/core/application/input.h"
 #include <wayland-client-protocol.h>
 #include <xdg-shell-client-protocol.h>
 #include <xkbcommon/xkbcommon.h>
 
-namespace core::window::detail {
+namespace core::detail {
 
 struct Axis {
     bool       valid;
@@ -91,14 +91,14 @@ public:
     }
 };
 
-class WaylandWindowImpl final: public WindowImpl {
+class AppImplWayland final: public AppImpl {
 public:
-    WaylandWindowImpl(Vec2<size_t> size, std::string title, WindowStyle style);
-    ~WaylandWindowImpl() final;
-    WaylandWindowImpl(const WaylandWindowImpl&)           = delete;
-    WaylandWindowImpl operator=(const WaylandWindowImpl&) = delete;
-    WaylandWindowImpl(WaylandWindowImpl&&)                = default;
-    WaylandWindowImpl& operator=(WaylandWindowImpl&&)     = default;
+    AppImplWayland(Vec2<size_t> size, std::string title, WindowStyle style);
+    ~AppImplWayland() final;
+    AppImplWayland(const AppImplWayland&)           = delete;
+    AppImplWayland operator=(const AppImplWayland&) = delete;
+    AppImplWayland(AppImplWayland&&)                = default;
+    AppImplWayland& operator=(AppImplWayland&&)     = default;
 
     void draw(const drawing::ImageView& image) final;
     void restyle(WindowStyle style) final;
@@ -109,6 +109,7 @@ public:
     bool next_frame() final;
     [[nodiscard]]
     bool should_close() const final;
+    void set_close() final;
 
 private:
     using wl_fixed_t  = int32_t;
@@ -182,4 +183,4 @@ private:
     static void xdg_wm_base_handle_ping(void* data, xdg_wm_base* xdg_wm_base, uint32_t serial);
     // clang-format on
 };
-} // namespace core::window::detail
+} // namespace core::detail

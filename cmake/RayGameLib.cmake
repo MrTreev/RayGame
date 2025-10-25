@@ -24,6 +24,7 @@ function(raygame_lib _target)
     set_target_properties(
         ${_target}
         PROPERTIES VERSION ${RayGame_VERSION}
+                   LINKER_LANGUAGE CXX
                    CXX_VISIBILITY_PRESET hidden
                    CXX_STANDARD 23
                    CXX_STANDARD_REQUIRED YES

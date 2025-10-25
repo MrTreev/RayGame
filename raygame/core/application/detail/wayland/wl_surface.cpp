@@ -1,16 +1,16 @@
-#include "raygame/core/window/detail/wayland.h"
+#include "raygame/core/application/detail/wayland.h"
 #include <wayland-client-protocol.h>
 
-const wl_callback_listener core::window::detail::WaylandWindowImpl::m_wl_surface_frame_listener{
+const wl_callback_listener core::detail::AppImplWayland::m_wl_surface_frame_listener{
     .done = wl_surface_handle_done,
 };
 
-void core::window::detail::WaylandWindowImpl::wl_surface_handle_done(
+void core::detail::AppImplWayland::wl_surface_handle_done(
     void*                     data,
     wl_callback*              wl_callback,
     [[maybe_unused]] uint32_t time
 ) {
-    auto* this_impl = static_cast<WaylandWindowImpl*>(data);
+    auto* this_impl = static_cast<AppImplWayland*>(data);
     wl_callback_destroy(wl_callback);
     wl_callback = wl_surface_frame(this_impl->m_wl_surface);
     wl_callback_add_listener(wl_callback, &m_wl_surface_frame_listener, this_impl);

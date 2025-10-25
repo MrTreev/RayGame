@@ -1,9 +1,9 @@
+#include "raygame/core/application/detail/wayland.h"
 #include "raygame/core/condition.h"
 #include "raygame/core/logger.h"
-#include "raygame/core/window/detail/wayland.h"
 #include <wayland-client-protocol.h>
 
-const wl_pointer_listener core::window::detail::WaylandWindowImpl::m_wl_pointer_listener = {
+const wl_pointer_listener core::detail::AppImplWayland::m_wl_pointer_listener = {
     .enter                   = wl_pointer_handle_enter,
     .leave                   = wl_pointer_handle_leave,
     .motion                  = wl_pointer_handle_motion,
@@ -36,14 +36,14 @@ constexpr uint32_t ALL_AXIS_EVENTS =
 } // namespace
 
 // NOLINTBEGIN(*-easily-swappable-parameters)
-void core::window::detail::WaylandWindowImpl::wl_pointer_handle_axis(
+void core::detail::AppImplWayland::wl_pointer_handle_axis(
     void*                        data,
     [[maybe_unused]] wl_pointer* wl_pointer,
     uint32_t                     time,
     uint32_t                     axis,
     wl_fixed_t                   value
 ) {
-    auto* this_impl                        = static_cast<WaylandWindowImpl*>(data);
+    auto* this_impl                        = static_cast<AppImplWayland*>(data);
     this_impl->m_pointer_event.event_mask |= POINTER_EVENT_AXIS;
     this_impl->m_pointer_event.time        = time;
     if (axis == WL_POINTER_AXIS_VERTICAL_SCROLL) {
@@ -57,13 +57,13 @@ void core::window::detail::WaylandWindowImpl::wl_pointer_handle_axis(
     }
 }
 
-void core::window::detail::WaylandWindowImpl::wl_pointer_handle_axis_discrete(
+void core::detail::AppImplWayland::wl_pointer_handle_axis_discrete(
     void*                        data,
     [[maybe_unused]] wl_pointer* wl_pointer,
     uint32_t                     axis,
     int32_t                      discrete
 ) {
-    auto* this_impl                        = static_cast<WaylandWindowImpl*>(data);
+    auto* this_impl                        = static_cast<AppImplWayland*>(data);
     this_impl->m_pointer_event.event_mask |= POINTER_EVENT_AXIS_DISCRETE;
     if (axis == WL_POINTER_AXIS_VERTICAL_SCROLL) {
         this_impl->m_pointer_event.axis_vertical.valid    = true;
@@ -76,33 +76,33 @@ void core::window::detail::WaylandWindowImpl::wl_pointer_handle_axis_discrete(
     }
 }
 
-void core::window::detail::WaylandWindowImpl::wl_pointer_handle_axis_relative_direction(
+void core::detail::AppImplWayland::wl_pointer_handle_axis_relative_direction(
     void*                        data,
     [[maybe_unused]] wl_pointer* wl_pointer,
     [[maybe_unused]] uint32_t    axis,
     [[maybe_unused]] uint32_t    direction
 ) {
     [[maybe_unused]]
-    const WaylandWindowImpl* const this_impl = static_cast<WaylandWindowImpl*>(data);
+    const AppImplWayland* const this_impl = static_cast<AppImplWayland*>(data);
 }
 
-void core::window::detail::WaylandWindowImpl::wl_pointer_handle_axis_source(
+void core::detail::AppImplWayland::wl_pointer_handle_axis_source(
     void*                        data,
     [[maybe_unused]] wl_pointer* wl_pointer,
     uint32_t                     axis_source
 ) {
-    auto* this_impl                         = static_cast<WaylandWindowImpl*>(data);
+    auto* this_impl                         = static_cast<AppImplWayland*>(data);
     this_impl->m_pointer_event.event_mask  |= POINTER_EVENT_AXIS_SOURCE;
     this_impl->m_pointer_event.axis_source  = axis_source;
 }
 
-void core::window::detail::WaylandWindowImpl::wl_pointer_handle_axis_stop(
+void core::detail::AppImplWayland::wl_pointer_handle_axis_stop(
     void*                        data,
     [[maybe_unused]] wl_pointer* wl_pointer,
     uint32_t                     time,
     uint32_t                     axis
 ) {
-    auto* this_impl                        = static_cast<WaylandWindowImpl*>(data);
+    auto* this_impl                        = static_cast<AppImplWayland*>(data);
     this_impl->m_pointer_event.time        = time;
     this_impl->m_pointer_event.event_mask |= POINTER_EVENT_AXIS_STOP;
     if (axis == WL_POINTER_AXIS_VERTICAL_SCROLL) {
@@ -114,17 +114,17 @@ void core::window::detail::WaylandWindowImpl::wl_pointer_handle_axis_stop(
     }
 }
 
-void core::window::detail::WaylandWindowImpl::wl_pointer_handle_axis_value120(
+void core::detail::AppImplWayland::wl_pointer_handle_axis_value120(
     void*                        data,
     [[maybe_unused]] wl_pointer* wl_pointer,
     [[maybe_unused]] uint32_t    axis,
     [[maybe_unused]] int32_t     value120
 ) {
     [[maybe_unused]]
-    const WaylandWindowImpl* const this_impl = static_cast<WaylandWindowImpl*>(data);
+    const AppImplWayland* const this_impl = static_cast<AppImplWayland*>(data);
 }
 
-void core::window::detail::WaylandWindowImpl::wl_pointer_handle_button(
+void core::detail::AppImplWayland::wl_pointer_handle_button(
     void*                        data,
     [[maybe_unused]] wl_pointer* pointer,
     uint32_t                     serial,
@@ -132,7 +132,7 @@ void core::window::detail::WaylandWindowImpl::wl_pointer_handle_button(
     uint32_t                     button,
     uint32_t                     state
 ) {
-    auto* this_impl                        = static_cast<WaylandWindowImpl*>(data);
+    auto* this_impl                        = static_cast<AppImplWayland*>(data);
     this_impl->m_pointer_event.event_mask |= POINTER_EVENT_BUTTON;
     this_impl->m_pointer_event.time        = time;
     this_impl->m_pointer_event.serial      = serial;
@@ -140,7 +140,7 @@ void core::window::detail::WaylandWindowImpl::wl_pointer_handle_button(
     this_impl->m_pointer_event.state       = state;
 }
 
-void core::window::detail::WaylandWindowImpl::wl_pointer_handle_enter(
+void core::detail::AppImplWayland::wl_pointer_handle_enter(
     void*                        data,
     [[maybe_unused]] wl_pointer* wl_pointer,
     uint32_t                     serial,
@@ -148,7 +148,7 @@ void core::window::detail::WaylandWindowImpl::wl_pointer_handle_enter(
     wl_fixed_t                   surface_x,
     wl_fixed_t                   surface_y
 ) {
-    auto* this_impl                        = static_cast<WaylandWindowImpl*>(data);
+    auto* this_impl                        = static_cast<AppImplWayland*>(data);
     this_impl->m_pointer_event.event_mask |= POINTER_EVENT_ENTER;
     this_impl->m_pointer_event.serial      = serial;
     this_impl->m_pointer_event.surface_x   = surface_x;
@@ -167,11 +167,11 @@ std::string source_string(uint32_t axis_source) {
 }
 } // namespace
 
-void core::window::detail::WaylandWindowImpl::wl_pointer_handle_frame(
+void core::detail::AppImplWayland::wl_pointer_handle_frame(
     void*                        data,
     [[maybe_unused]] wl_pointer* wl_pointer
 ) {
-    const auto*         this_impl = static_cast<WaylandWindowImpl*>(data);
+    const auto*         this_impl = static_cast<AppImplWayland*>(data);
     const PointerEvent& event     = this_impl->m_pointer_event;
     if ((event.event_mask & POINTER_EVENT_ENTER) != 0U) {
         core::log::trace(
@@ -233,25 +233,25 @@ void core::window::detail::WaylandWindowImpl::wl_pointer_handle_frame(
     }
 }
 
-void core::window::detail::WaylandWindowImpl::wl_pointer_handle_leave(
+void core::detail::AppImplWayland::wl_pointer_handle_leave(
     void*                        data,
     [[maybe_unused]] wl_pointer* wl_pointer,
     uint32_t                     serial,
     [[maybe_unused]] wl_surface* surface
 ) {
-    auto* this_impl                        = static_cast<WaylandWindowImpl*>(data);
+    auto* this_impl                        = static_cast<AppImplWayland*>(data);
     this_impl->m_pointer_event.serial      = serial;
     this_impl->m_pointer_event.event_mask |= POINTER_EVENT_LEAVE;
 }
 
-void core::window::detail::WaylandWindowImpl::wl_pointer_handle_motion(
+void core::detail::AppImplWayland::wl_pointer_handle_motion(
     void*                        data,
     [[maybe_unused]] wl_pointer* wl_pointer,
     uint32_t                     time,
     wl_fixed_t                   surface_x,
     wl_fixed_t                   surface_y
 ) {
-    auto* this_impl                        = static_cast<WaylandWindowImpl*>(data);
+    auto* this_impl                        = static_cast<AppImplWayland*>(data);
     this_impl->m_pointer_event.event_mask |= POINTER_EVENT_MOTION;
     this_impl->m_pointer_event.time        = time;
     this_impl->m_pointer_event.surface_x   = surface_x;

@@ -3,7 +3,7 @@
 
 namespace raygame::systems::pf1e {
 class Coins {
-    core::size_t m_amount{0};
+    core::uint64_t m_amount{0};
 
     static constexpr core::size_t PP_ = 1000;
     static constexpr core::size_t GP_ = 100;
@@ -34,6 +34,26 @@ public:
     [[nodiscard]]
     constexpr core::size_t cp() const {
         return m_amount / CP_;
+    }
+
+    [[nodiscard]]
+    constexpr core::size_t all_pp() const {
+        return m_amount / PP_;
+    }
+
+    [[nodiscard]]
+    constexpr core::size_t all_gp() const {
+        return (m_amount % PP_) / GP_;
+    }
+
+    [[nodiscard]]
+    constexpr core::size_t all_sp() const {
+        return (m_amount % GP_) / SP_;
+    }
+
+    [[nodiscard]]
+    constexpr core::size_t all_cp() const {
+        return (m_amount % SP_) / CP_;
     }
 };
 

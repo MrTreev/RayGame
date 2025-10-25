@@ -1,11 +1,15 @@
 #pragma once
 #include "raygame/core/types.h"
+#include <functional>
 #include <map>
 
-namespace core::window {
+namespace core {
 class InputMapper {
-    using func_t = void (*)(uint32_t);
-    std::map<uint32_t, void (*)(uint32_t)> m_map;
+public:
+    using func_t = std::function<void(uint32_t)>;
+
+private:
+    std::map<uint32_t, func_t> m_map;
 
 public:
     InputMapper();
@@ -13,4 +17,4 @@ public:
     void clear(uint32_t key);
     void set(uint32_t key, func_t func);
 };
-} // namespace core::window
+} // namespace core

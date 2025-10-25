@@ -27,15 +27,17 @@ command_result(){
 };
 
 run_configure(){
-    cmake \
-        -B "${BUILD_DIR}" \
-        -S . \
-        -G Ninja \
-        --toolchain ./cmake/presets/linux-clang-libcxx.cmake \
-        -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" \
-        -DCMAKE_EXPORT_COMPILE_COMMANDS="${EXPORT_COMPILE_COMMANDS}" \
-        -DRAYGAME_LOG_DISABLE_SOURCE_LOCATION="${DISABLE_SOURCE_LOC}" \
-        ;
+    if [ ! -d "${BUILD_DIR}" ]; then
+        cmake \
+            -B "${BUILD_DIR}" \
+            -S . \
+            -G Ninja \
+            --toolchain ./cmake/presets/linux-clang-libcxx.cmake \
+            -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS="${EXPORT_COMPILE_COMMANDS}" \
+            -DRAYGAME_LOG_DISABLE_SOURCE_LOCATION="${DISABLE_SOURCE_LOC}" \
+            ;
+    fi;
     command_result "$?" "Configure";
 };
 
