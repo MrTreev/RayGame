@@ -31,6 +31,7 @@ public:
     std::FILE* raw() { return m_file; }
 
     void write(const std::string_view& msg);
+    void write(const std::vector<byte>& msg);
     void writeln(const std::string_view& msg);
 
     [[nodiscard]]

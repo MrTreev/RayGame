@@ -125,5 +125,7 @@ raygame_lib(
          RayGame::Core::Io
          RayGame::Core::Math
          RayGame::Core::Application
+         RayGame::Core::Serialisation
 )
+target_link_libraries(RayGameCore PUBLIC RayGame::External::ZppBits)
 add_library(RayGame::Core ALIAS RayGameCore)

@@ -8,6 +8,7 @@
 #include <string_view>
 #include <system_error>
 #include <utility>
+#include <vector>
 
 namespace core::io {
 namespace {
@@ -90,6 +91,13 @@ bool File::good() const {
 }
 
 void File::write(const std::string_view& msg) {
+    const size_t n_written = std::fwrite(msg.data(), sizeof(msg[0]), msg.size(), m_file);
+    if (n_written != msg.size()) {
+        log::error("Message not fully written to: {}", m_path.filename().string());
+    }
+}
+
+void File::write(const std::vector<byte>& msg) {
     const size_t n_written = std::fwrite(msg.data(), sizeof(msg[0]), msg.size(), m_file);
     if (n_written != msg.size()) {
         log::error("Message not fully written to: {}", m_path.filename().string());

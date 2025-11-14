@@ -24,4 +24,4 @@ Prefer ISO standard methods over extensions where possible.
 ## Failures
 
 Use exceptions to signal a failure to perform a required task
-Use std::optional to signal a failure to perform an optional task
+Use std::optional to signal a failure to perform an optional task, or a very common failure

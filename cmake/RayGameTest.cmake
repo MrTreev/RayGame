@@ -36,7 +36,7 @@ function(raygame_test _target)
     cmake_parse_arguments(RAYGAME_TESTARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     set(_TARGET "RayGameTest${_target}")
     add_executable(${_TARGET})
-    target_compile_features(${_TARGET} PUBLIC cxx_std_23)
+    target_compile_features(${_TARGET} PUBLIC cxx_std_${RAYGAME_CXX_STANDARD})
     target_include_directories(${_TARGET} PUBLIC ${RayGame_SOURCE_DIR})
     set_target_properties(
         ${_TARGET}

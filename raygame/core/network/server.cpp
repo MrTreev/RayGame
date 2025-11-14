@@ -15,6 +15,7 @@ core::network::Server::Server()
     m_addr.sin_family      = AF_INET;
     m_addr.sin_addr.s_addr = INADDR_ANY;
 
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
     if (bind(m_fd, reinterpret_cast<sockaddr*>(&m_addr), sizeof(m_addr)) != 0) {
         perror("bind error:");
         return;
@@ -22,6 +23,7 @@ core::network::Server::Server()
 
     // read port
     socklen_t addr_len = sizeof(m_addr);
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
     getsockname(m_fd, reinterpret_cast<sockaddr*>(&m_addr), &addr_len);
     core::log::debug("server is on port %d\n", static_cast<int>(ntohs(m_addr.sin_port)));
 
@@ -33,6 +35,7 @@ core::network::Server::Server()
     // accept incoming connection
     sockaddr_storage caddr{};
     socklen_t        caddr_len = sizeof(caddr);
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
     const int        cfd       = accept(m_fd, reinterpret_cast<sockaddr*>(&caddr), &caddr_len);
 
     // read from client with recv!

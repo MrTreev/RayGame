@@ -11,6 +11,6 @@ raygame_test(Pixel          SRCS drawing/pixel.cpp                  DEPS RayGame
 raygame_test(Random         SRCS math/random.cpp                    DEPS RayGame::Core::Math)
 raygame_test(Rect           SRCS math/rect.cpp                      DEPS RayGame::Core::Math)
 raygame_test(RingAverage    SRCS math/ring_average.cpp              DEPS RayGame::Core::Math)
-raygame_test(Serialisation  SRCS serialisation/serialisation.cpp    DEPS RayGame::Core::Serialisation)
+raygame_test(Serialisation  SRCS serialisation/serialisation.cpp    DEPS RayGame::Core::Serialisation RayGame::Core)
 raygame_test(Types          SRCS types.cpp                          DEPS RayGame::Core::Base)
 raygame_test(Vector         SRCS math/vector.cpp                    DEPS RayGame::Core::Math)

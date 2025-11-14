@@ -9,7 +9,7 @@ function(raygame_lib _target)
     set(multiValueArgs HDRS SRCS DEPS DEFS)
     cmake_parse_arguments(RAYGAME_TESTARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     add_library(${_target})
-    target_compile_features(${_target} PUBLIC cxx_std_23)
+    target_compile_features(${_target} PUBLIC cxx_std_${RAYGAME_CXX_STANDARD})
     if(NOT RAYGAME_TESTARGS_NO_INCS)
         target_include_directories(
             ${_target} PUBLIC $<BUILD_INTERFACE:${RayGame_SOURCE_DIR}> $<INSTALL_INTERFACE:include/raygame>
@@ -26,10 +26,11 @@ function(raygame_lib _target)
         PROPERTIES VERSION ${RayGame_VERSION}
                    LINKER_LANGUAGE CXX
                    CXX_VISIBILITY_PRESET hidden
-                   CXX_STANDARD 23
+                   CXX_STANDARD ${RAYGAME_CXX_STANDARD}
                    CXX_STANDARD_REQUIRED YES
                    VISIBILITY_INLINES_HIDDEN YES
     )
     raygame_add_args(${_target})
     raygame_add_defs(${_target})
+    set_target_properties(${_target} PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_COMMAND}")
 endfunction()
