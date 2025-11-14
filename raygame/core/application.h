@@ -1,8 +1,11 @@
 #pragma once
-#include "raygame/core/drawing/image.h"
+#include "raygame/core/drawing/image.h" // IWYU pragma: export
 #include "raygame/core/math/ring_average.h"
 #include "raygame/core/math/timer.h"
+#include "raygame/core/math/vector.h"
+#include "raygame/core/types.h"
 #include <chrono>
+#include <memory>
 #include <string>
 #include <utility>
 

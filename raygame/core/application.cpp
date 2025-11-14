@@ -5,6 +5,7 @@
 #include "raygame/core/application/detail/wayland.h"
 #include "raygame/core/condition.h"
 #include "raygame/core/logger.h"
+#include "raygame/core/math/vector.h"
 
 core::Application::Application(Vec2<size_t> size, std::string title, WindowStyle style) {
     using Cocoa   = detail::CocoaWindowImpl;

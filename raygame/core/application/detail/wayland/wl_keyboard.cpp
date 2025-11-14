@@ -1,8 +1,10 @@
 #include "raygame/core/application/detail/wayland.h"
+#include "raygame/core/condition.h"
+#include "raygame/core/types.h"
 #include <sys/mman.h>
 #include <unistd.h>
 #include <wayland-client-protocol.h>
-#include <xkbcommon/xkbcommon.h>
+#include <wayland-util.h>
 
 const wl_keyboard_listener core::detail::AppImplWayland::m_wl_keyboard_listener = {
     .keymap      = wl_keyboard_keymap,

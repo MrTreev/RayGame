@@ -1,6 +1,7 @@
 #pragma once
 #include "raygame/core/types.h"
 #include <format>
+#include <string>
 
 namespace core {
 

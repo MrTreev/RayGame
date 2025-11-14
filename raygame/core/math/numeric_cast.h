@@ -1,7 +1,7 @@
 #pragma once
-#include "raygame/core/debug.h"
 #include "raygame/core/exception.h"
 #include "raygame/core/math/mathrule.h"
+#include "raygame/core/types.h"
 #include <concepts>
 #include <format>
 #include <utility>

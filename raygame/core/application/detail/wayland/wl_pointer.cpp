@@ -1,7 +1,11 @@
 #include "raygame/core/application/detail/wayland.h"
 #include "raygame/core/condition.h"
 #include "raygame/core/logger.h"
+#include "raygame/core/math/vector.h"
+#include "raygame/core/types.h"
+#include <format>
 #include <wayland-client-protocol.h>
+#include <wayland-util.h>
 
 const wl_pointer_listener core::detail::AppImplWayland::m_wl_pointer_listener = {
     .enter                   = wl_pointer_handle_enter,
@@ -43,15 +47,15 @@ void core::detail::AppImplWayland::wl_pointer_handle_axis(
     uint32_t                     axis,
     wl_fixed_t                   value
 ) {
-    auto* this_impl                        = static_cast<AppImplWayland*>(data);
-    this_impl->m_pointer_event.event_mask |= POINTER_EVENT_AXIS;
-    this_impl->m_pointer_event.time        = time;
+    auto* this_impl                          = static_cast<AppImplWayland*>(data);
+    this_impl->m_pointer_event.m_event_mask |= POINTER_EVENT_AXIS;
+    this_impl->m_pointer_event.m_time        = time;
     if (axis == WL_POINTER_AXIS_VERTICAL_SCROLL) {
-        this_impl->m_pointer_event.axis_vertical.valid = true;
-        this_impl->m_pointer_event.axis_vertical.value = value;
+        this_impl->m_pointer_event.m_axis_vertical.m_valid = true;
+        this_impl->m_pointer_event.m_axis_vertical.m_value = value;
     } else if (axis == WL_POINTER_AXIS_HORIZONTAL_SCROLL) {
-        this_impl->m_pointer_event.axis_horizontal.valid = true;
-        this_impl->m_pointer_event.axis_horizontal.value = value;
+        this_impl->m_pointer_event.m_axis_horizontal.m_valid = true;
+        this_impl->m_pointer_event.m_axis_horizontal.m_value = value;
     } else {
         core::condition::unknown("axis");
     }
@@ -63,14 +67,14 @@ void core::detail::AppImplWayland::wl_pointer_handle_axis_discrete(
     uint32_t                     axis,
     int32_t                      discrete
 ) {
-    auto* this_impl                        = static_cast<AppImplWayland*>(data);
-    this_impl->m_pointer_event.event_mask |= POINTER_EVENT_AXIS_DISCRETE;
+    auto* this_impl                          = static_cast<AppImplWayland*>(data);
+    this_impl->m_pointer_event.m_event_mask |= POINTER_EVENT_AXIS_DISCRETE;
     if (axis == WL_POINTER_AXIS_VERTICAL_SCROLL) {
-        this_impl->m_pointer_event.axis_vertical.valid    = true;
-        this_impl->m_pointer_event.axis_vertical.discrete = discrete;
+        this_impl->m_pointer_event.m_axis_vertical.m_valid    = true;
+        this_impl->m_pointer_event.m_axis_vertical.m_discrete = discrete;
     } else if (axis == WL_POINTER_AXIS_HORIZONTAL_SCROLL) {
-        this_impl->m_pointer_event.axis_horizontal.valid    = true;
-        this_impl->m_pointer_event.axis_horizontal.discrete = discrete;
+        this_impl->m_pointer_event.m_axis_horizontal.m_valid    = true;
+        this_impl->m_pointer_event.m_axis_horizontal.m_discrete = discrete;
     } else {
         core::condition::unknown("axis");
     }
@@ -91,9 +95,9 @@ void core::detail::AppImplWayland::wl_pointer_handle_axis_source(
     [[maybe_unused]] wl_pointer* wl_pointer,
     uint32_t                     axis_source
 ) {
-    auto* this_impl                         = static_cast<AppImplWayland*>(data);
-    this_impl->m_pointer_event.event_mask  |= POINTER_EVENT_AXIS_SOURCE;
-    this_impl->m_pointer_event.axis_source  = axis_source;
+    auto* this_impl                           = static_cast<AppImplWayland*>(data);
+    this_impl->m_pointer_event.m_event_mask  |= POINTER_EVENT_AXIS_SOURCE;
+    this_impl->m_pointer_event.m_axis_source  = axis_source;
 }
 
 void core::detail::AppImplWayland::wl_pointer_handle_axis_stop(
@@ -102,13 +106,13 @@ void core::detail::AppImplWayland::wl_pointer_handle_axis_stop(
     uint32_t                     time,
     uint32_t                     axis
 ) {
-    auto* this_impl                        = static_cast<AppImplWayland*>(data);
-    this_impl->m_pointer_event.time        = time;
-    this_impl->m_pointer_event.event_mask |= POINTER_EVENT_AXIS_STOP;
+    auto* this_impl                          = static_cast<AppImplWayland*>(data);
+    this_impl->m_pointer_event.m_time        = time;
+    this_impl->m_pointer_event.m_event_mask |= POINTER_EVENT_AXIS_STOP;
     if (axis == WL_POINTER_AXIS_VERTICAL_SCROLL) {
-        this_impl->m_pointer_event.axis_vertical.valid = true;
+        this_impl->m_pointer_event.m_axis_vertical.m_valid = true;
     } else if (axis == WL_POINTER_AXIS_HORIZONTAL_SCROLL) {
-        this_impl->m_pointer_event.axis_horizontal.valid = true;
+        this_impl->m_pointer_event.m_axis_horizontal.m_valid = true;
     } else {
         core::condition::unknown("axis");
     }
@@ -132,12 +136,12 @@ void core::detail::AppImplWayland::wl_pointer_handle_button(
     uint32_t                     button,
     uint32_t                     state
 ) {
-    auto* this_impl                        = static_cast<AppImplWayland*>(data);
-    this_impl->m_pointer_event.event_mask |= POINTER_EVENT_BUTTON;
-    this_impl->m_pointer_event.time        = time;
-    this_impl->m_pointer_event.serial      = serial;
-    this_impl->m_pointer_event.button      = button;
-    this_impl->m_pointer_event.state       = state;
+    auto* this_impl                          = static_cast<AppImplWayland*>(data);
+    this_impl->m_pointer_event.m_event_mask |= POINTER_EVENT_BUTTON;
+    this_impl->m_pointer_event.m_time        = time;
+    this_impl->m_pointer_event.m_serial      = serial;
+    this_impl->m_pointer_event.m_button      = button;
+    this_impl->m_pointer_event.m_state       = state;
 }
 
 void core::detail::AppImplWayland::wl_pointer_handle_enter(
@@ -148,11 +152,11 @@ void core::detail::AppImplWayland::wl_pointer_handle_enter(
     wl_fixed_t                   surface_x,
     wl_fixed_t                   surface_y
 ) {
-    auto* this_impl                        = static_cast<AppImplWayland*>(data);
-    this_impl->m_pointer_event.event_mask |= POINTER_EVENT_ENTER;
-    this_impl->m_pointer_event.serial      = serial;
-    this_impl->m_pointer_event.surface_x   = surface_x;
-    this_impl->m_pointer_event.surface_y   = surface_y;
+    auto* this_impl                          = static_cast<AppImplWayland*>(data);
+    this_impl->m_pointer_event.m_event_mask |= POINTER_EVENT_ENTER;
+    this_impl->m_pointer_event.m_serial      = serial;
+    this_impl->m_pointer_event.m_surface_x   = surface_x;
+    this_impl->m_pointer_event.m_surface_y   = surface_y;
 }
 
 namespace {
@@ -173,62 +177,62 @@ void core::detail::AppImplWayland::wl_pointer_handle_frame(
 ) {
     const auto*         this_impl = static_cast<AppImplWayland*>(data);
     const PointerEvent& event     = this_impl->m_pointer_event;
-    if ((event.event_mask & POINTER_EVENT_ENTER) != 0U) {
+    if ((event.m_event_mask & POINTER_EVENT_ENTER) != 0U) {
         core::log::trace(
             "Pointer Entry ({}, {})",
-            wl_fixed_to_double(event.surface_x),
-            wl_fixed_to_double(event.surface_y)
+            wl_fixed_to_double(event.m_surface_x),
+            wl_fixed_to_double(event.m_surface_y)
         );
     }
-    if ((event.event_mask & POINTER_EVENT_LEAVE) != 0U) {
+    if ((event.m_event_mask & POINTER_EVENT_LEAVE) != 0U) {
         core::log::trace("Pointer Leave");
     }
-    if ((event.event_mask & POINTER_EVENT_MOTION) != 0U) {
+    if ((event.m_event_mask & POINTER_EVENT_MOTION) != 0U) {
         core::log::trace(
             "Pointer Motion ({}, {})",
-            wl_fixed_to_double(event.surface_x),
-            wl_fixed_to_double(event.surface_y)
+            wl_fixed_to_double(event.m_surface_x),
+            wl_fixed_to_double(event.m_surface_y)
         );
     }
-    if ((event.event_mask & POINTER_EVENT_BUTTON) != 0U) {
-        if (event.state == WL_POINTER_BUTTON_STATE_PRESSED) {
+    if ((event.m_event_mask & POINTER_EVENT_BUTTON) != 0U) {
+        if (event.m_state == WL_POINTER_BUTTON_STATE_PRESSED) {
             core::log::trace(
                 "Button {} pressed at {}",
-                event.button,
+                event.m_button,
                 std::string(
                     core::Vec2<double>(
-                        wl_fixed_to_double(event.surface_x),
-                        wl_fixed_to_double(event.surface_y)
+                        wl_fixed_to_double(event.m_surface_x),
+                        wl_fixed_to_double(event.m_surface_y)
                     )
                 )
             );
-        } else if (event.state == WL_POINTER_BUTTON_STATE_RELEASED) {
-            core::log::trace("Button {} released", event.button);
+        } else if (event.m_state == WL_POINTER_BUTTON_STATE_RELEASED) {
+            core::log::trace("Button {} released", event.m_button);
         } else {
-            core::log::error("Button {}", event.button);
-            core::log::error("State  {}", event.state);
+            core::log::error("Button {}", event.m_button);
+            core::log::error("State  {}", event.m_state);
             core::condition::unknown("button state");
         }
     }
-    if ((event.event_mask & ALL_AXIS_EVENTS) != 0U) {
+    if ((event.m_event_mask & ALL_AXIS_EVENTS) != 0U) {
         const auto handle_axis = [event](const Axis& axis) {
             std::string ret_str = "Axis event:";
-            if ((event.event_mask & POINTER_EVENT_AXIS) != 0U) {
-                ret_str += std::format(" axis({}) ", wl_fixed_to_double(axis.value));
+            if ((event.m_event_mask & POINTER_EVENT_AXIS) != 0U) {
+                ret_str += std::format(" axis({}) ", wl_fixed_to_double(axis.m_value));
             }
-            if ((event.event_mask & POINTER_EVENT_AXIS_DISCRETE) != 0U) {
-                ret_str += std::format(" discrete({}) ", axis.discrete);
+            if ((event.m_event_mask & POINTER_EVENT_AXIS_DISCRETE) != 0U) {
+                ret_str += std::format(" discrete({}) ", axis.m_discrete);
             }
-            if ((event.event_mask & POINTER_EVENT_AXIS_SOURCE) != 0U) {
-                ret_str += source_string(event.event_mask);
+            if ((event.m_event_mask & POINTER_EVENT_AXIS_SOURCE) != 0U) {
+                ret_str += source_string(event.m_event_mask);
             }
             return ret_str;
         };
-        if (event.axis_vertical.valid) {
-            core::log::trace(handle_axis(event.axis_horizontal));
+        if (event.m_axis_vertical.m_valid) {
+            core::log::trace(handle_axis(event.m_axis_horizontal));
         }
-        if (event.axis_horizontal.valid) {
-            core::log::trace(handle_axis(event.axis_vertical));
+        if (event.m_axis_horizontal.m_valid) {
+            core::log::trace(handle_axis(event.m_axis_vertical));
         }
     }
 }
@@ -239,9 +243,9 @@ void core::detail::AppImplWayland::wl_pointer_handle_leave(
     uint32_t                     serial,
     [[maybe_unused]] wl_surface* surface
 ) {
-    auto* this_impl                        = static_cast<AppImplWayland*>(data);
-    this_impl->m_pointer_event.serial      = serial;
-    this_impl->m_pointer_event.event_mask |= POINTER_EVENT_LEAVE;
+    auto* this_impl                          = static_cast<AppImplWayland*>(data);
+    this_impl->m_pointer_event.m_serial      = serial;
+    this_impl->m_pointer_event.m_event_mask |= POINTER_EVENT_LEAVE;
 }
 
 void core::detail::AppImplWayland::wl_pointer_handle_motion(
@@ -251,11 +255,11 @@ void core::detail::AppImplWayland::wl_pointer_handle_motion(
     wl_fixed_t                   surface_x,
     wl_fixed_t                   surface_y
 ) {
-    auto* this_impl                        = static_cast<AppImplWayland*>(data);
-    this_impl->m_pointer_event.event_mask |= POINTER_EVENT_MOTION;
-    this_impl->m_pointer_event.time        = time;
-    this_impl->m_pointer_event.surface_x   = surface_x;
-    this_impl->m_pointer_event.surface_y   = surface_y;
+    auto* this_impl                          = static_cast<AppImplWayland*>(data);
+    this_impl->m_pointer_event.m_event_mask |= POINTER_EVENT_MOTION;
+    this_impl->m_pointer_event.m_time        = time;
+    this_impl->m_pointer_event.m_surface_x   = surface_x;
+    this_impl->m_pointer_event.m_surface_y   = surface_y;
 }
 
 // NOLINTEND(*-easily-swappable-parameters)

@@ -1,6 +1,7 @@
 #pragma once
 #include "raygame/core/exception.h"
 #include <filesystem>
+#include <string>
 
 class FileError: public core::exception::Exception {
 public:

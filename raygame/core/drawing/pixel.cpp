@@ -1,4 +1,5 @@
 #include "raygame/core/drawing/pixel.h" // IWYU pragma: keep
+#include <string>
 
 #define CHECK_COLOUR(COL)                                                                          \
     if (*this == ::core::colour::COL) {                                                            \

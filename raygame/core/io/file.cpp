@@ -1,8 +1,13 @@
 #include "raygame/core/io/file.h"
 #include "raygame/core/condition.h"
 #include "raygame/core/logger.h"
+#include <cerrno>
+#include <cstdio>
 #include <filesystem>
+#include <string>
+#include <string_view>
 #include <system_error>
+#include <utility>
 
 namespace core::io {
 namespace {

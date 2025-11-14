@@ -1,6 +1,12 @@
 #include "raygame/core/application/detail/dwm.h"
+#include "raygame/core/application.h"
 #include "raygame/core/application/detail/backends.h"
 #include "raygame/core/condition.h"
+#include "raygame/core/drawing/image.h"
+#include "raygame/core/math/vector.h"
+#include "raygame/core/types.h"
+#include <string>
+#include <utility>
 
 RAYGAME_CLANG_SUPPRESS_WARNING_PUSH
 RAYGAME_CLANG_SUPPRESS_WARNING("-Wmissing-noreturn")
@@ -14,13 +20,11 @@ RAYGAME_CLANG_SUPPRESS_WARNING_POP
 
 core::detail::DwmWindowImpl::~DwmWindowImpl() = default;
 
-void core::detail::DwmWindowImpl::draw(const drawing::ImageView& image) {
-    std::ignore = image;
+void core::detail::DwmWindowImpl::draw([[maybe_unused]] const drawing::ImageView& image) {
     condition::unimplemented();
 }
 
-void core::detail::DwmWindowImpl::restyle(WindowStyle style) {
-    std::ignore = style;
+void core::detail::DwmWindowImpl::restyle([[maybe_unused]] WindowStyle style) {
     condition::unimplemented();
 }
 

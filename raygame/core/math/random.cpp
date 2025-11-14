@@ -1,8 +1,10 @@
 #include "raygame/core/math/random.h" // IWYU pragma: keep
 #include "raygame/core/condition.h"
 #include "raygame/core/config.h"
+#include "raygame/core/types.h"
 #include <format>
 #include <random>
+#include <vector>
 
 namespace {
 

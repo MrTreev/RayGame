@@ -1,10 +1,12 @@
 #include "raygame/core/logger.h" // IWYU pragma: keep
 #include "raygame/core/condition.h"
-#include "raygame/core/debug.h"
 #include "raygame/core/string.h"
+#include "raygame/core/types.h"
 #include <chrono>
 #include <iostream>
+#include <print>
 #include <source_location>
+#include <string>
 #include <string_view>
 
 namespace {

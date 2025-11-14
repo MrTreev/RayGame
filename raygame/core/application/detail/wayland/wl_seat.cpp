@@ -1,5 +1,6 @@
 #include "raygame/core/application/detail/wayland.h"
 #include "raygame/core/logger.h"
+#include "raygame/core/types.h"
 #include <wayland-client-protocol.h>
 
 const wl_seat_listener core::detail::AppImplWayland::m_wl_seat_listener = {

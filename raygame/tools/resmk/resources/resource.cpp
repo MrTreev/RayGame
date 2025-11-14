@@ -1,6 +1,10 @@
 #include "raygame/tools/resmk/resources/resource.h"
 #include "raygame/core/condition.h"
+#include "raygame/core/config.h"
+#include "raygame/core/exception.h"
 #include "raygame/core/logger.h"
+#include <format>
+#include <string>
 
 RAYGAME_CLANG_SUPPRESS_WARNING_PUSH
 RAYGAME_CLANG_SUPPRESS_WARNING("-Wmissing-noreturn")

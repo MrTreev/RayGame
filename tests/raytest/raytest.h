@@ -5,7 +5,7 @@
 #include <vector>
 
 // sort
-#include <gtest/gtest.h>
+#include <gtest/gtest.h> // IWYU pragma: export
 
 #if defined(__clang__)
 #    define RAYTEST_CC_CLANG

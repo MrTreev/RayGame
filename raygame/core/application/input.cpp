@@ -1,4 +1,6 @@
 #include "raygame/core/application/input.h" // IWYU pragma: keep
+#include "raygame/core/types.h"
+#include <utility>
 
 core::InputMapper::InputMapper() = default;
 

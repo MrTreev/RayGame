@@ -1,8 +1,8 @@
 #pragma once
-#include "raygame/core/debug.h"
 #include "raygame/core/exception.h"
 #include "raygame/core/math/math.h"
 #include "raygame/core/math/numeric_cast.h"
+#include "raygame/core/types.h"
 #include <limits>
 #include <type_traits>
 #include <utility>

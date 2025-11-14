@@ -1,5 +1,7 @@
 #include "raygame/core/application/detail/wayland.h"
 #include "raygame/core/logger.h"
+#include "raygame/core/types.h"
+#include <string>
 #include <wayland-client-protocol.h>
 #include <xdg-shell-client-protocol.h>
 

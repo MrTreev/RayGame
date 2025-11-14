@@ -1,4 +1,5 @@
 #include "raygame/core/application/detail/wayland.h"
+#include "raygame/core/types.h"
 #include <xdg-shell-client-protocol.h>
 
 const xdg_wm_base_listener core::detail::AppImplWayland::m_xdg_wm_base_listener = {

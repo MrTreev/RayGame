@@ -1,9 +1,9 @@
 #pragma once
 #include "raygame/core/condition.h"
 #include "raygame/core/config.h"
-#include "raygame/core/debug.h"
 #include "raygame/core/exception.h"
 #include "raygame/core/math/numeric_cast.h"
+#include "raygame/core/types.h"
 #include <concepts>
 #include <limits>
 #include <type_traits>

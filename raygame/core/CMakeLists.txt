@@ -4,7 +4,6 @@ raygame_lib(
          concepts.h
          condition.h
          config.h
-         debug.h
          exception.h
          logger.h
          macros.h
@@ -14,7 +13,6 @@ raygame_lib(
          concepts.cpp
          condition.cpp
          config.cpp
-         debug.cpp
          exception.cpp
          logger.cpp
          macros.cpp

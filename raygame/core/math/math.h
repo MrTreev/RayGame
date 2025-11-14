@@ -1,7 +1,7 @@
 #pragma once
-#include "raygame/core/math/mathrule.h"
-#include "raygame/core/math/numeric_cast.h"
-#include "raygame/core/types.h"
+#include "raygame/core/math/mathrule.h"     // IWYU pragma: export
+#include "raygame/core/math/numeric_cast.h" // IWYU pragma: export
+#include "raygame/core/types.h"             // IWYU pragma: export
 #include <limits>
 #include <numbers>
 #include <type_traits>

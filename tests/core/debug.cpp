@@ -1,4 +1,4 @@
-#include "raygame/core/debug.h"
+#include "raygame/core/types.h"
 #include "raytest/raytest.h"
 
 class TestClass {};

@@ -1,5 +1,7 @@
 #include "raygame/core/application/detail/wayland.h"
 #include "raygame/core/logger.h"
+#include "raygame/core/math/numeric_cast.h"
+#include "raygame/core/types.h"
 #include <xdg-shell-client-protocol.h>
 
 const xdg_toplevel_listener core::detail::AppImplWayland::m_xdg_toplevel_listener = {

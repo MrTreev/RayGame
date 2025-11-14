@@ -1,5 +1,7 @@
 #include "raygame/core/exception.h" // IWYU pragma: keep
-#include "raygame/core/debug.h"
+#include "raygame/core/types.h"
+#include <stdexcept>
+#include <string>
 
 namespace core::exception {
 // Honestly, just easier this way, macro is pretty obvious what it does

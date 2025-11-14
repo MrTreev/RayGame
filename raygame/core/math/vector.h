@@ -2,6 +2,7 @@
 #include "raygame/core/math/arithmetic.h"
 #include "raygame/core/math/mathrule.h"
 #include "raygame/core/types.h"
+#include <concepts>
 #include <string>
 
 namespace core {
@@ -29,7 +30,7 @@ struct Vec2 {
     }
 
     template<core::math::MathRule MR = core::math::MR_DEFAULT>
-    constexpr Vec2<Type> operator+(auto other) {
+    constexpr Vec2<Type> operator+(std::integral auto other) {
         return {core::math::safe_add<Type>(m_x, other), core::math::safe_add<Type>(m_y, other)};
     }
 
@@ -42,7 +43,7 @@ struct Vec2 {
     }
 
     template<core::math::MathRule MR = core::math::MR_DEFAULT>
-    constexpr Vec2<Type> operator+=(auto other) {
+    constexpr Vec2<Type> operator+=(std::integral auto other) {
         return {
             m_x = core::math::safe_add<Type>(m_x, other),
             m_y = core::math::safe_add<Type>(m_y, other)

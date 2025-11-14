@@ -1,4 +1,5 @@
 #include "raygame/core/application/detail/wayland.h"
+#include "raygame/core/types.h"
 #include <wayland-client-protocol.h>
 
 const wl_callback_listener core::detail::AppImplWayland::m_wl_surface_frame_listener{

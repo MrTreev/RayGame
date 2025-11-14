@@ -9,22 +9,22 @@
 namespace core::detail {
 
 struct Axis {
-    bool       valid;
-    wl_fixed_t value;
-    int32_t    discrete;
+    bool       m_valid;
+    wl_fixed_t m_value;
+    int32_t    m_discrete;
 };
 
 struct PointerEvent {
-    uint32_t   event_mask;
-    wl_fixed_t surface_x;
-    wl_fixed_t surface_y;
-    uint32_t   button;
-    uint32_t   state;
-    uint32_t   time;
-    uint32_t   serial;
-    Axis       axis_vertical;
-    Axis       axis_horizontal;
-    uint32_t   axis_source;
+    uint32_t   m_event_mask;
+    wl_fixed_t m_surface_x;
+    wl_fixed_t m_surface_y;
+    uint32_t   m_button;
+    uint32_t   m_state;
+    uint32_t   m_time;
+    uint32_t   m_serial;
+    Axis       m_axis_vertical;
+    Axis       m_axis_horizontal;
+    uint32_t   m_axis_source;
 };
 
 class KeyboardState {

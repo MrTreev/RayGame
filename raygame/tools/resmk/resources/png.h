@@ -1,5 +1,5 @@
 #pragma once
-#include "raygame/tools/resmk/resources/resource.h"
+#include "raygame/tools/resmk/resources/resource.h" // IWYU pragma: export
 
 class PngFile: public Resource {
     int      m_width{0};

@@ -1,5 +1,5 @@
 #pragma once
-#include "raygame/core/macros.h"
+#include "raygame/core/macros.h" // IWYU pragma: export
 #include <cstddef>
 #include <cstdint>
 

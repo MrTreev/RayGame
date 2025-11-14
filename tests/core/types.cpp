@@ -1,6 +1,5 @@
 #include "raygame/core/types.h" // IWYU pragma: keep
 #include "raytest/raytest.h"
-#include <gtest/gtest.h>
 
 RG_TEST(Types, Pair) {
     RG_SUBCASE("Return Members") {
