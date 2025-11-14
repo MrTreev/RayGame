@@ -1,10 +1,10 @@
 #include "raygame/core/application.h" // IWYU pragma: keep
-#include "raygame/core/condition.h"
-#include "raygame/core/logger.h"
 #include "raygame/core/application/detail/backends.h"
 #include "raygame/core/application/detail/cocoa.h"
 #include "raygame/core/application/detail/dwm.h"
 #include "raygame/core/application/detail/wayland.h"
+#include "raygame/core/condition.h"
+#include "raygame/core/logger.h"
 
 core::Application::Application(Vec2<size_t> size, std::string title, WindowStyle style) {
     using Cocoa   = detail::CocoaWindowImpl;

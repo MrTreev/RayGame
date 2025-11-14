@@ -131,12 +131,12 @@ public:
 
     [[nodiscard]]
     const size_t& width() const {
-        return m_size.x;
+        return m_size.m_x;
     }
 
     [[nodiscard]]
     const size_t& height() const {
-        return m_size.y;
+        return m_size.m_y;
     }
 };
 } // namespace detail

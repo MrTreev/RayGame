@@ -16,8 +16,8 @@ public:
     template<size_t N>
     constexpr explicit ImageView(const std::array<Pixel, N>& in_buf, Vec2<dis_t> size)
         : ImgRect(size)
-        , m_mdspan(in_buf.data(), std::extents(size.x, size.y)) {
-        const auto mulsize = math::safe_mult<dis_t>(size.x, size.y);
+        , m_mdspan(in_buf.data(), std::extents(size.m_x, size.m_y)) {
+        const auto mulsize = math::safe_mult<dis_t>(size.m_x, size.m_y);
         condition::pre_condition(
             N == mulsize,
             std ::format("Size mismatch between m_buffer ({}) and size ({})", N, mulsize)

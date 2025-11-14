@@ -18,7 +18,7 @@ const wl_pointer_listener core::detail::AppImplWayland::m_wl_pointer_listener = 
 };
 
 namespace {
-enum pointer_event_mask : uint32_t { //NOLINT(*-enum-size)
+enum pointer_event_mask : uint32_t { //NOLINT(*-enum-size,*-use-enum-class)
     POINTER_EVENT_ENTER         = 1U << 0U,
     POINTER_EVENT_LEAVE         = 1U << 1U,
     POINTER_EVENT_MOTION        = 1U << 2U,

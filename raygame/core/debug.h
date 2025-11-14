@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <format>
+#include <memory>
 #include <source_location>
 #include <string>
 #include <typeinfo>
@@ -49,34 +50,45 @@ template<typename T>
 constexpr std::string type_name() {
     const T item{};
     if constexpr (core::config::COMPILER_IS_GCC_LIKE) {
-        char* demangled_name = abi::__cxa_demangle(typeid(item).name(), nullptr, nullptr, nullptr);
-        std::string ret_name{demangled_name};
-        free(demangled_name); //NOLINT(*-no-malloc,*-owning-memory)
-        if (ret_name == "unsigned char") {
+        std::unique_ptr<char> ret_name{
+            abi::__cxa_demangle(typeid(item).name(), nullptr, nullptr, nullptr)
+        };
+        // NOLINTNEXTLINE(*-macro-usage)
+#define RG_TYPEPTR(type) abi::__cxa_demangle(typeid(type(0)).name(), nullptr, nullptr, nullptr)
+        static const char* const uint8_t_name  = RG_TYPEPTR(uint8_t);
+        static const char* const int8_t_name   = RG_TYPEPTR(int8_t);
+        static const char* const uint16_t_name = RG_TYPEPTR(uint16_t);
+        static const char* const int16_t_name  = RG_TYPEPTR(int16_t);
+        static const char* const uint32_t_name = RG_TYPEPTR(uint32_t);
+        static const char* const int32_t_name  = RG_TYPEPTR(int32_t);
+        static const char* const uint64_t_name = RG_TYPEPTR(uint64_t);
+        static const char* const int64_t_name  = RG_TYPEPTR(int64_t);
+#undef RG_TYPEPTR
+        if (strcmp(ret_name.get(), uint8_t_name) == 0) {
             return "uint8_t";
         }
-        if (ret_name == "signed char") {
+        if (strcmp(ret_name.get(), int8_t_name) == 0) {
             return "int8_t";
         }
-        if (ret_name == "unsigned short") {
+        if (strcmp(ret_name.get(), uint16_t_name) == 0) {
             return "uint16_t";
         }
-        if (ret_name == "short") {
+        if (strcmp(ret_name.get(), int16_t_name) == 0) {
             return "int16_t";
         }
-        if (ret_name == "unsigned int") {
+        if (strcmp(ret_name.get(), uint32_t_name) == 0) {
             return "uint32_t";
         }
-        if (ret_name == "int") {
+        if (strcmp(ret_name.get(), int32_t_name) == 0) {
             return "int32_t";
         }
-        if (ret_name == "unsigned long") {
+        if (strcmp(ret_name.get(), uint64_t_name) == 0) {
             return "uint64_t";
         }
-        if (ret_name == "long") {
+        if (strcmp(ret_name.get(), int64_t_name) == 0) {
             return "int64_t";
         }
-        return ret_name;
+        return ret_name.get();
     } else {
         return {typeid(item).name()};
     }

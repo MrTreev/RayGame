@@ -2,6 +2,7 @@
 
 #include "raygame/core/math/arithmetic.h"
 #include "raygame/core/math/vector.h"
+#include "raygame/core/types.h"
 #include <string>
 
 namespace core {
@@ -22,16 +23,16 @@ public:
     constexpr Rect() = default;
 
     constexpr explicit Rect(Vec2<Dis_t> dist_vec)
-        : m_width(dist_vec.x)
-        , m_height(dist_vec.y)
+        : m_width(dist_vec.m_x)
+        , m_height(dist_vec.m_y)
         , m_x(0)
         , m_y(0) {}
 
     constexpr Rect(Vec2<Pos_t> pos_vec, Vec2<Dis_t> dist_vec)
-        : m_width(dist_vec.x)
-        , m_height(dist_vec.y)
-        , m_x(pos_vec.x)
-        , m_y(pos_vec.y) {}
+        : m_width(dist_vec.m_x)
+        , m_height(dist_vec.m_y)
+        , m_x(pos_vec.m_x)
+        , m_y(pos_vec.m_y) {}
 
     constexpr void zero() {
         m_x      = 0;
@@ -116,8 +117,8 @@ public:
 
     template<typename P, math::MathRule MR = math::MR_DEFAULT>
     constexpr void pos(Vec2<P> vec) {
-        m_x = core::math::numeric_cast<Pos_t, MR>(vec.x);
-        m_y = core::math::numeric_cast<Pos_t, MR>(vec.y);
+        m_x = core::math::numeric_cast<Pos_t, MR>(vec.m_x);
+        m_y = core::math::numeric_cast<Pos_t, MR>(vec.m_y);
     }
 
     template<math::MathRule MR = math::MR_DEFAULT>
@@ -128,14 +129,14 @@ public:
 
     template<typename P, math::MathRule MR = math::MR_DEFAULT>
     constexpr void size(Vec2<P> vec) {
-        m_width  = core::math::numeric_cast<Dis_t, MR>(vec.x);
-        m_height = core::math::numeric_cast<Dis_t, MR>(vec.y);
+        m_width  = core::math::numeric_cast<Dis_t, MR>(vec.m_x);
+        m_height = core::math::numeric_cast<Dis_t, MR>(vec.m_y);
     }
 
     template<typename P, math::MathRule MR = math::MR_DEFAULT>
     constexpr void translate(Vec2<P> vec) {
-        m_x = core::math::safe_add<Pos_t, MR>(m_x, vec.x);
-        m_y = core::math::safe_add<Pos_t, MR>(m_y, vec.y);
+        m_x = core::math::safe_add<Pos_t, MR>(m_x, vec.m_x);
+        m_y = core::math::safe_add<Pos_t, MR>(m_y, vec.m_y);
     }
 
     template<math::MathRule MR = math::MR_DEFAULT>
@@ -146,8 +147,8 @@ public:
 
     template<typename D, math::MathRule MR = math::MR_DEFAULT>
     constexpr void scale_add(Vec2<D> vec) {
-        m_width  = core::math::safe_add<Dis_t, MR>(m_width, vec.x);
-        m_height = core::math::safe_add<Dis_t, MR>(m_height, vec.y);
+        m_width  = core::math::safe_add<Dis_t, MR>(m_width, vec.m_x);
+        m_height = core::math::safe_add<Dis_t, MR>(m_height, vec.m_y);
     }
 
     template<math::MathRule MR = math::MR_DEFAULT>
@@ -158,8 +159,8 @@ public:
 
     template<typename D, math::MathRule MR = math::MR_DEFAULT>
     constexpr void scale_mult(Vec2<D> vec) {
-        m_width  = core::math::safe_mult<Dis_t, MR>(m_width, vec.x);
-        m_height = core::math::safe_mult<Dis_t, MR>(m_height, vec.y);
+        m_width  = core::math::safe_mult<Dis_t, MR>(m_width, vec.m_x);
+        m_height = core::math::safe_mult<Dis_t, MR>(m_height, vec.m_y);
     }
 
     template<math::MathRule MR = math::MR_DEFAULT>

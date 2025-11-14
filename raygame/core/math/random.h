@@ -1,6 +1,7 @@
 #pragma once
 #include "raygame/core/types.h"
 #include <limits>
+#include <type_traits>
 #include <vector>
 
 namespace core::math {

@@ -15,5 +15,5 @@ void core::InputMapper::clear(uint32_t key) {
 }
 
 void core::InputMapper::set(uint32_t key, func_t func) {
-    m_map.insert_or_assign(key, func);
+    m_map.insert_or_assign(key, std::move(func));
 }

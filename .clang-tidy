@@ -11,11 +11,16 @@ Checks:
   - 'performance-*'
   - 'portability-*'
   - 'readability-*'
-  - '-bugprone-easily-swappable-parameters'
+  - '-*-cognitive-complexity'
   - '-*-use-trailing-return-type'
-WarningsAsErrors: ''
-AnalyzeTemporaryDtors: false
-SystemHeaders:   false
+  - '-bugprone-easily-swappable-parameters'
+  - '-llvm-prefer-static-over-anonymous-namespace'
+  - '-misc-include-cleaner'
+  - '-portability-avoid-pragma-once'
+  - '-readability-use-concise-preprocessor-directives'
 CheckOptions:
     readability-braces-around-statements.ShortStatementLines: 1
     readability-identifier-naming.MemberPrefix: 'm_'
+SystemHeaders:   false
+UseColor: true
+WarningsAsErrors: ''

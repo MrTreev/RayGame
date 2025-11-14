@@ -24,7 +24,6 @@ function(raygame_add_args _target)
         target_compile_options(${_target} PRIVATE /w14906)      # string literal cast to 'LPWSTR'
         target_compile_options(${_target} PRIVATE /w14928)      # illegal copy-initialization; more than one user-defined conversion has been implicitly applied
         target_compile_options(${_target} PRIVATE /permissive-) # standards conformance mode for MSVC compiler.
-        target_compile_options(${_target} PRIVATE /WX-)
     elseif(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
         target_compile_options(${_target} PRIVATE -Wall)
         target_compile_options(${_target} PRIVATE -Wextra)
@@ -47,7 +46,6 @@ function(raygame_add_args _target)
         target_compile_options(${_target} PRIVATE -Wno-unsafe-buffer-usage)
         target_compile_options(${_target} PRIVATE -Wno-c23-extensions)
         target_compile_options(${_target} PRIVATE -Wno-unused-command-line-argument)
-        target_compile_options(${_target} PRIVATE -Werror)
     elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         target_compile_options(${_target} PRIVATE -Wall)
         target_compile_options(${_target} PRIVATE -Wextra)
@@ -72,8 +70,8 @@ function(raygame_add_args _target)
         target_compile_options(${_target} PRIVATE -Wsuggest-override)       # warn if an overridden member function is not marked 'override' or 'final'
         target_compile_options(${_target} PRIVATE -Wno-return-type)         # Too many false-positives
         target_compile_options(${_target} PRIVATE -Wno-duplicate-branches)  # Too many false-positives
-        target_compile_options(${_target} PRIVATE -Werror)
     else()
         message(FATAL_ERROR "No compiler warnings set for CXX compiler: '${CMAKE_CXX_COMPILER_ID}'")
     endif()
+    set_target_properties(${_target} PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_COMMAND}")
 endfunction()

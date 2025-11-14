@@ -1,5 +1,8 @@
 #!/bin/sh
 
+if [ "${1:-}" = "clean" ]; then
+    CLEAN=1
+fi
 BUILD_DIR="${BUILD_DIR:-build}"
 BUILD_TYPE="${BUILD_TYPE:-Debug}"
 EXPORT_COMPILE_COMMANDS="${EXPORT_COMPILE_COMMANDS:-ON}"
@@ -42,8 +45,10 @@ run_configure(){
 };
 
 run_build(){
+    set +x
     cmake \
         --build "${BUILD_DIR}" \
+        ${CLEAN:+--clean-first} \
         ;
     command_result "$?" "Build";
 };

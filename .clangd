@@ -24,6 +24,8 @@ Diagnostics:
     Remove:
       - modernize-use-trailing-return-type
       - readability-convert-member-functions-to-static
+      - readability-use-concise-preprocessor-directives
+      - llvm-prefer-static-over-anonymous-namespace
   UnusedIncludes: Strict
   Includes:
     MissingIncludes: Strict

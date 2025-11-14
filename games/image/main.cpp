@@ -9,7 +9,7 @@ constexpr core::Vec2<size_t> IMG_POS  = {100, 100};
 int main() {
     core::Application myapp;
     core::drawing::ImageView  m_image{resources::img_icon, IMG_SIZE};
-    m_image.move(IMG_POS.x, IMG_POS.y);
+    m_image.move(IMG_POS.m_x, IMG_POS.m_y);
     while (myapp.next_frame()) {
         myapp.draw(m_image);
     }

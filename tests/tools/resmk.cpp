@@ -2,43 +2,45 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-#ifndef RESMK
-#    define RESMK "RESMK"
-#endif
-#ifndef RESMK_DATA_DIR
-#    define RESMK_DATA_DIR "RESMK_DATA_DIR"
-#endif
-#ifndef RESMK_FILE_DIR
-#    define RESMK_FILE_DIR "RESMK_FILE_DIR"
+namespace {
+#if defined(RESMK)
+constexpr std::string resmk_name = RESMK;
+#else
+constexpr std::string resmk_name = "RESMK";
 #endif
 
-namespace {
+#if defined(RESMK_DATA_DIR)
+constexpr std::string resmk_data_dir = RESMK_DATA_DIR;
+#else
+constexpr std::string resmk_data_dir = "RESMK_DATA_DIR";
+#endif
+
+#if defined(RESMK_FILE_DIR)
+constexpr std::string resmk_data_dir = RESMK_FILE_DIR;
+#else
+constexpr std::string resmk_file_dir = "RESMK_FILE_DIR";
+#endif
 using cstr = const char* const;
 
-int resmk(cstr hdr, cstr png) {
+int resmk(const std::string& hdr, const std::string& png) {
     int       status = 0;
     const int pid    = fork();
     if (pid != 0) {
         waitpid(pid, &status, 0);
     } else {
-        const char* const executable{RESMK};
         // NOLINTNEXTLINE(*-vararg)
-        execl(executable, executable, hdr, png, nullptr);
+        execl(resmk_name.c_str(), resmk_name.c_str(), hdr.c_str(), png.c_str(), nullptr);
     }
     return status;
 }
-
-// cstr imgtest_header{};
-// cstr imgtest_source{};
-
 } // namespace
 
 RG_TEST(ResMK, stuff) {
     RG_SUBCASE("imgtest") {
-        cstr imgtest_hdr{RESMK_FILE_DIR "/imgtest.h"};
-        cstr imgtest_png{RESMK_DATA_DIR "/imgtest.png"};
+        const std::string imgtest_hdr{resmk_file_dir + "/imgtest.h"};
+        const std::string imgtest_png{resmk_data_dir + "/imgtest.png"};
         RG_CHECK_EQ(0, resmk(imgtest_hdr, imgtest_png));
         [[maybe_unused]]
-        cstr imgtest_src{RESMK_FILE_DIR "/imgtest.cpp"};
+        const std::string imgtest_src{resmk_file_dir + "/imgtest.cpp"};
     }
 }

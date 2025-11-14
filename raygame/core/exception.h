@@ -1,6 +1,7 @@
 #pragma once
 #include "raygame/core/concepts.h"
 #include <stdexcept>
+#include <string>
 
 namespace core::exception {
 // Honestly, just easier this way, macro is pretty obvious what it does

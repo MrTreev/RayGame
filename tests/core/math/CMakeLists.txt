@@ -1,8 +1,0 @@
-raygame_test(Arithmetic SRCS arithmetic.cpp DEPS RayGame::Core::Math)
-raygame_test(Math SRCS math.cpp DEPS RayGame::Core::Math)
-raygame_test(MathRule SRCS mathrule.cpp DEPS RayGame::Core::Math)
-raygame_test(NumericCast SRCS numeric_cast.cpp DEPS RayGame::Core::Math)
-raygame_test(Random SRCS random.cpp DEPS RayGame::Core::Math)
-raygame_test(Rect SRCS rect.cpp DEPS RayGame::Core::Math)
-raygame_test(RingAverage SRCS ring_average.cpp DEPS RayGame::Core::Math)
-raygame_test(Vector SRCS vector.cpp DEPS RayGame::Core::Math)

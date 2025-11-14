@@ -23,8 +23,8 @@ void core::detail::AppImplWayland::wl_surface_handle_done(
         this_impl->m_wl_surface,
         0,
         0,
-        math::numeric_cast<int32_t>(size.x),
-        math::numeric_cast<int32_t>(size.y)
+        math::numeric_cast<int32_t>(size.m_x),
+        math::numeric_cast<int32_t>(size.m_y)
     );
     wl_surface_commit(this_impl->m_wl_surface);
 }
