@@ -1,5 +1,5 @@
 #pragma once
-#include "raygame/core/application.h"
+#include "raygame/core/application/application.h"
 
 namespace core::detail {
 class DwmWindowImpl final: public AppImpl {

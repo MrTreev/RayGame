@@ -1,5 +1,5 @@
 #pragma once
-#include "raygame/core/application.h"
+#include "raygame/core/application/application.h"
 #include "raygame/core/application/detail/backends.h" // IWYU pragma: keep
 #include "raygame/core/application/input.h"
 #include <wayland-client-protocol.h>

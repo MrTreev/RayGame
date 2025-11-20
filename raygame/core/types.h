@@ -61,14 +61,12 @@ enum class SourceLoc : uint8_t {
     FULL,
     BASE,
 };
-#if defined(RAYGAME_ENABLE_SOURCE_LOCATION)
+#if defined(RAYGAME_SOURCE_LOCATION_FULL)
 constexpr SourceLoc sloc_type = SourceLoc::FULL;
-#elif defined(RAYGAME_DISABLE_SOURCE_LOCATION)
-#    if defined(NDEBUG)
-constexpr SourceLoc sloc_type = SourceLoc::NONE;
-#    else
+#elif defined(RAYGAME_SOURCE_LOCATION_BASE)
 constexpr SourceLoc sloc_type = SourceLoc::BASE;
-#    endif
+#elif defined(RAYGAME_SOURCE_LOCATION_NONE)
+constexpr SourceLoc sloc_type = SourceLoc::NONE;
 #else
 #    warning "No source location macro defined, disabling"
 constexpr SourceLoc sloc_type = SourceLoc::BASE;

@@ -1,4 +1,4 @@
-#include "raygame/core/application.h"
+#include "raygame/core/application/application.h"
 
 int main() {
     core::Application mywindow{};

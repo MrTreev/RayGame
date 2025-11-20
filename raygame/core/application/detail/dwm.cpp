@@ -1,5 +1,5 @@
 #include "raygame/core/application/detail/dwm.h"
-#include "raygame/core/application.h"
+#include "raygame/core/application/application.h"
 #include "raygame/core/application/detail/backends.h"
 #include "raygame/core/condition.h"
 #include "raygame/core/drawing/image.h"
