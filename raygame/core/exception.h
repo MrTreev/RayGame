@@ -1,5 +1,4 @@
 #pragma once
-#include "raygame/core/concepts.h"
 #include <stdexcept>
 #include <string>
 
@@ -102,8 +101,5 @@ RAYGAME_EXCEPTION_DECL_BASE(CheckCondition, Condition);
 RAYGAME_EXCEPTION_DECL_BASE(PostCondition, Condition);
 
 #undef RAYGAME_EXCEPTION_DECL_BASE
-
-template<concepts::Exception T>
-void raygame_throw() {}
 
 } // namespace core::exception

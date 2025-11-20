@@ -31,28 +31,6 @@ static_assert(false, "This game's code uses features from the C++23 standard");
  *  User-defined configuration macros
  */
 
-/*!
- *  @ingroup macros_config
- *  @defgroup macros_config_random Random Number Generator
- *  Configuration macros for the random number generator
- *  @{
- */
-
-#if !defined(RAYGAME_USE_FULL_RANDOM)
-//! Use non-deterministic randomness
-/*!
- *  Non-deterministic mode uses the C++ `std::random_device` as the seed for RNG.
- *  Deterministic mode uses a fixed value as the seed, incrementing each time it
- *  is accessed.
- */
-#    define RAYGAME_USE_FULL_RANDOM false
-#endif
-
-#if !defined(RAYGAME_RANDOM_INITIAL_SEED)
-//! Initial seed for randomness when in deterministic mode (uint64_t)
-#    define RAYGAME_RANDOM_INITIAL_SEED 42 // NOLINT(*-macro-usage)
-#endif
-
 //=============================================================================
 // Architecture Config
 //=============================================================================

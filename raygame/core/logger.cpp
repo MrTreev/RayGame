@@ -1,5 +1,4 @@
 #include "raygame/core/logger.h" // IWYU pragma: keep
-#include "raygame/core/condition.h"
 #include "raygame/core/string.h"
 #include "raygame/core/types.h"
 #include <chrono>
@@ -20,7 +19,6 @@ constexpr std::string to_string(core::log::Level level) {
     case core::log::Level::ERROR:   return "ERROR";
     case core::log::Level::FATAL:   return "FATAL";
     }
-    core::condition::unreachable();
 }
 
 using core::string::AnsiColour;
@@ -35,7 +33,6 @@ constexpr AnsiColour level_colour(core::log::Level level) {
     case core::log::Level::ERROR:   return AnsiColour::RED;
     case core::log::Level::FATAL:   return AnsiColour::MAGENTA;
     }
-    core::condition::unreachable();
 }
 } // namespace
 

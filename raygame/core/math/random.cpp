@@ -8,8 +8,18 @@
 
 namespace {
 
-constexpr bool FULL_RANDOM   = RAYGAME_USE_FULL_RANDOM;
-constexpr auto STARTING_SEED = RAYGAME_RANDOM_INITIAL_SEED;
+#if !defined(RAYGAME_RANDOM_DETERMINISTIC)
+#    define RAYGAME_DETERMINISTIC true
+#else
+#    define RAYGAME_DETERMINISTIC false
+#endif
+
+#if !defined(RAYGAME_RANDOM_INITIAL_SEED)
+#    define RAYGAME_INITIAL_SEED 42 // NOLINT(*-macro-usage)
+#endif
+
+constexpr bool DETERMINISTIC = RAYGAME_DETERMINISTIC;
+constexpr auto STARTING_SEED = RAYGAME_INITIAL_SEED;
 
 [[maybe_unused]]
 uint64_t seed = STARTING_SEED; //NOLINT(*-non-const-global-variables)
@@ -24,11 +34,11 @@ std::random_device dev; // NOLINT(cert-err58-cpp,*-non-const-global-variables)
 RAYGAME_CLANG_SUPPRESS_WARNING_POP
 
 uint64_t rand_seed() {
-    if constexpr (FULL_RANDOM) {
-        return dev();
-    } else {
+    if constexpr (DETERMINISTIC) {
         ++seed;
         return seed;
+    } else {
+        return dev();
     }
 }
 } // namespace
