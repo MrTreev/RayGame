@@ -21,6 +21,7 @@ Checks:
 CheckOptions:
     readability-braces-around-statements.ShortStatementLines: 1
     readability-identifier-naming.MemberPrefix: 'm_'
+    readability-identifier-length.IgnoredVariableNames: '_'
 SystemHeaders:   false
 UseColor: true
 WarningsAsErrors: ''
