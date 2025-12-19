@@ -7,7 +7,7 @@
 #    pragma clang diagnostic ignored "-Weverything"
 #endif
 
-#include "zpp_bits.h" // IWYU pragma: export
+#include <zpp_bits.h> // IWYU pragma: export
 
 #if defined(__clang__)
 #    pragma clang diagnostic pop

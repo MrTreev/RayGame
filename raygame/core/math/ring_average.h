@@ -1,4 +1,5 @@
 #pragma once
+#include "raygame/core/assert.h"
 #include "raygame/core/concepts.h"
 #include "raygame/core/math/math.h"
 #include "raygame/core/types.h"
@@ -24,26 +25,23 @@ public:
         }
     }
 
+    [[nodiscard]]
     constexpr T max() const {
-        if (m_cap == 0) [[unlikely]] {
-            return 0;
-        }
+        RAYGAME_ASSERT(m_cap > 0);
         const std::ranges::take_view items{m_buf, math::make_signed(m_cap)};
         return *std::max_element(items.begin(), items.end());
     }
 
+    [[nodiscard]]
     constexpr T min() const {
-        if (m_cap == 0) [[unlikely]] {
-            return 0;
-        }
+        RAYGAME_ASSERT(m_cap > 0);
         const std::ranges::take_view items{m_buf, math::make_signed(m_cap)};
         return *std::min_element(items.begin(), items.end());
     }
 
+    [[nodiscard]]
     constexpr T average() const {
-        if (m_cap == 0) [[unlikely]] {
-            return 0;
-        }
+        RAYGAME_ASSERT(m_cap > 0);
         const std::ranges::take_view items{m_buf, math::make_signed(m_cap)};
         const auto                   sum{std::reduce(items.begin(), items.end(), ZERO)};
         return sum / static_cast<T>(m_cap);

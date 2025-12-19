@@ -96,40 +96,23 @@ constexpr std::string type_name() {
         };
         // NOLINTNEXTLINE(*-macro-usage)
 #define RG_TYPEPTR(type) abi::__cxa_demangle(typeid(type(0)).name(), nullptr, nullptr, nullptr)
-        static const char* const uint8_t_name  = RG_TYPEPTR(uint8_t);
-        static const char* const int8_t_name   = RG_TYPEPTR(int8_t);
-        static const char* const uint16_t_name = RG_TYPEPTR(uint16_t);
-        static const char* const int16_t_name  = RG_TYPEPTR(int16_t);
-        static const char* const uint32_t_name = RG_TYPEPTR(uint32_t);
-        static const char* const int32_t_name  = RG_TYPEPTR(int32_t);
-        static const char* const uint64_t_name = RG_TYPEPTR(uint64_t);
-        static const char* const int64_t_name  = RG_TYPEPTR(int64_t);
-#undef RG_TYPEPTR
-        if (strcmp(ret_name.get(), uint8_t_name) == 0) {
-            return "uint8_t";
-        }
-        if (strcmp(ret_name.get(), int8_t_name) == 0) {
-            return "int8_t";
-        }
-        if (strcmp(ret_name.get(), uint16_t_name) == 0) {
-            return "uint16_t";
-        }
-        if (strcmp(ret_name.get(), int16_t_name) == 0) {
-            return "int16_t";
-        }
-        if (strcmp(ret_name.get(), uint32_t_name) == 0) {
-            return "uint32_t";
-        }
-        if (strcmp(ret_name.get(), int32_t_name) == 0) {
-            return "int32_t";
-        }
-        if (strcmp(ret_name.get(), uint64_t_name) == 0) {
-            return "uint64_t";
-        }
-        if (strcmp(ret_name.get(), int64_t_name) == 0) {
-            return "int64_t";
-        }
+#define RG_TYPERET(type)                                                                           \
+    if (strcmp(ret_name.get(), RG_TYPEPTR(type)) == 0) {                                           \
+        return #type;                                                                              \
+    }                                                                                              \
+    static_assert(true)
+
+        RG_TYPERET(uint8_t);
+        RG_TYPERET(uint16_t);
+        RG_TYPERET(uint32_t);
+        RG_TYPERET(uint64_t);
+        RG_TYPERET(int8_t);
+        RG_TYPERET(int16_t);
+        RG_TYPERET(int32_t);
+        RG_TYPERET(int64_t);
         return ret_name.get();
+#undef RG_TYPEPTR
+#undef RG_TYPERET
     } else {
         return {typeid(item).name()};
     }
