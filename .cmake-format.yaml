@@ -1,12 +1,31 @@
 additional_commands:
-  foo:
+  raygame_bin:
     flags:
-    - BAR
-    - BAZ
+    - NO_DEFS
+    - NO_ARGS
     kwargs:
-      DEPENDS: '*'
-      HEADERS: '*'
-      SOURCES: '*'
+      DEFS: '*'
+      DEPS: '*'
+      SRCS: '*'
+  raygame_lib:
+    flags:
+    - NO_INCS
+    kwargs:
+      DEFS: '*'
+      DEPS: '*'
+      HDRS: '*'
+      SRCS: '*'
+  raygame_test:
+    flags:
+    - NO_MAIN
+    - NO_TESTLIB
+    kwargs:
+      DEFS: '*'
+      DEPS: '*'
+      SRCS: '*'
+  raygame_add_wayland_protocols:
+    kwargs:
+      PROTOCOLS: '*'
 autosort: true
 bullet_char: '*'
 dangle_parens: true
@@ -21,3 +40,4 @@ tab_size: 4
 
 markup:
   enable_markup: false
+

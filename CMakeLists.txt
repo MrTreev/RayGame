@@ -26,7 +26,8 @@ set(RAYGAME_OS_IS_HURD $<PLATFORM_ID:GNU>)
 set(RAYGAME_OS_IS_LINUX $<PLATFORM_ID:Linux>)
 set(RAYGAME_OS_IS_MAC $<PLATFORM_ID:Darwin>)
 set(RAYGAME_OS_IS_WINDOWS $<PLATFORM_ID:Windows>)
-if($<NOT:$<OR:RAYGAME_OS_IS_ANDROID,RAYGAME_OS_IS_BSD,RAYGAME_OS_IS_HURD,RAYGAME_OS_IS_LINUX,RAYGAME_OS_IS_MAC,RAYGAME_OS_IS_WINDOWS>>)
+if($<NOT:$<OR:RAYGAME_OS_IS_ANDROID,RAYGAME_OS_IS_BSD,RAYGAME_OS_IS_HURD,RAYGAME_OS_IS_LINUX,RAYGAME_OS_IS_MAC,RAYGAME_OS_IS_WINDOWS>>
+)
     message(FATAL_ERROR "Unknown OS")
 endif()
 
@@ -54,20 +55,23 @@ option(RAYGAME_GUI_DISABLE_X11 "Disable the Linux X11 GUI backend" ON)
 
 option(RAYGAME_ENABLE_COVERAGE "Enable code coverage" OFF)
 
-set(RAYGAME_GUI_DEFAULT_WINDOW_TITLE "RayGame" CACHE STRING "Default GUI window title")
+set(RAYGAME_GUI_DEFAULT_WINDOW_TITLE
+    "RayGame"
+    CACHE STRING "Default GUI window title"
+)
 
 option(RAYGAME_MATH_RANDOM_FULL "Non-deterministic random numbers" OFF)
 
-set(RAYGAME_SOURCE_LOCATION "FULL" CACHE STRING "Souce location length")
-set_property(
-    CACHE RAYGAME_SOURCE_LOCATION
-    PROPERTY STRINGS
-             "FULL"
-             "BASE"
-             "NONE"
+set(RAYGAME_SOURCE_LOCATION
+    "FULL"
+    CACHE STRING "Souce location length"
 )
+set_property(CACHE RAYGAME_SOURCE_LOCATION PROPERTY STRINGS "FULL" "BASE" "NONE")
 
-set(RAYGAME_LOG_LEVEL "DEBUG" CACHE STRING "Minimum log level to be displayed")
+set(RAYGAME_LOG_LEVEL
+    "DEBUG"
+    CACHE STRING "Minimum log level to be displayed"
+)
 set_property(
     CACHE RAYGAME_LOG_LEVEL
     PROPERTY STRINGS
@@ -84,7 +88,10 @@ set_property(
 option(RAYGAME_TIME_FRAMES "Record the average frame time" OFF)
 
 if(RAYGAME_ENABLE_COMPILE_COMMANDS)
-    set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE BOOL "Generate compile_commands.json")
+    set(CMAKE_EXPORT_COMPILE_COMMANDS
+        ON
+        CACHE BOOL "Generate compile_commands.json"
+    )
 endif()
 
 ################################################################################
@@ -93,20 +100,22 @@ endif()
 include(GenerateExportHeader)
 
 if(RAYGAME_ENABLE_COVERAGE)
-  # set compiler flags
-  set(CMAKE_CXX_FLAGS "-O0 -coverage")
+    # set compiler flags
+    set(CMAKE_CXX_FLAGS "-O0 -coverage")
 
-  # find required tools
-  find_program(LCOV lcov REQUIRED)
-  find_program(GENHTML genhtml REQUIRED)
+    # find required tools
+    find_program(LCOV lcov REQUIRED)
+    find_program(GENHTML genhtml REQUIRED)
 
-  # add coverage target
-  add_custom_target(coverage
-    # gather data
-    COMMAND ${LCOV} --directory . --capture --output-file coverage.info
-    # generate report
-    COMMAND ${GENHTML} --demangle-cpp -o coverage coverage.info
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+    # add coverage target
+    add_custom_target(
+        coverage
+        # gather data
+        COMMAND ${LCOV} --directory . --capture --output-file coverage.info
+        # generate report
+        COMMAND ${GENHTML} --demangle-cpp -o coverage coverage.info
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    )
 endif()
 
 include(RayGameBin)
@@ -125,10 +134,6 @@ if(Doxygen_FOUND)
     set(DOXYGEN_WARN_IF_UNDOCUMENTED YES)
     set(DOXYGEN_EXTRACT_ALL YES) # Change to no to generate warnings for all undocumented items
     configure_file(third_party/doxygen/Doxyfile.in Doxyfile)
-    doxygen_add_docs(
-        RayGameDocs
-        raygame README.md
-        CONFIG_FILE ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
-    )
+    doxygen_add_docs(RayGameDocs raygame README.md CONFIG_FILE ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
 endif()
 add_subdirectory(games)

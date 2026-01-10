@@ -15,10 +15,8 @@ function(raygame_lib _target)
             ${_target} PUBLIC $<BUILD_INTERFACE:${RayGame_SOURCE_DIR}> $<INSTALL_INTERFACE:include/raygame>
         )
     endif()
-    target_sources(${_target}
-        PUBLIC ${RAYGAME_TESTARGS_HDRS}
-        PRIVATE ${RAYGAME_TESTARGS_SRCS}
-    )
+    target_sources(${_target} PUBLIC ${RAYGAME_TESTARGS_HDRS})
+    target_sources(${_target} PRIVATE ${RAYGAME_TESTARGS_SRCS})
     target_link_libraries(${_target} PRIVATE ${RAYGAME_TESTARGS_DEPS})
     target_compile_definitions(${_target} PUBLIC ${RAYGAME_TESTARGS_DEFS})
     set_target_properties(

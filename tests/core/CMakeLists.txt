@@ -1,16 +1,23 @@
-raygame_test(Arithmetic     SRCS math/arithmetic.cpp                DEPS RayGame::Core::Math)
-raygame_test(Condition      SRCS condition.cpp                      DEPS RayGame::Core::Base)
-raygame_test(Debug          SRCS debug.cpp                          DEPS RayGame::Core::Base)
-raygame_test(Image          SRCS drawing/image.cpp                  DEPS RayGame::Core::Drawing)
-raygame_test(Logger         SRCS logger.cpp                         DEPS RayGame::Core::Base)
-raygame_test(Math           SRCS math/math.cpp                      DEPS RayGame::Core::Math)
-raygame_test(MathRule       SRCS math/mathrule.cpp                  DEPS RayGame::Core::Math)
-raygame_test(Matrix         SRCS matrix.cpp                         DEPS RayGame::Core::Base)
-raygame_test(NumericCast    SRCS math/numeric_cast.cpp              DEPS RayGame::Core::Math)
-raygame_test(Pixel          SRCS drawing/pixel.cpp                  DEPS RayGame::Core::Drawing)
-raygame_test(Random         SRCS math/random.cpp                    DEPS RayGame::Core::Math)
-raygame_test(Rect           SRCS math/rect.cpp                      DEPS RayGame::Core::Math)
-raygame_test(RingAverage    SRCS math/ring_average.cpp              DEPS RayGame::Core::Math)
-raygame_test(Serialisation  SRCS serialisation/serialisation.cpp    DEPS RayGame::Core::Serialisation RayGame::Core)
-raygame_test(Types          SRCS types.cpp                          DEPS RayGame::Core::Base)
-raygame_test(Vector         SRCS math/vector.cpp                    DEPS RayGame::Core::Math)
+raygame_test(Arithmetic SRCS math/arithmetic.cpp DEPS RayGame::Core::Math)
+raygame_test(Condition SRCS condition.cpp DEPS RayGame::Core::Base)
+raygame_test(Debug SRCS debug.cpp DEPS RayGame::Core::Base)
+raygame_test(Image SRCS drawing/image.cpp DEPS RayGame::Core::Drawing)
+raygame_test(Logger SRCS logger.cpp DEPS RayGame::Core::Base)
+raygame_test(Math SRCS math/math.cpp DEPS RayGame::Core::Math)
+raygame_test(MathRule SRCS math/mathrule.cpp DEPS RayGame::Core::Math)
+raygame_test(Matrix SRCS matrix.cpp DEPS RayGame::Core::Base)
+raygame_test(NumericCast SRCS math/numeric_cast.cpp DEPS RayGame::Core::Math)
+raygame_test(Pixel SRCS drawing/pixel.cpp DEPS RayGame::Core::Drawing)
+raygame_test(Random SRCS math/random.cpp DEPS RayGame::Core::Math)
+raygame_test(Rect SRCS math/rect.cpp DEPS RayGame::Core::Math)
+raygame_test(RingAverage SRCS math/ring_average.cpp DEPS RayGame::Core::Math)
+raygame_test(
+    Serialisation
+    SRCS
+    serialisation/serialisation.cpp
+    DEPS
+    RayGame::Core::Serialisation
+    RayGame::Core
+)
+raygame_test(Types SRCS types.cpp DEPS RayGame::Core::Base)
+raygame_test(Vector SRCS math/vector.cpp DEPS RayGame::Core::Math)

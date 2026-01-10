@@ -23,12 +23,9 @@ add_library(RayGame::Core::Base ALIAS RayGameCoreBase)
 
 raygame_lib(
     RayGameCoreDrawing
-    HDRS drawing/image.h
-         drawing/pixel.h
-    SRCS drawing/image.cpp
-         drawing/pixel.cpp
-    DEPS RayGame::Core::Base
-         RayGame::Core::Math
+    HDRS drawing/image.h drawing/pixel.h
+    SRCS drawing/image.cpp drawing/pixel.cpp
+    DEPS RayGame::Core::Base RayGame::Core::Math
 )
 add_library(RayGame::Core::Drawing ALIAS RayGameCoreDrawing)
 
@@ -64,14 +61,9 @@ add_library(RayGame::Core::Math ALIAS RayGameCoreMath)
 
 raygame_lib(
     RayGameCoreApplication
-    HDRS application/application.h
-         application/input.h
-    SRCS application/application.cpp
-         application/input.cpp
-         application/detail/backends.h
-         application/detail/backends.cpp
-    DEPS RayGame::Core::Base
-         RayGame::Core::Drawing
+    HDRS application/application.h application/input.h
+    SRCS application/application.cpp application/input.cpp application/detail/backends.h application/detail/backends.cpp
+    DEPS RayGame::Core::Base RayGame::Core::Drawing
 )
 add_library(RayGame::Core::Application ALIAS RayGameCoreApplication)
 if(RAYGAME_OS_IS_MACOS AND NOT RAYGAME_GUI_DISABLE_COCOA)
@@ -119,13 +111,10 @@ raygame_lib(
 target_link_libraries(RayGameCoreSerialisation PUBLIC RayGame::External::ZppBits)
 add_library(RayGame::Core::Serialisation ALIAS RayGameCoreSerialisation)
 
-raygame_lib(
-    RayGameCore
-    DEPS RayGame::Core::Base
-         RayGame::Core::Io
-         RayGame::Core::Math
-         RayGame::Core::Application
-         RayGame::Core::Serialisation
+add_library(RayGameCore)
+target_link_libraries(
+    RayGameCore PUBLIC RayGame::Core::Base RayGame::Core::Io RayGame::Core::Math RayGame::Core::Application
+                       RayGame::Core::Serialisation
 )
 target_link_libraries(RayGameCore PUBLIC RayGame::External::ZppBits)
 add_library(RayGame::Core ALIAS RayGameCore)

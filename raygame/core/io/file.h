@@ -2,6 +2,7 @@
 #include "raygame/core/types.h"
 #include <cstdio>
 #include <filesystem>
+#include <source_location>
 #include <string_view>
 
 namespace core::io {
@@ -30,6 +31,10 @@ public:
 
     std::FILE* raw() { return m_file; }
 
+    void gencode(
+        const std::string_view& msg,
+        std::source_location    loc = std::source_location::current()
+    );
     void write(const std::string_view& msg);
     void write(const std::vector<byte>& msg);
     void writeln(const std::string_view& msg);

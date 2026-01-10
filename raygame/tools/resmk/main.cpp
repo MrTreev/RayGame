@@ -15,7 +15,8 @@ constexpr std::string progname{"resmk"};
 int print_help() {
     std::println("{}: Creates a RayGame resource from a file", progname);
     std::println("Usage: {} [options] <header> <files...>", progname);
-    std::println("      -h|--help       Displays this message");
+    std::println("    -h|--help                  Displays this message");
+    std::println("    -n|--namespace <namespace> Sets the outer namespace");
     return 0;
 }
 
@@ -78,24 +79,24 @@ int main(int argc, char* argv[]) {
         return 1;
     }
     core::io::File hdrfile{config.m_header, core::io::File::mode::write};
-    hdrfile.writeln("#include \"raygame/core/drawing/image.h\"");
+    hdrfile.gencode("#include \"raygame/core/drawing/image.h\"");
     hdrfile.writeln("");
     if (!config.m_outer_namespace.empty()) {
-        hdrfile.writeln(std::format("namespace {} {{", config.m_outer_namespace));
+        hdrfile.gencode(std::format("namespace {} {{", config.m_outer_namespace));
     }
-    hdrfile.writeln(std::format("namespace {} {{", config.m_ns_name));
+    hdrfile.gencode(std::format("namespace {} {{", config.m_ns_name));
     for (const auto& resource: config.m_resources) {
-        hdrfile.writeln(resource->declaration());
+        hdrfile.gencode(resource->declaration());
         std::string fname         = hdrfile.fname();
         fname[fname.length() - 1] = 'c';
         fname.append("pp");
         core::io::File srcfile{fname, "w"};
-        srcfile.writeln("#include \"raygame/core/drawing/image.h\"");
-        srcfile.writeln(std::format("#include \"{}\"", config.m_header.string()));
-        srcfile.writeln(resource->definition(config.m_ns_name + "::"));
+        srcfile.gencode("#include \"raygame/core/drawing/image.h\"");
+        srcfile.gencode(std::format("#include \"{}\"", config.m_header.string()));
+        srcfile.gencode(resource->definition(config.m_ns_name + "::"));
     }
-    hdrfile.writeln(std::format("}} // namespace {}", config.m_ns_name));
+    hdrfile.gencode(std::format("}} // namespace {}", config.m_ns_name));
     if (!config.m_outer_namespace.empty()) {
-        hdrfile.writeln(std::format("}} // namespace {}", config.m_outer_namespace));
+        hdrfile.gencode(std::format("}} // namespace {}", config.m_outer_namespace));
     }
 }

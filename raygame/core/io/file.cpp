@@ -1,6 +1,7 @@
 #include "raygame/core/io/file.h"
 #include "raygame/core/condition.h"
 #include "raygame/core/logger.h"
+#include "raygame/core/types.h"
 #include <cerrno>
 #include <cstdio>
 #include <filesystem>
@@ -105,8 +106,11 @@ void File::write(const std::vector<byte>& msg) {
 }
 
 void File::writeln(const std::string_view& msg) {
-    write(msg);
-    write("\n");
+    write(std::format("{}\n", msg));
+}
+
+void File::gencode(const std::string_view& msg, std::source_location loc) {
+    write(std::format("{} // {}\n", msg, debug::location_message(loc)));
 }
 
 File::~File() {

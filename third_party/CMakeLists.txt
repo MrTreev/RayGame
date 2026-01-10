@@ -1,21 +1,19 @@
 FetchContent_Declare(
     zpp_bits
     GIT_REPOSITORY https://github.com/eyalz800/zpp_bits.git
-    GIT_TAG        e5ff2b23904cdca8778ab7284bf82257102c8022
+    GIT_TAG e5ff2b23904cdca8778ab7284bf82257102c8022
 )
 FetchContent_Declare(
     stb
     GIT_REPOSITORY https://github.com/nothings/stb.git
-    GIT_TAG        f1c79c02822848a9bed4315b12c8c8f3761e1296
+    GIT_TAG f1c79c02822848a9bed4315b12c8c8f3761e1296
 )
 FetchContent_MakeAvailable(zpp_bits)
 FetchContent_MakeAvailable(stb)
 
 add_library(RayGameExternalZppBits INTERFACE)
 target_include_directories(
-    RayGameExternalZppBits
-    INTERFACE $<BUILD_INTERFACE:${zpp_bits_SOURCE_DIR}>
-              $<INSTALL_INTERFACE:include/zpp_bits>
+    RayGameExternalZppBits INTERFACE $<BUILD_INTERFACE:${zpp_bits_SOURCE_DIR}> $<INSTALL_INTERFACE:include/zpp_bits>
 )
 add_library(RayGame::External::ZppBits ALIAS RayGameExternalZppBits)
 
@@ -26,7 +24,8 @@ function(stb_lib _target)
     cmake_parse_arguments(RAYGAME_TESTARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     add_custom_command(
         OUTPUT ${RAYGAME_TESTARGS_FNAME}.c
-        COMMAND printf "${RAYGAME_TESTARGS_PRELUDE}\\n#include <${RAYGAME_TESTARGS_FNAME}.h>" > ${RAYGAME_TESTARGS_FNAME}.c
+        COMMAND printf "${RAYGAME_TESTARGS_PRELUDE}\\n#include <${RAYGAME_TESTARGS_FNAME}.h>" >
+                ${RAYGAME_TESTARGS_FNAME}.c
         VERBATIM
     )
     add_library(RayGameExternalStb${_target})
@@ -48,14 +47,8 @@ function(stb_lib _target)
         PUBLIC ${RAYGAME_TESTARGS_HDRDEF} ${RAYGAME_TESTARGS_DEFS}
         PRIVATE ${RAYGAME_TESTARGS_IMPLDEF}
     )
-    target_compile_options(
-        RayGameExternalStb${_target}
-        PRIVATE -w -Wno-tautological-comprare
-    )
-    target_include_directories(
-        RayGameExternalStb${_target}
-        PUBLIC ${stb_SOURCE_DIR}
-    )
+    target_compile_options(RayGameExternalStb${_target} PRIVATE -w -Wno-tautological-comprare)
+    target_include_directories(RayGameExternalStb${_target} PUBLIC ${stb_SOURCE_DIR})
     add_library(RayGame::External::STB::${_target} ALIAS RayGameExternalStb${_target})
 endfunction()
 
