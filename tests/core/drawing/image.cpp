@@ -2,7 +2,7 @@
 #include "raygame/core/drawing/pixel.h"
 #include "raytest/raytest.h"
 
-RG_TEST(Image, Constructors) {
+RT_TEST(Image, Constructors) {
     const std::array<core::Pixel, 9> arr9_test{
         core::colour::rgb(0, 0, 0),
         core::colour::rgb(0, 0, 0),

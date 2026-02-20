@@ -24,9 +24,9 @@ constexpr void raygame_assert(
 } // namespace core::detail
 
 #    if defined(RAYGAME_RAYTEST)
-#        include "raytest/raytest.h"
+#        include "raytest/raytest.h" // IWYU pragma: export
 // NOLINTNEXTLINE(*-macro-usage)
-#        define RAYGAME_ASSERT(condition, ...) RG_CHECK_TRUE(condition)
+#        define RAYGAME_ASSERT(condition, ...) RT_CHECK_TRUE(condition)
 #    else
 // NOLINTNEXTLINE(*-macro-usage)
 #        define RAYGAME_ASSERT(condition, ...)                                                     \

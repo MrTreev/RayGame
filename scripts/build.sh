@@ -1,23 +1,52 @@
 #!/bin/sh
 
-if [ "${1:-}" = "clean" ]; then
-    CLEAN=1
-fi
+log()      { printf "\033[34m%s\033[0m\n" "$@"; };
+log_red()  { printf "\033[31m%s\033[0m\n" "$@"; };
+log_green(){ printf "\033[32m%s\033[0m\n" "$@"; };
+
+nonempty() {
+    log_red 'ERROR: "%s" requires a non-empty option argument.\n' "$1" >&2;
+    exit 1;
+};
+
 BUILD_DIR="${BUILD_DIR:-build}"
-BUILD_TYPE="${BUILD_TYPE:-Debug}"
+TOOLCHAIN="${TOOLCHAIN:-linux-clang-libcxx}"
 EXPORT_COMPILE_COMMANDS="${EXPORT_COMPILE_COMMANDS:-ON}"
 
-log(){
-    printf "\033[34m%s\033[0m\n" "$@";
+show_help(){
+cat <<ENDHELP
+    -h|--help                   Shows this message
+    -c|--clean                  Clean builds before running
+    --build-dir=dir             Set the build dir ${BUILD_DIR}
+    --build-type=type           Set the build type (Debug,Release,RelWithDebInfo)
+    --export-compile-commands   Export compile_commands.json
+    --toolchain=toolchain       Set the toolchain ${TOOLCHAIN}
+ENDHELP
 };
 
-log_red(){
-    printf "\033[31m%s\033[0m\n" "$@";
-};
+while [ $# -gt 0 ]; do case $1 in
 
-log_green(){
-    printf "\033[32m%s\033[0m\n" "$@";
-};
+    -h|-\?|--help) show_help; exit ;;
+    -c|--clean) CLEAN=1 ;;
+
+    --build-dir) if [ -n "$2" ];then { BUILD_DIR=$2; shift; } else nonempty "--build-dir"; fi ;;
+    --build-dir=?*) BUILD_DIR=${1#*=} ;;
+    --build-dir=) nonempty "--build-dir" ;;
+
+    --build-type) if [ -n "$2" ];then { BUILD_TYPE=$2; shift; } else nonempty "--build-type"; fi ;;
+    --build-type=?*) BUILD_TYPE=${1#*=} ;;
+    --build-type=) nonempty "--build-type" ;;
+
+    --export-compile-commands) if [ -n "$2" ];then { EXPORT_COMPILE_COMMANDS=$2; shift; } else EXPORT_COMPILE_COMMANDS=ON; fi ;;
+    --export-compile-commands=?*) EXPORT_COMPILE_COMMANDS=${1#*=} ;;
+    --export-compile-commands=) nonempty "--export-compile-commands" ;;
+
+    --toolchain) if [ -n "$2" ];then { TOOLCHAIN=$2; shift; } else nonempty "--toolchain"; fi ;;
+    --toolchain=?*) TOOLCHAIN=${1#*=} ;;
+    --toolchain=) nonempty "--toolchain" ;;
+
+    -?*) log_red 'ERROR: Unknown option: %s\n' "$1" >&2; exit 1 ;;
+esac;shift;done
 
 command_result(){
     if [ "$1" -eq 0 ];then
@@ -34,7 +63,7 @@ run_configure(){
             -B "${BUILD_DIR}" \
             -S . \
             -G Ninja \
-            --toolchain ./cmake/presets/linux-clang-libcxx.cmake \
+            --toolchain "${TOOLCHAIN}" \
             -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" \
             -DCMAKE_EXPORT_COMPILE_COMMANDS="${EXPORT_COMPILE_COMMANDS}" \
             ;
@@ -43,7 +72,6 @@ run_configure(){
 };
 
 run_build(){
-    set +x
     cmake \
         --build "${BUILD_DIR}" \
         ${CLEAN:+--clean-first} \
@@ -59,7 +87,11 @@ run_test(){
     result=$?;
     command_result "$result" "Tests";
     if [ "${result}" -ne 0 ]; then
-        ctest --test-dir build --rerun-failed --output-on-failure;
+        ctest \
+            --test-dir "${BUILD_DIR}" \
+            --rerun-failed \
+            --output-on-failure\
+            ;
     fi
 };
 

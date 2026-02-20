@@ -99,6 +99,7 @@ raygame_lib(
     RayGameCoreIo
     HDRS io/file.h
     SRCS io/file.cpp
+    DEPS RayGame::Core::Base
 )
 add_library(RayGame::Core::Io ALIAS RayGameCoreIo)
 

@@ -11,13 +11,7 @@ raygame_test(Pixel SRCS drawing/pixel.cpp DEPS RayGame::Core::Drawing)
 raygame_test(Random SRCS math/random.cpp DEPS RayGame::Core::Math)
 raygame_test(Rect SRCS math/rect.cpp DEPS RayGame::Core::Math)
 raygame_test(RingAverage SRCS math/ring_average.cpp DEPS RayGame::Core::Math)
-raygame_test(
-    Serialisation
-    SRCS
-    serialisation/serialisation.cpp
-    DEPS
-    RayGame::Core::Serialisation
-    RayGame::Core
-)
+raygame_test(Serialisation SRCS serialisation/serialisation.cpp DEPS RayGame::Core::Serialisation RayGame::Core)
 raygame_test(Types SRCS types.cpp DEPS RayGame::Core::Base)
 raygame_test(Vector SRCS math/vector.cpp DEPS RayGame::Core::Math)
+raygame_test(FileIO SRCS io/file.cpp DEPS RayGame::Core::Io DEFS TEST_FILE_DIR="${CMAKE_CURRENT_BINARY_DIR}/io/data", TEST_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/io/data")

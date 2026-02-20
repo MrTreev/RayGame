@@ -1,86 +1,64 @@
 #!/bin/sh
 set -e
 
-SOURCE_DIR="$(dirname -- "$(readlink "$0")")"
-BUILDS_DIR="${SOURCE_DIR}/build-multi"
-RUN_FULL=1
+WHICH_BUILD_LIST=TWO
 
-runfull(){ return $RUN_FULL; }
+log()      { printf "\033[34m%s\033[0m\n" "$@"; };
+log_red()  { printf "\033[31m%s\033[0m\n" "$@"; };
+log_green(){ printf "\033[32m%s\033[0m\n" "$@"; };
+
+show_help(){
+cat <<ENDHELP
+    -h|--help                   Shows this message
+    -c|--clean                  Clean builds before running
+    -f|--full                   Build ALL types (very slow)
+    -r|--release                Build only release
+    --set-type <fullname>       Set build for clangd to follow
+ENDHELP
+};
+
+while [ $# -gt 0 ]; do case $1 in
+    -h|-\?|--help) show_help; exit ;;
+    -c|--clean) CLEAN=1 ;;
+    -f|--full) WHICH_BUILD_LIST=FULL ;;
+    -r|--release) WHICH_BUILD_LIST=RELEASE ;;
+
+    --set-type) if [ -n "$2" ];then { SET_TYPE=$2; shift; } else nonempty "--set-type"; fi ;;
+    --set-type=?*) SET_TYPE=${1#*=} ;;
+    --set-type=) nonempty "--set-type" ;;
+
+    -?*) log_red 'ERROR: Unknown option: %s\n' "$1" >&2; exit 1 ;;
+esac;shift;done
+
+if [ -n "${SET_TYPE:-}" ]; then
+    log_green "Setting build fullname: \"${SET_TYPE}\"";
+    rm compile_commands.json;
+    ln -s "build-multi/${SET_TYPE}/compile_commands.json" compile_commands.json;
+    rm -rf .cache/clangd;
+    log_green "Build set, exiting";
+    exit 0;
+fi;
+if [ "${1:-}" = "clean" ]; then export CLEAN=1; fi;
 
 
-configure_preset_type(){
-    preset="$1"
-    build_type="$2"
-    printf "Configuring: %s-%s\t" "${preset##*/}" "${build_type}"
-    cmake \
-        -S "${SOURCE_DIR}" \
-        -G Ninja \
-        -B "${BUILDS_DIR}/${preset##*/}-${build_type}" \
-        --toolchain "${preset}.cmake" \
-        -DCMAKE_BUILD_TYPE="${build_type}" \
-        -DCMAKE_COMPILE_WARNING_AS_ERROR=ON >/dev/null\
-        && echo "Succeeded" || echo "Failed"
-}
-
-build_preset_type(){
-    preset="$1"; build_type="$2";
-    printf "Building: %s-%s\t" "${preset##*/}" "${build_type}"
-    cmake \
-        --build "${BUILDS_DIR}/${preset##*/}-${build_type}" >/dev/null \
-        && echo "Succeeded" || echo "Failed"
-}
-
-test_preset_type(){
-    preset="$1"; build_type="$2";
-    printf "Testing: %s-%s\t" "${preset##*/}" "${build_type}"
-    ctest \
-        --test-dir "${BUILDS_DIR}/${preset##*/}-${build_type}" \
-        --quiet \
-        && echo "Succeeded" || echo "Failed"
-}
-
-run_test(){
-    for preset_file in "${SOURCE_DIR}/cmake/presets"/*.cmake; do
-        preset="${preset_file%.cmake}"
-        test_preset_type "${preset}" Debug
-        test_preset_type "${preset}" RelWithDebInfo
-        if runfull; then
-            test_preset_type "${preset}" Release
-            test_preset_type "${preset}" MinSizeRel
-        fi
-    done
-}
-
-run_build(){
-    for preset_file in "${SOURCE_DIR}/cmake/presets"/*.cmake; do
-        preset="${preset_file%.cmake}"
-        build_preset_type "${preset}" Debug
-        build_preset_type "${preset}" RelWithDebInfo
-        if runfull; then
-            build_preset_type "${preset}" Release
-            build_preset_type "${preset}" MinSizeRel
-        fi
-    done
-}
-
-run_configure(){
-    for preset_file in "${SOURCE_DIR}/cmake/presets"/*.cmake; do
-        preset="${preset_file%.cmake}"
-        configure_preset_type "${preset}" Debug
-        configure_preset_type "${preset}" RelWithDebInfo
-        if runfull; then
-            configure_preset_type "${preset}" Release
-            configure_preset_type "${preset}" MinSizeRel
-        fi
-    done
-}
-
-[ -n "${1:-}" ] || { echo "ERROR: No stage supplied" && exit 1; }
-[ -z "${2:-}" ] || RUN_FULL=0
-
-case "$1" in
-    build) run_build ;;
-    configure) run_configure ;;
-    test) run_test ;;
-    *) echo "ERROR: Invalid stage '$1'"; exit 1 ;;
+case "${WHICH_BUILD_LIST}" in
+    FULL)       BUILD_LIST='Debug Release RelWithDebInfo MinSizeRel' ;;
+    TWO)        BUILD_LIST='Debug RelWithDebInfo' ;;
+    RELEASE)    BUILD_LIST='RelWithDebInfo' ;;
+    *) log_red "ERROR: Unknown build list type: ${WHICH_BUILD_LIST}"; exit 1;;
 esac
+
+for toolchain in cmake/presets/*.cmake; do
+    for build_type in ${BUILD_LIST}; do
+        tcname="${toolchain##*/}"
+        fullname="${tcname%%.cmake}-${build_type}"
+        log "Running build for \"${fullname}\""
+        "${0%%_multi.sh}.sh" \
+            ${CLEAN:+--clean} \
+            --build-dir="build-multi/${tcname%%.cmake}-${build_type}" \
+            --build-type="${build_type}" \
+            --export-compile-commands="${EXPORT_COMPILE_COMMANDS:-ON}" \
+            --toolchain="${toolchain}" \
+            ;
+    done;
+done;

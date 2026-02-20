@@ -46,8 +46,8 @@ public:
     }
 };
 
-RG_TEST(Serialisation, test) {
-    RG_SUBCASE("test public") {
+RT_TEST(Serialisation, test) {
+    RT_SUBCASE("test public") {
         PublicTest test_struct{};
         test_struct.m_u32 = 0x11'11'00'00; // NOLINT(*-magic-numbers)
         test_struct.m_i32 = 0x22'22'33'33; // NOLINT(*-magic-numbers)
@@ -56,20 +56,20 @@ RG_TEST(Serialisation, test) {
 
         const auto testdata = core::serialise::serialise(test_struct);
         auto       out_struct{core::serialise::deserialise<PublicTest>(testdata)};
-        RG_CHECK_EQ(test_struct.m_u32, out_struct.m_u32);
-        RG_CHECK_EQ(test_struct.m_i32, out_struct.m_i32);
-        RG_CHECK_EQ(test_struct.m_u16, out_struct.m_u16);
-        RG_CHECK_EQ(test_struct.m_i16, out_struct.m_i16);
+        RT_CHECK_EQ(test_struct.m_u32, out_struct.m_u32);
+        RT_CHECK_EQ(test_struct.m_i32, out_struct.m_i32);
+        RT_CHECK_EQ(test_struct.m_u16, out_struct.m_u16);
+        RT_CHECK_EQ(test_struct.m_i16, out_struct.m_i16);
     }
-    RG_SUBCASE("test private") {
+    RT_SUBCASE("test private") {
         // NOLINTBEGIN(*-magic-numbers)
         const PrivateTest test_struct{0x11'11'00'00, 0x22'22'33'33, 0x15'93, 0x23'51};
         // NOLINTEND(*-magic-numbers)
         const auto        testdata = core::serialise::serialise(test_struct);
         auto              out_struct{core::serialise::deserialise<PrivateTest>(testdata)};
-        RG_CHECK_EQ(test_struct.u32(), out_struct.u32());
-        RG_CHECK_EQ(test_struct.i32(), out_struct.i32());
-        RG_CHECK_EQ(test_struct.u16(), out_struct.u16());
-        RG_CHECK_EQ(test_struct.i16(), out_struct.i16());
+        RT_CHECK_EQ(test_struct.u32(), out_struct.u32());
+        RT_CHECK_EQ(test_struct.i32(), out_struct.i32());
+        RT_CHECK_EQ(test_struct.u16(), out_struct.u16());
+        RT_CHECK_EQ(test_struct.i16(), out_struct.i16());
     }
 }

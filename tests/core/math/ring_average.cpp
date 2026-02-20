@@ -20,19 +20,19 @@ public:
         for (const auto [val, ave, max, min]:
              std::ranges::zip_view(values, averages, max_vals, min_vals)) {
             ringave.add(val);
-            RG_CHECK_EQ(ringave.average(), ave);
-            RG_CHECK_EQ(ringave.max(), max);
-            RG_CHECK_EQ(ringave.min(), min);
+            RT_CHECK_EQ(ringave.average(), ave);
+            RT_CHECK_EQ(ringave.max(), max);
+            RT_CHECK_EQ(ringave.min(), min);
         }
     }
 
     T val() { return 1; }
 };
 
-RG_TYPED_TEST_SUITE(RingAverageTest, ::test::types::Integral);
+RT_TYPED_TEST_SUITE(RingAverageTest, ::test::types::Integral);
 } // namespace
 
-RG_TYPED_TEST(RingAverageTest, Stats) {
+RT_TYPED_TEST(RingAverageTest, Stats) {
     this->test_vals(
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},

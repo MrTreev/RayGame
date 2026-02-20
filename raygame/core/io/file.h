@@ -40,7 +40,12 @@ public:
     void writeln(const std::string_view& msg);
 
     [[nodiscard]]
+    std::string slurp() const;
+
+    [[nodiscard]]
     std::string fname() const;
+    [[nodiscard]]
+    std::string path() const;
 
     [[nodiscard]]
     bool good() const;

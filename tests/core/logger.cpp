@@ -1,8 +1,8 @@
 #include "raygame/core/logger.h" // IWYU pragma: keep
 #include "raytest/raytest.h"
 
-RG_TEST(Logger, API) {
-    RG_SUBCASE("trace") {
+RT_TEST(Logger, API) {
+    RT_SUBCASE("trace") {
         using core::log::trace;
         const int tmp = 1;
         trace("test");
@@ -11,7 +11,7 @@ RG_TEST(Logger, API) {
         trace("{}, {}", 1, tmp);
     }
 
-    RG_SUBCASE("debug") {
+    RT_SUBCASE("debug") {
         using core::log::debug;
         const int tmp = 1;
         debug("test");
@@ -20,7 +20,7 @@ RG_TEST(Logger, API) {
         debug("{}, {}", 1, tmp);
     }
 
-    RG_SUBCASE("info") {
+    RT_SUBCASE("info") {
         using core::log::info;
         const int tmp = 1;
         info("test");
@@ -29,7 +29,7 @@ RG_TEST(Logger, API) {
         info("{}, {}", 1, tmp);
     }
 
-    RG_SUBCASE("warning") {
+    RT_SUBCASE("warning") {
         using core::log::warning;
         const int tmp = 1;
         warning("test");
@@ -38,7 +38,7 @@ RG_TEST(Logger, API) {
         warning("{}, {}", 1, tmp);
     }
 
-    RG_SUBCASE("error") {
+    RT_SUBCASE("error") {
         using core::log::error;
         const int tmp = 1;
         error("test");
@@ -47,7 +47,7 @@ RG_TEST(Logger, API) {
         error("{}, {}", 1, tmp);
     }
 
-    RG_SUBCASE("fatal") {
+    RT_SUBCASE("fatal") {
         using core::log::fatal;
         const int tmp = 1;
         fatal("test");

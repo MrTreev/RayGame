@@ -63,30 +63,31 @@ RAYTEST_CLANG_SUPPRESS_WARNING("-Wglobal-constructors")
 RAYTEST_CLANG_SUPPRESS_WARNING_POP
 
 // NOLINTBEGIN(*-macro-usage)
-#define RG_TYPED_TEST_SUITE(test_suite_name, test_name) TYPED_TEST_SUITE(test_suite_name, test_name)
-#define RG_TYPED_TEST(test_suite_name, test_name)                                                  \
+#define RT_TYPED_TEST_SUITE(test_suite_name, test_name) TYPED_TEST_SUITE(test_suite_name, test_name)
+#define RT_TYPED_TEST(test_suite_name, test_name)                                                  \
     RAYTEST_CLANG_SUPPRESS_WARNING_PUSH                                                            \
     RAYTEST_CLANG_SUPPRESS_WARNING("-Wglobal-constructors")                                        \
     TYPED_TEST(test_suite_name, test_name)                                                         \
     RAYTEST_CLANG_SUPPRESS_WARNING_POP
-#define RG_TEST(test_suite_name, test_name)                                                        \
+#define RT_TEST(test_suite_name, test_name)                                                        \
     RAYTEST_CLANG_SUPPRESS_WARNING_PUSH                                                            \
     RAYTEST_CLANG_SUPPRESS_WARNING("-Wglobal-constructors")                                        \
     TEST(test_suite_name, test_name)                                                               \
     RAYTEST_CLANG_SUPPRESS_WARNING_POP
 
-#define RG_TEST_FLOAT(a, b)          EXPECT_FLOAT_EQ((a), (b))
-#define RG_TEST_DOUBLE(a, b)         EXPECT_DOUBLE_EQ((a), (b))
-#define RG_CHECK_THROW(expr, except) EXPECT_THROW((expr), except)
-#define RG_CHECK_NO_THROW(expr)      EXPECT_NO_THROW((expr))
-#define RG_CHECK_TRUE(aval)          EXPECT_TRUE((aval))
-#define RG_CHECK_FALSE(aval)         EXPECT_FALSE((aval))
-#define RG_CHECK_EQ(aval, bval)      EXPECT_EQ((aval), (bval))
-#define RG_CHECK_GT(aval, bval)      EXPECT_GT((aval), (bval))
-#define RG_CHECK_GE(aval, bval)      EXPECT_GE((aval), (bval))
-#define RG_CHECK_LT(aval, bval)      EXPECT_LT((aval), (bval))
-#define RG_CHECK_LE(aval, bval)      EXPECT_LE((aval), (bval))
-#define RG_SUBCASE(str)
+#define RT_ASSERT(aval)              GTEST_ASSERT_TRUE((aval))
+#define RT_TEST_FLOAT(a, b)          EXPECT_FLOAT_EQ((a), (b))
+#define RT_TEST_DOUBLE(a, b)         EXPECT_DOUBLE_EQ((a), (b))
+#define RT_CHECK_THROW(expr, except) EXPECT_THROW((expr), except)
+#define RT_CHECK_NO_THROW(expr)      EXPECT_NO_THROW((expr))
+#define RT_CHECK_TRUE(aval)          EXPECT_TRUE((aval))
+#define RT_CHECK_FALSE(aval)         EXPECT_FALSE((aval))
+#define RT_CHECK_EQ(aval, bval)      EXPECT_EQ((aval), (bval))
+#define RT_CHECK_GT(aval, bval)      EXPECT_GT((aval), (bval))
+#define RT_CHECK_GE(aval, bval)      EXPECT_GE((aval), (bval))
+#define RT_CHECK_LT(aval, bval)      EXPECT_LT((aval), (bval))
+#define RT_CHECK_LE(aval, bval)      EXPECT_LE((aval), (bval))
+#define RT_SUBCASE(str)
 
 // NOLINTEND(*-macro-usage)
 

@@ -87,12 +87,12 @@ int main(int argc, char* argv[]) {
     hdrfile.gencode(std::format("namespace {} {{", config.m_ns_name));
     for (const auto& resource: config.m_resources) {
         hdrfile.gencode(resource->declaration());
-        std::string fname         = hdrfile.fname();
+        std::string fname         = hdrfile.path();
         fname[fname.length() - 1] = 'c';
         fname.append("pp");
         core::io::File srcfile{fname, "w"};
         srcfile.gencode("#include \"raygame/core/drawing/image.h\"");
-        srcfile.gencode(std::format("#include \"{}\"", config.m_header.string()));
+        srcfile.gencode(std::format("#include \"{}\"", config.m_header.filename().string()));
         srcfile.gencode(resource->definition(config.m_ns_name + "::"));
     }
     hdrfile.gencode(std::format("}} // namespace {}", config.m_ns_name));

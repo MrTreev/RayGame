@@ -83,8 +83,24 @@ File::File(std::filesystem::path filename, File::mode mod)
 File::File(std::filesystem::path filename, const char* mod)
     : File::File(std::move(filename), cstr_to_mod(mod)) {}
 
+std::string File::path() const {
+    return m_path.parent_path() / m_path.filename();
+}
+
+std::string File::slurp() const {
+    condition::check_condition(std::fseek(m_file, 0, SEEK_END) == 0, "Seek Failed");
+    const auto length = std::ftell(m_file);
+    condition::check_condition(std::fseek(m_file, 0, SEEK_SET) == 0, "Seek Failed");
+    condition::check_condition((length > 0), "Negative is an error");
+    const auto  len = static_cast<size_t>(length);
+    std::string buffer;
+    buffer.resize(len);
+    condition::check_condition(std::fread(buffer.data(), 1, len, m_file), "Failure during fread");
+    return buffer;
+}
+
 std::string File::fname() const {
-    return m_path.filename().string();
+    return m_path.filename();
 }
 
 bool File::good() const {
