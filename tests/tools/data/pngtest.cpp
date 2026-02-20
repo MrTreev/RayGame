@@ -1,9 +1,9 @@
 #include "raygame/core/drawing/image.h" // tools/resmk/main.cpp:94
-#include "imgtest.h" // tools/resmk/main.cpp:95
+#include "pngtest.h" // tools/resmk/main.cpp:95
 RAYGAME_CLANG_SUPPRESS_WARNING_PUSH
 RAYGAME_CLANG_SUPPRESS_WARNING("-Wglobal-constructors")
 // NOLINTNEXTLINE(cert-err58-cpp)
-const core::drawing::Image<4, 4> imgtest::imgtest {
+const core::drawing::Image<4, 4> pngtest::pngtest {
     std::array<core::Pixel, 16>{
         core::colour::rgba(0x00,0x00,0x00,0xff), core::colour::rgba(0xff,0xff,0xff,0xff), core::colour::rgba(0xff,0x00,0x00,0xff), core::colour::rgba(0x00,0xff,0x00,0xff), 
         core::colour::rgba(0x00,0x00,0x00,0x00), core::colour::rgba(0x00,0x00,0x00,0x00), core::colour::rgba(0x00,0x00,0x00,0x00), core::colour::rgba(0x00,0x00,0xff,0xff), 

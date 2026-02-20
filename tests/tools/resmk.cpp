@@ -38,24 +38,29 @@ RT_TEST(ResMK, stuff) {
     RT_SUBCASE("png data") {
         std::filesystem::create_directory(resmk_file);
         const std::filesystem::path pngtest_png{resmk_data / "pngtest.png"};
+        const std::filesystem::path desired_src{resmk_data / "pngtest.cpp"};
+        const std::filesystem::path desired_hdr{resmk_data / "pngtest.h"};
+
         const std::filesystem::path pngtest_hdr{resmk_file / "pngtest.h"};
+        const std::filesystem::path pngtest_src{resmk_file / "pngtest.cpp"};
+
         RT_CHECK_EQ(0, resmk(pngtest_hdr, pngtest_png));
         RT_ASSERT(std::filesystem::exists(pngtest_png));
 
         RT_CHECK_TRUE(std::filesystem::exists(pngtest_hdr));
         const core::io::File pngtest_hdrfile{pngtest_hdr, "r"};
-        const auto           hdrfile_content{pngtest_hdrfile.slurp()};
+        const std::string    hdrfile_content{pngtest_hdrfile.slurp()};
 
-        const core::io::File desired_hdrfile{pngtest_hdr, "r"};
-        const auto           hdrfile_desired{desired_hdrfile.slurp()};
+        const core::io::File desired_hdrfile{desired_hdr, "r"};
+        const std::string    hdrfile_desired{desired_hdrfile.slurp()};
+
         RT_CHECK_EQ(hdrfile_content, hdrfile_desired);
 
-        const std::filesystem::path pngtest_src{resmk_file / "pngtest.cpp"};
         RT_CHECK_TRUE(std::filesystem::exists(pngtest_src));
         const core::io::File pngtest_srcfile{pngtest_src, "r"};
-        const auto           srcfile_content{pngtest_srcfile.slurp()};
-        const core::io::File desired_srcfile{pngtest_src, "r"};
-        const auto           srcfile_desired{desired_srcfile.slurp()};
+        const std::string    srcfile_content{pngtest_srcfile.slurp()};
+        const core::io::File desired_srcfile{desired_src, "r"};
+        const std::string    srcfile_desired{desired_srcfile.slurp()};
         RT_CHECK_EQ(srcfile_content, srcfile_desired);
     }
 }
