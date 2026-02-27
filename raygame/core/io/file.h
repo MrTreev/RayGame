@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <source_location>
 #include <string_view>
+#include <vector>
 
 namespace core::io {
 class File {

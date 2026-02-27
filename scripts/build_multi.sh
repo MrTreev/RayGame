@@ -20,8 +20,10 @@ ENDHELP
 while [ $# -gt 0 ]; do case $1 in
     -h|-\?|--help) show_help; exit ;;
     -c|--clean) CLEAN=1 ;;
-    -f|--full) WHICH_BUILD_LIST=FULL ;;
-    -r|--release) WHICH_BUILD_LIST=RELEASE ;;
+    -f|--fresh) FRESH=1 ;;
+
+    --full) WHICH_BUILD_LIST=FULL ;;
+    --release) WHICH_BUILD_LIST=RELEASE ;;
 
     --set-type) if [ -n "$2" ];then { SET_TYPE=$2; shift; } else nonempty "--set-type"; fi ;;
     --set-type=?*) SET_TYPE=${1#*=} ;;
@@ -55,6 +57,7 @@ for toolchain in cmake/presets/*.cmake; do
         log "Running build for \"${fullname}\""
         "${0%%_multi.sh}.sh" \
             ${CLEAN:+--clean} \
+            ${FRESH:+--fresh} \
             --build-dir="build-multi/${tcname%%.cmake}-${build_type}" \
             --build-type="${build_type}" \
             --export-compile-commands="${EXPORT_COMPILE_COMMANDS:-ON}" \

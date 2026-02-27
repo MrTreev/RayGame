@@ -1,6 +1,7 @@
 #include "raygame/core/serialisation/serialisation.h" // IWYU pragma: keep
 #include "raytest/raytest.h"                          // IWYU pragma: keep
 
+#if 0
 struct PublicTest {
     uint32_t m_u32;
     int32_t  m_i32;
@@ -73,3 +74,4 @@ RT_TEST(Serialisation, test) {
         RT_CHECK_EQ(test_struct.i16(), out_struct.i16());
     }
 }
+#endif

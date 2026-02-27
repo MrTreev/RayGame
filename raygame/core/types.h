@@ -1,7 +1,7 @@
 #pragma once
 #include "raygame/core/config.h" // IWYU pragma: export
-#include <cstdint>
-#include <cstdlib>
+#include <cstdint>               // IWYU pragma: export
+#include <cstdlib>               // IWYU pragma: export
 #include <cstring>
 #include <format>
 #include <memory>

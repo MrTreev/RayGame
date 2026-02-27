@@ -9,6 +9,8 @@ nonempty() {
     exit 1;
 };
 
+CLEAN=0
+FRESH=0
 BUILD_DIR="${BUILD_DIR:-build}"
 TOOLCHAIN="${TOOLCHAIN:-linux-clang-libcxx}"
 EXPORT_COMPILE_COMMANDS="${EXPORT_COMPILE_COMMANDS:-ON}"
@@ -28,6 +30,7 @@ while [ $# -gt 0 ]; do case $1 in
 
     -h|-\?|--help) show_help; exit ;;
     -c|--clean) CLEAN=1 ;;
+    -f|--fresh) FRESH=1 ;;
 
     --build-dir) if [ -n "$2" ];then { BUILD_DIR=$2; shift; } else nonempty "--build-dir"; fi ;;
     --build-dir=?*) BUILD_DIR=${1#*=} ;;
@@ -60,6 +63,7 @@ command_result(){
 run_configure(){
     if [ ! -d "${BUILD_DIR}" ]; then
         cmake \
+            ${FRESH:+--fresh} \
             -B "${BUILD_DIR}" \
             -S . \
             -G Ninja \

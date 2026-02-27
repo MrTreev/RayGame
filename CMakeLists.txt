@@ -9,7 +9,7 @@ project(
     DESCRIPTION "A simple game and engine in C++"
     LANGUAGES CXX C
 )
-
+cmake_policy(SET CMP0155 OLD)
 set(RAYGAME_PATH_SRC ${PROJECT_SOURCE_DIR})
 list(APPEND CMAKE_MODULE_PATH ${RAYGAME_PATH_SRC}/cmake)
 include(RayGameSetup)

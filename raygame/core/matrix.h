@@ -1,3 +1,4 @@
+#pragma once
 #include "raygame/core/types.h"
 #include <mdspan>
 

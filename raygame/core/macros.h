@@ -259,197 +259,197 @@
 
 #define RAYGAME_ADD_TUPLE_SIZE(TemplatedClass, Size)                                                                                       \
     template<typename... T>                                                                                                                \
-    struct ::std::tuple_size<TemplatedClass<T...>>: ::std::integral_constant<size_t, Size> {}
+    struct std::tuple_size<TemplatedClass<T...>>: ::std::integral_constant<size_t, Size> {}
 
 #define RAYGAME_ADD_TUPLE_ELEMENT_2(TemplatedClass)                                                                                        \
     template<typename A, typename B>                                                                                                       \
-    struct ::std::tuple_element<0, TemplatedClass<A, B>> {                                                                                 \
+    struct std::tuple_element<0, TemplatedClass<A, B>> {                                                                                 \
         using type = A;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B>                                                                                                       \
-    struct ::std::tuple_element<1, TemplatedClass<A, B>> {                                                                                 \
+    struct std::tuple_element<1, TemplatedClass<A, B>> {                                                                                 \
         using type = B;                                                                                                                    \
     }
 
 #define RAYGAME_ADD_TUPLE_ELEMENT_3(TemplatedClass)                                                                                        \
     template<typename A, typename B, typename C>                                                                                           \
-    struct ::std::tuple_element<0, TemplatedClass<A, B, C>> {                                                                              \
+    struct std::tuple_element<0, TemplatedClass<A, B, C>> {                                                                              \
         using type = A;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C>                                                                                           \
-    struct ::std::tuple_element<1, TemplatedClass<A, B, C>> {                                                                              \
+    struct std::tuple_element<1, TemplatedClass<A, B, C>> {                                                                              \
         using type = B;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C>                                                                                           \
-    struct ::std::tuple_element<2, TemplatedClass<A, B, C>> {                                                                              \
+    struct std::tuple_element<2, TemplatedClass<A, B, C>> {                                                                              \
         using type = C;                                                                                                                    \
     }
 
 #define RAYGAME_ADD_TUPLE_ELEMENT_4(TemplatedClass)                                                                                        \
     template<typename A, typename B, typename C, typename D>                                                                               \
-    struct ::std::tuple_element<0, TemplatedClass<A, B, C, D>> {                                                                           \
+    struct std::tuple_element<0, TemplatedClass<A, B, C, D>> {                                                                           \
         using type = A;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C, typename D>                                                                               \
-    struct ::std::tuple_element<1, TemplatedClass<A, B, C, D>> {                                                                           \
+    struct std::tuple_element<1, TemplatedClass<A, B, C, D>> {                                                                           \
         using type = B;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C, typename D>                                                                               \
-    struct ::std::tuple_element<2, TemplatedClass<A, B, C, D>> {                                                                           \
+    struct std::tuple_element<2, TemplatedClass<A, B, C, D>> {                                                                           \
         using type = C;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C, typename D>                                                                               \
-    struct ::std::tuple_element<3, TemplatedClass<A, B, C, D>> {                                                                           \
+    struct std::tuple_element<3, TemplatedClass<A, B, C, D>> {                                                                           \
         using type = D;                                                                                                                    \
     }
 
 #define RAYGAME_ADD_TUPLE_ELEMENT_5(TemplatedClass)                                                                                        \
     template<typename A, typename B, typename C, typename D, typename E>                                                                   \
-    struct ::std::tuple_element<0, TemplatedClass<A, B, C, D, E>> {                                                                        \
+    struct std::tuple_element<0, TemplatedClass<A, B, C, D, E>> {                                                                        \
         using type = A;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C, typename D, typename E>                                                                   \
-    struct ::std::tuple_element<1, TemplatedClass<A, B, C, D, E>> {                                                                        \
+    struct std::tuple_element<1, TemplatedClass<A, B, C, D, E>> {                                                                        \
         using type = B;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C, typename D, typename E>                                                                   \
-    struct ::std::tuple_element<2, TemplatedClass<A, B, C, D, E>> {                                                                        \
+    struct std::tuple_element<2, TemplatedClass<A, B, C, D, E>> {                                                                        \
         using type = C;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C, typename D, typename E>                                                                   \
-    struct ::std::tuple_element<3, TemplatedClass<A, B, C, D, E>> {                                                                        \
+    struct std::tuple_element<3, TemplatedClass<A, B, C, D, E>> {                                                                        \
         using type = D;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C, typename D, typename E>                                                                   \
-    struct ::std::tuple_element<4, TemplatedClass<A, B, C, D, E>> {                                                                        \
+    struct std::tuple_element<4, TemplatedClass<A, B, C, D, E>> {                                                                        \
         using type = E;                                                                                                                    \
     }
 
 #define RAYGAME_ADD_TUPLE_ELEMENT_6(TemplatedClass)                                                                                        \
     template<typename A, typename B, typename C, typename D, typename E, typename F>                                                       \
-    struct ::std::tuple_element<0, TemplatedClass<A, B, C, D, E, F>> {                                                                     \
+    struct std::tuple_element<0, TemplatedClass<A, B, C, D, E, F>> {                                                                     \
         using type = A;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C, typename D, typename E, typename F>                                                       \
-    struct ::std::tuple_element<1, TemplatedClass<A, B, C, D, E, F>> {                                                                     \
+    struct std::tuple_element<1, TemplatedClass<A, B, C, D, E, F>> {                                                                     \
         using type = B;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C, typename D, typename E, typename F>                                                       \
-    struct ::std::tuple_element<2, TemplatedClass<A, B, C, D, E, F>> {                                                                     \
+    struct std::tuple_element<2, TemplatedClass<A, B, C, D, E, F>> {                                                                     \
         using type = C;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C, typename D, typename E, typename F>                                                       \
-    struct ::std::tuple_element<3, TemplatedClass<A, B, C, D, E, F>> {                                                                     \
+    struct std::tuple_element<3, TemplatedClass<A, B, C, D, E, F>> {                                                                     \
         using type = D;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C, typename D, typename E, typename F>                                                       \
-    struct ::std::tuple_element<4, TemplatedClass<A, B, C, D, E, F>> {                                                                     \
+    struct std::tuple_element<4, TemplatedClass<A, B, C, D, E, F>> {                                                                     \
         using type = E;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C, typename D, typename E, typename F>                                                       \
-    struct ::std::tuple_element<5, TemplatedClass<A, B, C, D, E, F>> {                                                                     \
+    struct std::tuple_element<5, TemplatedClass<A, B, C, D, E, F>> {                                                                     \
         using type = F;                                                                                                                    \
     }
 
 #define RAYGAME_ADD_TUPLE_ELEMENT_7(TemplatedClass)                                                                                        \
     template<typename A, typename B, typename C, typename D, typename E, typename F, typename G>                                           \
-    struct ::std::tuple_element<0, TemplatedClass<A, B, C, D, E, F, G>> {                                                                  \
+    struct std::tuple_element<0, TemplatedClass<A, B, C, D, E, F, G>> {                                                                  \
         using type = A;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C, typename D, typename E, typename F, typename G>                                           \
-    struct ::std::tuple_element<1, TemplatedClass<A, B, C, D, E, F, G>> {                                                                  \
+    struct std::tuple_element<1, TemplatedClass<A, B, C, D, E, F, G>> {                                                                  \
         using type = B;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C, typename D, typename E, typename F, typename G>                                           \
-    struct ::std::tuple_element<2, TemplatedClass<A, B, C, D, E, F, G>> {                                                                  \
+    struct std::tuple_element<2, TemplatedClass<A, B, C, D, E, F, G>> {                                                                  \
         using type = C;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C, typename D, typename E, typename F, typename G>                                           \
-    struct ::std::tuple_element<3, TemplatedClass<A, B, C, D, E, F, G>> {                                                                  \
+    struct std::tuple_element<3, TemplatedClass<A, B, C, D, E, F, G>> {                                                                  \
         using type = D;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C, typename D, typename E, typename F, typename G>                                           \
-    struct ::std::tuple_element<4, TemplatedClass<A, B, C, D, E, F, G>> {                                                                  \
+    struct std::tuple_element<4, TemplatedClass<A, B, C, D, E, F, G>> {                                                                  \
         using type = E;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C, typename D, typename E, typename F, typename G>                                           \
-    struct ::std::tuple_element<5, TemplatedClass<A, B, C, D, E, F, G>> {                                                                  \
+    struct std::tuple_element<5, TemplatedClass<A, B, C, D, E, F, G>> {                                                                  \
         using type = F;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C, typename D, typename E, typename F, typename G>                                           \
-    struct ::std::tuple_element<6, TemplatedClass<A, B, C, D, E, F, G>> {                                                                  \
+    struct std::tuple_element<6, TemplatedClass<A, B, C, D, E, F, G>> {                                                                  \
         using type = G;                                                                                                                    \
     }
 
 #define RAYGAME_ADD_TUPLE_ELEMENT_8(TemplatedClass)                                                                                        \
     template<typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H>                               \
-    struct ::std::tuple_element<0, TemplatedClass<A, B, C, D, E, F, G, H>> {                                                               \
+    struct std::tuple_element<0, TemplatedClass<A, B, C, D, E, F, G, H>> {                                                               \
         using type = A;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H>                               \
-    struct ::std::tuple_element<1, TemplatedClass<A, B, C, D, E, F, G, H>> {                                                               \
+    struct std::tuple_element<1, TemplatedClass<A, B, C, D, E, F, G, H>> {                                                               \
         using type = B;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H>                               \
-    struct ::std::tuple_element<2, TemplatedClass<A, B, C, D, E, F, G, H>> {                                                               \
+    struct std::tuple_element<2, TemplatedClass<A, B, C, D, E, F, G, H>> {                                                               \
         using type = C;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H>                               \
-    struct ::std::tuple_element<3, TemplatedClass<A, B, C, D, E, F, G, H>> {                                                               \
+    struct std::tuple_element<3, TemplatedClass<A, B, C, D, E, F, G, H>> {                                                               \
         using type = D;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H>                               \
-    struct ::std::tuple_element<4, TemplatedClass<A, B, C, D, E, F, G, H>> {                                                               \
+    struct std::tuple_element<4, TemplatedClass<A, B, C, D, E, F, G, H>> {                                                               \
         using type = E;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H>                               \
-    struct ::std::tuple_element<5, TemplatedClass<A, B, C, D, E, F, G, H>> {                                                               \
+    struct std::tuple_element<5, TemplatedClass<A, B, C, D, E, F, G, H>> {                                                               \
         using type = F;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H>                               \
-    struct ::std::tuple_element<6, TemplatedClass<A, B, C, D, E, F, G, H>> {                                                               \
+    struct std::tuple_element<6, TemplatedClass<A, B, C, D, E, F, G, H>> {                                                               \
         using type = G;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H>                               \
-    struct ::std::tuple_element<7, TemplatedClass<A, B, C, D, E, F, G, H>> {                                                               \
+    struct std::tuple_element<7, TemplatedClass<A, B, C, D, E, F, G, H>> {                                                               \
         using type = H;                                                                                                                    \
     }
 
 #define RAYGAME_ADD_TUPLE_ELEMENT_9(TemplatedClass)                                                                                        \
     template<typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H, typename I>                   \
-    struct ::std::tuple_element<0, TemplatedClass<A, B, C, D, E, F, G, H, I>> {                                                            \
+    struct std::tuple_element<0, TemplatedClass<A, B, C, D, E, F, G, H, I>> {                                                            \
         using type = A;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H, typename I>                   \
-    struct ::std::tuple_element<1, TemplatedClass<A, B, C, D, E, F, G, H, I>> {                                                            \
+    struct std::tuple_element<1, TemplatedClass<A, B, C, D, E, F, G, H, I>> {                                                            \
         using type = B;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H, typename I>                   \
-    struct ::std::tuple_element<2, TemplatedClass<A, B, C, D, E, F, G, H, I>> {                                                            \
+    struct std::tuple_element<2, TemplatedClass<A, B, C, D, E, F, G, H, I>> {                                                            \
         using type = C;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H, typename I>                   \
-    struct ::std::tuple_element<3, TemplatedClass<A, B, C, D, E, F, G, H, I>> {                                                            \
+    struct std::tuple_element<3, TemplatedClass<A, B, C, D, E, F, G, H, I>> {                                                            \
         using type = D;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H, typename I>                   \
-    struct ::std::tuple_element<4, TemplatedClass<A, B, C, D, E, F, G, H, I>> {                                                            \
+    struct std::tuple_element<4, TemplatedClass<A, B, C, D, E, F, G, H, I>> {                                                            \
         using type = E;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H, typename I>                   \
-    struct ::std::tuple_element<5, TemplatedClass<A, B, C, D, E, F, G, H, I>> {                                                            \
+    struct std::tuple_element<5, TemplatedClass<A, B, C, D, E, F, G, H, I>> {                                                            \
         using type = F;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H, typename I>                   \
-    struct ::std::tuple_element<6, TemplatedClass<A, B, C, D, E, F, G, H, I>> {                                                            \
+    struct std::tuple_element<6, TemplatedClass<A, B, C, D, E, F, G, H, I>> {                                                            \
         using type = G;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H, typename I>                   \
-    struct ::std::tuple_element<7, TemplatedClass<A, B, C, D, E, F, G, H, I>> {                                                            \
+    struct std::tuple_element<7, TemplatedClass<A, B, C, D, E, F, G, H, I>> {                                                            \
         using type = H;                                                                                                                    \
     };                                                                                                                                     \
     template<typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H, typename I>                   \
-    struct ::std::tuple_element<8, TemplatedClass<A, B, C, D, E, F, G, H, I>> {                                                            \
+    struct std::tuple_element<8, TemplatedClass<A, B, C, D, E, F, G, H, I>> {                                                            \
         using type = I;                                                                                                                    \
     }
 

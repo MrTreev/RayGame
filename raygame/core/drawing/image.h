@@ -4,7 +4,6 @@
 #include "raygame/core/math/rect.h"
 #include "raygame/core/math/vector.h"
 #include "raygame/core/matrix.h"
-#include <mdspan>
 
 namespace core::drawing {
 

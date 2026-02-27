@@ -177,15 +177,6 @@ static_assert(false, "Unknown Compiler");
 #    define ZPP_BITS_INLINE  [[msvc::forceinline]]
 #endif
 
-#if !defined(RAYGAME_CLANG_MIN)
-// NOLINTNEXTLINE(*-macro-usage)
-#    define RAYGAME_CLANG_MIN 19
-#endif
-#if (__clang_major__ < RAYGAME_CLANG_MIN)
-#    error "Only tested on clang " RAYGAME_PP_MACRO_STRINGIFY(RAYGAME_CLANG_MIN) " and higher"
-#endif
-#undef RAYGAME_CLANG_MIN
-
 //=============================================================================
 // Compiler-Dependant Pragma Macros
 //=============================================================================

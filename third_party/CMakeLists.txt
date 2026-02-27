@@ -1,7 +1,7 @@
 FetchContent_Declare(
     zpp_bits
     GIT_REPOSITORY https://github.com/eyalz800/zpp_bits.git
-    GIT_TAG e5ff2b23904cdca8778ab7284bf82257102c8022
+    GIT_TAG d45e5b9f5706248a050c013e696144a0644aa42c
 )
 FetchContent_Declare(
     stb
