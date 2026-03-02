@@ -126,7 +126,13 @@ void File::writeln(const std::string_view& msg) {
 }
 
 void File::gencode(const std::string_view& msg, std::source_location loc) {
-    write(std::format("{} // {}\n", msg, debug::location_message(loc)));
+    const auto locstr = debug::location_message(loc);
+    write(std::format("{}{}\n", msg, [locstr]() {
+        if (locstr.empty()) {
+            return std::string();
+        }
+        return std::format(" // {}", locstr);
+    }()));
 }
 
 File::~File() {

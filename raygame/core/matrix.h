@@ -1,6 +1,8 @@
 #pragma once
 #include "raygame/core/types.h"
-#include <mdspan>
+#if defined(RAYGAME_CC_CLANG) || defined(RAYGAME_CC_GCC)
+#    include <mdspan>
+#endif
 
 namespace core {
 

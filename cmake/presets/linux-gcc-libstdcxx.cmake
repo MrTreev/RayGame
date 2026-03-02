@@ -2,7 +2,7 @@ set(CMAKE_SYSTEM_NAME Linux)
 set(CMAKE_SYSTEM_PROCESSOR x86)
 
 set(triple x86_64-linux-gnu)
-set(tools /home/opatterson/Repos/MrTreev/RayGame/toolchains/gcc)
+set(tools ${CMAKE_CURRENT_LIST_DIR}/../../toolchains/gcc)
 
 set(CMAKE_C_COMPILER ${tools}/bin/gcc)
 set(CMAKE_C_COMPILER_AR ${tools}/bin/gcc-ar)
@@ -32,4 +32,5 @@ set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 
 set(CXX_SCAN_FOR_MODULES OFF)
-add_compile_options(--sysroot=${tools})
+
+add_link_options(-static-libstdc++)

@@ -21,5 +21,3 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "RelWithDebInfo" "MinSizeRel")
 set(RAYGAME_CXX_STANDARD 26)
 
-find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
-set(CLANG_TIDY_COMMAND "${CLANG_TIDY_EXE}")

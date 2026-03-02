@@ -37,9 +37,18 @@ RT_TEST(ResMK, stuff) {
 
     RT_SUBCASE("png data") {
         std::filesystem::create_directory(resmk_file);
+        const std::string fname = []() {
+#if defined(RAYGAME_SOURCE_LOCATION_FULL)
+            return "pngtest-full";
+#elif defined(RAYGAME_SOURCE_LOCATION_BASE)
+            return "pngtest-base";
+#elif defined(RAYGAME_SOURCE_LOCATION_NONE)
+            return "pngtest-none";
+#endif
+        }();
         const std::filesystem::path pngtest_png{resmk_data / "pngtest.png"};
-        const std::filesystem::path desired_src{resmk_data / "pngtest.cpp"};
-        const std::filesystem::path desired_hdr{resmk_data / "pngtest.h"};
+        const std::filesystem::path desired_src{resmk_data / (fname + ".cpp")};
+        const std::filesystem::path desired_hdr{resmk_data / (fname + ".h")};
 
         const std::filesystem::path pngtest_hdr{resmk_file / "pngtest.h"};
         const std::filesystem::path pngtest_src{resmk_file / "pngtest.cpp"};

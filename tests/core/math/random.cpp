@@ -24,10 +24,10 @@ RT_TYPED_TEST(Rand, Rand) {
         val = rand(min_rand, max_rand);
     }
     RT_CHECK_FALSE(all_same(test_arr));
-    RT_CHECK_TRUE(std::all_of(test_arr.begin(), test_arr.end(), [](auto val) {
+    RT_CHECK_TRUE(std::all_of(test_arr.begin(), test_arr.end(), [min_rand](auto val) {
         return val >= min_rand;
     }));
-    RT_CHECK_TRUE(std::all_of(test_arr.begin(), test_arr.end(), [](auto val) {
+    RT_CHECK_TRUE(std::all_of(test_arr.begin(), test_arr.end(), [max_rand](auto val) {
         return val <= max_rand;
     }));
 }

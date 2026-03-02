@@ -73,6 +73,9 @@ constexpr SourceLoc sloc_type = SourceLoc::BASE;
 #endif
 
 constexpr std::string location_message(std::source_location loc) {
+    if constexpr (debug::sloc_type == SourceLoc::NONE) {
+        return {};
+    }
     constexpr std::string_view search_str = []() {
         if constexpr (debug::sloc_type == SourceLoc::FULL) {
             return "/raygame/";

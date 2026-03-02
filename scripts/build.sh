@@ -9,8 +9,8 @@ nonempty() {
     exit 1;
 };
 
-CLEAN=0
-FRESH=0
+unset CLEAN
+unset FRESH
 BUILD_DIR="${BUILD_DIR:-build}"
 TOOLCHAIN="${TOOLCHAIN:-linux-clang-libcxx}"
 EXPORT_COMPILE_COMMANDS="${EXPORT_COMPILE_COMMANDS:-ON}"
@@ -48,6 +48,8 @@ while [ $# -gt 0 ]; do case $1 in
     --toolchain=?*) TOOLCHAIN=${1#*=} ;;
     --toolchain=) nonempty "--toolchain" ;;
 
+    --) shift; break;;
+
     -?*) log_red 'ERROR: Unknown option: %s\n' "$1" >&2; exit 1 ;;
 esac;shift;done
 
@@ -70,6 +72,7 @@ run_configure(){
             --toolchain "${TOOLCHAIN}" \
             -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" \
             -DCMAKE_EXPORT_COMPILE_COMMANDS="${EXPORT_COMPILE_COMMANDS}" \
+            "${@}" \
             ;
     fi;
     command_result "$?" "Configure";
@@ -86,6 +89,8 @@ run_build(){
 run_test(){
     ctest \
         --test-dir "${BUILD_DIR}" \
+        --progress \
+        --parallel 0 \
         --quiet \
         ;
     result=$?;
@@ -99,4 +104,4 @@ run_test(){
     fi
 };
 
-run_configure && run_build && run_test;
+run_configure "$@" && run_build && run_test;

@@ -8,19 +8,12 @@
 #include "raygame/core/math/vector.h"
 
 core::Application::Application(Vec2<size_t> size, std::string title, WindowStyle style) {
-    using Cocoa   = detail::CocoaWindowImpl;
-    using Dwm     = detail::DwmWindowImpl;
-    using Wayland = detail::AppImplWayland;
-    switch (config::BACKEND) {
-    case config::GuiBackend::COCOA:
-        m_impl = std::make_unique<Cocoa>(size, std::move(title), style);
-        return;
-    case config::GuiBackend::DWM:
-        m_impl = std::make_unique<Dwm>(size, std::move(title), style);
-        return;
-    case config::GuiBackend::WAYLAND:
-        m_impl = std::make_unique<Wayland>(size, std::move(title), style);
-        return;
+    if constexpr (config::BACKEND == config::GuiBackend::COCOA) {
+        m_impl = std::make_unique<detail::CocoaWindowImpl>(size, std::move(title), style);
+    } else if constexpr (config::BACKEND == config::GuiBackend::DWM) {
+        m_impl = std::make_unique<detail::DwmWindowImpl>(size, std::move(title), style);
+    } else if constexpr (config::BACKEND == config::GuiBackend::WAYLAND) {
+        m_impl = std::make_unique<detail::AppImplWayland>(size, std::move(title), style);
     }
 }
 

@@ -14,9 +14,9 @@ constexpr std::array<T, N - 1> arr2img(std::array<T, N> in_arr) {
 } // namespace
 
 [[maybe_unused]]
-constinit const std::array<core::Pixel, 92UL * 96UL> icon_argb8888 =
+const std::array<core::Pixel, 92UL * 96UL> icon_argb8888 =
     std::bit_cast<std::array<core::Pixel, 92UL * 96UL>>(arr2img(cottage_image));
 [[maybe_unused]]
-constinit const std::array<core::Pixel, 400UL * 400UL> img_icon =
+const std::array<core::Pixel, 400UL * 400UL> img_icon =
     std::bit_cast<std::array<core::Pixel, 400UL * 400UL>>(arr2img(pixel_data));
 } // namespace resources

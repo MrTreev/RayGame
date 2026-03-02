@@ -29,7 +29,7 @@ void PngFile::content(std::string& stuff) const {
             const uint8_t a_val    = m_data[row_off + col_off + 3U];
             // NOLINTEND(*-pointer-arithmetic)
             stuff                 += std::format(
-                "core::colour::rgba({:#04x},{:#04x},{:#04x},{:#04x}), ",
+                "core::colour::rgba({:#04x},{:#04x},{:#04x},{:#04x}),",
                 r_val,
                 g_val,
                 b_val,

@@ -35,3 +35,6 @@ set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 add_compile_options(-Wno-unused-command-line-argument)
 add_compile_options(-stdlib=libc++)
 add_link_options(-stdlib=libc++)
+
+find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
+set(CLANG_TIDY_COMMAND "${CLANG_TIDY_EXE}")
