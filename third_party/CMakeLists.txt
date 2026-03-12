@@ -1,21 +1,9 @@
 FetchContent_Declare(
-    zpp_bits
-    GIT_REPOSITORY https://github.com/eyalz800/zpp_bits.git
-    GIT_TAG d45e5b9f5706248a050c013e696144a0644aa42c
-)
-FetchContent_Declare(
     stb
     GIT_REPOSITORY https://github.com/nothings/stb.git
     GIT_TAG f1c79c02822848a9bed4315b12c8c8f3761e1296
 )
-FetchContent_MakeAvailable(zpp_bits)
 FetchContent_MakeAvailable(stb)
-
-add_library(RayGameExternalZppBits INTERFACE)
-target_include_directories(
-    RayGameExternalZppBits INTERFACE $<BUILD_INTERFACE:${zpp_bits_SOURCE_DIR}> $<INSTALL_INTERFACE:include/zpp_bits>
-)
-add_library(RayGame::External::ZppBits ALIAS RayGameExternalZppBits)
 
 function(stb_lib _target)
     set(options)
@@ -37,8 +25,6 @@ function(stb_lib _target)
     set_target_properties(
         RayGameExternalStb${_target}
         PROPERTIES C_VISIBILITY_PRESET hidden
-                   C_STANDARD 23
-                   C_STANDARD_REQUIRED YES
                    LINKER_LANGUAGE C
                    VISIBILITY_INLINES_HIDDEN YES
     )
@@ -52,18 +38,18 @@ function(stb_lib _target)
     add_library(RayGame::External::STB::${_target} ALIAS RayGameExternalStb${_target})
 endfunction()
 
-stb_lib(CLexer IMPLDEF STB_C_LEXER_IMPLEMENTATION FNAME stb_c_lexer)
-stb_lib(Include IMPLDEF STB_INCLUDE_IMPLEMENTATION FNAME stb_include)
-stb_lib(LeakCheck IMPLDEF STB_LEAKCHECK_IMPLEMENTATION FNAME stb_leakcheck)
-stb_lib(Sprintf IMPLDEF STB_SPRINTF_IMPLEMENTATION FNAME stb_sprintf)
+# stb_lib(CLexer IMPLDEF STB_C_LEXER_IMPLEMENTATION FNAME stb_c_lexer)
+# stb_lib(Include IMPLDEF STB_INCLUDE_IMPLEMENTATION FNAME stb_include)
+# stb_lib(LeakCheck IMPLDEF STB_LEAKCHECK_IMPLEMENTATION FNAME stb_leakcheck)
+# stb_lib(Sprintf IMPLDEF STB_SPRINTF_IMPLEMENTATION FNAME stb_sprintf)
 
-stb_lib(HexWave IMPLDEF STB_HEXWAVE_IMPLEMENTATION FNAME stb_hexwave)
-stb_lib(Perlin IMPLDEF STB_PERLIN_IMPLEMENTATION FNAME stb_perlin)
-stb_lib(RectPack IMPLDEF STB_RECT_PACK_IMPLEMENTATION FNAME stb_rect_pack)
-stb_lib(TrueType IMPLDEF STB_TRUETYPE_IMPLEMENTATION FNAME stb_truetype)
+# stb_lib(HexWave IMPLDEF STB_HEXWAVE_IMPLEMENTATION FNAME stb_hexwave)
+# stb_lib(Perlin IMPLDEF STB_PERLIN_IMPLEMENTATION FNAME stb_perlin)
+# stb_lib(RectPack IMPLDEF STB_RECT_PACK_IMPLEMENTATION FNAME stb_rect_pack)
+# stb_lib(TrueType IMPLDEF STB_TRUETYPE_IMPLEMENTATION FNAME stb_truetype)
 
 stb_lib(Image IMPLDEF STB_IMAGE_IMPLEMENTATION FNAME stb_image)
-stb_lib(ImageResize IMPLDEF STB_IMAGE_RESIZE_IMPLEMENTATION FNAME stb_image_resize2)
-stb_lib(ImageWrite IMPLDEF STB_IMAGE_WRITE_IMPLEMENTATION FNAME stb_image_write)
+# stb_lib(ImageResize IMPLDEF STB_IMAGE_RESIZE_IMPLEMENTATION FNAME stb_image_resize2)
+# stb_lib(ImageWrite IMPLDEF STB_IMAGE_WRITE_IMPLEMENTATION FNAME stb_image_write)
 
-stb_lib(EasyFont FNAME stb_easy_font)
+# stb_lib(EasyFont FNAME stb_easy_font)

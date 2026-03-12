@@ -109,7 +109,6 @@ raygame_lib(
     SRCS serialisation/serialisation.cpp
     DEPS RayGame::Core::Base
 )
-target_link_libraries(RayGameCoreSerialisation PUBLIC RayGame::External::ZppBits)
 add_library(RayGame::Core::Serialisation ALIAS RayGameCoreSerialisation)
 
 add_library(RayGameCore)
@@ -117,5 +116,4 @@ target_link_libraries(
     RayGameCore PUBLIC RayGame::Core::Base RayGame::Core::Io RayGame::Core::Math RayGame::Core::Application
                        RayGame::Core::Serialisation
 )
-target_link_libraries(RayGameCore PUBLIC RayGame::External::ZppBits)
 add_library(RayGame::Core ALIAS RayGameCore)

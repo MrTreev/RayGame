@@ -11,7 +11,7 @@ void setBuildStatus(String message, String state) {
 pipeline {
     agent any
     parameters {
-        string(name: 'TOOLCHAIN', defaultValue: 'linux-clang-libcxx', description: 'CMake toolchain to use')
+        choice(name: 'TOOLCHAIN', choices: ['linux-clang-libcxx', 'linux-gcc-libstdcxx'], description: 'CMake toolchain to use')
         choice(name: 'BUILD_TYPE', choices: ['Debug', 'Release', 'RelWithDebInfo', 'MinSizeRel'], description: 'Build type')
         choice(name: 'LOG_LEVEL', choices: ['TRACE', 'DEBUG', 'INFO', 'NOTE', 'PROGRESS', 'WARNING', 'ERROR', 'FATAL'], description: 'Logging Level')
         choice(name: 'SOURCE_LOCATION', choices: ['FULL', 'BASE', 'NONE'], description: 'Source location level in logs')
@@ -26,6 +26,7 @@ pipeline {
                         -S . \\
                         -B build \\
                         -G Ninja \\
+                        --fresh \\
                         --toolchain cmake/presets/${TOOLCHAIN}.cmake \\
                         -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \\
                         -DRAYGAME_ENABLE_COMPILE_COMMANDS=OFF \\
@@ -42,7 +43,7 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh('cmake --build build')
+                sh('cmake --build build --clean-first')
             }
         }
         stage('Test') {

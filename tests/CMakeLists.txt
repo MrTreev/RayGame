@@ -9,7 +9,6 @@ raygame_lib(
     SRCS
     raytest/raytest.cpp
     raytest/main.cpp
-    NO_INCS
 )
 target_include_directories(
     RayGameRayTest PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> $<INSTALL_INTERFACE:include/raytest>
