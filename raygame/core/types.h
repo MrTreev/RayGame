@@ -56,39 +56,7 @@ using dis_t = RAYGAME_DISTANCE_TYPE;
 static_assert(std::is_unsigned_v<dis_t>);
 
 namespace debug {
-enum class SourceLoc : uint8_t {
-    NONE = 0,
-    FULL,
-    BASE,
-};
-#if defined(RAYGAME_SOURCE_LOCATION_FULL)
-constexpr SourceLoc sloc_type = SourceLoc::FULL;
-#elif defined(RAYGAME_SOURCE_LOCATION_BASE)
-constexpr SourceLoc sloc_type = SourceLoc::BASE;
-#elif defined(RAYGAME_SOURCE_LOCATION_NONE)
-constexpr SourceLoc sloc_type = SourceLoc::NONE;
-#else
-#    warning "No source location macro defined, disabling"
-constexpr SourceLoc sloc_type = SourceLoc::BASE;
-#endif
-
-constexpr std::string location_message(std::source_location loc) {
-    if constexpr (debug::sloc_type == SourceLoc::NONE) {
-        return {};
-    }
-    constexpr std::string_view search_str = []() {
-        if constexpr (debug::sloc_type == SourceLoc::FULL) {
-            return "/raygame/";
-        } else {
-            return "/";
-        }
-    }();
-    std::string_view shortloc{loc.file_name()};
-    shortloc.remove_prefix(
-        std::string_view(loc.file_name()).rfind(search_str) + search_str.length()
-    );
-    return std::format("{}:{}", shortloc, loc.line());
-}
+std::string location_message(std::source_location loc) ;
 
 template<typename T>
 constexpr std::string type_name() {

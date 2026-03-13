@@ -11,6 +11,26 @@
 
 namespace {
 
+#if defined(RAYGAME_LOG_TRACE)
+#    define RAYGAME_LOG_LEVEL TRACE
+#elif defined(RAYGAME_LOG_DEBUG)
+#    define RAYGAME_LOG_LEVEL DEBUG
+#elif defined(RAYGAME_LOG_INFO)
+#    define RAYGAME_LOG_LEVEL INFO
+#elif defined(RAYGAME_LOG_WARNING)
+#    define RAYGAME_LOG_LEVEL WARNING
+#elif defined(RAYGAME_LOG_ERROR)
+#    define RAYGAME_LOG_LEVEL ERROR
+#elif defined(RAYGAME_LOG_FATAL)
+#    define RAYGAME_LOG_LEVEL FATAL
+#else
+#    warning "No logging level set for RAYGAME, using NOTE"
+constexpr Level logging_level = Level::NOTE;
+#endif
+
+//! Current logging level
+constexpr core::log::Level logging_level = core::log::Level::RAYGAME_LOG_LEVEL;
+
 constexpr std::string to_string(core::log::Level level) {
     switch (level) {
     case core::log::Level::TRACE:   return "TRACE";
@@ -45,23 +65,19 @@ void core::log::detail::logger(
     std::source_location loc
 ) {
     if (logging_level <= level) {
-        if constexpr (core::debug::sloc_type == core::debug::SourceLoc::NONE) {
-            std::println(
-                std::cerr,
-                "{:%T} [{}] - {}",
-                std::chrono::system_clock::now(),
-                to_string(level),
-                string::colourise(level_colour(level), text)
-            );
-        } else {
-            std::println(
-                std::cerr,
-                "{:%T} [{}] {} - {}",
-                std::chrono::system_clock::now(),
-                to_string(level),
-                core::debug::location_message(loc),
-                string::colourise(level_colour(level), text)
-            );
-        }
+        std::println(
+            std::cerr,
+            "{:%T} [{}]{} - {}",
+            std::chrono::system_clock::now(),
+            to_string(level),
+            [loc] {
+            const auto locmsg{core::debug::location_message(loc)};
+            if (locmsg.empty()) {
+                return std::string();
+            }
+            return " " + locmsg;
+        }(),
+            string::colourise(level_colour(level), text)
+        );
     }
 }

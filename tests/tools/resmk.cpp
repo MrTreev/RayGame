@@ -1,7 +1,8 @@
 #include "raygame/core/io/file.h"
+#include "raygame/core/types.h"
 #include "raytest/raytest.h"
 #include <filesystem>
-#include <sys/wait.h>
+#include <source_location>
 #include <unistd.h>
 
 #if !defined(RESMK)
@@ -37,14 +38,19 @@ RT_TEST(ResMK, stuff) {
 
     RT_SUBCASE("png data") {
         std::filesystem::create_directory(resmk_file);
+
         const std::string fname = []() {
-#if defined(RAYGAME_SOURCE_LOCATION_FULL)
-            return "pngtest-full";
-#elif defined(RAYGAME_SOURCE_LOCATION_BASE)
-            return "pngtest-base";
-#elif defined(RAYGAME_SOURCE_LOCATION_NONE)
+            const auto        cur{std::source_location::current()};
+            const std::string fna{std::format("resmk.cpp:{}", cur.line())};
+            const auto        msg = core::debug::location_message(cur);
+            if (msg == fna) {
+                return "pngtest-base";
+            }
+            if (msg == "tests/tools/" + fna) {
+                return "pngtest-full";
+            }
+            RT_CHECK_TRUE(msg.empty());
             return "pngtest-none";
-#endif
         }();
         const std::filesystem::path pngtest_png{resmk_data / "pngtest.png"};
         const std::filesystem::path desired_src{resmk_data / (fname + ".cpp")};

@@ -3,23 +3,6 @@
 #include <source_location>
 #include <string_view>
 
-#if defined(RAYGAME_LOG_TRACE)
-#    define RAYGAME_LOG_LEVEL TRACE
-#elif defined(RAYGAME_LOG_DEBUG)
-#    define RAYGAME_LOG_LEVEL DEBUG
-#elif defined(RAYGAME_LOG_INFO)
-#    define RAYGAME_LOG_LEVEL INFO
-#elif defined(RAYGAME_LOG_WARNING)
-#    define RAYGAME_LOG_LEVEL WARNING
-#elif defined(RAYGAME_LOG_ERROR)
-#    define RAYGAME_LOG_LEVEL ERROR
-#elif defined(RAYGAME_LOG_FATAL)
-#    define RAYGAME_LOG_LEVEL FATAL
-#else
-#    warning "No logging level set for RAYGAME, using NOTE"
-constexpr Level logging_level = Level::NOTE;
-#endif
-
 namespace core::log {
 //! Logging level
 enum class Level : uint8_t {
@@ -31,9 +14,6 @@ enum class Level : uint8_t {
     ERROR   = 90,
     FATAL   = 255,
 };
-
-//! Current logging level
-constexpr Level logging_level = Level::RAYGAME_LOG_LEVEL;
 
 //! Logging level to string converter
 namespace detail {

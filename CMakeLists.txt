@@ -138,11 +138,6 @@ if(RAYGAME_ENABLE_COVERAGE)
     )
 endif()
 
-function(raygame_add_defs _target)
-    target_compile_definitions(${_target} PUBLIC "RAYGAME_LOG_${RAYGAME_LOG_LEVEL}")
-    target_compile_definitions(${_target} PUBLIC "RAYGAME_SOURCE_LOCATION_${RAYGAME_SOURCE_LOCATION}")
-endfunction()
-
 function(raygame_bin _target)
     set(options NO_DEFS NO_ARGS)
     set(oneValueArgs)
@@ -158,9 +153,6 @@ function(raygame_bin _target)
                    CXX_VISIBILITY_PRESET hidden
                    VISIBILITY_INLINES_HIDDEN YES
     )
-    if($<NOT:${RAYGAME_TESTARGS_NO_DEFS}>)
-        raygame_add_defs(${_target})
-    endif()
     set_target_properties(${_target} PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_COMMAND}")
 endfunction()
 
@@ -182,7 +174,6 @@ function(raygame_lib _target)
                    CXX_VISIBILITY_PRESET hidden
                    VISIBILITY_INLINES_HIDDEN YES
     )
-    raygame_add_defs(${_target})
     set_target_properties(${_target} PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_COMMAND}")
 endfunction()
 
@@ -279,7 +270,6 @@ function(raygame_test _target)
                    CXX_VISIBILITY_PRESET hidden
                    VISIBILITY_INLINES_HIDDEN YES
     )
-    raygame_add_defs(${_TARGET})
     target_link_libraries(${_TARGET} PUBLIC GTest::gtest)
     gtest_discover_tests(${_TARGET})
     if($<NOT:${RAYGAME_TESTARGS_NO_MAIN}>)

@@ -19,6 +19,8 @@ raygame_lib(
          matrix.cpp
          types.cpp
 )
+target_compile_definitions(RayGameCoreBase PRIVATE RAYGAME_LOG_${RAYGAME_LOG_LEVEL})
+target_compile_definitions(RayGameCoreBase PRIVATE RAYGAME_SOURCE_LOCATION_${RAYGAME_SOURCE_LOCATION})
 add_library(RayGame::Core::Base ALIAS RayGameCoreBase)
 
 raygame_lib(
