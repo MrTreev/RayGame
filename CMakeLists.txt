@@ -293,24 +293,34 @@ function(raygame_resource _target)
     set(oneValueArgs NAME)
     set(multiValueArgs RESOURCES)
     cmake_parse_arguments(RAYGAME_TESTARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-    set(${RAYGAME_TESTARGS_NAME}_header "${RAYGAME_TESTARGS_NAME}.h")
-    set(${RAYGAME_TESTARGS_NAME}_source "${RAYGAME_TESTARGS_NAME}.cpp")
+    set(gen_dir "${PROJECT_BINARY_DIR}/generated")
+    set(${RAYGAME_TESTARGS_NAME}_header "${gen_dir}/${RAYGAME_TESTARGS_NAME}.h")
+    set(${RAYGAME_TESTARGS_NAME}_source "${gen_dir}/${RAYGAME_TESTARGS_NAME}.cpp")
     set_source_files_properties(${${RAYGAME_TESTARGS_NAME}_source} GENERATED)
     set_source_files_properties(${${RAYGAME_TESTARGS_NAME}_header} GENERATED)
     set_property(SOURCE ${${RAYGAME_TESTARGS_NAME}_header} ${${RAYGAME_TESTARGS_NAME}_source} PROPERTY SKIP_AUTOMOC ON)
+    get_target_property(RAYGAME_RESMK_DIR
+        RayGame::Tools::ResMk
+        BINARY_DIR
+    )
+    file(REAL_PATH ${RAYGAME_TESTARGS_RESOURCES} ${RAYGAME_TESTARGS_NAME}_data)
     add_custom_command(
         OUTPUT ${${RAYGAME_TESTARGS_NAME}_header} ${${RAYGAME_TESTARGS_NAME}_source}
-        COMMAND ${RAYGAME_RESMK_EXE} ${${RAYGAME_TESTARGS_NAME}_header} ${RAYGAME_TESTARGS_RESOURCES}
+        COMMAND ${RAYGAME_RESMK_DIR}/resmk ${${RAYGAME_TESTARGS_NAME}_header} ${${RAYGAME_TESTARGS_NAME}_data}
         DEPENDS RayGame::Tools::ResMk
         CODEGEN
         VERBATIM
     )
-    add_custom_target(${${RAYGAME_TESTARGS_NAME}_header}_dep DEPENDS ${${RAYGAME_TESTARGS_NAME}_header})
-
+    add_custom_target(${RAYGAME_TESTARGS_NAME}_dep
+        DEPENDS
+            ${${RAYGAME_TESTARGS_NAME}_header}
+            ${${RAYGAME_TESTARGS_NAME}_source}
+    )
     add_library(${_target})
     target_sources(${_target} PUBLIC ${${RAYGAME_TESTARGS_NAME}_header})
     target_sources(${_target} PRIVATE ${${RAYGAME_TESTARGS_NAME}_source})
-    add_dependencies(${_target} ${${RAYGAME_TESTARGS_NAME}_header}_dep)
+    add_dependencies(${_target} ${RAYGAME_TESTARGS_NAME}_dep)
+    target_include_directories(${_target} PUBLIC $<BUILD_INTERFACE:${gen_dir}/../> $<INSTALL_INTERFACE:include/generated>)
     target_include_directories(${_target} PUBLIC $<BUILD_INTERFACE:${RayGame_SOURCE_DIR}> $<INSTALL_INTERFACE:include/raygame>)
 endfunction()
 
