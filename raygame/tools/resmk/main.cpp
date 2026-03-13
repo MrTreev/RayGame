@@ -44,7 +44,7 @@ struct Config {
 };
 
 // NOLINTNEXTLINE(*-c-arrays)
-Config handle_args(const int argc, char* const argv[]) {
+Config handle_args(const int argc, const char* const argv[]) {
     Config config;
     for (int argn{1}; argn < argc; argn++) {
         const std::string arg{argv[argn]}; //NOLINT(*-pointer-arithmetic)
@@ -72,31 +72,34 @@ Config handle_args(const int argc, char* const argv[]) {
 }
 } // namespace
 
-// NOLINTNEXTLINE(*-exception-escape)
 int main(int argc, char* argv[]) {
-    const Config config = handle_args(argc, argv);
-    if (config.m_header.string().empty()) {
+    try {
+        const Config config = handle_args(argc, argv);
+        if (config.m_header.string().empty()) {
+            throw std::runtime_error("Empty header string");
+        }
+        core::io::File hdrfile{config.m_header, core::io::File::mode::write};
+        hdrfile.gencode("#include \"raygame/core/drawing/image.h\"");
+        hdrfile.writeln("");
+        if (!config.m_outer_namespace.empty()) {
+            hdrfile.gencode(std::format("namespace {} {{", config.m_outer_namespace));
+        }
+        hdrfile.gencode(std::format("namespace {} {{", config.m_ns_name));
+        for (const auto& resource: config.m_resources) {
+            hdrfile.gencode(resource->declaration());
+            std::string fname         = hdrfile.path();
+            fname[fname.length() - 1] = 'c';
+            fname.append("pp");
+            core::io::File srcfile{fname, "w"};
+            srcfile.gencode("#include \"raygame/core/drawing/image.h\"");
+            srcfile.gencode(std::format("#include \"{}\"", config.m_header.filename().string()));
+            srcfile.gencode(resource->definition(config.m_ns_name + "::"));
+        }
+        hdrfile.gencode(std::format("}} // namespace {}", config.m_ns_name));
+        if (!config.m_outer_namespace.empty()) {
+            hdrfile.gencode(std::format("}} // namespace {}", config.m_outer_namespace));
+        }
+    } catch (...) {
         return 1;
-    }
-    core::io::File hdrfile{config.m_header, core::io::File::mode::write};
-    hdrfile.gencode("#include \"raygame/core/drawing/image.h\"");
-    hdrfile.writeln("");
-    if (!config.m_outer_namespace.empty()) {
-        hdrfile.gencode(std::format("namespace {} {{", config.m_outer_namespace));
-    }
-    hdrfile.gencode(std::format("namespace {} {{", config.m_ns_name));
-    for (const auto& resource: config.m_resources) {
-        hdrfile.gencode(resource->declaration());
-        std::string fname         = hdrfile.path();
-        fname[fname.length() - 1] = 'c';
-        fname.append("pp");
-        core::io::File srcfile{fname, "w"};
-        srcfile.gencode("#include \"raygame/core/drawing/image.h\"");
-        srcfile.gencode(std::format("#include \"{}\"", config.m_header.filename().string()));
-        srcfile.gencode(resource->definition(config.m_ns_name + "::"));
-    }
-    hdrfile.gencode(std::format("}} // namespace {}", config.m_ns_name));
-    if (!config.m_outer_namespace.empty()) {
-        hdrfile.gencode(std::format("}} // namespace {}", config.m_outer_namespace));
     }
 }

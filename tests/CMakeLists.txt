@@ -13,7 +13,7 @@ raygame_lib(
 target_include_directories(
     RayGameRayTest PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> $<INSTALL_INTERFACE:include/raytest>
 )
-raygame_link_testlib(RayGameRayTest)
+target_link_libraries(RayGameRayTest PUBLIC GTest::gtest)
 
 add_library(RayGame::RayTest ALIAS RayGameRayTest)
 add_subdirectory(core)

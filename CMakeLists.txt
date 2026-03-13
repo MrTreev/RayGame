@@ -12,7 +12,26 @@ project(
 cmake_policy(SET CMP0155 OLD)
 set(RAYGAME_PATH_SRC ${PROJECT_SOURCE_DIR})
 list(APPEND CMAKE_MODULE_PATH ${RAYGAME_PATH_SRC}/cmake)
-include(RayGameSetup)
+cmake_policy(SET CMP0063 NEW)
+cmake_policy(SET CMP0128 NEW)
+
+function(raygame_assure_out_of_source_builds)
+    get_filename_component(srcdir "${CMAKE_SOURCE_DIR}" REALPATH)
+    get_filename_component(bindir "${CMAKE_BINARY_DIR}" REALPATH)
+    if("${srcdir}" STREQUAL "${bindir}")
+        message("######################################################")
+        message("Warning: in-source builds are disabled")
+        message("Please create a separate build directory and run cmake from there")
+        message("######################################################")
+        message(FATAL_ERROR "Quitting configuration")
+    endif()
+endfunction()
+raygame_assure_out_of_source_builds()
+
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "RelWithDebInfo" "MinSizeRel")
+
 
 ################################################################################
 # CMake config vars
@@ -98,6 +117,7 @@ endif()
 # Main
 ################################################################################
 include(GenerateExportHeader)
+include(FetchContent)
 
 if(RAYGAME_ENABLE_COVERAGE)
     # set compiler flags
@@ -118,14 +138,192 @@ if(RAYGAME_ENABLE_COVERAGE)
     )
 endif()
 
-include(RayGameBin)
-include(RayGameLib)
-include(RayGameWayland)
-include(RayGameTest)
-raygame_enable_testing()
+function(raygame_add_defs _target)
+    target_compile_definitions(${_target} PUBLIC "RAYGAME_LOG_${RAYGAME_LOG_LEVEL}")
+    target_compile_definitions(${_target} PUBLIC "RAYGAME_SOURCE_LOCATION_${RAYGAME_SOURCE_LOCATION}")
+endfunction()
+
+function(raygame_bin _target)
+    set(options NO_DEFS NO_ARGS)
+    set(oneValueArgs)
+    set(multiValueArgs SRCS DEPS DEFS)
+    cmake_parse_arguments(RAYGAME_TESTARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+    add_executable(${_target})
+    target_sources(${_target} PRIVATE ${RAYGAME_TESTARGS_SRCS})
+    target_link_libraries(${_target} PRIVATE ${RAYGAME_TESTARGS_DEPS})
+    target_compile_definitions(${_target} PRIVATE ${RAYGAME_TESTARGS_DEFS})
+    set_target_properties(
+        ${_target}
+        PROPERTIES VERSION ${RayGame_VERSION}
+                   CXX_VISIBILITY_PRESET hidden
+                   VISIBILITY_INLINES_HIDDEN YES
+    )
+    if($<NOT:${RAYGAME_TESTARGS_NO_DEFS}>)
+        raygame_add_defs(${_target})
+    endif()
+    set_target_properties(${_target} PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_COMMAND}")
+endfunction()
+
+function(raygame_lib _target)
+    set(options)
+    set(oneValueArgs)
+    set(multiValueArgs HDRS SRCS DEPS DEFS)
+    cmake_parse_arguments(RAYGAME_TESTARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+    add_library(${_target})
+    target_include_directories(${_target} PUBLIC $<BUILD_INTERFACE:${RayGame_SOURCE_DIR}> $<INSTALL_INTERFACE:include/raygame>)
+    target_sources(${_target} PUBLIC ${RAYGAME_TESTARGS_HDRS})
+    target_sources(${_target} PRIVATE ${RAYGAME_TESTARGS_SRCS})
+    target_link_libraries(${_target} PRIVATE ${RAYGAME_TESTARGS_DEPS})
+    target_compile_definitions(${_target} PUBLIC ${RAYGAME_TESTARGS_DEFS})
+    set_target_properties(
+        ${_target}
+        PROPERTIES VERSION ${RayGame_VERSION}
+                   LINKER_LANGUAGE CXX
+                   CXX_VISIBILITY_PRESET hidden
+                   VISIBILITY_INLINES_HIDDEN YES
+    )
+    raygame_add_defs(${_target})
+    set_target_properties(${_target} PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_COMMAND}")
+endfunction()
+
+find_package(PkgConfig)
+
+function(raygame_add_wayland_protocols _full_target)
+    set(options)
+    set(oneValueArgs)
+    set(multiValueArgs PROTOCOLS)
+    cmake_parse_arguments(RAYGAME_ARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+    pkg_check_modules(RAYGAME_WL REQUIRED wayland-client)
+    if(NOT RAYGAME_WL_FOUND)
+        message(SEND_ERROR "wayland-client module could not be found")
+    endif()
+    string(REPLACE ":" "" _target ${_full_target})
+
+    find_program(WAYLAND_SCANNER_EXECUTABLE NAMES wayland-scanner)
+    set(${_target}_proto_dir "${CMAKE_CURRENT_BINARY_DIR}/wayland")
+
+    add_library(${_target} SHARED)
+    set_target_properties(
+        ${_target}
+        PROPERTIES COMPILER_WARNING_AS_ERROR OFF
+                   LANGUAGE C
+                   C_EXTENSIONS OFF
+                   LINKER_LANGUAGE C
+                   SYSTEM ON
+    )
+    target_compile_options(${_target} PRIVATE -w)
+
+    foreach(protocol IN LISTS RAYGAME_ARGS_PROTOCOLS)
+        set(${protocol}_header "${${_target}_proto_dir}/${protocol}-client-protocol.h")
+        set(${protocol}_source "${${_target}_proto_dir}/${protocol}-protocol.c")
+        set(${protocol}_xml "${RAYGAME_PATH_SRC}/third_party/wayland/${protocol}.xml")
+        set_source_files_properties(${${protocol}_source} GENERATED)
+        set_source_files_properties(${${protocol}_header} GENERATED)
+        set_property(SOURCE ${${protocol}_header} ${${protocol}_source} PROPERTY SKIP_AUTOMOC ON)
+        add_custom_command(
+            OUTPUT "${${protocol}_source}"
+            COMMAND ${WAYLAND_SCANNER_EXECUTABLE} public-code ${${protocol}_xml} ${${protocol}_source}
+            DEPENDS ${${protocol}_xml}
+            VERBATIM
+        )
+        add_custom_command(
+            OUTPUT "${${protocol}_header}"
+            COMMAND ${WAYLAND_SCANNER_EXECUTABLE} client-header ${${protocol}_xml} ${${protocol}_header}
+            DEPENDS ${${protocol}_xml}
+            VERBATIM
+        )
+        target_sources(
+            ${_target}
+            PUBLIC ${${protocol}_header}
+            PRIVATE ${${protocol}_source}
+        )
+    endforeach()
+
+    target_include_directories(
+        ${_target}
+        PUBLIC ${${_target}_proto_dir}
+        PRIVATE ${RAYGAME_WL_INCLUDE_DIRS}
+    )
+    target_link_libraries(${_target} PUBLIC ${RAYGAME_WL_LINK_LIBRARIES})
+    target_link_options(${_target} PRIVATE ${RAYGAME_WL_LDFLAGS})
+    target_compile_options(${_target} PRIVATE ${RAYGAME_WL_CFLAGS})
+    target_include_directories(${_target} PUBLIC ${${RAYGAME_ARGS_TARGET}_proto_dir})
+endfunction()
+
+if(RAYGAME_BUILD_TESTS)
+    enable_testing()
+    FetchContent_Declare(
+        googletest URL https://github.com/google/googletest/releases/download/v1.16.0/googletest-1.16.0.tar.gz
+    )
+    # For Windows: Prevent overriding the parent project's compiler/linker settings
+    set(gtest_force_shared_crt
+        ON
+        CACHE BOOL "" FORCE
+    )
+    FetchContent_MakeAvailable(googletest)
+    include(CTest)
+    include(GoogleTest)
+endif()
+
+function(raygame_test _target)
+    set(options NO_MAIN NO_TESTLIB)
+    set(oneValueArgs)
+    set(multiValueArgs SRCS DEPS DEFS)
+    cmake_parse_arguments(RAYGAME_TESTARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+    set(_TARGET "RayGameTest${_target}")
+    add_executable(${_TARGET})
+    target_include_directories(${_TARGET} PUBLIC ${RayGame_SOURCE_DIR})
+    set_target_properties(
+        ${_TARGET}
+        PROPERTIES VERSION ${RayGame_VERSION}
+                   CXX_VISIBILITY_PRESET hidden
+                   VISIBILITY_INLINES_HIDDEN YES
+    )
+    raygame_add_defs(${_TARGET})
+    target_link_libraries(${_TARGET} PUBLIC GTest::gtest)
+    gtest_discover_tests(${_TARGET})
+    if($<NOT:${RAYGAME_TESTARGS_NO_MAIN}>)
+        target_compile_definitions(${_TARGET} PUBLIC RAYTEST_NO_MAIN)
+    endif()
+    if($<NOT:${RAYGAME_TESTARGS_NO_TESTLIB}>)
+        target_link_libraries(${_TARGET} PUBLIC GTest::gtest)
+    endif()
+    target_sources(${_TARGET} PUBLIC ${RAYGAME_TESTARGS_SRCS})
+    target_compile_definitions(${_TARGET} PUBLIC RAYGAME_RAYTEST)
+    target_compile_definitions(${_TARGET} PUBLIC ${RAYGAME_TESTARGS_DEFS})
+    target_link_libraries(${_TARGET} PUBLIC RayGame::RayTest)
+    target_link_libraries(${_TARGET} PUBLIC ${RAYGAME_TESTARGS_DEPS})
+endfunction()
 
 add_subdirectory(third_party)
 add_subdirectory(raygame)
+
+function(raygame_resource _target)
+    set(options)
+    set(oneValueArgs NAME)
+    set(multiValueArgs RESOURCES)
+    cmake_parse_arguments(RAYGAME_TESTARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+    set(${RAYGAME_TESTARGS_NAME}_header "${RAYGAME_TESTARGS_NAME}.h")
+    set(${RAYGAME_TESTARGS_NAME}_source "${RAYGAME_TESTARGS_NAME}.cpp")
+    set_source_files_properties(${${RAYGAME_TESTARGS_NAME}_source} GENERATED)
+    set_source_files_properties(${${RAYGAME_TESTARGS_NAME}_header} GENERATED)
+    set_property(SOURCE ${${RAYGAME_TESTARGS_NAME}_header} ${${RAYGAME_TESTARGS_NAME}_source} PROPERTY SKIP_AUTOMOC ON)
+    add_custom_command(
+        OUTPUT ${${RAYGAME_TESTARGS_NAME}_header} ${${RAYGAME_TESTARGS_NAME}_source}
+        COMMAND ${RAYGAME_RESMK_EXE} ${${RAYGAME_TESTARGS_NAME}_header} ${RAYGAME_TESTARGS_RESOURCES}
+        DEPENDS RayGame::Tools::ResMk
+        CODEGEN
+        VERBATIM
+    )
+    add_custom_target(${${RAYGAME_TESTARGS_NAME}_header}_dep DEPENDS ${${RAYGAME_TESTARGS_NAME}_header})
+
+    add_library(${_target})
+    target_sources(${_target} PUBLIC ${${RAYGAME_TESTARGS_NAME}_header})
+    target_sources(${_target} PRIVATE ${${RAYGAME_TESTARGS_NAME}_source})
+    add_dependencies(${_target} ${${RAYGAME_TESTARGS_NAME}_header}_dep)
+    target_include_directories(${_target} PUBLIC $<BUILD_INTERFACE:${RayGame_SOURCE_DIR}> $<INSTALL_INTERFACE:include/raygame>)
+endfunction()
+
 add_subdirectory(tests)
 add_subdirectory(docs)
 

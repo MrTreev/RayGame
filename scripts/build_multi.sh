@@ -55,7 +55,7 @@ case "${WHICH_BUILD_LIST}" in
 esac
 
 if [ "${WHICH_BUILD_LIST}" != "ALL" ]; then
-    for toolchain in cmake/presets/*.cmake; do
+    for toolchain in toolchain/presets/*.cmake; do
         for build_type in ${BUILD_LIST}; do
             tcname="${toolchain##*/}"
             fullname="${tcname%%.cmake}-${build_type}"
@@ -75,7 +75,7 @@ else
     for math_random_full in 'ON' 'OFF'; do
     for log_level in 'TRACE' 'DEBUG' 'INFO' 'WARNING' 'ERROR' 'FATAL'; do
     for source_location in 'FULL' 'BASE' 'NONE'; do
-    for toolchain in cmake/presets/*.cmake; do
+    for toolchain in toolchain/presets/*.cmake; do
         for build_type in ${BUILD_LIST}; do
             tcname="${toolchain##*/}"
             fullname="all-${tcname%%.cmake}-${time_frames}-${math_random_full}-${source_location}-${log_level}-${build_type}"

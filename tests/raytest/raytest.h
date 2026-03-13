@@ -4,9 +4,6 @@
 #include <limits>
 #include <vector>
 
-// sort
-#include <gtest/gtest.h> // IWYU pragma: export
-
 #if defined(__clang__)
 #    define RAYTEST_CC_CLANG
 #    define RAYTEST_COMPILER CLANG;
@@ -58,7 +55,16 @@ static_assert(false, "Unknown Compiler");
 // NOLINTEND(*-macro-usage)
 
 RAYTEST_CLANG_SUPPRESS_WARNING_PUSH
+RAYTEST_CLANG_SUPPRESS_WARNING("-Wexit-time-destructors")
 RAYTEST_CLANG_SUPPRESS_WARNING("-Wglobal-constructors")
+RAYTEST_CLANG_SUPPRESS_WARNING("-Wmissing-noreturn")
+RAYTEST_CLANG_SUPPRESS_WARNING("-Wswitch-enum")
+RAYTEST_CLANG_SUPPRESS_WARNING("-Wweak-vtables")
+#if defined(RAYTEST_CC_CLANG)
+#    pragma clang system_header
+#elif defined(RAYTEST_CC_GCC)
+#    pragma GCC system_header
+#endif
 #include <gtest/gtest.h> // IWYU pragma: export
 RAYTEST_CLANG_SUPPRESS_WARNING_POP
 
