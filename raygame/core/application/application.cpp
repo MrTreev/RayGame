@@ -21,7 +21,10 @@ core::detail::AppImpl::~AppImpl() {
     core::log::debug("Destroying Window: {}", m_title);
 };
 
-void core::detail::AppImpl::draw([[maybe_unused]] const drawing::ImageView& image) {
+void core::detail::AppImpl::draw(
+    [[maybe_unused]] const drawing::ImageView& image,
+    [[maybe_unused]] const Vec2<pos_t>&        position
+) {
     condition::unreachable();
 }
 

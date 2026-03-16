@@ -119,7 +119,7 @@ public:
     AppImpl& operator=(AppImpl&&)     = default;
     virtual ~AppImpl();
 
-    virtual void draw(const drawing::ImageView& image);
+    virtual void draw(const drawing::ImageView& image, const Vec2<pos_t>& position);
 
     virtual void restyle(WindowStyle style);
 
@@ -161,7 +161,9 @@ public:
     Application& operator=(Application&&)     = default;
     ~Application()                            = default;
 
-    void draw(const drawing::ImageView& image) { m_impl->draw(image); }
+    void draw(const drawing::ImageView& image, const Vec2<pos_t>& position) {
+        m_impl->draw(image, position);
+    }
 
     void restyle(WindowStyle style) { m_impl->restyle(style); }
 

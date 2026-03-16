@@ -161,17 +161,17 @@ AppImplWayland::~AppImplWayland() {
     wl_surface_destroy(m_wl_surface);
 }
 
-void AppImplWayland::draw(const drawing::ImageView& image) {
+void AppImplWayland::draw(const drawing::ImageView& image, const Vec2<pos_t>& position) {
     constexpr auto clamp = [](const pos_t val) {
         return numeric_cast<dis_t>(std::max(pos_t(0), val));
     };
-    constexpr auto domin = [](const dis_t max, const pos_t val) {
-        return numeric_cast<dis_t>(std::min(numeric_cast<pos_t>(max), val));
+    constexpr auto domin = [](const dis_t max, const dis_t val) {
+        return numeric_cast<dis_t>(std::min(numeric_cast<dis_t>(max), val));
     };
-    const dis_t row_left  = clamp(image.top());
-    const dis_t col_top   = clamp(image.left());
-    const dis_t row_right = domin(height(), image.bottom());
-    const dis_t col_bot   = domin(width(), image.right());
+    const dis_t row_left  = clamp(position.m_x);
+    const dis_t col_top   = clamp(position.m_y);
+    const dis_t row_right = domin(height(), math::safe_add<dis_t>(position.m_x, image.width()));
+    const dis_t col_bot   = domin(width(), math::safe_add<dis_t>(position.m_y, image.height()));
     if (std::cmp_greater(col_top, width()) || std::cmp_greater(row_left, height())) {
         return;
     }
@@ -180,8 +180,8 @@ void AppImplWayland::draw(const drawing::ImageView& image) {
     for (; row < row_right; ++row) {
         col = col_top;
         for (; col < col_bot; ++col) {
-            const auto therow  = math::safe_sub<dis_t>(row, image.pos_y());
-            const auto thecol  = math::safe_sub<dis_t>(col, image.pos_x());
+            const auto therow  = math::safe_sub<dis_t>(row, position.m_x);
+            const auto thecol  = math::safe_sub<dis_t>(col, position.m_y);
             m_pixbuf[row, col] = image[therow, thecol];
         }
     }

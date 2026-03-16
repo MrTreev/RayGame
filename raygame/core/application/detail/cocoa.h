@@ -11,7 +11,7 @@ public:
     CocoaWindowImpl& operator=(CocoaWindowImpl&&)     = default;
     ~CocoaWindowImpl() final;
 
-    void draw(const drawing::ImageView& image) final;
+    void draw(const drawing::ImageView& image, const Vec2<pos_t>& position) final;
 
     void restyle(WindowStyle style) final;
 

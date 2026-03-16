@@ -19,8 +19,10 @@ RAYGAME_CLANG_SUPPRESS_WARNING_POP
 
 core::detail::CocoaWindowImpl::~CocoaWindowImpl() = default;
 
-void core::detail::CocoaWindowImpl::draw(const drawing::ImageView& image) {
-    std::ignore = image;
+void core::detail::CocoaWindowImpl::draw(
+    [[maybe_unused]] const drawing::ImageView& image,
+    [[maybe_unused]] const Vec2<pos_t>&        position
+) {
     condition::unimplemented();
 }
 

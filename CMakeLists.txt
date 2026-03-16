@@ -305,14 +305,7 @@ function(raygame_resource _target)
     )
     set(resource_list)
     foreach(resource IN LISTS RAYGAME_TESTARGS_RESOURCES)
-        find_file(resfile
-            NAMES ${resource}
-            PATHS ${CMAKE_CURRENT_SOURCE_DIR}
-            NO_CACHE
-            REQUIRED
-            NO_DEFAULT_PATH
-        )
-        file(REAL_PATH ${resfile} resfilename)
+        file(REAL_PATH ${resource} resfilename)
         list(APPEND resource_list ${resfilename})
     endforeach()
     add_custom_command(

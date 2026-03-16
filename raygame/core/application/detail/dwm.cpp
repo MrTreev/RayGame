@@ -20,7 +20,10 @@ RAYGAME_CLANG_SUPPRESS_WARNING_POP
 
 core::detail::DwmWindowImpl::~DwmWindowImpl() = default;
 
-void core::detail::DwmWindowImpl::draw([[maybe_unused]] const drawing::ImageView& image) {
+void core::detail::DwmWindowImpl::draw(
+    [[maybe_unused]] const drawing::ImageView& image,
+    [[maybe_unused]] const Vec2<pos_t>&        position
+) {
     condition::unimplemented();
 }
 
