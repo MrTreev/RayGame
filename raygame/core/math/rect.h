@@ -7,53 +7,25 @@
 
 namespace core {
 
-template<typename PositionType, typename DistanceType = PositionType>
+template<typename DistanceType>
 class Rect {
 public:
-    using Pos_t = PositionType;
     using Dis_t = DistanceType;
 
 private:
     Dis_t m_width{};
     Dis_t m_height{};
-    Pos_t m_x{};
-    Pos_t m_y{};
 
 public:
     constexpr Rect() = default;
 
     constexpr explicit Rect(Vec2<Dis_t> dist_vec)
         : m_width(dist_vec.m_x)
-        , m_height(dist_vec.m_y)
-        , m_x(0)
-        , m_y(0) {}
-
-    constexpr Rect(Vec2<Pos_t> pos_vec, Vec2<Dis_t> dist_vec)
-        : m_width(dist_vec.m_x)
-        , m_height(dist_vec.m_y)
-        , m_x(pos_vec.m_x)
-        , m_y(pos_vec.m_y) {}
+        , m_height(dist_vec.m_y) {}
 
     constexpr void zero() {
-        m_x      = 0;
-        m_y      = 0;
         m_width  = 0;
         m_height = 0;
-    }
-
-    [[nodiscard]]
-    constexpr Vec2<Pos_t> pos() const {
-        return {m_x, m_y};
-    }
-
-    [[nodiscard]]
-    constexpr Pos_t pos_x() const {
-        return m_x;
-    }
-
-    [[nodiscard]]
-    constexpr Pos_t pos_y() const {
-        return m_y;
     }
 
     [[nodiscard]]
@@ -71,54 +43,13 @@ public:
         return m_height;
     }
 
-    [[nodiscard]]
-    constexpr Pos_t left() const {
-        return m_x;
-    }
-
-    [[nodiscard]]
-    constexpr Pos_t right() const {
-        return math::safe_add<Pos_t>(m_x, m_width);
-    }
-
-    [[nodiscard]]
-    constexpr Pos_t top() const {
-        return m_y;
-    }
-
-    [[nodiscard]]
-    constexpr Pos_t bottom() const {
-        return math::safe_add<Pos_t>(m_y, m_height);
-    }
-
     constexpr explicit operator std::string() const {
-        return std::format(
-            "Rect(x: {}, y: {}, width: {}, height: {})",
-            m_x,
-            m_y,
-            m_width,
-            m_height
-        );
+        return std::format("Rect(width: {}, height: {})", m_width, m_height);
     }
 
-    template<typename P, typename D>
-    constexpr bool operator==(const Rect<P, D>& other) const {
-        return (
-            std::cmp_equal(m_x, other.m_x) && std::cmp_equal(m_y, other.m_y)
-            && std::cmp_equal(m_width, other.m_width) && std::cmp_equal(m_height, other.m_height)
-        );
-    }
-
-    template<math::MathRule MR = math::MR_DEFAULT>
-    constexpr void pos(auto setx, auto sety) {
-        m_x = core::math::numeric_cast<Pos_t, MR>(setx);
-        m_y = core::math::numeric_cast<Pos_t, MR>(sety);
-    }
-
-    template<typename P, math::MathRule MR = math::MR_DEFAULT>
-    constexpr void pos(Vec2<P> vec) {
-        m_x = core::math::numeric_cast<Pos_t, MR>(vec.m_x);
-        m_y = core::math::numeric_cast<Pos_t, MR>(vec.m_y);
+    template<typename D>
+    constexpr bool operator==(const Rect<D>& other) const {
+        return (std::cmp_equal(m_width, other.m_width) && std::cmp_equal(m_height, other.m_height));
     }
 
     template<math::MathRule MR = math::MR_DEFAULT>
@@ -127,22 +58,10 @@ public:
         m_height = core::math::numeric_cast<Dis_t, MR>(set_height);
     }
 
-    template<typename P, math::MathRule MR = math::MR_DEFAULT>
-    constexpr void size(Vec2<P> vec) {
+    template<typename D, math::MathRule MR = math::MR_DEFAULT>
+    constexpr void size(Vec2<D> vec) {
         m_width  = core::math::numeric_cast<Dis_t, MR>(vec.m_x);
         m_height = core::math::numeric_cast<Dis_t, MR>(vec.m_y);
-    }
-
-    template<typename P, math::MathRule MR = math::MR_DEFAULT>
-    constexpr void translate(Vec2<P> vec) {
-        m_x = core::math::safe_add<Pos_t, MR>(m_x, vec.m_x);
-        m_y = core::math::safe_add<Pos_t, MR>(m_y, vec.m_y);
-    }
-
-    template<math::MathRule MR = math::MR_DEFAULT>
-    constexpr void translate(auto translate_x, auto translate_y) {
-        m_x = core::math::safe_add<Pos_t, MR>(m_x, translate_x);
-        m_y = core::math::safe_add<Pos_t, MR>(m_y, translate_y);
     }
 
     template<typename D, math::MathRule MR = math::MR_DEFAULT>

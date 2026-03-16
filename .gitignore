@@ -1,6 +1,7 @@
 imgui.ini
 compile_commands.json
 .cache
+.idea
 /build/
 /build-multi/
 /bazel-*

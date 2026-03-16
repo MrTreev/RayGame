@@ -1,4 +1,5 @@
 #include "raygame/core/io/file.h"
+#include "raygame/core/logger.h"
 #include "raygame/tools/resmk/resources/png.h"
 #include "raygame/tools/resmk/resources/resource.h"
 #include <algorithm>
@@ -78,6 +79,9 @@ int main(int argc, char* argv[]) {
         if (config.m_header.string().empty()) {
             throw std::runtime_error("Empty header string");
         }
+        if (config.m_resources.empty()) {
+            throw std::runtime_error("No resources given");
+        }
         core::io::File hdrfile{config.m_header, core::io::File::mode::write};
         hdrfile.gencode("#include \"raygame/core/drawing/image.h\"");
         hdrfile.writeln("");
@@ -99,7 +103,11 @@ int main(int argc, char* argv[]) {
         if (!config.m_outer_namespace.empty()) {
             hdrfile.gencode(std::format("}} // namespace {}", config.m_outer_namespace));
         }
+    } catch (const std::runtime_error& err) {
+        core::log::error("ERROR: {}", err.what());
+        return 1;
     } catch (...) {
+        core::log::error("ERROR: Unknown Error");
         return 1;
     }
 }

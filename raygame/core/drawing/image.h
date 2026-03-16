@@ -3,13 +3,13 @@
 #include "raygame/core/drawing/pixel.h"
 #include "raygame/core/math/rect.h"
 #include "raygame/core/math/vector.h"
-#include "raygame/core/matrix.h"
+#include <mdspan>
 
 namespace core::drawing {
 
-class ImageView: private Rect<pos_t, dis_t> {
+class ImageView: private Rect<dis_t> {
     std::mdspan<const Pixel, std::dextents<dis_t, 2>, std::layout_right> m_mdspan;
-    using ImgRect = Rect<pos_t, dis_t>;
+    using ImgRect = Rect<dis_t>;
 
 public:
     template<size_t N>
@@ -23,20 +23,8 @@ public:
         );
     }
 
-    constexpr void move(pos_t posx, pos_t posy) { pos(posx, posy); }
-
-    using ImgRect::pos;
-    using ImgRect::pos_x;
-    using ImgRect::pos_y;
-
     using ImgRect::height;
     using ImgRect::width;
-
-    using ImgRect::bottom;
-    using ImgRect::top;
-
-    using ImgRect::left;
-    using ImgRect::right;
 
     [[nodiscard]]
     constexpr auto data() const {
@@ -52,7 +40,7 @@ public:
     constexpr const Pixel& at(dis_t row, dis_t col) const {
         condition::pre_condition(row <= height(), std::format("{} <= {}", row, height()));
         condition::pre_condition(col <= width(), std::format("{} <= {}", col, height()));
-        return m_mdspan[row, col];
+        return get_item(row, col);
     }
 
     [[nodiscard]]
@@ -69,7 +57,6 @@ public:
     constexpr auto extent(dis_t ext) const {
         return m_mdspan.extent(ext);
     }
-
 };
 
 template<dis_t Width, dis_t Height>

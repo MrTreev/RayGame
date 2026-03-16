@@ -1,7 +1,7 @@
 raygame_resource(
     GeneratedPngImage
     NAME generated_png_image
-    RESOURCES pngtest.png
+    RESOURCES pngtest.png square.png
 )
 raygame_bin(
     GeneratedImage

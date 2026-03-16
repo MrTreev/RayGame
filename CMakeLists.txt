@@ -303,11 +303,22 @@ function(raygame_resource _target)
         RayGame::Tools::ResMk
         BINARY_DIR
     )
-    file(REAL_PATH ${RAYGAME_TESTARGS_RESOURCES} ${RAYGAME_TESTARGS_NAME}_data)
+    set(resource_list)
+    foreach(resource IN LISTS RAYGAME_TESTARGS_RESOURCES)
+        find_file(resfile
+            NAMES ${resource}
+            PATHS ${CMAKE_CURRENT_SOURCE_DIR}
+            NO_CACHE
+            REQUIRED
+            NO_DEFAULT_PATH
+        )
+        file(REAL_PATH ${resfile} resfilename)
+        list(APPEND resource_list ${resfilename})
+    endforeach()
     add_custom_command(
         OUTPUT ${${RAYGAME_TESTARGS_NAME}_header} ${${RAYGAME_TESTARGS_NAME}_source}
-        COMMAND ${RAYGAME_RESMK_DIR}/resmk ${${RAYGAME_TESTARGS_NAME}_header} ${${RAYGAME_TESTARGS_NAME}_data}
-        DEPENDS RayGame::Tools::ResMk
+        COMMAND ${RAYGAME_RESMK_DIR}/resmk ${${RAYGAME_TESTARGS_NAME}_header} ${resource_list}
+        DEPENDS ${resource_list} RayGame::Tools::ResMk
         CODEGEN
         VERBATIM
     )
