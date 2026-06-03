@@ -4,7 +4,7 @@
 
 // ColumnLimit for this file is longer (140 currently) for readability
 // clang-format off
-// NOLINTBEGIN(*-macro-usage)
+// NOLINTBEGIN(*-macro-usage,bugprone-macro-parentheses)
 #define RAYGAME_PP_MACRO_STRINGIFY(x) RAYGAME_PP_STRINGIFY(x)
 #define RAYGAME_PP_STRINGIFY(x) #x
 
@@ -460,5 +460,5 @@
         TemplatedClass                                                         \
     )
 
-// NOLINTEND(*-macro-usage)
+// NOLINTEND(*-macro-usage,bugprone-macro-parentheses)
 // clang-format on

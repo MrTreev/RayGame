@@ -56,13 +56,13 @@ using dis_t = RAYGAME_DISTANCE_TYPE;
 static_assert(std::is_unsigned_v<dis_t>);
 
 namespace debug {
-std::string location_message(std::source_location loc) ;
+std::string location_message(std::source_location loc);
 
 template<typename T>
 constexpr std::string type_name() {
     const T item{};
     if constexpr (core::config::COMPILER_IS_GCC_LIKE) {
-        std::unique_ptr<char> ret_name{
+        const std::unique_ptr<char> ret_name{
             abi::__cxa_demangle(typeid(item).name(), nullptr, nullptr, nullptr)
         };
         // NOLINTNEXTLINE(*-macro-usage)
@@ -161,8 +161,10 @@ public:
     third_t third() const { return m_third; }
 
     constexpr explicit operator std::string() const {
-        if constexpr (std::is_same_v<decltype(m_first), decltype(m_second)>
-                      && std::is_same_v<decltype(m_first), decltype(m_third)>) {
+        if constexpr (
+            std::is_same_v<decltype(m_first), decltype(m_second)>
+            && std::is_same_v<decltype(m_first), decltype(m_third)>
+        ) {
             return std::format(
                 "Triple<{}>({}, {}, {})",
                 core::debug::type_name(m_first),
@@ -220,9 +222,11 @@ public:
     auto operator<=>(const Quad&) const = default;
 
     constexpr explicit operator std::string() const {
-        if constexpr (std::is_same_v<decltype(m_first), decltype(m_second)>
-                      && std::is_same_v<decltype(m_first), decltype(m_third)>
-                      && std::is_same_v<decltype(m_first), decltype(m_fourth)>) {
+        if constexpr (
+            std::is_same_v<decltype(m_first), decltype(m_second)>
+            && std::is_same_v<decltype(m_first), decltype(m_third)>
+            && std::is_same_v<decltype(m_first), decltype(m_fourth)>
+        ) {
             return std::format(
                 "Quad<{}>({}, {}, {}, {})",
                 core::debug::type_name(m_first),

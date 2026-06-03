@@ -9,6 +9,7 @@
 #include <string>
 #include <utility>
 
+// NOLINTBEGIN(*-macro-usage)
 #if !defined(RAYGAME_TIME_FRAMES)
 //! @ingroup macros_config
 //! Log the average frame time
@@ -38,6 +39,7 @@
 #    define RAYGAME_TARGET_FPS 60
 #endif
 //! @}
+// NOLINTEND(*-macro-usage)
 
 namespace core {
 //! Default Window Width

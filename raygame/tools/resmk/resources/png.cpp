@@ -2,7 +2,11 @@
 #include "raygame/core/io/file.h"
 #include "raygame/core/logger.h"
 #include "raygame/core/math/numeric_cast.h"
+
+//NOLINTBEGIN(*)
 #include <stb_image.h>
+
+//NOLINTEND(*)
 
 void PngFile::process_impl() {
     core::io::File pngfile{m_source, "rb"};
