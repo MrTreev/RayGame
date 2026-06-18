@@ -1,0 +1,42 @@
+load("@doxygen//:doxygen.bzl", "doxygen")
+
+alias(
+    name = "compile_commands",
+    actual = "@wolfd_bazel_compile_commands//:generate_compile_commands",
+)
+
+doxygen(
+    name = "doxygen",
+    srcs = [
+        "README.md",
+        "//raygame:doxyfiles",
+    ],
+    outs = ["html"],
+    builtin_stl_support = True,
+    configurations = [
+        "GENERATE_HTML = YES",
+        "GENERATE_LATEX = NO",
+        "QUIET = YES",
+        "WARNINGS = YES",
+        "EXTRACT_ALL = YES",
+        "SHOW_GROUPED_MEMB_INC = YES",
+        "SORT_BRIEF_DOCS = YES",
+        "SORT_MEMBERS_CTORS_1ST = YES",
+        "SORT_GROUP_NAMES = YES",
+        "SORT_BY_SCOPE_NAME = YES",
+        "SOURCE_BROWSER = YES",
+        "REFERENCES_RELATION = YES",
+        "REFERENCED_BY_RELATION = YES",
+        "REFERENCES_LINK_SOURCE = YES",
+        "SOURCE_TOOLTIPS = YES",
+        "HTML_COLORSTYLE = TOGGLE",
+        "PREDEFINED = RAYGAME_DOXYGEN_INVOKED=1",
+    ],
+    have_dot = False,
+    hide_undoc_members = False,
+    project_brief = "Game engine and test game written in C++",
+    project_name = "RayGame",
+    tags = ["manual"],
+    use_mdfile_as_mainpage = "README.md",
+    visibility = ["//visibility:public"],
+)
