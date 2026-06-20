@@ -18,11 +18,11 @@ class RingAverage {
 
 public:
     constexpr void add(T val) {
+        if (m_cap < bufsize) [[unlikely]] {
+            m_cap += 1;
+        }
         m_buf[m_pos] = val;
         m_pos        = (m_pos + 1) % bufsize;
-        if (m_cap < bufsize) [[unlikely]] {
-            ++m_cap;
-        }
     }
 
     [[nodiscard]]
@@ -41,7 +41,7 @@ public:
 
     [[nodiscard]]
     constexpr T average() const {
-        RAYGAME_ASSERT(m_cap > 0);
+        RAYGAME_ASSERT(m_cap > 0U);
         const std::ranges::take_view items{m_buf, math::make_signed(m_cap)};
         const auto                   sum{std::reduce(items.begin(), items.end(), ZERO)};
         return sum / static_cast<T>(m_cap);

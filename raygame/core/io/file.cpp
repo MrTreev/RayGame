@@ -88,6 +88,7 @@ std::string File::path() const {
 }
 
 std::string File::slurp() const {
+    condition::check_condition(good(), "File not good");
     condition::check_condition(std::fseek(m_file, 0, SEEK_END) == 0, "Seek Failed");
     const auto length = std::ftell(m_file);
     condition::check_condition(std::fseek(m_file, 0, SEEK_SET) == 0, "Seek Failed");
@@ -108,6 +109,7 @@ bool File::good() const {
 }
 
 void File::write(const std::string_view& msg) {
+    condition::check_condition(good(), "File not good");
     const size_t n_written = std::fwrite(msg.data(), sizeof(msg[0]), msg.size(), m_file);
     if (n_written != msg.size()) {
         log::error("Message not fully written to: {}", m_path.filename().string());
@@ -115,6 +117,7 @@ void File::write(const std::string_view& msg) {
 }
 
 void File::write(const std::vector<byte>& msg) {
+    condition::check_condition(good(), "File not good");
     const size_t n_written = std::fwrite(msg.data(), sizeof(msg[0]), msg.size(), m_file);
     if (n_written != msg.size()) {
         log::error("Message not fully written to: {}", m_path.filename().string());
@@ -122,10 +125,12 @@ void File::write(const std::vector<byte>& msg) {
 }
 
 void File::writeln(const std::string_view& msg) {
+    condition::check_condition(good(), "File not good");
     write(std::format("{}\n", msg));
 }
 
 void File::gencode(const std::string_view& msg, std::source_location loc) {
+    condition::check_condition(good(), "File not good");
     const auto locstr = debug::location_message(loc);
     write(std::format("{}{}\n", msg, [locstr]() {
         if (locstr.empty()) {

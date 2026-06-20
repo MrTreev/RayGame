@@ -16,7 +16,7 @@ constexpr void raygame_assert(
     const std::string_view msg = "",
     std::source_location   loc = std::source_location::current()
 ) {
-    if (condition) {
+    if (!condition) {
         raygame_assert_raise(msg, loc);
     }
 }
@@ -26,7 +26,7 @@ constexpr void raygame_assert(
 #    if defined(RAYGAME_RAYTEST)
 #        include "raytest/raytest.h" // IWYU pragma: export
 // NOLINTNEXTLINE(*-macro-usage)
-#        define RAYGAME_ASSERT(condition, ...) RT_CHECK_TRUE(condition)
+#        define RAYGAME_ASSERT(condition, ...) RT_CHECK_TRUE(condition __VA_OPT__(, ) __VA_ARGS__)
 #    else
 // NOLINTNEXTLINE(*-macro-usage)
 #        define RAYGAME_ASSERT(condition, ...)                                                     \

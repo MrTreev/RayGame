@@ -6,11 +6,14 @@ rg_cc_library(
         "raytest.h",
     ],
     srcs = [
-        "main.cpp",
         "raytest.cpp",
     ],
     include_prefix = "raytest",
     deps = [
-        "//third_party/gtest"
+        "//third_party/gtest",
+    ],
+    implementation_deps = [
+        "//raygame/core:config",
+        "@rules_cc//cc/runfiles",
     ],
 )

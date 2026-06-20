@@ -1,6 +1,7 @@
 #pragma once
 #include <algorithm>
 #include <cstdint>
+#include <filesystem>
 #include <limits>
 #include <vector>
 
@@ -98,6 +99,9 @@ RAYTEST_CLANG_SUPPRESS_WARNING_POP
 // NOLINTEND(*-macro-usage)
 
 namespace test {
+
+std::filesystem::path datafile(const std::string& data_name);
+
 template<
     typename T,
     typename M = std::conditional_t<std::is_signed_v<T>, std::intmax_t, std::uintmax_t>>
@@ -219,4 +223,5 @@ using IntegralPairs = ::testing::Types<
 using All = ::testing::Types<void>;
 
 } // namespace types
+
 } // namespace test

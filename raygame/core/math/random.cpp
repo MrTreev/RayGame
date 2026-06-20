@@ -28,9 +28,9 @@ uint64_t seed = STARTING_SEED; //NOLINT(*-non-const-global-variables)
 RAYGAME_CLANG_SUPPRESS_WARNING_PUSH
 RAYGAME_CLANG_SUPPRESS_WARNING("-Wglobal-constructors")
 RAYGAME_CLANG_SUPPRESS_WARNING("-Wexit-time-destructors")
-// Done like this because there should only be a single random_device for the
-// whole game
-std::random_device dev; // NOLINT(cert-err58-cpp,*-non-const-global-variables)
+// Done like this because there should only be a single random_device for the whole game
+// NOLINTNEXTLINE(cert-err58-cpp,*-non-const-global-variables,*-static-initialization)
+std::random_device dev;
 RAYGAME_CLANG_SUPPRESS_WARNING_POP
 
 uint64_t rand_seed() {

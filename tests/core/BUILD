@@ -1,6 +1,11 @@
 load("//rules:rg_cc.bzl", "rg_cc_singletest")
 
 rg_cc_singletest(
+    name = "assert",
+    deps = ["//raygame/core"],
+)
+
+rg_cc_singletest(
     name = "condition",
     deps = ["//raygame/core"],
 )
