@@ -9,7 +9,6 @@ bazel_dep(name = "aspect_bazel_lib", version = "2.22.5")
 bazel_dep(name = "bazel_skylib", version = "1.9.0")
 bazel_dep(name = "googletest", version = "1.17.0.bcr.2")
 bazel_dep(name = "stb", version = "0.0.0-20251026-f1c79c0")
-bazel_dep(name = "wolfd_bazel_compile_commands", version = "0.5.2")
 
 bazel_dep(name = "rules_doxygen", version = "2.6.3", dev_dependency = True)
 doxygen_extension = use_extension(
@@ -18,14 +17,11 @@ doxygen_extension = use_extension(
 )
 use_repo(doxygen_extension, "doxygen")
 
-bazel_dep(name = "toolchains_llvm", version = "1.7.0")
-llvm = use_extension(
-    "@toolchains_llvm//toolchain/extensions:llvm.bzl",
-    "llvm",
-)
+bazel_dep(name = "toolchains_llvm", version = "1.8.0")
+llvm = use_extension("@toolchains_llvm//toolchain/extensions:llvm.bzl", "llvm")
 llvm.toolchain(
     llvm_versions = {
-        "": "21.1.8",
+        "": "22.1.7",
     },
     cxx_standard = {"": "c++26"},
     stdlib = {"": "builtin-libc++"},

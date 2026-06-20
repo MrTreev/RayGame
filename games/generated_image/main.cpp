@@ -1,4 +1,4 @@
-#include "generated/generated_png_image.h"
+#include "games/generated_image/generated_png_image.h"
 #include "raygame/core/application/application.h"
 
 int main() {

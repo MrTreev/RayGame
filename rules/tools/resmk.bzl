@@ -3,8 +3,8 @@ load("@rules_cc//cc:defs.bzl", "cc_library")
 def _resmk_rule_impl(ctx):
     namespace = ctx.attr.namespace
     resources = ctx.files.resources
-    outhdr = ctx.files.outhdr
-    outsrc = ctx.files.outsrc
+    outhdr = ctx.outputs.outhdr
+    outsrc = ctx.outputs.outsrc
     args = ctx.actions.args()
     args.add(outhdr.path)
     if len(namespace) != 0:
@@ -25,8 +25,8 @@ resmk_rule = rule(
     attrs = {
         "namespace": attr.string(default = ""),
         "resources": attr.label_list(allow_files = [".png"]),
-        "outhdr": attr.label(),
-        "outsrc": attr.label(),
+        "outhdr": attr.output(),
+        "outsrc": attr.output(),
         "_resmk": attr.label(
             default = Label("//raygame/tools/resmk"),
             allow_single_file = True,
@@ -50,6 +50,7 @@ def _resmk_macro(name, namespace, resources, visibility):
         name = name,
         hdrs = [outhdr],
         srcs = [outsrc],
+        deps = ["//raygame/core/drawing"],
         visibility = visibility,
     )
 

@@ -1,0 +1,5 @@
+verbose = 0
+arguments = 0
+bazel-command = bazel
+output = %workspace%/compile_commands.json
+targets = //...

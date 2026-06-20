@@ -1,6 +1,7 @@
 # Build defaults
 common --compilation_mode dbg
 common --verbose_failures
+common --verbose_visibility_errors
 
 # for system_library rule
 common --experimental_starlark_cc_import

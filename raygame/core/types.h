@@ -56,6 +56,9 @@ using dis_t = RAYGAME_DISTANCE_TYPE;
 static_assert(std::is_unsigned_v<dis_t>);
 
 namespace debug {
+#if !defined(__cpp_lib_source_location)
+#    error "No valid source_location"
+#endif
 std::string location_message(std::source_location loc);
 
 template<typename T>
