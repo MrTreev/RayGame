@@ -1,7 +1,7 @@
 load("//rules:rg_cc.bzl", "rg_cc_binary")
-load("//rules/tools:resmk.bzl", "resmk")
+load("//rules:rg_resmk.bzl", "rg_resmk")
 
-resmk(
+rg_resmk(
     name = "generated_png_image",
     resources = [
         "pngtest.png",

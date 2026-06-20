@@ -11,7 +11,6 @@ def _resmk_rule_impl(ctx):
         args.add("--namespace", namespace.path)
     for resource in resources:
         args.add(resource.path)
-    print(args)
     ctx.actions.run(
         mnemonic = "ResmkRun",
         executable = ctx.executable._resmk,
@@ -54,7 +53,7 @@ def _resmk_macro(name, namespace, resources, visibility):
         visibility = visibility,
     )
 
-resmk = macro(
+rg_resmk = macro(
     implementation = _resmk_macro,
     attrs = {
         "namespace": attr.string(default = ""),
