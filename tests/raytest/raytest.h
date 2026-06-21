@@ -100,7 +100,17 @@ RAYTEST_CLANG_SUPPRESS_WARNING_POP
 
 namespace test {
 
+/*! Return path to a given datafile
+ *  @param data_name Path from repo root to the data file
+ *  @return Full path to data file
+ */
 std::filesystem::path datafile(const std::string& data_name);
+
+/*! Generate path for creating a file within a test
+ *  @param file_name file name to create
+ *  @return Full path to file
+ */
+std::filesystem::path newfile(const std::string& file_name);
 
 template<
     typename T,

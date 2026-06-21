@@ -28,6 +28,15 @@ std::filesystem::path datafile(const std::string& data_name) {
     return file;
 }
 
+std::filesystem::path newfile(const std::string& file_name) {
+    //NOLINTNEXTLINE(concurrency-mt-unsafe)
+    const auto* test_tmpdir = std::getenv("TEST_TMPDIR");
+    if (test_tmpdir == nullptr) {
+        return {"./" + file_name};
+    }
+    return {std::filesystem::path(test_tmpdir) / file_name};
+}
+
 } // namespace test
 
 int main(int argc, char** argv) {

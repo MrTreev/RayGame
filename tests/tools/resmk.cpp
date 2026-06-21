@@ -33,16 +33,11 @@ int resmk(const std::string& hdr, const std::string& png) {
 } // namespace
 
 RT_TEST(ResMK, stuff) {
-    const std::filesystem::path resmk_data = RESMK_DATA_DIR;
-    const std::filesystem::path resmk_file = RESMK_FILE_DIR;
-
     RT_SUBCASE("png data") {
-        std::filesystem::create_directory(resmk_file);
-
-        const std::string fname = []() {
+        const std::string           fname{[]() {
             const auto        cur{std::source_location::current()};
             const std::string fna{std::format("resmk.cpp:{}", cur.line())};
-            const auto        msg = core::debug::location_message(cur);
+            const auto        msg{core::debug::location_message(cur)};
             if (msg == fna) {
                 return "pngtest-base";
             }
@@ -51,13 +46,14 @@ RT_TEST(ResMK, stuff) {
             }
             RT_CHECK_TRUE(msg.empty());
             return "pngtest-none";
-        }();
+        }()};
+        const std::filesystem::path resmk_data{test::datafile("tests/tools/data")};
         const std::filesystem::path pngtest_png{resmk_data / "pngtest.png"};
         const std::filesystem::path desired_src{resmk_data / (fname + ".cpp")};
         const std::filesystem::path desired_hdr{resmk_data / (fname + ".h")};
 
-        const std::filesystem::path pngtest_hdr{resmk_file / "pngtest.h"};
-        const std::filesystem::path pngtest_src{resmk_file / "pngtest.cpp"};
+        const std::filesystem::path pngtest_hdr{test::newfile("pngtest.h")};
+        const std::filesystem::path pngtest_src{test::newfile("pngtest.cpp")};
 
         RT_CHECK_EQ(0, resmk(pngtest_hdr, pngtest_png));
         RT_ASSERT(std::filesystem::exists(pngtest_png));
@@ -65,10 +61,8 @@ RT_TEST(ResMK, stuff) {
         RT_CHECK_TRUE(std::filesystem::exists(pngtest_hdr));
         const core::io::File pngtest_hdrfile{pngtest_hdr, "r"};
         const std::string    hdrfile_content{pngtest_hdrfile.slurp()};
-
         const core::io::File desired_hdrfile{desired_hdr, "r"};
         const std::string    hdrfile_desired{desired_hdrfile.slurp()};
-
         RT_CHECK_EQ(hdrfile_content, hdrfile_desired);
 
         RT_CHECK_TRUE(std::filesystem::exists(pngtest_src));
