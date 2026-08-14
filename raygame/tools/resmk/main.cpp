@@ -36,6 +36,19 @@ std::unique_ptr<Resource> make_resource(std::filesystem::path source) {
     return std::make_unique<Resource>(std::move(source));
 }
 
+class Help: public core::exception::Exception {
+public:
+    Help(const Help&)            = default;
+    Help(Help&&)                 = delete;
+    Help& operator=(const Help&) = default;
+    Help& operator=(Help&&)      = delete;
+
+    explicit Help()
+        : core::exception::Exception("") {}
+
+    ~Help() noexcept override = default;
+};
+
 struct Config {
     bool                                   m_header_set{false};
     std::filesystem::path                  m_header;
@@ -51,7 +64,7 @@ Config handle_args(const int argc, const char* const argv[]) {
         const std::string arg{argv[argn]}; //NOLINT(*-pointer-arithmetic)
         if (arg.starts_with('-')) {
             if (arg == "-h" || arg == "--help") {
-                print_help();
+                throw Help();
             }
             if (arg == "-n" || arg == "--namespace") {
                 config.m_outer_namespace = argv[++argn]; //NOLINT(*-pointer-arithmetic)
@@ -84,7 +97,7 @@ int main(int argc, char* argv[]) {
         }
         core::io::File hdrfile{config.m_header, core::io::File::mode::write};
         auto           srcname{config.m_header.string()};
-        srcname[srcname.length() - 1] = 'c';
+        srcname.at(srcname.length() - 1) = 'c';
         srcname.append("pp");
         core::io::File srcfile{srcname, core::io::File::mode::write};
         hdrfile.gencode("#include \"raygame/core/drawing/image.h\"");
@@ -103,6 +116,9 @@ int main(int argc, char* argv[]) {
         if (!config.m_outer_namespace.empty()) {
             hdrfile.gencode(std::format("}} // namespace {}", config.m_outer_namespace));
         }
+    } catch (const Help&) {
+        print_help();
+        return 0;
     } catch (const std::runtime_error& err) {
         core::log::error("ERROR: {}", err.what());
         return 1;

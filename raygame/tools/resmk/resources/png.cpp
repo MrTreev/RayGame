@@ -8,6 +8,10 @@
 
 //NOLINTEND(*)
 
+PngFile::~PngFile() {
+    stbi_image_free(m_data);
+}
+
 void PngFile::process_impl() {
     core::io::File pngfile{m_source, "rb"};
     if (!pngfile.good()) {
@@ -15,6 +19,9 @@ void PngFile::process_impl() {
     }
     core::log::debug("pngfile: {}", pngfile.fname());
     m_data = stbi_load_from_file(pngfile.raw(), &m_width, &m_height, &m_channels, N_CH);
+    if (m_data == nullptr) {
+        throw FileError(std::format("Unable to load image: {}", pngfile.fname()));
+    }
 }
 
 void PngFile::content(std::string& stuff) const {

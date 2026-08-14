@@ -1,25 +1,14 @@
 #include "raygame/core/io/file.h"
+#include "raygame/core/logger.h"
 #include "raygame/core/types.h"
 #include "raytest/raytest.h"
 #include <filesystem>
 #include <source_location>
 #include <unistd.h>
 
-#if !defined(RESMK)
-#    define RESMK "RESMK"
-#endif
-
-#if !defined(RESMK_DATA_DIR)
-#    define RESMK_DATA_DIR "RESMK_DATA_DIR"
-#endif
-
-#if !defined(RESMK_FILE_DIR)
-#    define RESMK_FILE_DIR "RESMK_FILE_DIR"
-#endif
-
 namespace {
 int resmk(const std::string& hdr, const std::string& png) {
-    const std::filesystem::path resmk_name = RESMK;
+    const std::filesystem::path resmk_name = test::datafile("raygame/tools/resmk/resmk");
     int                         status     = 0;
     const int                   pid        = fork();
     if (pid != 0) {
@@ -34,7 +23,7 @@ int resmk(const std::string& hdr, const std::string& png) {
 
 RT_TEST(ResMK, stuff) {
     RT_SUBCASE("png data") {
-        const std::string           fname{[]() {
+        const std::string fname{[]() {
             const auto        cur{std::source_location::current()};
             const std::string fna{std::format("resmk.cpp:{}", cur.line())};
             const auto        msg{core::debug::location_message(cur)};
@@ -47,6 +36,7 @@ RT_TEST(ResMK, stuff) {
             RT_CHECK_TRUE(msg.empty());
             return "pngtest-none";
         }()};
+        core::log::debug("fname = {}", fname);
         const std::filesystem::path resmk_data{test::datafile("tests/tools/data")};
         const std::filesystem::path pngtest_png{resmk_data / "pngtest.png"};
         const std::filesystem::path desired_src{resmk_data / (fname + ".cpp")};

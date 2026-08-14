@@ -19,4 +19,11 @@ class PngFile: public Resource {
 public:
     explicit PngFile(std::filesystem::path source)
         : Resource(std::move(source)) {}
+
+    ~PngFile() override;
+
+    PngFile(const PngFile&)            = default;
+    PngFile(PngFile&&)                 = default;
+    PngFile& operator=(const PngFile&) = default;
+    PngFile& operator=(PngFile&&)      = default;
 };

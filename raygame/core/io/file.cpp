@@ -77,6 +77,7 @@ File::File(std::filesystem::path filename, File::mode mod)
             log::error("Error in file: {}", m_path.string());
             throw std::system_error(errno, std::system_category());
         }
+        m_good = true;
     }
 }
 
@@ -110,7 +111,7 @@ bool File::good() const {
 
 void File::write(const std::string_view& msg) {
     condition::check_condition(good(), std::format("File not good: {}", m_path.string()));
-    const size_t n_written = std::fwrite(msg.data(), sizeof(msg[0]), msg.size(), m_file);
+    const size_t n_written = std::fwrite(msg.data(), sizeof(msg.at(0)), msg.size(), m_file);
     if (n_written != msg.size()) {
         log::error("Message not fully written to: {}", m_path.filename().string());
     }
@@ -118,7 +119,7 @@ void File::write(const std::string_view& msg) {
 
 void File::write(const std::vector<byte>& msg) {
     condition::check_condition(good(), std::format("File not good: {}", m_path.string()));
-    const size_t n_written = std::fwrite(msg.data(), sizeof(msg[0]), msg.size(), m_file);
+    const size_t n_written = std::fwrite(msg.data(), sizeof(msg.at(0)), msg.size(), m_file);
     if (n_written != msg.size()) {
         log::error("Message not fully written to: {}", m_path.filename().string());
     }

@@ -8,7 +8,7 @@ def _resmk_rule_impl(ctx):
     args = ctx.actions.args()
     args.add(outhdr.path)
     if len(namespace) != 0:
-        args.add("--namespace", namespace.path)
+        args.add("--namespace", namespace)
     for resource in resources:
         args.add(resource.path)
     ctx.actions.run(
