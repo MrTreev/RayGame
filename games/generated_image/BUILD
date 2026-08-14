@@ -4,8 +4,8 @@ load("//rules:rg_resmk.bzl", "rg_resmk")
 rg_resmk(
     name = "generated_png_image",
     resources = [
-        "pngtest.png",
-        "square.png",
+        "resources/pngtest.png",
+        "resources/square.png",
     ],
 )
 
