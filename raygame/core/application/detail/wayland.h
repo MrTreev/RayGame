@@ -2,6 +2,7 @@
 #include "raygame/core/application/application.h"
 #include "raygame/core/application/detail/backends.h" // IWYU pragma: keep
 #include "raygame/core/application/input.h"
+#include "wayland-client-protocol-impl.h"
 #include <wayland-client-protocol.h>
 #include <xdg-shell-client-protocol.h>
 #include <xkbcommon/xkbcommon.h>
@@ -112,9 +113,17 @@ public:
     void set_close() final;
 
 private:
-    using wl_fixed_t  = int32_t;
-    int      m_shm_fd = -1;
+    using wl_fixed_t = int32_t;
+
+    static constexpr size_t BUFFER_COUNT = 2;
+
+    int      m_shm_fd         = -1;
+    size_t   m_mapped_size    = 0;
+    size_t   m_current_buffer = 0;
     uint32_t m_wl_shm_format;
+
+    std::array<wl_buffer*, BUFFER_COUNT> m_buffers = {nullptr, nullptr};
+    std::array<bool, BUFFER_COUNT>       m_busy    = {false, false};
 
     std::mdspan<Pixel, std::dextents<size_t, 2>> m_pixbuf;
 
@@ -143,6 +152,7 @@ private:
     xdg_toplevel*  m_xdg_toplevel  = nullptr;
     xdg_wm_base*   m_xdg_wm_base   = nullptr;
 
+    static const wl_buffer_listener    m_wl_buffer_listener;
     static const wl_callback_listener  m_wl_surface_frame_listener;
     static const wl_keyboard_listener  m_wl_keyboard_listener;
     static const wl_pointer_listener   m_wl_pointer_listener;
@@ -153,6 +163,7 @@ private:
     static const xdg_wm_base_listener  m_xdg_wm_base_listener;
 
     // clang-format off
+    static void wl_buffer_release(void *data, wl_buffer *buffer);
     static void wl_keyboard_enter(void *data, wl_keyboard *wl_keyboard, uint32_t serial, wl_surface *surface, wl_array *keys);
     static void wl_keyboard_key(void *data, wl_keyboard *wl_keyboard, uint32_t serial, uint32_t time, uint32_t key, uint32_t state);
     static void wl_keyboard_keymap(void *data, wl_keyboard *wl_keyboard, uint32_t format, int32_t shm_fd, uint32_t size);

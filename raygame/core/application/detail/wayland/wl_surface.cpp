@@ -16,9 +16,6 @@ void core::detail::AppImplWayland::wl_surface_handle_done(
     wl_callback = wl_surface_frame(this_impl->m_wl_surface);
     wl_callback_add_listener(wl_callback, &m_wl_surface_frame_listener, this_impl);
     this_impl->new_buffer();
-    wl_surface_attach(this_impl->m_wl_surface, this_impl->m_wl_buffer, 0, 0);
-    wl_buffer_destroy(this_impl->m_wl_buffer);
-    this_impl->m_wl_buffer = nullptr;
     const auto size        = this_impl->get_size();
     wl_surface_damage_buffer(
         this_impl->m_wl_surface,

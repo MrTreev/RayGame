@@ -30,7 +30,7 @@ using core::condition::pre_condition;
 using core::math::numeric_cast;
 using core::math::safe_mult;
 
-constexpr bool   PRINT_KEY       = false;
+constexpr bool   PRINT_KEY       = true;
 constexpr size_t COLOUR_CHANNELS = 4;
 
 constexpr std::string_view alnum = "abcdefghijklmnaoqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
@@ -42,7 +42,7 @@ std::string random_string(
     std::string  ret;
     const size_t charlen = valid_chars.size() - 1;
     std::generate_n(std::back_inserter(ret), length, [&] {
-        return valid_chars[core::math::rand<size_t>(0, charlen)];
+        return valid_chars.at(core::math::rand<size_t>(0, charlen));
     });
     return ret;
 }
@@ -85,10 +85,10 @@ constexpr wl_shm_format get_colour_format() {
     constexpr auto ARGB      = 0b11000011'00000000'11111111'00111100;
     constexpr auto colourval = rgba(RVAL, GVAL, BVAL, AVAL);
     switch (bit_cast<uint32_t>(colourval)) {
-    case (ARGB): core::log::debug("Colour Format: ARGB"); return WL_SHM_FORMAT_XRGB8888;
-    case (ABGR): core::log::debug("Colour Format: ABGR"); return WL_SHM_FORMAT_XBGR8888;
-    case (BGRA): core::log::debug("Colour Format: BGRA"); return WL_SHM_FORMAT_BGRX8888;
-    case (RGBA): core::log::debug("Colour Format: RGBA"); return WL_SHM_FORMAT_RGBX8888;
+    case ARGB: core::log::debug("Colour Format: ARGB"); return WL_SHM_FORMAT_XRGB8888;
+    case ABGR: core::log::debug("Colour Format: ABGR"); return WL_SHM_FORMAT_XBGR8888;
+    case BGRA: core::log::debug("Colour Format: BGRA"); return WL_SHM_FORMAT_BGRX8888;
+    case RGBA: core::log::debug("Colour Format: RGBA"); return WL_SHM_FORMAT_RGBX8888;
     default:
         throw std::invalid_argument(
             std::format(
@@ -156,6 +156,18 @@ AppImplWayland::AppImplWayland(Vec2<size_t> size, std::string title, WindowStyle
 AppImplWayland::~AppImplWayland() {
     m_buffer_width  = 0;
     m_buffer_height = 0;
+    if (m_pixbuf.data_handle() != nullptr && m_buffer_width > 0 && m_buffer_height > 0) {
+        using math::MathRule::CLAMP;
+        const auto old_stride = safe_mult<size_t, CLAMP>(m_buffer_width, COLOUR_CHANNELS);
+        const auto old_buflen = safe_mult<size_t, CLAMP>(old_stride, m_buffer_height * 2);
+        munmap(m_pixbuf.data_handle(), old_buflen);
+    }
+    if (m_wl_buffer != nullptr) {
+        wl_buffer_destroy(m_wl_buffer);
+    }
+    if (m_shm_fd >= 0) {
+        close(m_shm_fd);
+    }
     xdg_toplevel_destroy(m_xdg_toplevel);
     xdg_surface_destroy(m_xdg_surface);
     wl_surface_destroy(m_wl_surface);
@@ -163,7 +175,7 @@ AppImplWayland::~AppImplWayland() {
 
 void AppImplWayland::draw(const drawing::ImageView& image, const Vec2<pos_t>& position) {
     constexpr auto clamp = [](const pos_t val) {
-        return numeric_cast<dis_t>(std::max(pos_t(0), val));
+        return numeric_cast<dis_t>(std::max(static_cast<pos_t>(0), val));
     };
     constexpr auto domin = [](const dis_t max, const dis_t val) {
         return numeric_cast<dis_t>(std::min(numeric_cast<dis_t>(max), val));
@@ -240,6 +252,16 @@ void AppImplWayland::new_buffer() {
     const auto buflen    = safe_mult<size_t>(bufstride, bufheight * 2);
     log::trace("Requesting buffer with size: {}, {}", bufwidth, bufheight);
     log::trace("buflen: {}", buflen);
+    // Release previous mapping / buffer / fd
+    if (m_pixbuf.data_handle() != nullptr && m_buffer_width > 0 && m_buffer_height > 0) {
+        const auto old_stride = safe_mult<size_t>(m_buffer_width, COLOUR_CHANNELS);
+        const auto old_buflen = safe_mult<size_t>(old_stride, m_buffer_height * 2);
+        munmap(m_pixbuf.data_handle(), old_buflen);
+    }
+    if (m_wl_buffer != nullptr) {
+        wl_buffer_destroy(m_wl_buffer);
+        m_wl_buffer = nullptr;
+    }
     if (m_shm_fd >= 0) {
         close(m_shm_fd);
     }
@@ -268,6 +290,7 @@ void AppImplWayland::new_buffer() {
     log::trace("Surface Attached");
     if (m_wl_shm_pool != nullptr) {
         wl_shm_pool_destroy(m_wl_shm_pool);
+        m_wl_shm_pool = nullptr;
     }
 }
 
