@@ -64,7 +64,7 @@ int allocate_shm_file(size_t size) {
     const int shm_fd = create_shm_file();
     check_condition(shm_fd >= 0, "Failed to create valid SHM File Descriptor");
     const int ret = ftruncate(shm_fd, numeric_cast<__off_t>(size));
-    post_condition(ret == 0, "Could not resize SHM memory-mapped file");
+    check_condition(ret == 0, "Could not resize SHM memory-mapped file");
     return shm_fd;
 }
 
@@ -260,13 +260,13 @@ void AppImplWayland::new_buffer() {
     }
     m_shm_fd = allocate_shm_file(buflen);
     check_condition(m_shm_fd >= 0, "creation of shm buffer file failed");
-    auto* const pixbuf =
+    m_mapped_base =
         static_cast<Pixel*>(mmap(nullptr, buflen, PROT_READ | PROT_WRITE, MAP_SHARED, m_shm_fd, 0));
-    if (pixbuf == MAP_FAILED) {
+    if (m_mapped_base == MAP_FAILED) {
         close(m_shm_fd);
         check_condition(false, "Could not setup shm data");
     }
-    m_pixbuf      = {pixbuf, std::extents(bufheight, bufwidth)};
+    m_pixbuf      = {m_mapped_base, std::extents(bufheight, bufwidth)};
     m_wl_shm_pool = wl_shm_create_pool(m_wl_shm, m_shm_fd, numeric_cast<int32_t>(buflen));
     m_wl_buffer   = wl_shm_pool_create_buffer(
         m_wl_shm_pool,
@@ -335,4 +335,107 @@ void KeyboardState::event(const uint32_t& key, const uint32_t& state) {
 
 // NOLINTEND(*-easily-swappable-parameters)
 
+void AppImplWayland::set_current_pixbuf() {
+    // m_pixbuf always views exactly one frame inside the big mapping
+    const auto stride_bytes = safe_mult<size_t>(m_buffer_width, COLOUR_CHANNELS);
+    const auto frame_bytes  = safe_mult<size_t>(stride_bytes, m_buffer_height);
+    m_pixbuf                = {
+        m_mapped_base + (m_current_buffer * (frame_bytes / sizeof(Pixel))),
+        std::extents(m_buffer_height, m_buffer_width)
+    };
+}
+
+void AppImplWayland::recreate_buffers() {
+    const auto wid = width();
+    const auto hei = height();
+    if (wid == 0 || 0 == hei) {
+        return;
+    }
+
+    // Already correct size? nothing to do.
+    if ((m_buffers.at(0) != nullptr) && m_buffer_width == wid && m_buffer_height == hei) {
+        return;
+    }
+
+    // --- tear down old resources ---
+    for (auto*& buf: m_buffers) {
+        if (buf != nullptr) {
+            wl_buffer_destroy(buf);
+            buf = nullptr;
+        }
+    }
+    m_busy.fill(false);
+
+    if (m_wl_shm_pool != nullptr) {
+        wl_shm_pool_destroy(m_wl_shm_pool);
+        m_wl_shm_pool = nullptr;
+    }
+    if (m_mapped_base != nullptr) {
+        munmap(m_mapped_base, m_mapped_size);
+        m_mapped_base = nullptr;
+        m_mapped_size = 0;
+    }
+    if (m_shm_fd >= 0) {
+        close(m_shm_fd);
+        m_shm_fd = -1;
+    }
+
+    // --- create new pool large enough for two frames ---
+    const auto stride = safe_mult<size_t>(wid, COLOUR_CHANNELS);
+    const auto frame  = safe_mult<size_t>(stride, hei);
+    m_mapped_size     = safe_mult<size_t>(frame, BUFFER_COUNT);
+
+    m_shm_fd = allocate_shm_file(m_mapped_size);
+    check_condition(m_shm_fd >= 0, "shm file creation failed");
+
+    m_mapped_base = static_cast<Pixel*>(
+        mmap(nullptr, m_mapped_size, PROT_READ | PROT_WRITE, MAP_SHARED, m_shm_fd, 0)
+    );
+    check_condition(m_mapped_base != MAP_FAILED, "mmap failed");
+
+    m_wl_shm_pool = wl_shm_create_pool(m_wl_shm, m_shm_fd, numeric_cast<int32_t>(m_mapped_size));
+    check_ptr(m_wl_shm_pool, "wl_shm_pool creation failed");
+
+    // create the two buffers at offsets 0 and frame
+    for (size_t i = 0; i < BUFFER_COUNT; ++i) {
+        m_buffers.at(i) = wl_shm_pool_create_buffer(
+            m_wl_shm_pool,
+            numeric_cast<int32_t>(i * frame), // offset
+            numeric_cast<int32_t>(wid),
+            numeric_cast<int32_t>(hei),
+            numeric_cast<int32_t>(stride),
+            m_wl_shm_format
+        );
+        check_ptr(m_buffers.at(i), "wl_buffer creation failed");
+        wl_buffer_add_listener(m_buffers.at(i), &m_wl_buffer_listener, this);
+    }
+
+    // We no longer need the pool object after the buffers exist
+    wl_shm_pool_destroy(m_wl_shm_pool);
+    m_wl_shm_pool = nullptr;
+
+    m_buffer_width   = wid;
+    m_buffer_height  = hei;
+    m_current_buffer = 0;
+    m_busy.fill(false);
+
+    set_current_pixbuf(); // m_pixbuf now points at buffer 0
+    log::trace("Double-buffered shm pool ready ({}×{}, 2 frames)", wid, hei);
+}
+
+// Release callback – marks a buffer free again
+void AppImplWayland::wl_buffer_release(void* data, wl_buffer* buffer) {
+    auto* self = static_cast<AppImplWayland*>(data);
+    for (size_t i = 0; i < BUFFER_COUNT; ++i) {
+        if (self->m_buffers.at(i) == buffer) {
+            self->m_busy.at(i) = false;
+            log::trace("Buffer {} released by compositor", i);
+            return;
+        }
+    }
+}
+
+const wl_buffer_listener AppImplWayland::m_wl_buffer_listener = {
+    .release = wl_buffer_release,
+};
 } // namespace core::detail

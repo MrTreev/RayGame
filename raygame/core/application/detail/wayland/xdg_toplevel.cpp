@@ -26,6 +26,7 @@ void core::detail::AppImplWayland::xdg_toplevel_handle_configure(
     }
     log::debug("Configure: width={}, height={}", width, height);
     this_impl->set_size({math::numeric_cast<size_t>(width), math::numeric_cast<size_t>(height)});
+    this_impl->recreate_buffers();
 }
 
 void core::detail::AppImplWayland::xdg_toplevel_handle_close(
@@ -45,6 +46,7 @@ void core::detail::AppImplWayland::xdg_toplevel_handle_configure_bounds(
     auto* this_impl = static_cast<AppImplWayland*>(data);
     log::debug("Configure Bounds: {}, {}", width, height);
     this_impl->set_size({math::numeric_cast<size_t>(width), math::numeric_cast<size_t>(height)});
+    this_impl->recreate_buffers();
 }
 
 void core::detail::AppImplWayland::xdg_toplevel_handle_wm_capabilities(

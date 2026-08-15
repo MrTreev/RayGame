@@ -117,6 +117,7 @@ private:
     size_t   m_mapped_size    = 0;
     size_t   m_current_buffer = 0;
     uint32_t m_wl_shm_format;
+    Pixel*   m_mapped_base = nullptr;
 
     std::array<wl_buffer*, BUFFER_COUNT> m_buffers = {nullptr, nullptr};
     std::array<bool, BUFFER_COUNT>       m_busy    = {false, false};
@@ -124,6 +125,8 @@ private:
     std::mdspan<Pixel, std::dextents<size_t, 2>> m_pixbuf;
 
     void new_buffer();
+    void set_current_pixbuf();
+    void recreate_buffers();
     void set_style(WindowStyle style);
 
     bool          m_should_close = false;
