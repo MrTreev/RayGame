@@ -1,9 +1,8 @@
 #include "raygame/core/application/detail/wayland.h"
+#include "raygame/core/application/detail/wayland/wl_include.h"
 #include "raygame/core/logger.h"
 #include "raygame/core/types.h"
 #include <string>
-#include <wayland-client-protocol.h>
-#include <xdg-shell-client-protocol.h>
 
 const wl_registry_listener core::detail::AppImplWayland::m_wl_registry_listener = {
     .global        = wl_registry_handle_global,

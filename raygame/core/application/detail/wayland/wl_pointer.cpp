@@ -1,11 +1,10 @@
 #include "raygame/core/application/detail/wayland.h"
+#include "raygame/core/application/detail/wayland/wl_include.h"
 #include "raygame/core/condition.h"
 #include "raygame/core/logger.h"
 #include "raygame/core/math/vector.h"
 #include "raygame/core/types.h"
 #include <format>
-#include <wayland-client-protocol.h>
-#include <wayland-util.h>
 
 const wl_pointer_listener core::detail::AppImplWayland::m_wl_pointer_listener = {
     .enter                   = wl_pointer_handle_enter,

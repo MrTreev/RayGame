@@ -1,11 +1,7 @@
 #pragma once
 #include "raygame/core/application/application.h"
-#include "raygame/core/application/detail/backends.h" // IWYU pragma: keep
+#include "raygame/core/application/detail/wayland/wl_include.h"
 #include "raygame/core/application/input.h"
-#include "wayland-client-protocol-impl.h"
-#include <wayland-client-protocol.h>
-#include <xdg-shell-client-protocol.h>
-#include <xkbcommon/xkbcommon.h>
 
 namespace core::detail {
 

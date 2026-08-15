@@ -56,10 +56,13 @@ static_assert(false, "Unknown Compiler");
 // NOLINTEND(*-macro-usage)
 
 RAYTEST_CLANG_SUPPRESS_WARNING_PUSH
+RAYTEST_CLANG_SUPPRESS_WARNING("-Wcharacter-conversion")
 RAYTEST_CLANG_SUPPRESS_WARNING("-Wexit-time-destructors")
 RAYTEST_CLANG_SUPPRESS_WARNING("-Wglobal-constructors")
 RAYTEST_CLANG_SUPPRESS_WARNING("-Wmissing-noreturn")
+RAYTEST_CLANG_SUPPRESS_WARNING("-Wreserved-identifier")
 RAYTEST_CLANG_SUPPRESS_WARNING("-Wswitch-enum")
+RAYTEST_CLANG_SUPPRESS_WARNING("-Wthread-safety-negative")
 RAYTEST_CLANG_SUPPRESS_WARNING("-Wweak-vtables")
 #if defined(RAYTEST_CC_CLANG)
 #    pragma clang system_header

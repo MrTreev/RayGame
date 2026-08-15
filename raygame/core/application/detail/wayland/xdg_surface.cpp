@@ -1,7 +1,6 @@
 #include "raygame/core/application/detail/wayland.h"
+#include "raygame/core/application/detail/wayland/wl_include.h"
 #include "raygame/core/types.h"
-#include <wayland-client-protocol.h>
-#include <xdg-shell-client-protocol.h>
 
 const xdg_surface_listener core::detail::AppImplWayland::m_xdg_surface_listener = {
     .configure = xdg_surface_handle_configure,

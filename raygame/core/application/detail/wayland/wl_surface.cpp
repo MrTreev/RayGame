@@ -1,6 +1,6 @@
 #include "raygame/core/application/detail/wayland.h"
+#include "raygame/core/application/detail/wayland/wl_include.h"
 #include "raygame/core/types.h"
-#include <wayland-client-protocol.h>
 
 const wl_callback_listener core::detail::AppImplWayland::m_wl_surface_frame_listener{
     .done = wl_surface_handle_done,
@@ -16,7 +16,7 @@ void core::detail::AppImplWayland::wl_surface_handle_done(
     wl_callback = wl_surface_frame(this_impl->m_wl_surface);
     wl_callback_add_listener(wl_callback, &m_wl_surface_frame_listener, this_impl);
     this_impl->new_buffer();
-    const auto size        = this_impl->get_size();
+    const auto size = this_impl->get_size();
     wl_surface_damage_buffer(
         this_impl->m_wl_surface,
         0,

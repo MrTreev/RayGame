@@ -1,6 +1,7 @@
 #include "raygame/core/application/detail/wayland.h"
 #include "raygame/core/application/application.h"
 #include "raygame/core/application/detail/backends.h"
+#include "raygame/core/application/detail/wayland/wl_include.h"
 #include "raygame/core/condition.h"
 #include "raygame/core/drawing/pixel.h"
 #include "raygame/core/logger.h"
@@ -17,10 +18,6 @@
 #include <sys/mman.h>
 #include <unistd.h>
 #include <utility>
-#include <wayland-client-core.h>
-#include <wayland-client-protocol.h>
-#include <xdg-shell-client-protocol.h>
-#include <xkbcommon/xkbcommon.h>
 
 namespace {
 using core::condition::check_condition;
@@ -48,7 +45,7 @@ std::string random_string(
 }
 
 int create_shm_file() {
-    constexpr int N_RETRIES = 100;
+    constexpr int N_RETRIES = 10;
     constexpr int RAND_LEN  = 6;
     for (int retries = N_RETRIES; retries > 0; --retries) {
         const std::string name("/wl_shm-" + random_string(RAND_LEN));
@@ -154,8 +151,6 @@ AppImplWayland::AppImplWayland(Vec2<size_t> size, std::string title, WindowStyle
 }
 
 AppImplWayland::~AppImplWayland() {
-    m_buffer_width  = 0;
-    m_buffer_height = 0;
     if (m_pixbuf.data_handle() != nullptr && m_buffer_width > 0 && m_buffer_height > 0) {
         using math::MathRule::CLAMP;
         const auto old_stride = safe_mult<size_t, CLAMP>(m_buffer_width, COLOUR_CHANNELS);
@@ -252,7 +247,6 @@ void AppImplWayland::new_buffer() {
     const auto buflen    = safe_mult<size_t>(bufstride, bufheight * 2);
     log::trace("Requesting buffer with size: {}, {}", bufwidth, bufheight);
     log::trace("buflen: {}", buflen);
-    // Release previous mapping / buffer / fd
     if (m_pixbuf.data_handle() != nullptr && m_buffer_width > 0 && m_buffer_height > 0) {
         const auto old_stride = safe_mult<size_t>(m_buffer_width, COLOUR_CHANNELS);
         const auto old_buflen = safe_mult<size_t>(old_stride, m_buffer_height * 2);

@@ -4,7 +4,20 @@
 #include "raygame/core/math/numeric_cast.h"
 
 //NOLINTBEGIN(*)
+RAYGAME_CLANG_SUPPRESS_WARNING_PUSH
+RAYGAME_CLANG_SUPPRESS_WARNING("-Wcast-align")
+RAYGAME_CLANG_SUPPRESS_WARNING("-Wcast-qual")
+RAYGAME_CLANG_SUPPRESS_WARNING("-Wdisabled-macro-expansion")
+RAYGAME_CLANG_SUPPRESS_WARNING("-Wdouble-promotion")
+RAYGAME_CLANG_SUPPRESS_WARNING("-Wextra-semi-stmt")
+RAYGAME_CLANG_SUPPRESS_WARNING("-Wimplicit-fallthrough")
+RAYGAME_CLANG_SUPPRESS_WARNING("-Wimplicit-int-conversion")
+RAYGAME_CLANG_SUPPRESS_WARNING("-Wold-style-cast")
+RAYGAME_CLANG_SUPPRESS_WARNING("-Wreserved-identifier")
+RAYGAME_CLANG_SUPPRESS_WARNING("-Wsign-conversion")
+RAYGAME_CLANG_SUPPRESS_WARNING("-Wzero-as-null-pointer-constant")
 #include <stb_image.h>
+RAYGAME_CLANG_SUPPRESS_WARNING_POP
 
 //NOLINTEND(*)
 
