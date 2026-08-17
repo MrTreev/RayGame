@@ -1,1 +1,1 @@
-#include "raygame/core/math/ring_average.h" // IWYU pragma: keep
+#include "raygame/core/math/ring_average.hpp" // IWYU pragma: keep

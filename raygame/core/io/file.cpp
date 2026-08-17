@@ -1,7 +1,7 @@
-#include "raygame/core/io/file.h"
-#include "raygame/core/condition.h"
-#include "raygame/core/logger.h"
-#include "raygame/core/types.h"
+#include "raygame/core/io/file.hpp"
+#include "raygame/core/condition.hpp"
+#include "raygame/core/logger.hpp"
+#include "raygame/core/types.hpp"
 #include <cerrno>
 #include <cstdio>
 #include <filesystem>

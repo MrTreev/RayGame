@@ -1,5 +1,5 @@
-#include "raygame/core/math/random.h" // IWYU pragma: keep
-#include "raytest/raytest.h"
+#include "raygame/core/math/random.hpp" // IWYU pragma: keep
+#include "raytest/raytest.hpp"
 #include <array>
 
 template<typename T>

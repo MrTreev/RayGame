@@ -1,4 +1,4 @@
-#include "raygame/core/types.h" // IWYU pragma: keep
+#include "raygame/core/types.hpp" // IWYU pragma: keep
 #include <source_location>
 
 namespace {

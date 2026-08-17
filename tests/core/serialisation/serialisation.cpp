@@ -1,2 +1,2 @@
-#include "raygame/core/serialisation/serialisation.h" // IWYU pragma: keep
-#include "raytest/raytest.h"                          // IWYU pragma: keep
+#include "raygame/core/serialisation/serialisation.hpp" // IWYU pragma: keep
+#include "raytest/raytest.hpp"                          // IWYU pragma: keep

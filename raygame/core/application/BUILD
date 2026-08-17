@@ -3,21 +3,21 @@ load("//rules:rg_cc.bzl", "rg_cc_library")
 rg_cc_library(
     name = "application",
     hdrs = [
-        "application.h",
-        "input.h",
+        "application.hpp",
+        "input.hpp",
     ],
     srcs = [
         "application.cpp",
         "input.cpp",
         "detail/backends.cpp",
-        "detail/backends.h",
+        "detail/backends.hpp",
         "detail/cocoa.cpp",
-        "detail/cocoa.h",
+        "detail/cocoa.hpp",
         "detail/dwm.cpp",
-        "detail/dwm.h",
+        "detail/dwm.hpp",
         "detail/wayland.cpp",
-        "detail/wayland.h",
-        "detail/wayland/wl_include.h",
+        "detail/wayland.hpp",
+        "detail/wayland/wl_include.hpp",
         "detail/wayland/wl_keyboard.cpp",
         "detail/wayland/wl_pointer.cpp",
         "detail/wayland/wl_registry.cpp",
@@ -38,7 +38,7 @@ rg_cc_library(
 filegroup(
     name = "doxyfiles",
     srcs = glob([
-            "**/*.h",
+            "**/*.hpp",
             "**/*.dox",
         ],
         allow_empty = True,

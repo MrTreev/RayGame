@@ -1,7 +1,7 @@
-#include "raygame/core/logger.h" // IWYU pragma: keep
-#include "raygame/core/config.h"
-#include "raygame/core/string.h"
-#include "raygame/core/types.h"
+#include "raygame/core/logger.hpp" // IWYU pragma: keep
+#include "raygame/core/config.hpp"
+#include "raygame/core/string.hpp"
+#include "raygame/core/types.hpp"
 #include <chrono>
 #include <cstdlib>
 #include <iostream>

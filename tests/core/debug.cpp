@@ -1,5 +1,5 @@
-#include "raygame/core/types.h"
-#include "raytest/raytest.h"
+#include "raygame/core/types.hpp"
+#include "raytest/raytest.hpp"
 
 class TestClass {};
 

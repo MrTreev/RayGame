@@ -1,1 +1,1 @@
-#include "raygame/core/concepts.h" // IWYU pragma: keep
+#include "raygame/core/concepts.hpp" // IWYU pragma: keep

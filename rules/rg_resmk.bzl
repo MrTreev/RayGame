@@ -36,7 +36,7 @@ resmk_rule = rule(
 )
 
 def _resmk_macro(name, namespace, resources, visibility):
-    outhdr = name + ".h"
+    outhdr = name + ".hpp"
     outsrc = name + ".cpp"
     resmk_rule(
         name = name + "_files",

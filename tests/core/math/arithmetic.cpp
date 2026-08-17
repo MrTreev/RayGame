@@ -1,5 +1,5 @@
-#include "raygame/core/math/arithmetic.h"
-#include "raytest/raytest.h"
+#include "raygame/core/math/arithmetic.hpp"
+#include "raytest/raytest.hpp"
 
 template<typename T>
 class ArithmeticTest: public ::testing::Test {

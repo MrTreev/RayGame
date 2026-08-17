@@ -1,5 +1,5 @@
-#include "raygame/core/drawing/image.h" // main.cpp:94
-#include "pngtest.h" // main.cpp:95
+#include "raygame/core/drawing/image.hpp" // main.cpp:94
+#include "pngtest.hpp" // main.cpp:95
 RAYGAME_CLANG_SUPPRESS_WARNING_PUSH
 RAYGAME_CLANG_SUPPRESS_WARNING("-Wglobal-constructors")
 // NOLINTNEXTLINE(cert-err58-cpp)

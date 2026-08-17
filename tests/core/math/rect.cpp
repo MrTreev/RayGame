@@ -1,5 +1,5 @@
-#include "raygame/core/math/rect.h"
-#include "raytest/raytest.h"
+#include "raygame/core/math/rect.hpp"
+#include "raytest/raytest.hpp"
 
 using core::Rect;
 using core::Vec2;

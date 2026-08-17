@@ -1,5 +1,5 @@
-#include "raygame/core/network/server.h"
-#include "raygame/core/logger.h"
+#include "raygame/core/network/server.hpp"
+#include "raygame/core/logger.hpp"
 #include <arpa/inet.h>
 #include <cstdio>
 #include <netdb.h>

@@ -1,7 +1,7 @@
-#include "raygame/core/application/detail/cocoa.h"
-#include "raygame/core/application/detail/backends.h"
-#include "raygame/core/condition.h"
-#include "raygame/core/config.h"
+#include "raygame/core/application/detail/cocoa.hpp"
+#include "raygame/core/application/detail/backends.hpp"
+#include "raygame/core/condition.hpp"
+#include "raygame/core/config.hpp"
 
 RAYGAME_CLANG_SUPPRESS_WARNING_PUSH
 RAYGAME_CLANG_SUPPRESS_WARNING("-Wmissing-noreturn")

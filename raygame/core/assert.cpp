@@ -1,5 +1,5 @@
-#include "raygame/core/assert.h"
-#include "raygame/core/types.h"
+#include "raygame/core/assert.hpp"
+#include "raygame/core/types.hpp"
 #include <cstdlib>
 #include <iostream>
 #include <print>

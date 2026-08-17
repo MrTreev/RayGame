@@ -1,5 +1,5 @@
-#include "raygame/core/assert.h"
-#include "raytest/raytest.h"
+#include "raygame/core/assert.hpp"
+#include "raytest/raytest.hpp"
 
 RT_TEST(Assert, Checks) {
     RT_SUBCASE("check asserts") {

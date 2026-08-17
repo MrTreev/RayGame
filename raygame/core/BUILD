@@ -115,7 +115,7 @@ rg_cc_single(
 filegroup(
     name = "doxyfiles",
     srcs = glob([
-            "**/*.h",
+            "**/*.hpp",
             "**/*.dox",
         ],
         allow_empty = True,

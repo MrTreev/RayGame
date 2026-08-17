@@ -22,7 +22,7 @@ def rg_cc_library(name, **kwargs):
 def rg_cc_single(name, **kwargs):
     rg_cc_library(
         name = name,
-        hdrs = [name + ".h"],
+        hdrs = [name + ".hpp"],
         srcs = [name + ".cpp"],
         visibility = kwargs.pop("visibility", ["//visibility:public"]),
         **kwargs

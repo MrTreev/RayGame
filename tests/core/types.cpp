@@ -1,5 +1,5 @@
-#include "raygame/core/types.h" // IWYU pragma: keep
-#include "raytest/raytest.h"
+#include "raygame/core/types.hpp" // IWYU pragma: keep
+#include "raytest/raytest.hpp"
 
 RT_TEST(Types, Pair) {
     RT_SUBCASE("Return Members") {

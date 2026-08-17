@@ -1,5 +1,5 @@
-#include "raygame/core/math/vector.h"
-#include "raytest/raytest.h"
+#include "raygame/core/math/vector.hpp"
+#include "raytest/raytest.hpp"
 
 template<typename T>
 class VectorTest: public ::testing::Test {

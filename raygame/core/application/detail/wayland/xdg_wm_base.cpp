@@ -1,5 +1,5 @@
-#include "raygame/core/application/detail/wayland.h"
-#include "raygame/core/types.h"
+#include "raygame/core/application/detail/wayland.hpp"
+#include "raygame/core/types.hpp"
 
 const xdg_wm_base_listener core::detail::AppImplWayland::m_xdg_wm_base_listener = {
     .ping = xdg_wm_base_handle_ping,

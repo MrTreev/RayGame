@@ -1,7 +1,7 @@
-#include "raygame/tools/resmk/resources/png.h"
-#include "raygame/core/io/file.h"
-#include "raygame/core/logger.h"
-#include "raygame/core/math/numeric_cast.h"
+#include "raygame/tools/resmk/resources/png.hpp"
+#include "raygame/core/io/file.hpp"
+#include "raygame/core/logger.hpp"
+#include "raygame/core/math/numeric_cast.hpp"
 
 //NOLINTBEGIN(*)
 RAYGAME_CLANG_SUPPRESS_WARNING_PUSH

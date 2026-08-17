@@ -1,7 +1,7 @@
-#include "raygame/core/io/file.h"
-#include "raygame/core/logger.h"
-#include "raygame/core/types.h"
-#include "raytest/raytest.h"
+#include "raygame/core/io/file.hpp"
+#include "raygame/core/logger.hpp"
+#include "raygame/core/types.hpp"
+#include "raytest/raytest.hpp"
 #include <filesystem>
 #include <source_location>
 #include <unistd.h>
@@ -40,9 +40,9 @@ RT_TEST(ResMK, stuff) {
         const std::filesystem::path resmk_data{test::datafile("tests/tools/data")};
         const std::filesystem::path pngtest_png{resmk_data / "pngtest.png"};
         const std::filesystem::path desired_src{resmk_data / (fname + ".cpp")};
-        const std::filesystem::path desired_hdr{resmk_data / (fname + ".h")};
+        const std::filesystem::path desired_hdr{resmk_data / (fname + ".hpp")};
 
-        const std::filesystem::path pngtest_hdr{test::newfile("pngtest.h")};
+        const std::filesystem::path pngtest_hdr{test::newfile("pngtest.hpp")};
         const std::filesystem::path pngtest_src{test::newfile("pngtest.cpp")};
 
         RT_CHECK_EQ(0, resmk(pngtest_hdr, pngtest_png));

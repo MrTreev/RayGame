@@ -1,1 +1,1 @@
-#include "raygame/core/drawing/image.h" // IWYU pragma: keep
+#include "raygame/core/drawing/image.hpp" // IWYU pragma: keep

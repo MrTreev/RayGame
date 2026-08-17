@@ -1,4 +1,4 @@
-#include "raygame/core/math/timer.h"
+#include "raygame/core/math/timer.hpp"
 
 namespace core::math {
 template class Timer<

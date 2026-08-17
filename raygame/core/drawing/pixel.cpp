@@ -1,4 +1,4 @@
-#include "raygame/core/drawing/pixel.h" // IWYU pragma: keep
+#include "raygame/core/drawing/pixel.hpp" // IWYU pragma: keep
 #include <string>
 
 #define CHECK_COLOUR(COL)                                                                          \

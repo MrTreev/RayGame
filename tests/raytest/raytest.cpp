@@ -1,5 +1,5 @@
-#include "raytest.h" // IWYU pragma: keep
-#include "raygame/core/config.h"
+#include "raytest.hpp" // IWYU pragma: keep
+#include "raygame/core/config.hpp"
 #include <filesystem>
 #include <print>
 #include <rules_cc/cc/runfiles/runfiles.h>

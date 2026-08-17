@@ -1,5 +1,5 @@
-#include "raygame/core/logger.h" // IWYU pragma: keep
-#include "raytest/raytest.h"
+#include "raygame/core/logger.hpp" // IWYU pragma: keep
+#include "raytest/raytest.hpp"
 
 RT_TEST(Logger, API) {
     RT_SUBCASE("trace") {

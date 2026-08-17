@@ -1,6 +1,6 @@
-#include "raygame/core/application/detail/wayland.h"
-#include "raygame/core/application/detail/wayland/wl_include.h"
-#include "raygame/core/types.h"
+#include "raygame/core/application/detail/wayland.hpp"
+#include "raygame/core/application/detail/wayland/wl_include.hpp"
+#include "raygame/core/types.hpp"
 
 const wl_callback_listener core::detail::AppImplWayland::m_wl_surface_frame_listener{
     .done = wl_surface_handle_done,

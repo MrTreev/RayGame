@@ -1,7 +1,7 @@
-#include "raygame/core/io/file.h"
-#include "raygame/core/logger.h"
-#include "raygame/tools/resmk/resources/png.h"
-#include "raygame/tools/resmk/resources/resource.h"
+#include "raygame/core/io/file.hpp"
+#include "raygame/core/logger.hpp"
+#include "raygame/tools/resmk/resources/png.hpp"
+#include "raygame/tools/resmk/resources/resource.hpp"
 #include <algorithm>
 #include <filesystem>
 #include <memory>
@@ -97,16 +97,16 @@ int main(int argc, char* argv[]) {
         }
         core::io::File hdrfile{config.m_header, core::io::File::mode::write};
         auto           srcname{config.m_header.string()};
-        srcname.at(srcname.length() - 1) = 'c';
-        srcname.append("pp");
+        const auto     back = srcname.rfind('h');
+        srcname.at(back)    = 'c';
         core::io::File srcfile{srcname, core::io::File::mode::write};
-        hdrfile.gencode("#include \"raygame/core/drawing/image.h\"");
+        hdrfile.gencode("#include \"raygame/core/drawing/image.hpp\"");
         hdrfile.writeln("");
         if (!config.m_outer_namespace.empty()) {
             hdrfile.gencode(std::format("namespace {} {{", config.m_outer_namespace));
         }
         hdrfile.gencode(std::format("namespace {} {{", config.m_ns_name));
-        srcfile.gencode("#include \"raygame/core/drawing/image.h\"");
+        srcfile.gencode("#include \"raygame/core/drawing/image.hpp\"");
         srcfile.gencode(std::format("#include \"{}\"", config.m_header.filename().string()));
         for (const auto& resource: config.m_resources) {
             hdrfile.gencode(resource->declaration());

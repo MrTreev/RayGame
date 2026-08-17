@@ -1,1 +1,1 @@
-#include "raygame/core/math/numeric_cast.h" // IWYU pragma: keep
+#include "raygame/core/math/numeric_cast.hpp" // IWYU pragma: keep

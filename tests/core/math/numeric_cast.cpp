@@ -1,5 +1,5 @@
-#include "raygame/core/math/numeric_cast.h"
-#include "raytest/raytest.h"
+#include "raygame/core/math/numeric_cast.hpp"
+#include "raytest/raytest.hpp"
 #include <cstdint>
 
 using exp_t = core::exception::Condition;

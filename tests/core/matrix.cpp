@@ -1,5 +1,5 @@
-#include "raygame/core/matrix.h" // IWYU pragma: keep
-#include "raytest/raytest.h"
+#include "raygame/core/matrix.hpp" // IWYU pragma: keep
+#include "raytest/raytest.hpp"
 
 RT_TEST(Matrix, Basic) {
     RT_SUBCASE("Construction") {

@@ -1,8 +1,8 @@
-#include "raygame/core/application/detail/wayland.h"
-#include "raygame/core/application/detail/wayland/wl_include.h"
-#include "raygame/core/logger.h"
-#include "raygame/core/math/numeric_cast.h"
-#include "raygame/core/types.h"
+#include "raygame/core/application/detail/wayland.hpp"
+#include "raygame/core/application/detail/wayland/wl_include.hpp"
+#include "raygame/core/logger.hpp"
+#include "raygame/core/math/numeric_cast.hpp"
+#include "raygame/core/types.hpp"
 
 const xdg_toplevel_listener core::detail::AppImplWayland::m_xdg_toplevel_listener = {
     .configure        = xdg_toplevel_handle_configure,

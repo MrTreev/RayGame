@@ -1,8 +1,8 @@
-#include "raygame/tools/resmk/resources/resource.h"
-#include "raygame/core/condition.h"
-#include "raygame/core/config.h"
-#include "raygame/core/exception.h"
-#include "raygame/core/logger.h"
+#include "raygame/tools/resmk/resources/resource.hpp"
+#include "raygame/core/condition.hpp"
+#include "raygame/core/config.hpp"
+#include "raygame/core/exception.hpp"
+#include "raygame/core/logger.hpp"
 #include <format>
 #include <string>
 

@@ -1,11 +1,11 @@
-#include "raygame/core/application/application.h" // IWYU pragma: keep
-#include "raygame/core/application/detail/backends.h"
-#include "raygame/core/application/detail/cocoa.h"
-#include "raygame/core/application/detail/dwm.h"
-#include "raygame/core/application/detail/wayland.h"
-#include "raygame/core/condition.h"
-#include "raygame/core/logger.h"
-#include "raygame/core/math/vector.h"
+#include "raygame/core/application/application.hpp" // IWYU pragma: keep
+#include "raygame/core/application/detail/backends.hpp"
+#include "raygame/core/application/detail/cocoa.hpp"
+#include "raygame/core/application/detail/dwm.hpp"
+#include "raygame/core/application/detail/wayland.hpp"
+#include "raygame/core/condition.hpp"
+#include "raygame/core/logger.hpp"
+#include "raygame/core/math/vector.hpp"
 
 core::Application::Application(Vec2<size_t> size, std::string title, WindowStyle style) {
     if constexpr (config::BACKEND == config::GuiBackend::COCOA) {

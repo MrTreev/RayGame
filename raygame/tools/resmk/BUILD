@@ -3,8 +3,8 @@ load("//rules:rg_cc.bzl", "rg_cc_binary", "rg_cc_library")
 rg_cc_library(
     name = "resmk_lib",
     hdrs = [
-        "resources/png.h",
-        "resources/resource.h",
+        "resources/png.hpp",
+        "resources/resource.hpp",
     ],
     srcs = [
         "resources/png.cpp",

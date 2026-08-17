@@ -3,8 +3,8 @@ load("//rules:rg_cc.bzl", "rg_cc_library")
 rg_cc_library(
     name = "drawing",
     hdrs = [
-        "image.h",
-        "pixel.h",
+        "image.hpp",
+        "pixel.hpp",
     ],
     srcs = [
         "image.cpp",
@@ -19,7 +19,7 @@ rg_cc_library(
 filegroup(
     name = "doxyfiles",
     srcs = glob([
-            "**/*.h",
+            "**/*.hpp",
             "**/*.dox",
         ],
         allow_empty = True,

@@ -1,9 +1,9 @@
-#include "raygame/core/application/detail/wayland.h"
-#include "raygame/core/application/detail/wayland/wl_include.h"
-#include "raygame/core/condition.h"
-#include "raygame/core/logger.h"
-#include "raygame/core/math/vector.h"
-#include "raygame/core/types.h"
+#include "raygame/core/application/detail/wayland.hpp"
+#include "raygame/core/application/detail/wayland/wl_include.hpp"
+#include "raygame/core/condition.hpp"
+#include "raygame/core/logger.hpp"
+#include "raygame/core/math/vector.hpp"
+#include "raygame/core/types.hpp"
 #include <format>
 
 const wl_pointer_listener core::detail::AppImplWayland::m_wl_pointer_listener = {

@@ -1,5 +1,5 @@
-#include "raygame/core/math/mathrule.h"
-#include "raytest/raytest.h"
+#include "raygame/core/math/mathrule.hpp"
+#include "raytest/raytest.hpp"
 
 using core::math::MathRule::ALLOW;
 using core::math::MathRule::CLAMP;

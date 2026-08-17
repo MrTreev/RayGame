@@ -1,10 +1,10 @@
-#include "raygame/core/application/detail/dwm.h"
-#include "raygame/core/application/application.h"
-#include "raygame/core/application/detail/backends.h"
-#include "raygame/core/condition.h"
-#include "raygame/core/drawing/image.h"
-#include "raygame/core/math/vector.h"
-#include "raygame/core/types.h"
+#include "raygame/core/application/detail/dwm.hpp"
+#include "raygame/core/application/application.hpp"
+#include "raygame/core/application/detail/backends.hpp"
+#include "raygame/core/condition.hpp"
+#include "raygame/core/drawing/image.hpp"
+#include "raygame/core/math/vector.hpp"
+#include "raygame/core/types.hpp"
 #include <string>
 #include <utility>
 

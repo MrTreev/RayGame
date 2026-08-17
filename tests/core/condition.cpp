@@ -1,6 +1,6 @@
-#include "raygame/core/condition.h" // IWYU pragma: keep
-#include "raygame/core/exception.h"
-#include "raytest/raytest.h"
+#include "raygame/core/condition.hpp" // IWYU pragma: keep
+#include "raygame/core/exception.hpp"
+#include "raytest/raytest.hpp"
 
 namespace {
 template<typename T>

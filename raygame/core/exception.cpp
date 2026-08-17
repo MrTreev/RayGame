@@ -1,5 +1,5 @@
-#include "raygame/core/exception.h" // IWYU pragma: keep
-#include "raygame/core/types.h"
+#include "raygame/core/exception.hpp" // IWYU pragma: keep
+#include "raygame/core/types.hpp"
 #include <stdexcept>
 #include <string>
 

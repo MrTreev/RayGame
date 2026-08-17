@@ -3,7 +3,7 @@ load("//rules:rg_cc.bzl", "rg_cc_library")
 rg_cc_library(
     name = "raytest",
     hdrs = [
-        "raytest.h",
+        "raytest.hpp",
     ],
     srcs = [
         "raytest.cpp",

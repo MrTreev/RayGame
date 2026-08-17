@@ -1,5 +1,5 @@
-#include "raygame/core/drawing/pixel.h" // IWYU pragma: keep
-#include "raytest/raytest.h"
+#include "raygame/core/drawing/pixel.hpp" // IWYU pragma: keep
+#include "raytest/raytest.hpp"
 
 RT_TEST(Pixel, StringFunctions) {
     const auto        mod = core::colour::rgba(23, 12, 14, 16);

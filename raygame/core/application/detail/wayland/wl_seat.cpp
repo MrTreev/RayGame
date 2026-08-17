@@ -1,7 +1,7 @@
-#include "raygame/core/application/detail/wayland.h"
-#include "raygame/core/application/detail/wayland/wl_include.h"
-#include "raygame/core/logger.h"
-#include "raygame/core/types.h"
+#include "raygame/core/application/detail/wayland.hpp"
+#include "raygame/core/application/detail/wayland/wl_include.hpp"
+#include "raygame/core/logger.hpp"
+#include "raygame/core/types.hpp"
 
 const wl_seat_listener core::detail::AppImplWayland::m_wl_seat_listener = {
     .capabilities = wl_seat_handle_capabilities,

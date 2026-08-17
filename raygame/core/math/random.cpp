@@ -1,7 +1,7 @@
-#include "raygame/core/math/random.h" // IWYU pragma: keep
-#include "raygame/core/condition.h"
-#include "raygame/core/config.h"
-#include "raygame/core/types.h"
+#include "raygame/core/math/random.hpp" // IWYU pragma: keep
+#include "raygame/core/condition.hpp"
+#include "raygame/core/config.hpp"
+#include "raygame/core/types.hpp"
 #include <format>
 #include <random>
 #include <vector>

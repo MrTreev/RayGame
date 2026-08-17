@@ -1,5 +1,5 @@
-#include "raygame/core/io/file.h"
-#include "raytest/raytest.h"
+#include "raygame/core/io/file.hpp"
+#include "raytest/raytest.hpp"
 #include <filesystem>
 #include <sys/wait.h>
 #include <unistd.h>

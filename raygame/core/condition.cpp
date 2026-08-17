@@ -1,5 +1,5 @@
-#include "raygame/core/condition.h" // IWYU pragma: keep
-#include "raygame/core/logger.h"
+#include "raygame/core/condition.hpp" // IWYU pragma: keep
+#include "raygame/core/logger.hpp"
 #include <source_location>
 #include <string>
 #include <utility>

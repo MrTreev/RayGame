@@ -1,6 +1,6 @@
-#include "raygame/core/drawing/image.h"
-#include "raygame/core/drawing/pixel.h"
-#include "raytest/raytest.h"
+#include "raygame/core/drawing/image.hpp"
+#include "raygame/core/drawing/pixel.hpp"
+#include "raytest/raytest.hpp"
 
 RT_TEST(Image, Constructors) {
     const std::array<core::Pixel, 9> arr9_test{
