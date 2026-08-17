@@ -16,7 +16,10 @@ void core::detail::AppImplWayland::wl_registry_handle_global(
     const char*  interface,
     uint32_t     version
 ) {
-    auto*             this_impl = static_cast<AppImplWayland*>(data);
+    auto* this_impl = static_cast<AppImplWayland*>(data);
+    if (this_impl->m_should_close) {
+        return;
+    }
     const std::string interface_str{interface};
     if (interface_str == wl_shm_interface.name) {
         core::log::trace("Handled Global: {}", interface);

@@ -14,6 +14,9 @@ void core::detail::AppImplWayland::wl_surface_handle_done(
     auto* self = static_cast<AppImplWayland*>(data);
 
     wl_callback_destroy(wl_callback);
+    if (self->m_should_close) {
+        return;
+    }
     self->m_wl_callback = wl_surface_frame(self->m_wl_surface);
     wl_callback_add_listener(self->m_wl_callback, &m_wl_surface_frame_listener, self);
 

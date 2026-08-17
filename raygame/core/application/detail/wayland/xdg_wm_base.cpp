@@ -12,5 +12,8 @@ void core::detail::AppImplWayland::xdg_wm_base_handle_ping(
 ) {
     [[maybe_unused]]
     auto* this_impl = static_cast<AppImplWayland*>(data);
+    if (this_impl->m_should_close) {
+        return;
+    }
     xdg_wm_base_pong(xdg_wm_base, serial);
 }

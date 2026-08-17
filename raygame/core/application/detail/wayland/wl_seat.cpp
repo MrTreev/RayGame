@@ -13,7 +13,10 @@ void core::detail::AppImplWayland::wl_seat_handle_capabilities(
     wl_seat* seat,
     uint32_t capabilities
 ) {
-    auto*      this_impl     = static_cast<AppImplWayland*>(data);
+    auto* this_impl = static_cast<AppImplWayland*>(data);
+    if (this_impl->m_should_close) {
+        return;
+    }
     const bool have_pointer  = (capabilities != 0U) && (WL_SEAT_CAPABILITY_POINTER != 0U);
     const bool have_keyboard = (capabilities & WL_SEAT_CAPABILITY_KEYBOARD) != 0U;
     if (have_pointer && this_impl->m_wl_pointer == nullptr) {
@@ -39,5 +42,8 @@ void core::detail::AppImplWayland::wl_seat_name(
 ) {
     [[maybe_unused]]
     auto* this_impl = static_cast<AppImplWayland*>(data);
+    if (this_impl->m_should_close) {
+        return;
+    }
     core::log::trace("{}", name);
 }

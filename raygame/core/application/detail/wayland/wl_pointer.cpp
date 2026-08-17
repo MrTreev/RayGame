@@ -46,7 +46,10 @@ void core::detail::AppImplWayland::wl_pointer_handle_axis(
     uint32_t                     axis,
     wl_fixed_t                   value
 ) {
-    auto* this_impl                          = static_cast<AppImplWayland*>(data);
+    auto* this_impl = static_cast<AppImplWayland*>(data);
+    if (this_impl->m_should_close) {
+        return;
+    }
     this_impl->m_pointer_event.m_event_mask |= POINTER_EVENT_AXIS;
     this_impl->m_pointer_event.m_time        = time;
     if (axis == WL_POINTER_AXIS_VERTICAL_SCROLL) {
@@ -66,7 +69,10 @@ void core::detail::AppImplWayland::wl_pointer_handle_axis_discrete(
     uint32_t                     axis,
     int32_t                      discrete
 ) {
-    auto* this_impl                          = static_cast<AppImplWayland*>(data);
+    auto* this_impl = static_cast<AppImplWayland*>(data);
+    if (this_impl->m_should_close) {
+        return;
+    }
     this_impl->m_pointer_event.m_event_mask |= POINTER_EVENT_AXIS_DISCRETE;
     if (axis == WL_POINTER_AXIS_VERTICAL_SCROLL) {
         this_impl->m_pointer_event.m_axis_vertical.m_valid    = true;
@@ -87,6 +93,9 @@ void core::detail::AppImplWayland::wl_pointer_handle_axis_relative_direction(
 ) {
     [[maybe_unused]]
     const AppImplWayland* const this_impl = static_cast<AppImplWayland*>(data);
+    if (this_impl->m_should_close) {
+        return;
+    }
 }
 
 void core::detail::AppImplWayland::wl_pointer_handle_axis_source(
@@ -94,7 +103,10 @@ void core::detail::AppImplWayland::wl_pointer_handle_axis_source(
     [[maybe_unused]] wl_pointer* wl_pointer,
     uint32_t                     axis_source
 ) {
-    auto* this_impl                           = static_cast<AppImplWayland*>(data);
+    auto* this_impl = static_cast<AppImplWayland*>(data);
+    if (this_impl->m_should_close) {
+        return;
+    }
     this_impl->m_pointer_event.m_event_mask  |= POINTER_EVENT_AXIS_SOURCE;
     this_impl->m_pointer_event.m_axis_source  = axis_source;
 }
@@ -105,7 +117,10 @@ void core::detail::AppImplWayland::wl_pointer_handle_axis_stop(
     uint32_t                     time,
     uint32_t                     axis
 ) {
-    auto* this_impl                          = static_cast<AppImplWayland*>(data);
+    auto* this_impl = static_cast<AppImplWayland*>(data);
+    if (this_impl->m_should_close) {
+        return;
+    }
     this_impl->m_pointer_event.m_time        = time;
     this_impl->m_pointer_event.m_event_mask |= POINTER_EVENT_AXIS_STOP;
     if (axis == WL_POINTER_AXIS_VERTICAL_SCROLL) {
@@ -125,6 +140,9 @@ void core::detail::AppImplWayland::wl_pointer_handle_axis_value120(
 ) {
     [[maybe_unused]]
     const AppImplWayland* const this_impl = static_cast<AppImplWayland*>(data);
+    if (this_impl->m_should_close) {
+        return;
+    }
 }
 
 void core::detail::AppImplWayland::wl_pointer_handle_button(
@@ -135,7 +153,10 @@ void core::detail::AppImplWayland::wl_pointer_handle_button(
     uint32_t                     button,
     uint32_t                     state
 ) {
-    auto* this_impl                          = static_cast<AppImplWayland*>(data);
+    auto* this_impl = static_cast<AppImplWayland*>(data);
+    if (this_impl->m_should_close) {
+        return;
+    }
     this_impl->m_pointer_event.m_event_mask |= POINTER_EVENT_BUTTON;
     this_impl->m_pointer_event.m_time        = time;
     this_impl->m_pointer_event.m_serial      = serial;
@@ -151,7 +172,10 @@ void core::detail::AppImplWayland::wl_pointer_handle_enter(
     wl_fixed_t                   surface_x,
     wl_fixed_t                   surface_y
 ) {
-    auto* this_impl                          = static_cast<AppImplWayland*>(data);
+    auto* this_impl = static_cast<AppImplWayland*>(data);
+    if (this_impl->m_should_close) {
+        return;
+    }
     this_impl->m_pointer_event.m_event_mask |= POINTER_EVENT_ENTER;
     this_impl->m_pointer_event.m_serial      = serial;
     this_impl->m_pointer_event.m_surface_x   = surface_x;
@@ -174,8 +198,11 @@ void core::detail::AppImplWayland::wl_pointer_handle_frame(
     void*                        data,
     [[maybe_unused]] wl_pointer* wl_pointer
 ) {
-    const auto*         this_impl = static_cast<AppImplWayland*>(data);
-    const PointerEvent& event     = this_impl->m_pointer_event;
+    const auto* this_impl = static_cast<AppImplWayland*>(data);
+    if (this_impl->m_should_close) {
+        return;
+    }
+    const PointerEvent& event = this_impl->m_pointer_event;
     if ((event.m_event_mask & POINTER_EVENT_ENTER) != 0U) {
         core::log::trace(
             "Pointer Entry ({}, {})",
@@ -242,7 +269,10 @@ void core::detail::AppImplWayland::wl_pointer_handle_leave(
     uint32_t                     serial,
     [[maybe_unused]] wl_surface* surface
 ) {
-    auto* this_impl                          = static_cast<AppImplWayland*>(data);
+    auto* this_impl = static_cast<AppImplWayland*>(data);
+    if (this_impl->m_should_close) {
+        return;
+    }
     this_impl->m_pointer_event.m_serial      = serial;
     this_impl->m_pointer_event.m_event_mask |= POINTER_EVENT_LEAVE;
 }
@@ -254,7 +284,10 @@ void core::detail::AppImplWayland::wl_pointer_handle_motion(
     wl_fixed_t                   surface_x,
     wl_fixed_t                   surface_y
 ) {
-    auto* this_impl                          = static_cast<AppImplWayland*>(data);
+    auto* this_impl = static_cast<AppImplWayland*>(data);
+    if (this_impl->m_should_close) {
+        return;
+    }
     this_impl->m_pointer_event.m_event_mask |= POINTER_EVENT_MOTION;
     this_impl->m_pointer_event.m_time        = time;
     this_impl->m_pointer_event.m_surface_x   = surface_x;
