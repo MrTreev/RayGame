@@ -111,7 +111,7 @@ public:
 private:
     using wl_fixed_t = int32_t;
 
-    static constexpr size_t BUFFER_COUNT = 2;
+    static constexpr size_t BUFFER_COUNT = 3;
 
     int      m_shm_fd         = -1;
     size_t   m_mapped_size    = 0;

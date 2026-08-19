@@ -1,6 +1,7 @@
 #include "raygame/core/math/vector.hpp"
 #include "raytest/raytest.hpp"
 
+namespace {
 template<typename T>
 class VectorTest: public ::testing::Test {
 public:
@@ -16,6 +17,7 @@ public:
 
     T::B bval() { return 1; }
 };
+} // namespace
 
 RT_TYPED_TEST_SUITE(VectorPaired, test::types::IntegralPairs);
 

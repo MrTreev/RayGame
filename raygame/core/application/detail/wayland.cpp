@@ -340,6 +340,7 @@ void AppImplWayland::set_current_pixbuf() {
     const auto stride_bytes = safe_mult<size_t>(m_buffer_width, COLOUR_CHANNELS);
     const auto frame_bytes  = safe_mult<size_t>(stride_bytes, m_buffer_height);
     m_pixbuf                = {
+        //NOLINTNEXTLINE(*-pointer-arithmetic)
         m_mapped_base + (m_current_buffer * (frame_bytes / sizeof(Pixel))),
         std::extents(m_buffer_height, m_buffer_width)
     };

@@ -2,11 +2,13 @@
 #include "raytest/raytest.hpp"
 #include <array>
 
+namespace {
 template<typename T>
 class Rand: public ::testing::Test {
 public:
     T val() { return 1; }
 };
+} // namespace
 
 RT_TYPED_TEST_SUITE(Rand, test::types::Integral);
 

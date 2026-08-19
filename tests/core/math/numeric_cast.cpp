@@ -10,11 +10,13 @@ using test::lowest;
 using test::max;
 using test::min;
 
+namespace {
 template<typename T>
 class NumericCast: public ::testing::Test {
 public:
     T val() { return 1; }
 };
+} // namespace
 
 RT_TYPED_TEST_SUITE(NumericCast, test::types::Integral);
 
