@@ -4,6 +4,7 @@ rg_cc_singletest(
     name = "resmk",
     deps = [
         "//raygame/core/io",
+        "//raygame/tools/resmk:resmk_lib",
     ],
     data = [
         "//raygame/tools/resmk",
