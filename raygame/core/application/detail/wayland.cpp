@@ -130,6 +130,16 @@ AppImplWayland::AppImplWayland(Vec2<size_t> size, std::string title, WindowStyle
     check_ptr(m_xdg_toplevel, "xdg_toplevel setup failed");
     xdg_toplevel_add_listener(m_xdg_toplevel, &m_xdg_toplevel_listener, this);
     xdg_surface_add_listener(m_xdg_surface, &m_xdg_surface_listener, this);
+    xdg_toplevel_set_min_size(
+        m_xdg_toplevel,
+        numeric_cast<int32_t>(width()),
+        numeric_cast<int32_t>(height())
+    );
+    xdg_toplevel_set_max_size(
+        m_xdg_toplevel,
+        numeric_cast<int32_t>(width()),
+        numeric_cast<int32_t>(height())
+    );
     wl_surface_commit(m_wl_surface);
     log::trace("Surface Committed");
     while ((wl_display_dispatch(m_wl_display) != -1) && (!m_configured)) {
@@ -336,7 +346,6 @@ void KeyboardState::event(const uint32_t& key, const uint32_t& state) {
 // NOLINTEND(*-easily-swappable-parameters)
 
 void AppImplWayland::set_current_pixbuf() {
-    // m_pixbuf always views exactly one frame inside the big mapping
     const auto stride_bytes = safe_mult<size_t>(m_buffer_width, COLOUR_CHANNELS);
     const auto frame_bytes  = safe_mult<size_t>(stride_bytes, m_buffer_height);
     m_pixbuf                = {
@@ -352,13 +361,9 @@ void AppImplWayland::recreate_buffers() {
     if (wid == 0 || 0 == hei) {
         return;
     }
-
-    // Already correct size? nothing to do.
     if ((m_buffers.at(0) != nullptr) && m_buffer_width == wid && m_buffer_height == hei) {
         return;
     }
-
-    // --- tear down old resources ---
     for (auto*& buf: m_buffers) {
         if (buf != nullptr) {
             wl_buffer_destroy(buf);
@@ -366,7 +371,6 @@ void AppImplWayland::recreate_buffers() {
         }
     }
     m_busy.fill(false);
-
     if (m_wl_shm_pool != nullptr) {
         wl_shm_pool_destroy(m_wl_shm_pool);
         m_wl_shm_pool = nullptr;
@@ -380,28 +384,21 @@ void AppImplWayland::recreate_buffers() {
         close(m_shm_fd);
         m_shm_fd = -1;
     }
-
-    // --- create new pool large enough for two frames ---
     const auto stride = safe_mult<size_t>(wid, COLOUR_CHANNELS);
     const auto frame  = safe_mult<size_t>(stride, hei);
     m_mapped_size     = safe_mult<size_t>(frame, BUFFER_COUNT);
-
-    m_shm_fd = allocate_shm_file(m_mapped_size);
+    m_shm_fd          = allocate_shm_file(m_mapped_size);
     check_condition(m_shm_fd >= 0, "shm file creation failed");
-
     m_mapped_base = static_cast<Pixel*>(
         mmap(nullptr, m_mapped_size, PROT_READ | PROT_WRITE, MAP_SHARED, m_shm_fd, 0)
     );
     check_condition(m_mapped_base != MAP_FAILED, "mmap failed");
-
     m_wl_shm_pool = wl_shm_create_pool(m_wl_shm, m_shm_fd, numeric_cast<int32_t>(m_mapped_size));
     check_ptr(m_wl_shm_pool, "wl_shm_pool creation failed");
-
-    // create the two buffers at offsets 0 and frame
     for (size_t i = 0; i < BUFFER_COUNT; ++i) {
         m_buffers.at(i) = wl_shm_pool_create_buffer(
             m_wl_shm_pool,
-            numeric_cast<int32_t>(i * frame), // offset
+            numeric_cast<int32_t>(i * frame),
             numeric_cast<int32_t>(wid),
             numeric_cast<int32_t>(hei),
             numeric_cast<int32_t>(stride),
@@ -410,21 +407,16 @@ void AppImplWayland::recreate_buffers() {
         check_ptr(m_buffers.at(i), "wl_buffer creation failed");
         wl_buffer_add_listener(m_buffers.at(i), &m_wl_buffer_listener, this);
     }
-
-    // We no longer need the pool object after the buffers exist
     wl_shm_pool_destroy(m_wl_shm_pool);
-    m_wl_shm_pool = nullptr;
-
+    m_wl_shm_pool    = nullptr;
     m_buffer_width   = wid;
     m_buffer_height  = hei;
     m_current_buffer = 0;
     m_busy.fill(false);
-
-    set_current_pixbuf(); // m_pixbuf now points at buffer 0
+    set_current_pixbuf();
     log::trace("Double-buffered shm pool ready ({}×{}, 2 frames)", wid, hei);
 }
 
-// Release callback – marks a buffer free again
 void AppImplWayland::wl_buffer_release(void* data, wl_buffer* buffer) {
     auto* self = static_cast<AppImplWayland*>(data);
     for (size_t i = 0; i < BUFFER_COUNT; ++i) {
