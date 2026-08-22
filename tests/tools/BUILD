@@ -7,12 +7,8 @@ rg_cc_singletest(
     ],
     data = [
         "//raygame/tools/resmk",
-        "data/pngtest-base.cpp",
-        "data/pngtest-base.hpp",
-        "data/pngtest-full.cpp",
-        "data/pngtest-full.hpp",
-        "data/pngtest-none.cpp",
-        "data/pngtest-none.hpp",
+        "data/pngtest.cpp",
+        "data/pngtest.hpp",
         "data/pngtest.png",
     ],
 )

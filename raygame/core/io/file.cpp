@@ -130,15 +130,9 @@ void File::writeln(const std::string_view& msg) {
     write(std::format("{}\n", msg));
 }
 
-void File::gencode(const std::string_view& msg, std::source_location loc) {
+void File::gencode(const std::string_view& msg) {
     condition::check_condition(good(), std::format("File not good: {}", m_path.string()));
-    const auto locstr = debug::location_message(loc);
-    write(std::format("{}{}\n", msg, [locstr]() {
-        if (locstr.empty()) {
-            return std::string();
-        }
-        return std::format(" // {}", locstr);
-    }()));
+    write(std::format("{}\n", msg));
 }
 
 File::~File() {

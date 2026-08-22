@@ -1,9 +1,6 @@
 #include "raygame/core/io/file.hpp"
-#include "raygame/core/logger.hpp"
-#include "raygame/core/types.hpp"
 #include "raytest/raytest.hpp"
 #include <filesystem>
-#include <source_location>
 #include <unistd.h>
 
 namespace {
@@ -23,24 +20,10 @@ int resmk(const std::string& hdr, const std::string& png) {
 
 RT_TEST(ResMK, stuff) {
     RT_SUBCASE("png data") {
-        const std::string fname{[]() {
-            const auto        cur{std::source_location::current()};
-            const std::string fna{std::format("resmk.cpp:{}", cur.line())};
-            const auto        msg{core::debug::location_message(cur)};
-            if (msg == fna) {
-                return "pngtest-base";
-            }
-            if (msg == "tests/tools/" + fna) {
-                return "pngtest-full";
-            }
-            RT_CHECK_TRUE(msg.empty());
-            return "pngtest-none";
-        }()};
-        core::log::debug("fname = {}", fname);
         const std::filesystem::path resmk_data{test::datafile("tests/tools/data")};
         const std::filesystem::path pngtest_png{resmk_data / "pngtest.png"};
-        const std::filesystem::path desired_src{resmk_data / (fname + ".cpp")};
-        const std::filesystem::path desired_hdr{resmk_data / (fname + ".hpp")};
+        const std::filesystem::path desired_src{resmk_data / "pngtest.cpp"};
+        const std::filesystem::path desired_hdr{resmk_data / "pngtest.hpp"};
 
         const std::filesystem::path pngtest_hdr{test::newfile("pngtest.hpp")};
         const std::filesystem::path pngtest_src{test::newfile("pngtest.cpp")};

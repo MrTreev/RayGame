@@ -32,10 +32,7 @@ public:
 
     std::FILE* raw() { return m_file; }
 
-    void gencode(
-        const std::string_view& msg,
-        std::source_location    loc = std::source_location::current()
-    );
+    void gencode(const std::string_view& msg);
     void write(const std::string_view& msg);
     void write(const std::vector<byte>& msg);
     void writeln(const std::string_view& msg);

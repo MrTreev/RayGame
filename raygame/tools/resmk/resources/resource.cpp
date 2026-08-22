@@ -9,6 +9,8 @@
 RAYGAME_CLANG_SUPPRESS_WARNING_PUSH
 RAYGAME_CLANG_SUPPRESS_WARNING("-Wmissing-noreturn")
 
+namespace resmk {
+
 void Resource::process_impl() {
     throw core::exception::Unimplemented(
         std::format("Unknown file extension: {}", m_source.extension().string())
@@ -52,3 +54,5 @@ FileError::FileError(const std ::string& message)
     : core::exception::Exception(message) {}
 
 FileError::~FileError() noexcept = default;
+
+} // namespace resmk

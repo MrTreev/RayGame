@@ -3,6 +3,8 @@
 #include <filesystem>
 #include <string>
 
+namespace resmk {
+
 class FileError: public core::exception::Exception {
 public:
     FileError(const FileError&)            = default;
@@ -41,3 +43,5 @@ public:
 
     void process();
 };
+
+} // namespace resmk

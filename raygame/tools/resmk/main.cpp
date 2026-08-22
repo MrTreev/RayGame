@@ -1,6 +1,6 @@
-#include "raygame/core/io/file.hpp"
 #include "raygame/core/logger.hpp"
 #include "raygame/tools/resmk/resources/png.hpp"
+#include "raygame/tools/resmk/resources/resmk.hpp"
 #include "raygame/tools/resmk/resources/resource.hpp"
 #include <algorithm>
 #include <filesystem>
@@ -12,6 +12,8 @@
 namespace {
 
 constexpr std::string progname{"resmk"};
+using resmk::PngFile;
+using resmk::Resource;
 
 int print_help() {
     std::println("{}: Creates a RayGame resource from a file", progname);
@@ -95,27 +97,12 @@ int main(int argc, char* argv[]) {
         if (config.m_resources.empty()) {
             throw std::runtime_error("No resources given");
         }
-        core::io::File hdrfile{config.m_header, core::io::File::mode::write};
-        auto           srcname{config.m_header.string()};
-        const auto     back = srcname.rfind('h');
-        srcname.at(back)    = 'c';
-        core::io::File srcfile{srcname, core::io::File::mode::write};
-        hdrfile.gencode("#include \"raygame/core/drawing/image.hpp\"");
-        hdrfile.writeln("");
-        if (!config.m_outer_namespace.empty()) {
-            hdrfile.gencode(std::format("namespace {} {{", config.m_outer_namespace));
-        }
-        hdrfile.gencode(std::format("namespace {} {{", config.m_ns_name));
-        srcfile.gencode("#include \"raygame/core/drawing/image.hpp\"");
-        srcfile.gencode(std::format("#include \"{}\"", config.m_header.filename().string()));
-        for (const auto& resource: config.m_resources) {
-            hdrfile.gencode(resource->declaration());
-            srcfile.gencode(resource->definition(config.m_ns_name + "::"));
-        }
-        hdrfile.gencode(std::format("}} // namespace {}", config.m_ns_name));
-        if (!config.m_outer_namespace.empty()) {
-            hdrfile.gencode(std::format("}} // namespace {}", config.m_outer_namespace));
-        }
+        resmk::resmk(
+            config.m_header,
+            config.m_resources,
+            config.m_outer_namespace,
+            config.m_ns_name
+        );
     } catch (const Help&) {
         print_help();
         return 0;

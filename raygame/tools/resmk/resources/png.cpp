@@ -21,6 +21,8 @@ RAYGAME_CLANG_SUPPRESS_WARNING_POP
 
 //NOLINTEND(*)
 
+namespace resmk {
+
 PngFile::~PngFile() {
     stbi_image_free(m_data);
 }
@@ -68,3 +70,5 @@ void PngFile::content(std::string& stuff) const {
 std::string PngFile::type() const {
     return std::format("core::drawing::Image<{}, {}>", m_width, m_height);
 }
+
+} // namespace resmk

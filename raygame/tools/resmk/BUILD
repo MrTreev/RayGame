@@ -4,10 +4,12 @@ rg_cc_library(
     name = "resmk_lib",
     hdrs = [
         "resources/png.hpp",
+        "resources/resmk.hpp",
         "resources/resource.hpp",
     ],
     srcs = [
         "resources/png.cpp",
+        "resources/resmk.cpp",
         "resources/resource.cpp",
     ],
     deps = [
