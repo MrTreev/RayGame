@@ -60,13 +60,11 @@ _rg_wayland_protocol_rule = rule(
 
 def rg_wayland_protocol(**kwargs):
     name = kwargs.pop("name")
-    protocol = kwargs.pop("protocol", default = name)
-    xml_file = kwargs.pop("xml", default = "%s.xml" % protocol)
-    header = kwargs.pop("header", default = "{proto}-client-protocol-impl.h".format(proto = protocol))
-    modhdr = kwargs.pop("modhdr", default = "{proto}-client-protocol.h".format(proto = protocol))
-    source = kwargs.pop("source", default = "{proto}-protocol.c".format(proto = protocol))
-    deps = kwargs.pop("deps", default = [])
-    dirname = "%s_incdir" % protocol
+    protocol = kwargs.pop("protocol", name)
+    xml_file = kwargs.pop("xml", "%s.xml" % protocol)
+    header = kwargs.pop("header", "{proto}-client-protocol-impl.h".format(proto = protocol))
+    modhdr = kwargs.pop("modhdr", "{proto}-client-protocol.h".format(proto = protocol))
+    source = kwargs.pop("source", "{proto}-protocol.c".format(proto = protocol))
     protocol_target = "_{}_wayland_protocol".format(name)
 
     _rg_wayland_protocol_rule(

@@ -17,9 +17,3 @@ config_setting(
     constraint_values = ["//rules/os:linux"],
     visibility = ["//visibility:public"],
 )
-
-config_setting(
-    name = "x11",
-    constraint_values = ["//rules/os:linux"],
-    visibility = ["//visibility:public"],
-)

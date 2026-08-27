@@ -51,7 +51,7 @@ RT_TEST(ResMK, stuff) {
         const std::filesystem::path pngtest_src{test::newfile(std::format("{}.cpp", base))};
 
         const std::vector<std::filesystem::path> paths{pngtest_png};
-        resmk::resmk(pngtest_hdr, paths, base, base);
+        resmk::resmk(pngtest_hdr, paths, "", base);
         RT_ASSERT(std::filesystem::exists(pngtest_png));
 
         RT_CHECK_TRUE(std::filesystem::exists(pngtest_hdr));

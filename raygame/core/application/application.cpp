@@ -1,20 +1,25 @@
 #include "raygame/core/application/application.hpp" // IWYU pragma: keep
 #include "raygame/core/application/detail/backends.hpp"
-#include "raygame/core/application/detail/cocoa.hpp"
-#include "raygame/core/application/detail/dwm.hpp"
-#include "raygame/core/application/detail/wayland.hpp"
 #include "raygame/core/condition.hpp"
 #include "raygame/core/logger.hpp"
 #include "raygame/core/math/vector.hpp"
 
+#if defined(RAYGAME_GUI_BACKEND_COCOA)
+#    include "raygame/core/application/detail/cocoa.hpp"
+#elif defined(RAYGAME_GUI_BACKEND_DWM)
+#    include "raygame/core/application/detail/dwm.hpp"
+#elif defined(RAYGAME_GUI_BACKEND_WAYLAND)
+#    include "raygame/core/application/detail/wayland.hpp"
+#endif
+
 core::Application::Application(Vec2<size_t> size, std::string title, WindowStyle style) {
-    if constexpr (config::BACKEND == config::GuiBackend::COCOA) {
-        m_impl = std::make_unique<detail::CocoaWindowImpl>(size, std::move(title), style);
-    } else if constexpr (config::BACKEND == config::GuiBackend::DWM) {
-        m_impl = std::make_unique<detail::DwmWindowImpl>(size, std::move(title), style);
-    } else if constexpr (config::BACKEND == config::GuiBackend::WAYLAND) {
-        m_impl = std::make_unique<detail::AppImplWayland>(size, std::move(title), style);
-    }
+#if defined(RAYGAME_GUI_BACKEND_COCOA)
+    m_impl = std::make_unique<detail::CocoaWindowImpl>(size, std::move(title), style);
+#elif defined(RAYGAME_GUI_BACKEND_DWM)
+    m_impl = std::make_unique<detail::DwmWindowImpl>(size, std::move(title), style);
+#elif defined(RAYGAME_GUI_BACKEND_WAYLAND)
+    m_impl = std::make_unique<detail::AppImplWayland>(size, std::move(title), style);
+#endif
 }
 
 core::detail::AppImpl::~AppImpl() {

@@ -4,13 +4,13 @@ module(
 )
 
 bazel_dep(name = "platforms", version = "1.1.0")
-bazel_dep(name = "rules_cc", version = "0.2.19")
+bazel_dep(name = "rules_cc", version = "0.2.22")
 bazel_dep(name = "aspect_bazel_lib", version = "2.22.5")
-bazel_dep(name = "bazel_skylib", version = "1.9.0")
-bazel_dep(name = "googletest", version = "1.17.0.bcr.2")
+bazel_dep(name = "bazel_skylib", version = "1.9.2")
+bazel_dep(name = "googletest", version = "1.18.0.bcr.1")
 bazel_dep(name = "stb", version = "0.0.0-20251026-f1c79c0")
 
-bazel_dep(name = "rules_doxygen", version = "2.6.3", dev_dependency = True)
+bazel_dep(name = "rules_doxygen", version = "2.6.4", dev_dependency = True)
 doxygen_extension = use_extension(
     "@rules_doxygen//:extensions.bzl",
     "doxygen_extension",
@@ -20,12 +20,10 @@ use_repo(doxygen_extension, "doxygen")
 bazel_dep(name = "toolchains_llvm", version = "1.8.0")
 llvm = use_extension("@toolchains_llvm//toolchain/extensions:llvm.bzl", "llvm")
 llvm.toolchain(
-    llvm_versions = {
-        "": "22.1.7",
-    },
+    llvm_version = "22.1.7",
     cxx_standard = {"": "c++26"},
     stdlib = {"": "builtin-libc++"},
-    compile_flags = {"": [
+    extra_compile_flags = {"": [
         "-fstack-protector",
         "-fno-omit-frame-pointer",
         "-fcolor-diagnostics",
@@ -50,6 +48,8 @@ llvm.toolchain(
         "-Wno-unsafe-buffer-usage",
         "-Wno-c23-extensions",
         "-Wno-unused-command-line-argument",
+        "-Wno-missing-include-dirs",
+        "-Wno-reserved-macro-identifier",
     ]},
 )
 use_repo(llvm, "llvm_toolchain")

@@ -11,27 +11,37 @@ rg_cc_library(
         "input.cpp",
         "detail/backends.cpp",
         "detail/backends.hpp",
-        "detail/cocoa.cpp",
-        "detail/cocoa.hpp",
-        "detail/dwm.cpp",
-        "detail/dwm.hpp",
-        "detail/wayland.cpp",
-        "detail/wayland.hpp",
-        "detail/wayland/wl_include.hpp",
-        "detail/wayland/wl_keyboard.cpp",
-        "detail/wayland/wl_pointer.cpp",
-        "detail/wayland/wl_registry.cpp",
-        "detail/wayland/wl_seat.cpp",
-        "detail/wayland/wl_surface.cpp",
-        "detail/wayland/xdg_surface.cpp",
-        "detail/wayland/xdg_toplevel.cpp",
-        "detail/wayland/xdg_wm_base.cpp",
-    ],
+    ] + select({
+        "//rules/gui:cocoa": [
+            "detail/cocoa.cpp",
+            "detail/cocoa.hpp",
+        ],
+        "//rules/gui:dwm": [
+            "detail/dwm.cpp",
+            "detail/dwm.hpp",
+        ],
+        "//rules/gui:wayland": [
+            "detail/wayland.cpp",
+            "detail/wayland.hpp",
+            "detail/wayland/wl_include.hpp",
+            "detail/wayland/wl_keyboard.cpp",
+            "detail/wayland/wl_pointer.cpp",
+            "detail/wayland/wl_registry.cpp",
+            "detail/wayland/wl_seat.cpp",
+            "detail/wayland/wl_surface.cpp",
+            "detail/wayland/xdg_surface.cpp",
+            "detail/wayland/xdg_toplevel.cpp",
+            "detail/wayland/xdg_wm_base.cpp",
+        ],
+    }),
     deps = [
         "//raygame/core",
         "//raygame/core/drawing",
-        "//third_party/wayland",
-    ],
+    ] + select({
+        "//rules/gui:wayland": [
+            "//third_party/wayland"
+        ],
+    }),
     visibility = ["//visibility:public"],
 )
 

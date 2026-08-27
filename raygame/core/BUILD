@@ -89,11 +89,7 @@ rg_cc_single(
     deps = [
         ":config",
     ],
-    defines = [] + select({
-        "//rules/log/source_location:full": ["RAYGAME_SOURCE_LOCATION_FULL"],
-        "//rules/log/source_location:base": ["RAYGAME_SOURCE_LOCATION_BASE"],
-        "//rules/log/source_location:none": ["RAYGAME_SOURCE_LOCATION_NONE"],
-    }))
+)
 
 rg_cc_single(
     name = "logger",

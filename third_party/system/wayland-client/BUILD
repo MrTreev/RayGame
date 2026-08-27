@@ -4,6 +4,10 @@ cc_library(
     name = "wayland-client",
     deps = [":libwayland-client-import"],
     visibility = ["//visibility:public"],
+    target_compatible_with = select({
+        "//rules/os:linux": [],
+        "//conditions:default": ["@platforms//:incompatible"],
+    }),
 )
 
 cc_import(
@@ -11,6 +15,10 @@ cc_import(
     hdrs = [":libwayland-client-headers"],
     interface_library = ":libwayland-client-sofile",
     system_provided = True,
+    target_compatible_with = select({
+        "//rules/os:linux": [],
+        "//conditions:default": ["@platforms//:incompatible"],
+    }),
 )
 
 genrule(
@@ -25,10 +33,18 @@ genrule(
         "/usr/include/wayland-client-core.h",
         "/usr/include/wayland-client-protocol.h",
     ),
+    target_compatible_with = select({
+        "//rules/os:linux": [],
+        "//conditions:default": ["@platforms//:incompatible"],
+    }),
 )
 
 genrule(
     name = "libwayland-client-sofile",
     outs = ["libwayland-client.so"],
     cmd = "cp /usr/lib/libwayland-client.so $(RULEDIR)",
+    target_compatible_with = select({
+        "//rules/os:linux": [],
+        "//conditions:default": ["@platforms//:incompatible"],
+    }),
 )

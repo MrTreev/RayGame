@@ -4,6 +4,10 @@ cc_library(
     name = "xkbcommon",
     deps = [":libxkbcommon-import"],
     visibility = ["//visibility:public"],
+    target_compatible_with = select({
+        "//rules/os:linux": [],
+        "//conditions:default": ["@platforms//:incompatible"],
+    }),
 )
 
 cc_import(
@@ -11,6 +15,10 @@ cc_import(
     hdrs = [":libxkbcommon-headers"],
     interface_library = ":libxkbcommon-sofile",
     system_provided = True,
+    target_compatible_with = select({
+        "//rules/os:linux": [],
+        "//conditions:default": ["@platforms//:incompatible"],
+    }),
 )
 
 LIBXKBCOMMONHDRS = [
@@ -30,10 +38,18 @@ genrule(
         outdir = "$(RULEDIR)/xkbcommon",
         infiles = " ".join(["/usr/include/{}".format(f) for f in LIBXKBCOMMONHDRS]),
     ),
+    target_compatible_with = select({
+        "//rules/os:linux": [],
+        "//conditions:default": ["@platforms//:incompatible"],
+    }),
 )
 
 genrule(
     name = "libxkbcommon-sofile",
     outs = ["libxkbcommon.so"],
     cmd = "cp /usr/lib/libxkbcommon.so $(RULEDIR)",
+    target_compatible_with = select({
+        "//rules/os:linux": [],
+        "//conditions:default": ["@platforms//:incompatible"],
+    }),
 )

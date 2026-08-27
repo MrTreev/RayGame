@@ -35,7 +35,8 @@ RAYGAME_CLANG_SUPPRESS_WARNING("-Wglobal-constructors")
 RAYGAME_CLANG_SUPPRESS_WARNING("-Wexit-time-destructors")
 RAYGAME_DEBUG_ONLY(const)
 RAYGAME_RELEASE_ONLY(constexpr)
-//NOLINTNEXTLINE(cert-err58-cpp)
+// This can't throw, static initialisation is fine here
+//NOLINTNEXTLINE(cert-err58-cpp,*-static-initialization)
 core::log::Level logging_level = []() {
     if constexpr (core::config::BUILD_TYPE == core::config::BuildType::DEBUG) {
         //NOLINTNEXTLINE(concurrency-mt-unsafe)
