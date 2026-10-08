@@ -67,27 +67,31 @@ Config handle_args(const int argc, const char* const argv[]) {
 
 int main(int argc, char* argv[]) {
     try {
-        const Config config = handle_args(argc, argv);
-        if (config.m_header.string().empty()) {
-            throw std::runtime_error("Empty header string");
+        try {
+            const Config config = handle_args(argc, argv);
+            if (config.m_header.string().empty()) {
+                throw std::runtime_error("Empty header string");
+            }
+            if (config.m_resources.empty()) {
+                throw std::runtime_error("No resources given");
+            }
+            resmk::resmk(
+                config.m_header,
+                config.m_resources,
+                config.m_outer_namespace,
+                config.m_ns_name
+            );
+        } catch (const Help&) {
+            print_help();
+            return 0;
+        } catch (const std::runtime_error& err) {
+            core::log::error("ERROR: {}", err.what());
+            return 1;
+        } catch (...) {
+            core::log::error("ERROR: Unknown Error");
+            return 1;
         }
-        if (config.m_resources.empty()) {
-            throw std::runtime_error("No resources given");
-        }
-        resmk::resmk(
-            config.m_header,
-            config.m_resources,
-            config.m_outer_namespace,
-            config.m_ns_name
-        );
-    } catch (const Help&) {
-        print_help();
-        return 0;
-    } catch (const std::runtime_error& err) {
-        core::log::error("ERROR: {}", err.what());
-        return 1;
     } catch (...) {
-        core::log::error("ERROR: Unknown Error");
         return 1;
     }
 }

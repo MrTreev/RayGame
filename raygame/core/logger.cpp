@@ -37,7 +37,7 @@ RAYGAME_DEBUG_ONLY(const)
 RAYGAME_RELEASE_ONLY(constexpr)
 // This can't throw, static initialisation is fine here
 //NOLINTNEXTLINE(cert-err58-cpp,*-static-initialization)
-core::log::Level logging_level = []() {
+core::log::Level logging_level = [] {
     if constexpr (core::config::BUILD_TYPE == core::config::BuildType::DEBUG) {
         //NOLINTNEXTLINE(concurrency-mt-unsafe)
         const char* const lvl{std::getenv("RAYGAME_LOG_LEVEL")};

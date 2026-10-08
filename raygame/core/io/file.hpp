@@ -2,7 +2,6 @@
 #include "raygame/core/types.hpp"
 #include <cstdio>
 #include <filesystem>
-#include <source_location>
 #include <string_view>
 #include <vector>
 
@@ -20,7 +19,7 @@ public:
         append,
         read_extended,
         write_extended,
-        append_extended
+        append_extended,
     };
     explicit File(std::filesystem::path filename, File::mode mod);
     explicit File(std::filesystem::path filename, const char* mod);

@@ -12,7 +12,7 @@ RT_TEST(Image, Constructors) {
         core::colour::rgb(0, 0, 0),
         core::colour::rgb(0, 0, 0),
         core::colour::rgb(0, 0, 0),
-        core::colour::rgb(0, 0, 0)
+        core::colour::rgb(0, 0, 0),
     };
     const core::drawing::ImageView img9_test{
         arr9_test,

@@ -3,6 +3,7 @@
 
 namespace raygame::systems {
 enum class Sex : core::uint8_t {
+    Unknown = 0,
     M,
     F,
 };

@@ -66,11 +66,13 @@ safe_add(const std::integral auto aval, const std::integral auto bval) {
             } else if constexpr (MR == MathRule::CLAMP) {
                 return std::numeric_limits<Out_T>::max();
             }
-        } else if (std::cmp_less(aval, 0)
-                   && std::cmp_less(
-                       bval,
-                       static_cast<work_t>(std::numeric_limits<Out_T>::lowest()) - worka
-                   )) {
+        } else if (
+            std::cmp_less(aval, 0)
+            && std::cmp_less(
+                bval,
+                static_cast<work_t>(std::numeric_limits<Out_T>::lowest()) - worka
+            )
+        ) {
             if constexpr (MR == MathRule::STRICT) {
                 throw core::exception::Condition(
                     std::format(

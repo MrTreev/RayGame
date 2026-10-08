@@ -69,7 +69,7 @@ void core::detail::AppImplWayland::xdg_toplevel_handle_wm_capabilities(
     [[maybe_unused]] struct wl_array*     capabilities
 ) {
     [[maybe_unused]]
-    auto* this_impl = static_cast<AppImplWayland*>(data);
+    const auto* this_impl = static_cast<AppImplWayland*>(data);
     if (this_impl->m_should_close) {
         return;
     }

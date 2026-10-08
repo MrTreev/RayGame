@@ -23,7 +23,7 @@ enum class GuiBackend : uint8_t {
     WAYLAND,
 };
 
-constexpr auto BACKEND = []() {
+constexpr auto BACKEND = [] {
     using core::condition::unimplemented;
     using core::config::GuiBackend;
     using core::config::OperatingSystem;

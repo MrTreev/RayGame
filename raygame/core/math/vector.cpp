@@ -1,5 +1,4 @@
 #include "raygame/core/math/vector.hpp" // IWYU pragma: keep
-#include "raygame/core/types.hpp"
 
 template struct core::Vec2<core::uint8_t>;
 template struct core::Vec2<core::uint16_t>;

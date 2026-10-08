@@ -22,7 +22,8 @@ core::Application::Application(Vec2<size_t> size, std::string title, WindowStyle
 #endif
 }
 
-core::detail::AppImpl::~AppImpl() {
+core::detail::AppImpl::~AppImpl() { // NOLINT(bugprone-exception-escape)
+                                    // I honestly don't care in this case
     core::log::debug("Destroying Window: {}", m_title);
 };
 

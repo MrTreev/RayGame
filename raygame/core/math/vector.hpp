@@ -38,7 +38,7 @@ struct Vec2 {
     constexpr Vec2<Type> operator+(const Vec2<U>& other) {
         return {
             core::math::safe_add<Type>(m_x, other.m_x),
-            core::math::safe_add<Type>(m_y, other.m_y)
+            core::math::safe_add<Type>(m_y, other.m_y),
         };
     }
 
@@ -46,7 +46,7 @@ struct Vec2 {
     constexpr Vec2<Type> operator+=(std::integral auto other) {
         return {
             m_x = core::math::safe_add<Type>(m_x, other),
-            m_y = core::math::safe_add<Type>(m_y, other)
+            m_y = core::math::safe_add<Type>(m_y, other),
         };
     }
 
@@ -54,7 +54,7 @@ struct Vec2 {
     constexpr Vec2<Type> operator+=(const Vec2<U>& other) {
         return {
             m_x = core::math::safe_add<Type>(m_x, other.m_x),
-            m_y = core::math::safe_add<Type>(m_y, other.m_y)
+            m_y = core::math::safe_add<Type>(m_y, other.m_y),
         };
     }
 };

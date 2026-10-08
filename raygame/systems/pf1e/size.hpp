@@ -3,6 +3,7 @@
 
 namespace raygame::systems::pf1e {
 enum class Size : core::uint8_t {
+    Unknown        = 0x00,
     Fine           = 0x01,
     Diminutive     = 0x02,
     Tiny           = 0x03,

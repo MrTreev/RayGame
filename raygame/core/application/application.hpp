@@ -94,17 +94,17 @@ protected:
     void set_style(WindowStyle style) { m_style = style; }
 
     [[nodiscard]]
-    const Vec2<size_t>& get_size() const {
+    const Vec2<size_t>& get_size() const [[clang::lifetimebound]] {
         return m_size;
     }
 
     [[nodiscard]]
-    const std::string& get_title() const {
+    const std::string& get_title() const [[clang::lifetimebound]] {
         return m_title;
     }
 
     [[nodiscard]]
-    const WindowStyle& get_style() const {
+    const WindowStyle& get_style() const [[clang::lifetimebound]] {
         return m_style;
     }
 
@@ -135,12 +135,12 @@ public:
     virtual void set_close();
 
     [[nodiscard]]
-    const size_t& width() const {
+    const size_t& width() const [[clang::lifetimebound]] {
         return m_size.m_x;
     }
 
     [[nodiscard]]
-    const size_t& height() const {
+    const size_t& height() const [[clang::lifetimebound]] {
         return m_size.m_y;
     }
 };
@@ -184,12 +184,12 @@ public:
     void set_close() { m_impl->set_close(); }
 
     [[nodiscard]]
-    const size_t& width() const {
+    const size_t& width() const [[clang::lifetimebound]] {
         return m_impl->width();
     }
 
     [[nodiscard]]
-    const size_t& height() const {
+    const size_t& height() const [[clang::lifetimebound]] {
         return m_impl->height();
     }
 };

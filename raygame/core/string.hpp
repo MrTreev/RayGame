@@ -13,7 +13,7 @@ enum class AnsiColour : uint8_t {
     RESET,   // "\033[0m"
 };
 
-constexpr std::string text_colour(AnsiColour col) {
+constexpr std::string_view text_colour(AnsiColour col) {
     switch (col) {
     case AnsiColour::RED:     return "\033[31m";
     case AnsiColour::GREEN:   return "\033[32m";

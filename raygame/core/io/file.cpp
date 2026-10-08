@@ -135,7 +135,8 @@ void File::gencode(const std::string_view& msg) {
     write(std::format("{}\n", msg));
 }
 
-File::~File() {
+File::~File() { // NOLINT(bugprone-exception-escape)
+                // I honestly don't care in this case
     if (m_file != nullptr) {
         if (std::fflush(m_file) != 0) {
             log::error("Could not flush file: {}", m_path.string());

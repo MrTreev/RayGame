@@ -67,8 +67,9 @@ safe_mult(const std::integral auto aval, const std::integral auto bval) {
             } else if constexpr (MR == MathRule::CLAMP) {
                 return outmax;
             }
-        } else if (std::is_unsigned<Out_T>()
-                   && (std::cmp_less(aval, 0) || std::cmp_less(bval, 0))) {
+        } else if (
+            std::is_unsigned<Out_T>() && (std::cmp_less(aval, 0) || std::cmp_less(bval, 0))
+        ) {
             if constexpr (MR == MathRule::STRICT) {
                 throw Condition(
                     std::format(

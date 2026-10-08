@@ -291,7 +291,7 @@ enum class OperatingSystem : uint8_t {
     WIN64,   //!< Windows 64-Bit
 };
 
-constexpr OperatingSystem OPERATING_SYSTEM = []() {
+constexpr OperatingSystem OPERATING_SYSTEM = [] {
 #if defined(RAYGAME_OS_ANDROID)
     return OperatingSystem::ANDROID;
 #elif defined(RAYGAME_OS_BSD)
@@ -327,7 +327,7 @@ enum class BuildType : bool {
     RELEASE,
 };
 
-constexpr BuildType BUILD_TYPE = []() {
+constexpr BuildType BUILD_TYPE = [] {
 #if defined(NDEBUG)
     return BuildType::RELEASE;
 #else

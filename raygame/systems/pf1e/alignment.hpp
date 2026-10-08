@@ -2,6 +2,7 @@
 #include "raygame/core/types.hpp"
 
 enum class Alignment : core::uint8_t {
+    Unknown = 0,
     // clang-format off
     CG, NG, LG,
     CN, TN, LN,

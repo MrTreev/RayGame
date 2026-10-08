@@ -183,7 +183,7 @@ void core::detail::AppImplWayland::wl_pointer_handle_enter(
 }
 
 namespace {
-std::string source_string(uint32_t axis_source) {
+std::string_view source_string(uint32_t axis_source) {
     switch (axis_source) {
     case WL_POINTER_AXIS_SOURCE_WHEEL:      return " source(wheel) ";
     case WL_POINTER_AXIS_SOURCE_FINGER:     return " source(finger) ";

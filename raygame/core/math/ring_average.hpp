@@ -21,7 +21,7 @@ public:
         if (m_cap < bufsize) [[unlikely]] {
             m_cap += 1;
         }
-        m_buf[m_pos] = val;
+        m_buf[m_pos] = val; // NOLINT(*-bounds-*)
         m_pos        = (m_pos + 1) % bufsize;
     }
 

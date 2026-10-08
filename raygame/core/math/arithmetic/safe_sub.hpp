@@ -32,12 +32,12 @@ Out_T safe_sub(const std::integral auto aval, const std::integral auto bval) {
             }
             if constexpr (MR == MathRule::STRICT) {
                 throw core::exception::Condition(
-                    std ::format(
+                    std::format(
                         "Result of subtraction ({} - {}) is outside the range of "
                         "output type '{}'",
                         aval,
                         bval,
-                        core ::debug ::type_name<Out_T>()
+                        core::debug::type_name<Out_T>()
                     )
                 );
             }
@@ -51,9 +51,8 @@ Out_T safe_sub(const std::integral auto aval, const std::integral auto bval) {
                 return std::numeric_limits<Out_T>::max();
             }
             condition::unreachable();
-        } else {
-            return core::math::numeric_cast<Out_T, MR>(res);
         }
+        return core::math::numeric_cast<Out_T, MR>(res);
     } else {
         const auto worka = static_cast<work_t>(aval);
         const auto workb = static_cast<work_t>(bval);
@@ -75,12 +74,12 @@ Out_T safe_sub(const std::integral auto aval, const std::integral auto bval) {
             }
             if constexpr (MR == MathRule::STRICT) {
                 throw core::exception::Condition(
-                    std ::format(
+                    std::format(
                         "Result of subtraction ({} - {}) is outside the range of "
                         "output type '{}'",
                         aval,
                         bval,
-                        core ::debug ::type_name<Out_T>()
+                        core::debug::type_name<Out_T>()
                     )
                 );
             }

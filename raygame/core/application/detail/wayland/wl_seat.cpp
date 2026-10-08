@@ -41,7 +41,7 @@ void core::detail::AppImplWayland::wl_seat_name(
     const char*               name
 ) {
     [[maybe_unused]]
-    auto* this_impl = static_cast<AppImplWayland*>(data);
+    const auto* this_impl = static_cast<AppImplWayland*>(data);
     if (this_impl->m_should_close) {
         return;
     }

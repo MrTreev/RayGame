@@ -5,57 +5,36 @@
 #include "raygame/systems/pf1e/alignment.hpp"
 #include "raygame/systems/pf1e/deity.hpp"
 #include "raygame/systems/pf1e/race.hpp"
-#include "raygame/systems/pf1e/skills.hpp"
 
 namespace raygame::systems::pf1e {
 
 struct EquipmentSlots {
-    void* armour;
-    void* belt;
-    void* body;
-    void* chest;
-    void* eyes;
-    void* feet;
-    void* hands;
-    void* headband;
-    void* neck;
-    void* ring_l;
-    void* ring_r;
-    void* shield;
-    void* shoulders;
-    void* wrist;
+    void* m_armour;
+    void* m_belt;
+    void* m_body;
+    void* m_chest;
+    void* m_eyes;
+    void* m_feet;
+    void* m_hands;
+    void* m_headband;
+    void* m_neck;
+    void* m_ring_l;
+    void* m_ring_r;
+    void* m_shield;
+    void* m_shoulders;
+    void* m_wrist;
 };
 
 struct Character {
-    Character(
-        Name         name,
-        Sex          sex,
-        Race         race,
-        core::size_t age,
-        core::size_t height,
-        core::size_t weight,
-        Alignment    alignment,
-        Deity        deity
-    )
-        : m_name(std::move(name))
-        , m_sex(sex)
-        , m_race(race)
-        , m_age(age)
-        , m_height(height)
-        , m_weight(weight)
-        , m_alignment(alignment)
-        , m_deity(deity) {}
+    Name m_name{""};
+    Sex  m_sex{};
+    Race m_race{};
 
-private:
-    Name m_name;
-    Sex  m_sex;
-    Race m_race;
+    core::size_t m_age{};
+    core::size_t m_height{};
+    core::size_t m_weight{};
 
-    core::size_t m_age;
-    core::size_t m_height;
-    core::size_t m_weight;
-
-    Alignment m_alignment;
+    Alignment m_alignment{};
     Deity     m_deity;
 };
 
