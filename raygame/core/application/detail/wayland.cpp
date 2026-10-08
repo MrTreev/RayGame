@@ -184,24 +184,20 @@ void AppImplWayland::draw(const drawing::ImageView& image, const Vec2<pos_t>& po
     constexpr auto domin = [](const dis_t max, const dis_t val) {
         return numeric_cast<dis_t>(std::min(numeric_cast<dis_t>(max), val));
     };
-    const dis_t row_left  = clamp(position.m_x);
-    const dis_t col_top   = clamp(position.m_y);
-    const dis_t row_right = domin(height(), math::safe_add<dis_t>(position.m_x, image.width()));
-    const dis_t col_bot   = domin(width(), math::safe_add<dis_t>(position.m_y, image.height()));
-    if (std::cmp_greater(col_top, width()) || std::cmp_greater(row_left, height())) {
+    const dis_t x_0 = clamp(position.m_x);
+    const dis_t y_0 = clamp(position.m_y);
+    const dis_t x_1 = domin(height(), math::safe_add<dis_t>(position.m_x, image.width()));
+    const dis_t y_1 = domin(width(), math::safe_add<dis_t>(position.m_y, image.height()));
+    if (std::cmp_greater(x_0, width()) || std::cmp_greater(y_0, height())) {
         return;
     }
-    dis_t row{row_left};
-    dis_t col{col_top};
-    for (; row < row_right; ++row) {
-        col = col_top;
-        for (; col < col_bot; ++col) {
-            const auto therow  = math::safe_sub<dis_t>(row, position.m_x);
-            const auto thecol  = math::safe_sub<dis_t>(col, position.m_y);
-            m_pixbuf[row, col] = image[therow, thecol];
+    for (dis_t xval{x_0}; xval < x_1; ++xval) {
+        for (dis_t yval{y_0}; yval < y_1; ++yval) {
+            const auto src_y     = math::safe_sub<dis_t>(yval, position.m_y);
+            const auto src_x     = math::safe_sub<dis_t>(xval, position.m_x);
+            m_pixbuf[yval, xval] = image[src_y, src_x];
         }
     }
-    log::trace("Drawn: {} rows, {} cols", row - row_left, col - col_top);
 }
 
 void AppImplWayland::restyle() {

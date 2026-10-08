@@ -1,6 +1,6 @@
 # Fix non-square drawings on Wayland
 
-- STATUS: OPEN
+- STATUS: CLOSED
 - PRIORITY: 900
 - TAGS: bug
 
