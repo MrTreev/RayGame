@@ -31,7 +31,6 @@ RAYGAME_CLANG_SUPPRESS_WARNING("-Wexit-time-destructors")
 // Done like this because there should only be a single random_device for the whole game
 // NOLINTNEXTLINE(cert-err58-cpp,*-non-const-global-variables,*-static-initialization)
 std::random_device dev;
-RAYGAME_CLANG_SUPPRESS_WARNING_POP
 
 uint64_t rand_seed() {
     if constexpr (DETERMINISTIC) {
@@ -41,13 +40,16 @@ uint64_t rand_seed() {
         return dev();
     }
 }
+
+// NOLINTNEXTLINE(cert-err58-cpp,*-non-const-global-variables,*-static-initialization)
+std::mt19937 rng(rand_seed());
+RAYGAME_CLANG_SUPPRESS_WARNING_POP
 } // namespace
 
 template<typename T>
 requires std::is_integral_v<T> && std::is_trivial_v<T>
 T core::math::rand(T min, T max) {
     core::condition::pre_condition(min < max, std::format("min: {} < max: {}", min, max));
-    std::mt19937                     rng(rand_seed());
     std::uniform_int_distribution<T> dist(min, max);
     return dist(rng);
 }
@@ -65,7 +67,6 @@ template<typename T>
 requires std::is_integral_v<T> && std::is_trivial_v<T>
 std::vector<T> core::math::rand_n(size_t amount, T min, T max) {
     core::condition::pre_condition(min < max, std::format("min: {} < max: {}", min, max));
-    std::mt19937                     rng(rand_seed());
     std::uniform_int_distribution<T> dist(min, max);
     std::vector<T>                   results;
     results.reserve(amount);
