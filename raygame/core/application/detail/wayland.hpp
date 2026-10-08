@@ -68,12 +68,12 @@ public:
     void event(const uint32_t& key, const uint32_t& state);
 
     [[nodiscard]]
-    const decltype(m_delay)& rate() const {
+    const decltype(m_delay)& rate() const [[clang::lifetimebound]] {
         return m_rate;
     }
 
     [[nodiscard]]
-    const decltype(m_delay)& delay() const {
+    const decltype(m_delay)& delay() const [[clang::lifetimebound]] {
         return m_delay;
     }
 

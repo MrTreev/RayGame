@@ -325,7 +325,7 @@ void KeyboardState::new_from_string(const char* str) {
 }
 
 void KeyboardState::event(const uint32_t& key, const uint32_t& state) {
-    log::debug("event: key({}), state({})", key, state);
+    log::trace("event: key({}), state({})", key, state);
     m_inputmapper.map(key, state);
     if constexpr (PRINT_KEY) {
         constexpr uint32_t        KEY_OFFSET{8};
@@ -334,8 +334,8 @@ void KeyboardState::event(const uint32_t& key, const uint32_t& state) {
         constexpr size_t          BUFSIZE{128};
         std::array<char, BUFSIZE> buf{0};
         xkb_keysym_get_name(sym, buf.data(), sizeof(buf));
-        const char* action{state == WL_KEYBOARD_KEY_STATE_PRESSED ? "press" : "release"};
-        log::debug("key {}: sym: {} ({}), ", action, std::string_view(buf), sym);
+        const char* action{state == WL_KEYBOARD_KEY_STATE_PRESSED ? "press:  " : "release:"};
+        log::debug("key {} sym: {} ({}), ", action, std::string_view(buf), sym);
     }
 }
 

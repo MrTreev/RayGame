@@ -9,7 +9,7 @@ void core::InputMapper::map(const uint32_t key, const uint32_t state) {
     if (val != m_map.end()) {
         val->second(state);
     } else {
-        core::log::debug("Missed map: state {}, key: {}, ", state, key);
+        core::log::trace("Missed map: state {}, key: {}, ", state, key);
     }
 }
 
