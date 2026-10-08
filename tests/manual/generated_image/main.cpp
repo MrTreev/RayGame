@@ -1,5 +1,5 @@
-#include "games/generated_image/generated_png_image.hpp"
 #include "raygame/core/application/application.hpp"
+#include "tests/manual/generated_image/generated_png_image.hpp"
 
 int main() {
     core::Application mywindow{};

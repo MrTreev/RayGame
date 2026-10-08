@@ -1,7 +1,7 @@
-#include "games/image/icon.hpp"
-#include "games/image/cottage.hpp"
-#include "games/image/defs.hpp"
+#include "tests/manual/image/icon.hpp"
 #include "raygame/core/drawing/pixel.hpp"
+#include "tests/manual/image/cottage.hpp"
+#include "tests/manual/image/defs.hpp"
 
 namespace resources {
 namespace {

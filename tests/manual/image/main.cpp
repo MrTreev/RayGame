@@ -1,6 +1,6 @@
-#include "games/image/defs.hpp"
 #include "raygame/core/application/application.hpp"
 #include "raygame/core/drawing/image.hpp"
+#include "tests/manual/image/defs.hpp"
 
 constexpr core::Vec2<core::dis_t> IMG_SIZE = {400, 400};
 constexpr core::Vec2<core::pos_t> IMG_POS  = {100, 100};
