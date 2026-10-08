@@ -22,18 +22,10 @@ rg_wayland_protocol(
     name = "xdg-shell-client-protocol",
     protocol = "xdg-shell",
     visibility = ["//visibility:public"],
-    target_compatible_with = select({
-        "//rules/os:linux": [],
-        "//conditions:default": ["@platforms//:incompatible"],
-    }),
 )
 
 rg_wayland_protocol(
     name = "wayland-client-protocol",
     protocol = "wayland",
     visibility = ["//visibility:public"],
-    target_compatible_with = select({
-        "//rules/os:linux": [],
-        "//conditions:default": ["@platforms//:incompatible"],
-    }),
 )

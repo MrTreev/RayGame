@@ -74,6 +74,10 @@ def rg_wayland_protocol(**kwargs):
         header = header,
         modhdr = modhdr,
         source = source,
+        target_compatible_with = select({
+            "//rules/os:linux": [],
+            "//conditions:default": ["@platforms//:incompatible"],
+        }),
         pragma = select({
             "@rules_cc//cc/compiler:clang": "#pragma clang system_header",
             "@rules_cc//cc/compiler:clang-cl": "#pragma clang system_header",
@@ -88,5 +92,9 @@ def rg_wayland_protocol(**kwargs):
         srcs = [source, header],
         conlyopts = ["-w"],
         includes = ["."],
+        target_compatible_with = select({
+            "//rules/os:linux": [],
+            "//conditions:default": ["@platforms//:incompatible"],
+        }),
         **kwargs
     )
