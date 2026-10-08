@@ -26,8 +26,8 @@ void logger(core::log::Level level, std::string_view text, std::source_location 
     template<typename... Args>                                                                     \
     struct level {                                                                                 \
         constexpr explicit level(                                                                  \
-            std::string_view     message,                                                          \
-            std::source_location loc = std::source_location::current()                             \
+            const std::string_view& message,                                                       \
+            std::source_location    loc = std::source_location::current()                          \
         ) {                                                                                        \
             detail::logger(Level::LEVEL, std::move(message), loc);                                 \
         }                                                                                          \
@@ -37,7 +37,7 @@ void logger(core::log::Level level, std::string_view text, std::source_location 
             Args&&... args,                                                                        \
             std::source_location loc = std::source_location::current()                             \
         )                                                                                          \
-            : level(std::vformat(fmt.get(), std::make_format_args(args...)), loc) {}               \
+            : level(std::format(fmt, std::forward<Args>(args)...), loc) {}                         \
     };                                                                                             \
                                                                                                    \
     template<typename... Args>                                                                     \
