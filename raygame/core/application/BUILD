@@ -41,6 +41,7 @@ rg_cc_library(
         "//rules/gui:wayland": [
             "//third_party/wayland"
         ],
+        "//conditions:default": [],
     }),
     visibility = ["//visibility:public"],
 )
