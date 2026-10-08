@@ -13,7 +13,8 @@ class PngFile: public Resource {
 
     void process_impl() override;
 
-    void content(std::string& stuff) const override;
+    [[nodiscard]]
+    std::string content() const override;
 
     [[nodiscard]]
     std::string type() const override;

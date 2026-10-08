@@ -19,7 +19,8 @@ class Resource {
     virtual void process_impl();
     [[nodiscard]]
     virtual std::string type() const;
-    virtual void        content([[maybe_unused]] std::string& stuff) const;
+    [[nodiscard]]
+    virtual std::string content() const;
 
 public:
     std::filesystem::path m_source; // NOLINT(misc-non-private-member-variables-in-classes)

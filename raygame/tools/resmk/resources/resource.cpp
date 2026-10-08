@@ -23,7 +23,7 @@ std::string Resource::type() const {
     core::condition::unimplemented();
 }
 
-void Resource::content([[maybe_unused]] std::string& stuff) const {
+std::string Resource::content() const {
     core::condition::unimplemented();
 }
 
@@ -39,7 +39,7 @@ std::string Resource::definition(std::string prefix) const {
     definition += "RAYGAME_CLANG_SUPPRESS_WARNING(\"-Wglobal-constructors\")\n";
     definition += "// NOLINTNEXTLINE(cert-err58-cpp)\n";
     definition += std::format("const {} {}{} {{\n", type(), prefix, m_name);
-    content(definition);
+    definition += content();
     definition += std::format("\n}};\n");
     definition += "RAYGAME_CLANG_SUPPRESS_WARNING_POP\n";
     return definition;
@@ -50,7 +50,7 @@ void Resource::process() {
     process_impl();
 }
 
-FileError::FileError(const std ::string& message)
+FileError::FileError(const std::string& message)
     : core::exception::Exception(message) {}
 
 FileError::~FileError() noexcept = default;

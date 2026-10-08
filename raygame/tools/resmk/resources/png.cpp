@@ -39,7 +39,8 @@ void PngFile::process_impl() {
     }
 }
 
-void PngFile::content(std::string& stuff) const {
+std::string PngFile::content() const {
+    std::string stuff;
     stuff += std::format("    std::array<core::Pixel, {}>{{", (m_width * m_height));
     for (int yval{0}; yval < m_height; ++yval) {
         stuff += "\n        ";
@@ -64,6 +65,7 @@ void PngFile::content(std::string& stuff) const {
         }
     }
     stuff += "\n    }";
+    return stuff;
 }
 
 [[nodiscard]]
