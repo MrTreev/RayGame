@@ -135,11 +135,6 @@ AppImplWayland::AppImplWayland(Vec2<size_t> size, std::string title, WindowStyle
         numeric_cast<int32_t>(width()),
         numeric_cast<int32_t>(height())
     );
-    xdg_toplevel_set_max_size(
-        m_xdg_toplevel,
-        numeric_cast<int32_t>(width()),
-        numeric_cast<int32_t>(height())
-    );
     wl_surface_commit(m_wl_surface);
     log::trace("Surface Committed");
     while ((wl_display_dispatch(m_wl_display) != -1) && (!m_configured)) {
