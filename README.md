@@ -2,10 +2,6 @@
 
 An experimental game engine, written in C++
 
-## Documentation
-
-For documentation on how to use the engine, look under [docs](docs).
-
 ## Licencing
 
 The code written here is covered under the MIT licence, given in the [LICENSE](LICENSE) file.

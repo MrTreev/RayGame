@@ -17,11 +17,16 @@ Use `#include <cstdio>` in place of `<stdio.h>` for example.
 
 Nested ternaries make code more difficult to read and lead to more bugs.
 
-## Use ISO standard C++ extensions only used when absolutely required
+## Use C++ extensions only used when absolutely required
 
 Prefer ISO standard methods over extensions where possible.
 
 ## Failures
 
-Use exceptions to signal a failure to perform a required task
-Use std::optional to signal a failure to perform an optional task, or a very common failure
+Use exceptions to signal a failure to perform a required task.
+Use std::optional to signal a failure to perform an optional task, or a very common failure.
+
+### Prefer to fail fast and fail hard.
+
+This prevents errors from being overlooked.
+This project is a game, not server-software, it is allowed to crash.
