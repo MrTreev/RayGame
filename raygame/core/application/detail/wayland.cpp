@@ -161,15 +161,74 @@ AppImplWayland::~AppImplWayland() {
         const auto old_buflen = safe_mult<size_t, CLAMP>(old_stride, m_buffer_height * 2);
         munmap(m_pixbuf.data_handle(), old_buflen);
     }
+    if (m_wl_callback != nullptr) {
+        wl_callback_destroy(m_wl_callback);
+        m_wl_callback = nullptr;
+    }
+    for (auto*& buf: m_buffers) {
+        if (buf != nullptr) {
+            wl_buffer_destroy(buf);
+            buf = nullptr;
+        }
+    }
     if (m_wl_buffer != nullptr) {
         wl_buffer_destroy(m_wl_buffer);
+        m_wl_buffer = nullptr;
+    }
+    if (m_mapped_base != nullptr) {
+        munmap(m_mapped_base, m_mapped_size);
+        m_mapped_base = nullptr;
+        m_mapped_size = 0;
     }
     if (m_shm_fd >= 0) {
         close(m_shm_fd);
+        m_shm_fd = -1;
     }
-    xdg_toplevel_destroy(m_xdg_toplevel);
-    xdg_surface_destroy(m_xdg_surface);
-    wl_surface_destroy(m_wl_surface);
+    if (m_wl_pointer != nullptr) {
+        wl_pointer_release(m_wl_pointer);
+        m_wl_pointer = nullptr;
+    }
+    if (m_wl_keyboard != nullptr) {
+        wl_keyboard_release(m_wl_keyboard);
+        m_wl_keyboard = nullptr;
+    }
+    if (m_wl_seat != nullptr) {
+        wl_seat_destroy(m_wl_seat);
+        m_wl_seat = nullptr;
+    }
+    if (m_xdg_toplevel != nullptr) {
+        xdg_toplevel_destroy(m_xdg_toplevel);
+        m_xdg_toplevel = nullptr;
+    }
+    if (m_xdg_surface != nullptr) {
+        xdg_surface_destroy(m_xdg_surface);
+        m_xdg_surface = nullptr;
+    }
+    if (m_wl_surface != nullptr) {
+        wl_surface_destroy(m_wl_surface);
+        m_wl_surface = nullptr;
+    }
+    if (m_xdg_wm_base != nullptr) {
+        xdg_wm_base_destroy(m_xdg_wm_base);
+        m_xdg_wm_base = nullptr;
+    }
+    if (m_wl_compositor != nullptr) {
+        wl_compositor_destroy(m_wl_compositor);
+        m_wl_compositor = nullptr;
+    }
+    if (m_wl_shm != nullptr) {
+        wl_shm_destroy(m_wl_shm);
+        m_wl_shm = nullptr;
+    }
+    if (m_wl_registry != nullptr) {
+        wl_registry_destroy(m_wl_registry);
+        m_wl_registry = nullptr;
+    }
+    if (m_wl_display != nullptr) {
+        wl_display_flush(m_wl_display);
+        wl_display_disconnect(m_wl_display);
+        m_wl_display = nullptr;
+    }
 }
 
 void AppImplWayland::draw(const drawing::ImageView& image, const Vec2<pos_t>& position) {
