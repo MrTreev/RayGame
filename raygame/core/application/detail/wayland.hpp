@@ -113,12 +113,6 @@ private:
 
     static constexpr size_t BUFFER_COUNT = 3;
 
-    int      m_shm_fd         = -1;
-    size_t   m_mapped_size    = 0;
-    size_t   m_current_buffer = 0;
-    Pixel*   m_mapped_base    = nullptr;
-    uint32_t m_wl_shm_format;
-
     std::array<wl_buffer*, BUFFER_COUNT> m_buffers{nullptr};
     std::array<bool, BUFFER_COUNT>       m_busy{false};
 
@@ -132,6 +126,15 @@ private:
     bool          m_configured   = false;
     PointerEvent  m_pointer_event{};
     KeyboardState m_keyboard_state;
+    int           m_shm_fd         = -1;
+    size_t        m_mapped_size    = 0;
+    size_t        m_current_buffer = 0;
+    Pixel*        m_mapped_base    = nullptr;
+    uint32_t      m_wl_shm_format;
+    uint32_t      m_wl_shm_name        = 0;
+    uint32_t      m_wl_compositor_name = 0;
+    uint32_t      m_xdg_wm_base_name   = 0;
+    uint32_t      m_wl_seat_name       = 0;
 
     size_t m_buffer_width  = 0;
     size_t m_buffer_height = 0;

@@ -144,7 +144,14 @@ AppImplWayland::AppImplWayland(Vec2<size_t> size, std::string title, WindowStyle
     xdg_toplevel_set_title(m_xdg_toplevel, get_title().c_str());
     recreate_buffers();
     restyle();
-    wl_surface_attach(m_wl_surface, m_buffers.at(0), 0, 0);
+    xdg_surface_set_window_geometry(
+        m_xdg_surface,
+        0,
+        0,
+        numeric_cast<int32_t>(width()),
+        numeric_cast<int32_t>(height())
+    );
+    wl_surface_attach(m_wl_surface, m_buffers.at(m_current_buffer), 0, 0);
     log::trace("Surface Attached");
     wl_surface_commit(m_wl_surface);
     log::trace("Surface Committed");
@@ -155,16 +162,6 @@ AppImplWayland::AppImplWayland(Vec2<size_t> size, std::string title, WindowStyle
 }
 
 AppImplWayland::~AppImplWayland() {
-    if (m_pixbuf.data_handle() != nullptr && m_buffer_width > 0 && m_buffer_height > 0) {
-        using math::MathRule::CLAMP;
-        const auto old_stride = safe_mult<size_t, CLAMP>(m_buffer_width, COLOUR_CHANNELS);
-        const auto old_buflen = safe_mult<size_t, CLAMP>(old_stride, m_buffer_height * 2);
-        munmap(m_pixbuf.data_handle(), old_buflen);
-    }
-    if (m_wl_callback != nullptr) {
-        wl_callback_destroy(m_wl_callback);
-        m_wl_callback = nullptr;
-    }
     for (auto*& buf: m_buffers) {
         if (buf != nullptr) {
             wl_buffer_destroy(buf);
@@ -293,6 +290,10 @@ bool AppImplWayland::should_close() const {
 
 void AppImplWayland::set_close() {
     m_should_close = true;
+    if (m_wl_callback != nullptr) {
+        wl_callback_destroy(m_wl_callback);
+        m_wl_callback = nullptr;
+    }
 }
 
 // NOLINTBEGIN(*-easily-swappable-parameters)

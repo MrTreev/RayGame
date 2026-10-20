@@ -29,6 +29,14 @@ void core::detail::AppImplWayland::wl_surface_handle_done(
     self->m_busy.at(front) = true;
 
     const auto size = self->get_size();
+    xdg_surface_set_window_geometry(
+        self->m_xdg_surface,
+        0,
+        0,
+        math::numeric_cast<int32_t>(size.m_x),
+        math::numeric_cast<int32_t>(size.m_y)
+    );
+    wl_surface_attach(self->m_wl_surface, self->m_buffers.at(front), 0, 0);
     wl_surface_damage_buffer(
         self->m_wl_surface,
         0,
@@ -40,10 +48,7 @@ void core::detail::AppImplWayland::wl_surface_handle_done(
 
     // Switch to the other buffer for the next frame (if it is free)
     const size_t next = (front + 1) % BUFFER_COUNT;
-    if (!self->m_busy.at(next)) {
-        self->m_current_buffer = next;
-        self->set_current_pixbuf();
-    }
-    // else: both busy – keep drawing into the same buffer (or you could
-    //       dispatch until a release arrives; rare for software rendering)}
+    while (self->m_busy.at(next)) {}
+    self->m_current_buffer = next;
+    self->set_current_pixbuf();
 }

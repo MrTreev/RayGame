@@ -16,8 +16,6 @@ void core::detail::AppImplWayland::xdg_surface_handle_configure(
         return;
     }
     xdg_surface_ack_configure(xdg_surface, serial);
-    if (this_impl->m_configured) {
-        wl_surface_commit(this_impl->m_wl_surface);
-    }
     this_impl->m_configured = true;
+    wl_surface_commit(this_impl->m_wl_surface);
 }

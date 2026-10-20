@@ -250,7 +250,7 @@ void core::detail::AppImplWayland::wl_pointer_handle_frame(
                 ret_str += std::format(" discrete({}) ", axis.m_discrete);
             }
             if ((event.m_event_mask & POINTER_EVENT_AXIS_SOURCE) != 0U) {
-                ret_str += source_string(event.m_event_mask);
+                ret_str += source_string(event.m_axis_source);
             }
             return ret_str;
         };
