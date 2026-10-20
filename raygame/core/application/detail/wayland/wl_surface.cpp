@@ -39,7 +39,7 @@ void core::detail::AppImplWayland::wl_surface_handle_done(
     wl_surface_commit(self->m_wl_surface);
 
     // Switch to the other buffer for the next frame (if it is free)
-    const size_t next = 1 - front;
+    const size_t next = (front + 1) % BUFFER_COUNT;
     if (!self->m_busy.at(next)) {
         self->m_current_buffer = next;
         self->set_current_pixbuf();

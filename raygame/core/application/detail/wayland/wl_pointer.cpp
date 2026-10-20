@@ -198,11 +198,11 @@ void core::detail::AppImplWayland::wl_pointer_handle_frame(
     void*                        data,
     [[maybe_unused]] wl_pointer* wl_pointer
 ) {
-    const auto* this_impl = static_cast<AppImplWayland*>(data);
+    auto* this_impl = static_cast<AppImplWayland*>(data);
     if (this_impl->m_should_close) {
         return;
     }
-    const PointerEvent& event = this_impl->m_pointer_event;
+    PointerEvent& event = this_impl->m_pointer_event;
     if ((event.m_event_mask & POINTER_EVENT_ENTER) != 0U) {
         core::log::trace(
             "Pointer Entry ({}, {})",
@@ -255,12 +255,13 @@ void core::detail::AppImplWayland::wl_pointer_handle_frame(
             return ret_str;
         };
         if (event.m_axis_vertical.m_valid) {
-            core::log::trace(handle_axis(event.m_axis_horizontal));
-        }
-        if (event.m_axis_horizontal.m_valid) {
             core::log::trace(handle_axis(event.m_axis_vertical));
         }
+        if (event.m_axis_horizontal.m_valid) {
+            core::log::trace(handle_axis(event.m_axis_horizontal));
+        }
     }
+    event = {};
 }
 
 void core::detail::AppImplWayland::wl_pointer_handle_leave(

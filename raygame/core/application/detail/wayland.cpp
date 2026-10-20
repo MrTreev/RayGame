@@ -142,9 +142,9 @@ AppImplWayland::AppImplWayland(Vec2<size_t> size, std::string title, WindowStyle
     }
     log::trace("Display Dispatched");
     xdg_toplevel_set_title(m_xdg_toplevel, get_title().c_str());
-    new_buffer();
+    recreate_buffers();
     restyle();
-    wl_surface_attach(m_wl_surface, m_wl_buffer, 0, 0);
+    wl_surface_attach(m_wl_surface, m_buffers.at(0), 0, 0);
     log::trace("Surface Attached");
     wl_surface_commit(m_wl_surface);
     log::trace("Surface Committed");
@@ -170,10 +170,6 @@ AppImplWayland::~AppImplWayland() {
             wl_buffer_destroy(buf);
             buf = nullptr;
         }
-    }
-    if (m_wl_buffer != nullptr) {
-        wl_buffer_destroy(m_wl_buffer);
-        m_wl_buffer = nullptr;
     }
     if (m_mapped_base != nullptr) {
         munmap(m_mapped_base, m_mapped_size);
@@ -299,54 +295,6 @@ void AppImplWayland::set_close() {
     m_should_close = true;
 }
 
-void AppImplWayland::new_buffer() {
-    const auto bufwidth  = width();
-    const auto bufheight = height();
-    const auto bufstride = safe_mult<size_t>(bufwidth, COLOUR_CHANNELS);
-    const auto buflen    = safe_mult<size_t>(bufstride, bufheight * 2);
-    log::trace("Requesting buffer with size: {}, {}", bufwidth, bufheight);
-    log::trace("buflen: {}", buflen);
-    if (m_pixbuf.data_handle() != nullptr && m_buffer_width > 0 && m_buffer_height > 0) {
-        const auto old_stride = safe_mult<size_t>(m_buffer_width, COLOUR_CHANNELS);
-        const auto old_buflen = safe_mult<size_t>(old_stride, m_buffer_height * 2);
-        munmap(m_pixbuf.data_handle(), old_buflen);
-    }
-    if (m_wl_buffer != nullptr) {
-        wl_buffer_destroy(m_wl_buffer);
-        m_wl_buffer = nullptr;
-    }
-    if (m_shm_fd >= 0) {
-        close(m_shm_fd);
-    }
-    m_shm_fd = allocate_shm_file(buflen);
-    check_condition(m_shm_fd >= 0, "creation of shm buffer file failed");
-    m_mapped_base =
-        static_cast<Pixel*>(mmap(nullptr, buflen, PROT_READ | PROT_WRITE, MAP_SHARED, m_shm_fd, 0));
-    if (m_mapped_base == MAP_FAILED) {
-        close(m_shm_fd);
-        check_condition(false, "Could not setup shm data");
-    }
-    m_pixbuf      = {m_mapped_base, std::extents(bufheight, bufwidth)};
-    m_wl_shm_pool = wl_shm_create_pool(m_wl_shm, m_shm_fd, numeric_cast<int32_t>(buflen));
-    m_wl_buffer   = wl_shm_pool_create_buffer(
-        m_wl_shm_pool,
-        0,
-        numeric_cast<int32_t>(bufwidth),
-        numeric_cast<int32_t>(bufheight),
-        numeric_cast<int32_t>(bufstride),
-        m_wl_shm_format
-    );
-    m_buffer_width  = bufwidth;
-    m_buffer_height = bufheight;
-    check_ptr(m_wl_buffer, "Failed to create buffer");
-    wl_surface_attach(m_wl_surface, m_wl_buffer, 0, 0);
-    log::trace("Surface Attached");
-    if (m_wl_shm_pool != nullptr) {
-        wl_shm_pool_destroy(m_wl_shm_pool);
-        m_wl_shm_pool = nullptr;
-    }
-}
-
 // NOLINTBEGIN(*-easily-swappable-parameters)
 void KeyboardState::update_mask(
     uint32_t mods_depressed,
@@ -421,10 +369,7 @@ void AppImplWayland::recreate_buffers() {
         }
     }
     m_busy.fill(false);
-    if (m_wl_shm_pool != nullptr) {
-        wl_shm_pool_destroy(m_wl_shm_pool);
-        m_wl_shm_pool = nullptr;
-    }
+    wl_shm_pool* shm_pool = nullptr;
     if (m_mapped_base != nullptr) {
         munmap(m_mapped_base, m_mapped_size);
         m_mapped_base = nullptr;
@@ -443,11 +388,11 @@ void AppImplWayland::recreate_buffers() {
         mmap(nullptr, m_mapped_size, PROT_READ | PROT_WRITE, MAP_SHARED, m_shm_fd, 0)
     );
     check_condition(m_mapped_base != MAP_FAILED, "mmap failed");
-    m_wl_shm_pool = wl_shm_create_pool(m_wl_shm, m_shm_fd, numeric_cast<int32_t>(m_mapped_size));
-    check_ptr(m_wl_shm_pool, "wl_shm_pool creation failed");
+    shm_pool = wl_shm_create_pool(m_wl_shm, m_shm_fd, numeric_cast<int32_t>(m_mapped_size));
+    check_ptr(shm_pool, "wl_shm_pool creation failed");
     for (size_t i = 0; i < BUFFER_COUNT; ++i) {
         m_buffers.at(i) = wl_shm_pool_create_buffer(
-            m_wl_shm_pool,
+            shm_pool,
             numeric_cast<int32_t>(i * frame),
             numeric_cast<int32_t>(wid),
             numeric_cast<int32_t>(hei),
@@ -457,14 +402,14 @@ void AppImplWayland::recreate_buffers() {
         check_ptr(m_buffers.at(i), "wl_buffer creation failed");
         wl_buffer_add_listener(m_buffers.at(i), &m_wl_buffer_listener, this);
     }
-    wl_shm_pool_destroy(m_wl_shm_pool);
-    m_wl_shm_pool    = nullptr;
+    wl_shm_pool_destroy(shm_pool);
+    shm_pool         = nullptr;
     m_buffer_width   = wid;
     m_buffer_height  = hei;
     m_current_buffer = 0;
     m_busy.fill(false);
     set_current_pixbuf();
-    log::trace("Double-buffered shm pool ready ({}×{}, 2 frames)", wid, hei);
+    log::trace("shm pool ready ({}×{}, {} buffers)", wid, hei, BUFFER_COUNT);
 }
 
 void AppImplWayland::wl_buffer_release(void* data, wl_buffer* buffer) {

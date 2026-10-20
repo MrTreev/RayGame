@@ -104,7 +104,7 @@ protected:
     }
 
     [[nodiscard]]
-    const WindowStyle& get_style() const [[clang::lifetimebound]] {
+    WindowStyle get_style() const {
         return m_style;
     }
 
@@ -135,12 +135,12 @@ public:
     virtual void set_close();
 
     [[nodiscard]]
-    const size_t& width() const [[clang::lifetimebound]] {
+    size_t width() const {
         return m_size.m_x;
     }
 
     [[nodiscard]]
-    const size_t& height() const [[clang::lifetimebound]] {
+    size_t height() const {
         return m_size.m_y;
     }
 };
@@ -184,12 +184,12 @@ public:
     void set_close() { m_impl->set_close(); }
 
     [[nodiscard]]
-    const size_t& width() const [[clang::lifetimebound]] {
+    size_t width() const {
         return m_impl->width();
     }
 
     [[nodiscard]]
-    const size_t& height() const [[clang::lifetimebound]] {
+    size_t height() const {
         return m_impl->height();
     }
 };

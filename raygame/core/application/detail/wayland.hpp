@@ -116,15 +116,14 @@ private:
     int      m_shm_fd         = -1;
     size_t   m_mapped_size    = 0;
     size_t   m_current_buffer = 0;
+    Pixel*   m_mapped_base    = nullptr;
     uint32_t m_wl_shm_format;
-    Pixel*   m_mapped_base = nullptr;
 
-    std::array<wl_buffer*, BUFFER_COUNT> m_buffers = {nullptr, nullptr};
-    std::array<bool, BUFFER_COUNT>       m_busy    = {false, false};
+    std::array<wl_buffer*, BUFFER_COUNT> m_buffers{nullptr};
+    std::array<bool, BUFFER_COUNT>       m_busy{false};
 
     std::mdspan<Pixel, std::dextents<size_t, 2>> m_pixbuf;
 
-    void new_buffer();
     void set_current_pixbuf();
     void recreate_buffers();
     void set_style(WindowStyle style);
@@ -134,22 +133,22 @@ private:
     PointerEvent  m_pointer_event{};
     KeyboardState m_keyboard_state;
 
-    size_t         m_buffer_width  = 0;
-    size_t         m_buffer_height = 0;
-    wl_buffer*     m_wl_buffer     = nullptr;
-    wl_callback*   m_wl_callback   = nullptr;
-    wl_compositor* m_wl_compositor = nullptr;
+    size_t m_buffer_width  = 0;
+    size_t m_buffer_height = 0;
+
+    // These are intentionally ordered for destruction
     wl_display*    m_wl_display    = nullptr;
-    wl_keyboard*   m_wl_keyboard   = nullptr;
-    wl_pointer*    m_wl_pointer    = nullptr;
     wl_registry*   m_wl_registry   = nullptr;
-    wl_seat*       m_wl_seat       = nullptr;
     wl_shm*        m_wl_shm        = nullptr;
-    wl_shm_pool*   m_wl_shm_pool   = nullptr;
+    wl_compositor* m_wl_compositor = nullptr;
+    xdg_wm_base*   m_xdg_wm_base   = nullptr;
     wl_surface*    m_wl_surface    = nullptr;
     xdg_surface*   m_xdg_surface   = nullptr;
     xdg_toplevel*  m_xdg_toplevel  = nullptr;
-    xdg_wm_base*   m_xdg_wm_base   = nullptr;
+    wl_seat*       m_wl_seat       = nullptr;
+    wl_keyboard*   m_wl_keyboard   = nullptr;
+    wl_pointer*    m_wl_pointer    = nullptr;
+    wl_callback*   m_wl_callback   = nullptr;
 
     static const wl_buffer_listener    m_wl_buffer_listener;
     static const wl_callback_listener  m_wl_surface_frame_listener;
