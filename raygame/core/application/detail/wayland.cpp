@@ -135,11 +135,6 @@ AppImplWayland::AppImplWayland(Vec2<size_t> size, std::string title, WindowStyle
         numeric_cast<int32_t>(width()),
         numeric_cast<int32_t>(height())
     );
-    wl_surface_commit(m_wl_surface);
-    log::trace("Surface Committed");
-    while ((wl_display_dispatch(m_wl_display) != -1) && (!m_configured)) {
-        log::error("Wayland display not configured");
-    }
     log::trace("Display Dispatched");
     xdg_toplevel_set_title(m_xdg_toplevel, get_title().c_str());
     recreate_buffers();
@@ -162,6 +157,10 @@ AppImplWayland::AppImplWayland(Vec2<size_t> size, std::string title, WindowStyle
 }
 
 AppImplWayland::~AppImplWayland() {
+    if (m_wl_callback != nullptr) {
+        wl_callback_destroy(m_wl_callback);
+        m_wl_callback = nullptr;
+    }
     for (auto*& buf: m_buffers) {
         if (buf != nullptr) {
             wl_buffer_destroy(buf);
@@ -233,8 +232,8 @@ void AppImplWayland::draw(const drawing::ImageView& image, const Vec2<pos_t>& po
     };
     const dis_t x_0 = clamp(position.m_x);
     const dis_t y_0 = clamp(position.m_y);
-    const dis_t x_1 = domin(height(), math::safe_add<dis_t>(position.m_x, image.width()));
-    const dis_t y_1 = domin(width(), math::safe_add<dis_t>(position.m_y, image.height()));
+    const dis_t x_1 = domin(width(), math::safe_add<dis_t>(position.m_x, image.width()));
+    const dis_t y_1 = domin(height(), math::safe_add<dis_t>(position.m_y, image.height()));
     if (std::cmp_greater(x_0, width()) || std::cmp_greater(y_0, height())) {
         return;
     }

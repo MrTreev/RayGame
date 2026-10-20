@@ -12,23 +12,16 @@ void core::detail::AppImplWayland::wl_surface_handle_done(
     [[maybe_unused]] uint32_t time
 ) {
     auto* self = static_cast<AppImplWayland*>(data);
-
     wl_callback_destroy(wl_callback);
     if (self->m_should_close) {
         return;
     }
     self->m_wl_callback = wl_surface_frame(self->m_wl_surface);
     wl_callback_add_listener(self->m_wl_callback, &m_wl_surface_frame_listener, self);
-
-    // Make sure we have buffers matching the current size
     self->recreate_buffers();
-
-    // Attach the buffer we have been drawing into
-    const size_t front = self->m_current_buffer;
-    wl_surface_attach(self->m_wl_surface, self->m_buffers.at(front), 0, 0);
+    const size_t front     = self->m_current_buffer;
     self->m_busy.at(front) = true;
-
-    const auto size = self->get_size();
+    const auto size        = self->get_size();
     xdg_surface_set_window_geometry(
         self->m_xdg_surface,
         0,
@@ -45,10 +38,13 @@ void core::detail::AppImplWayland::wl_surface_handle_done(
         math::numeric_cast<int32_t>(size.m_y)
     );
     wl_surface_commit(self->m_wl_surface);
-
-    // Switch to the other buffer for the next frame (if it is free)
     const size_t next = (front + 1) % BUFFER_COUNT;
-    while (self->m_busy.at(next)) {}
+    while (self->m_busy.at(next)) {
+        if (wl_display_dispatch(self->m_wl_display) == -1) {
+            self->set_close();
+            return;
+        }
+    }
     self->m_current_buffer = next;
     self->set_current_pixbuf();
 }
