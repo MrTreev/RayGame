@@ -11,11 +11,10 @@ void core::detail::AppImplWayland::xdg_surface_handle_configure(
     xdg_surface* xdg_surface,
     uint32_t     serial
 ) {
-    auto* this_impl = static_cast<AppImplWayland*>(data);
+    const auto* this_impl = static_cast<AppImplWayland*>(data);
     if (this_impl->m_should_close) {
         return;
     }
     xdg_surface_ack_configure(xdg_surface, serial);
-    this_impl->m_configured = true;
     wl_surface_commit(this_impl->m_wl_surface);
 }

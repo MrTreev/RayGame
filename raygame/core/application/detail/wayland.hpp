@@ -123,7 +123,6 @@ private:
     void set_style(WindowStyle style);
 
     bool          m_should_close = false;
-    bool          m_configured   = false;
     PointerEvent  m_pointer_event{};
     KeyboardState m_keyboard_state;
     int           m_shm_fd         = -1;

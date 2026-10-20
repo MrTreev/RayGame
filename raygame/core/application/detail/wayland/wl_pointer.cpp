@@ -233,7 +233,16 @@ void core::detail::AppImplWayland::wl_pointer_handle_frame(
                 )
             );
         } else if (event.m_state == WL_POINTER_BUTTON_STATE_RELEASED) {
-            core::log::trace("Button {} released", event.m_button);
+            core::log::debug(
+                "Button {} released at {}",
+                event.m_button,
+                std::string(
+                    core::Vec2<double>(
+                        wl_fixed_to_double(event.m_surface_x),
+                        wl_fixed_to_double(event.m_surface_y)
+                    )
+                )
+            );
         } else {
             core::log::error("Button {}", event.m_button);
             core::log::error("State  {}", event.m_state);
@@ -261,6 +270,11 @@ void core::detail::AppImplWayland::wl_pointer_handle_frame(
             core::log::trace(handle_axis(event.m_axis_horizontal));
         }
     }
+    const auto surf_x = event.m_surface_x;
+    const auto surf_y = event.m_surface_y;
+    event             = {};
+    event.m_surface_x = surf_x;
+    event.m_surface_y = surf_y;
 }
 
 void core::detail::AppImplWayland::wl_pointer_handle_leave(
