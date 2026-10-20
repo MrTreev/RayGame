@@ -47,12 +47,11 @@ void core::detail::AppImplWayland::wl_registry_handle_global(
 }
 
 void core::detail::AppImplWayland::wl_registry_handle_global_remove(
-    void*        data,
-    wl_registry* registry,
-    uint32_t     name
+    void*                         data,
+    [[maybe_unused]] wl_registry* registry,
+    uint32_t                      name
 ) {
     [[maybe_unused]]
-    const auto* this_impl = static_cast<AppImplWayland*>(data);
-    wl_registry_destroy(registry);
+    const auto* self = static_cast<AppImplWayland*>(data);
     core::log::trace("removed registry: {}", name);
 }
