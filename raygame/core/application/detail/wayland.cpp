@@ -185,7 +185,7 @@ AppImplWayland::~AppImplWayland() {
         m_wl_keyboard = nullptr;
     }
     if (m_wl_seat != nullptr) {
-        wl_seat_destroy(m_wl_seat);
+        wl_seat_release(m_wl_seat);
         m_wl_seat = nullptr;
     }
     if (m_xdg_toplevel != nullptr) {

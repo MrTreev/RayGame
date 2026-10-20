@@ -63,7 +63,8 @@ void core::detail::AppImplWayland::wl_registry_handle_global_remove(
         wl_shm_destroy(this_impl->m_wl_shm);
         this_impl->m_wl_shm      = nullptr;
         this_impl->m_wl_shm_name = 0;
-        core::log::info("wl_shm removed");
+        core::log::warning("wl_shm removed");
+        this_impl->set_close();
     } else if (name == this_impl->m_wl_compositor_name && (this_impl->m_wl_compositor != nullptr)) {
         wl_compositor_destroy(this_impl->m_wl_compositor);
         this_impl->m_wl_compositor      = nullptr;
@@ -89,6 +90,6 @@ void core::detail::AppImplWayland::wl_registry_handle_global_remove(
         wl_seat_release(this_impl->m_wl_seat);
         this_impl->m_wl_seat      = nullptr;
         this_impl->m_wl_seat_name = 0;
-        log::warning("wl_seat removed");
+        core::log::warning("wl_seat removed");
     }
 }

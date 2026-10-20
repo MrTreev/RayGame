@@ -222,7 +222,7 @@ void core::detail::AppImplWayland::wl_pointer_handle_frame(
     }
     if ((event.m_event_mask & POINTER_EVENT_BUTTON) != 0U) {
         if (event.m_state == WL_POINTER_BUTTON_STATE_PRESSED) {
-            core::log::trace(
+            core::log::debug(
                 "Button {} pressed at {}",
                 event.m_button,
                 std::string(
@@ -261,7 +261,6 @@ void core::detail::AppImplWayland::wl_pointer_handle_frame(
             core::log::trace(handle_axis(event.m_axis_horizontal));
         }
     }
-    event = {};
 }
 
 void core::detail::AppImplWayland::wl_pointer_handle_leave(
