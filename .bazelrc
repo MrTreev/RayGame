@@ -4,6 +4,7 @@ common --verbose_failures
 common --verbose_visibility_errors
 
 # for system_library rule
+build --features=external_include_paths
 common --experimental_starlark_cc_import
 common --experimental_repo_remote_exec
 
