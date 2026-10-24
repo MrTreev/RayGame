@@ -21,6 +21,6 @@ string_flag(
         "base",
         "none",
     ],
-    build_setting_default = "full",
+    build_setting_default = "base",
     visibility = ["//visibility:public"],
 )
