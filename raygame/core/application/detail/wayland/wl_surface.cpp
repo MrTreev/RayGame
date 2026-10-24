@@ -14,15 +14,18 @@ void core::detail::AppImplWayland::wl_surface_handle_done(
     auto*        self  = static_cast<AppImplWayland*>(data);
     const size_t front = self->m_current_buffer;
     const size_t next  = (front + 1) % BUFFER_COUNT;
-    while (self->m_busy.at(next)) {
+    while (self->m_busy.at(next) && !self->m_should_close) {
         if (wl_display_dispatch(self->m_wl_display) == -1) {
             self->set_close();
             return;
         }
     }
-    wl_callback_destroy(wl_callback);
     if (self->m_should_close) {
         return;
+    }
+    if (self->m_wl_callback == wl_callback) {
+        wl_callback_destroy(wl_callback);
+        self->m_wl_callback = nullptr;
     }
     self->m_wl_callback = wl_surface_frame(self->m_wl_surface);
     wl_callback_add_listener(self->m_wl_callback, &m_wl_surface_frame_listener, self);
