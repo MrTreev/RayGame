@@ -4,11 +4,9 @@ rg_cc_library(
     name = "application",
     hdrs = [
         "application.hpp",
-        "input.hpp",
     ],
     srcs = [
         "application.cpp",
-        "input.cpp",
         "detail/backends.cpp",
         "detail/backends.hpp",
     ] + select({
