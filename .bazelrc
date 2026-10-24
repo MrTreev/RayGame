@@ -4,9 +4,17 @@ common --verbose_failures
 common --verbose_visibility_errors
 
 # for system_library rule
-build --features=external_include_paths
 common --experimental_starlark_cc_import
 common --experimental_repo_remote_exec
+
+# Suppress warnings from third-party sources
+build --features=external_include_paths
+build:linux --per_file_copt=external/.*@-w
+build:linux --host_per_file_copt=external/.*@-w
+build:macos --per_file_copt=external/.*@-w
+build:macos --host_per_file_copt=external/.*@-w
+build:windows --per_file_copt=external/.*@/w
+build:windows --host_per_file_copt=external/.*@/w
 
 # Common
 common --enable_platform_specific_config
