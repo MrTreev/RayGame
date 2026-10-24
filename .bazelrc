@@ -16,6 +16,9 @@ build:macos --host_per_file_copt=external/.*@-w
 build:windows --per_file_copt=external/.*@/w
 build:windows --host_per_file_copt=external/.*@/w
 
+# Default test options
+test --test_verbose_timeout_warnings
+
 # Common
 common --enable_platform_specific_config
 common --incompatible_enable_cc_toolchain_resolution

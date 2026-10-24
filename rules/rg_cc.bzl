@@ -30,11 +30,13 @@ def rg_cc_single(name, **kwargs):
 
 def rg_cc_test(name, **kwargs):
     my_deps = kwargs.pop("deps", [])
+    my_size = kwargs.pop("size", "small")
     testlib = kwargs.pop("testlib", ["//tests/raytest"])
     cc_test(
         name = name,
         srcs = kwargs.pop("srcs", []),
         deps = my_deps + testlib,
+        size = my_size,
         visibility = kwargs.pop("visibility", ["//visibility:public"]),
         **kwargs
     )
