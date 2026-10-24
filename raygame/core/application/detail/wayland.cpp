@@ -5,7 +5,6 @@
 #include "raygame/core/condition.hpp"
 #include "raygame/core/drawing/pixel.hpp"
 #include "raygame/core/logger.hpp"
-#include "raygame/core/math/random.hpp"
 #include "raygame/core/math/vector.hpp"
 #include "raygame/core/types.hpp"
 #include <algorithm>
@@ -13,6 +12,7 @@
 #include <bits/types.h>
 #include <cstdlib>
 #include <fcntl.h>
+#include <random>
 #include <stdexcept>
 #include <string_view>
 #include <sys/mman.h>
@@ -30,16 +30,19 @@ using core::math::safe_mult;
 constexpr bool   PRINT_KEY       = true;
 constexpr size_t COLOUR_CHANNELS = 4;
 
-constexpr std::string_view alnum = "abcdefghijklmnaoqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-
-std::string random_string(
-    const size_t&      length,
-    const std::string& valid_chars = {alnum.data(), alnum.length()}
-) {
-    std::string  ret;
-    const size_t charlen = valid_chars.size() - 1;
+std::string random_string(const size_t& length) {
+    constexpr std::string_view alnum{
+        "abcdefghijklmnaoqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+    };
+    RAYGAME_CLANG_SUPPRESS_WARNING_PUSH
+    RAYGAME_CLANG_SUPPRESS_WARNING("-Wexit-time-destructors")
+    static std::random_device rand_dev;
+    RAYGAME_CLANG_SUPPRESS_WARNING_POP
+    static std::mt19937                          generator{rand_dev()};
+    static std::uniform_int_distribution<size_t> distr{0, alnum.size() - 1};
+    std::string                                  ret;
     std::generate_n(std::back_inserter(ret), length, [&] {
-        return valid_chars.at(core::math::rand<size_t>(0, charlen));
+        return alnum.at(distr(generator));
     });
     return ret;
 }

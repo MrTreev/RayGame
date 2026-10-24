@@ -21,11 +21,6 @@ rg_cc_singletest(
 )
 
 rg_cc_singletest(
-    name = "random",
-    deps = ["//raygame/core/math"],
-)
-
-rg_cc_singletest(
     name = "rect",
     deps = ["//raygame/core/math"],
 )
